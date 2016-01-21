@@ -1,0 +1,20 @@
+-module(chat_sup).
+-export([start_link/0, init/1]).
+-behavior(supervisor).
+
+start_link() ->
+	supervisor:start_link(?MODULE, []).
+
+init([]) ->
+	SupFlags = #{
+		strategy => one_for_all,
+		intensity => 3,
+		period => 5000},
+	ChildSpec = #{
+		id => chat_serv,
+		start => {chat_serv, start_link, []},
+		restart => permanent,
+		shutdown => 5000,
+		type => worker,
+		modules => [chat_serv]},
+	{ok, {SupFlags, [ChildSpec]}}.
