@@ -32,11 +32,9 @@ init([Port]) ->
 	end.
 
 handle_call({accept, ServerPid}, _From, #server{listen_socket = ListenSocket} = State) ->
-	io:format("Accept ~p~n", [ServerPid]),
 	NewAcceptPid = spawn(fun() -> accept(ListenSocket, ServerPid) end),
 	{reply, ok, State#server{accept_pid = NewAcceptPid}};
 handle_call({connect, ServerPid}, _From, #server{listen_socket = ListenSocket} = State) ->
-	io:format("Connect ~p~n", [ServerPid]),
 	NewAcceptPid = spawn(fun() -> accept(ListenSocket, ServerPid) end),
 	{reply, ok, State#server{accept_pid = NewAcceptPid}}.
 
@@ -56,9 +54,8 @@ code_change(_, State, _) ->
 accept(ListenSocket, ServerPid) ->
 	case gen_tcp:accept(ListenSocket) of
 		{ok, Socket} ->
-			gen_tcp:close(Socket),
-			io:format("Closing socket ~p~n", [Socket]),
-			gen_server:call(ServerPid, {connect, ServerPid});
+			gen_server:call(ServerPid, {connect, ServerPid}),
+			chat_handler:do_recv(Socket);
 		Error ->
 			io:format("Error accepting connection ~p~n", [Error])
 	end.
