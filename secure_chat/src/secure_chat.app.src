@@ -1,0 +1,15 @@
+{application, secure_chat, [
+    {description, "A secure chat application"},
+    {vsn, "1.0.0"},
+    {registered, []},
+    {mod, {secure_chat_app, []}},
+    {applications, [
+        kernel,
+        stdlib
+    ]},
+    {env,[]},
+    {modules, []},
+    {maintainers, []},
+    {licenses, []},
+    {links, []}
+]}.

@@ -1,4 +1,4 @@
--module(chat_handler).
+-module(secure_chat_handler).
 -export([do_recv/1]).
 
 do_recv(Socket) ->

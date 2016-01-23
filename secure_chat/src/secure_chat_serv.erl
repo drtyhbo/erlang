@@ -1,4 +1,4 @@
--module(chat_serv).
+-module(secure_chat_serv).
 -export([start_link/1, init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 -behavior(gen_server).
 
@@ -23,6 +23,7 @@ start_accept(Pid) ->
 	end.
 
 init([Port]) ->
+	lager:info("Starting server on port ~p~n", [Port]),
 	case gen_tcp:listen(Port, [binary, {active, false}, {reuseaddr, true}]) of
 		{ok, Socket} ->
 			process_flag(trap_exit, true),
@@ -45,7 +46,6 @@ handle_info(_Info, State) ->
 	{noreply, State}.
 
 terminate(Reason, State) ->
-	io:format("Terminate ~p~n", [Reason]),
 	gen_tcp:close(State#server.listen_socket).
 
 code_change(_, State, _) ->
