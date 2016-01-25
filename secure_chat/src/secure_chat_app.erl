@@ -5,21 +5,18 @@
 
 -module(secure_chat_app).
 -behaviour(application).
--export([start/2, stop/1]).
-
-%%====================================================================
-%% API
-%%====================================================================
+-export([start/2, stop/1, shutdown/0]).
 
 start(_StartType, _StartArgs) ->
-	lager:start(),
+	setup(),
     secure_chat_sup:start_link().
-
-%%--------------------------------------------------------------------
 
 stop(_State) ->
     ok.
 
-%%====================================================================
-%% Internal functions
-%%====================================================================
+shutdown() ->
+	secure_chat_sup:stop(),
+	application:stop(chat).
+
+setup() ->
+	lager:start().
