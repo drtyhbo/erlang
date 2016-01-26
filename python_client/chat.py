@@ -15,6 +15,8 @@ def process_line(line):
         c.login(pieces[1], pieces[2])
     elif pieces[0] == 'send':
         c.send_message(pieces[1], ' '.join(pieces[2:]))
+    elif pieces[0] == 'disconnect':
+        c.close()
 
 def add_input(input_queue):
     line = ''

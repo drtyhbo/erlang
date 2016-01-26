@@ -11,7 +11,7 @@
 %% ==== Defines ====
 
 -define(SOCK(Msg), {tcp, _Port, Msg}).
--define(SOCK_CLOSED(Msg), {tcp_closed, _Port, Msg}).
+-define(SOCK_CLOSED(), {tcp_closed, _Port}).
 
 % Incoming JSON
 -define(CONNECT_JSON(Username, SessionToken), [{<<"c">>, Username},{<<"s">>, SessionToken}]).
@@ -71,7 +71,7 @@ handle_info(?SOCK(Msg), FSMState, State) ->
 	Json = mochijson2:decode(Msg),
 	NewState = handle_json(FSMState, Json, State),
 	{next_state, FSMState, NewState};
-handle_info(?SOCK_CLOSED(_Msg), _FSMState, State) ->
+handle_info(?SOCK_CLOSED(), _FSMState, State) ->
 	io:format("Socket disconnected ~n"),
 	{stop, disconnect, State};
 handle_info(Info, FSMState, State) ->
@@ -103,7 +103,7 @@ send_json(Socket, Json) ->
 %% ==== Terminate ====
 
 terminate(Reason, _StateName, State) ->
-	secure_chat_serv:remove_user(State#handler_state.username),
+	secure_chat_user_list:remove_user(State#handler_state.username),
 	gen_tcp:close(State#handler_state.socket),
 	io:format("~p~n", [Reason]),
 	ok.
