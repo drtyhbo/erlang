@@ -12,8 +12,13 @@
 
 -define(SOCK(Msg), {tcp, _Port, Msg}).
 -define(SOCK_CLOSED(Msg), {tcp_closed, _Port, Msg}).
+
+% Incoming JSON
 -define(CONNECT_JSON(Username, SessionToken), [{<<"c">>, Username},{<<"s">>, SessionToken}]).
 -define(SEND_MESSAGE_JSON(Recipient, Message), [{<<"r">>, Recipient},{<<"m">>, Message}]).
+
+% Outgoing JSON
+-define(CONNECTED_JSON(), {struct, [{<<"r">>, <<"connected">>}]}).
 -define(RECIEVE_MESSAGE_JSON(Sender, Message), {struct, [{<<"s">>, Sender},{<<"m">>, Message}]}).
 
 start(Socket, RedisConnection) ->
@@ -44,8 +49,8 @@ init([Socket, RedisConnection]) ->
 %% ==== Logged Out Events ====
 
 logged_out(connect, State) ->
-	io:format("Received logged_out connect~n"),
 	secure_chat_user_list:add_user(State#handler_state.username, self()),
+	send_json(State#handler_state.socket, ?CONNECTED_JSON()),
 	{next_state, logged_in, State};
 logged_out(Event, _State) ->
 	io:format("Received unknown logged_out event ~p~n", [Event]).
