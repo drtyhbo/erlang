@@ -25,7 +25,7 @@ init([]) ->
 		modules => [secure_chat_serv]},
 	UserListChildSpec = #{
 		id => secure_chat_user_list,
-		start => {secure_chat_user_list, start_link, []},
+		start => {secure_chat_msg_router, start_link, []},
 		restart => permanent,
 		shutdown => 5000,
 		type => worker,

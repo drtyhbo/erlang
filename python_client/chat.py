@@ -58,8 +58,8 @@ class ChatClient(asyncore.dispatcher):
     def process_json(self, json_to_process):
         if 'r' in json_to_process:
             print ">>> ok connected <<<"
-        elif 's' in json_to_process and 'm' in json_to_process:
-            print "%s: %s" % (json_to_process['s'], json_to_process['m'])
+        elif 'f' in json_to_process and 'm' in json_to_process:
+            print "%s: %s" % (json_to_process['f'], json_to_process['m'])
 
     ## asyncore.dispatcher delegate ##
 
