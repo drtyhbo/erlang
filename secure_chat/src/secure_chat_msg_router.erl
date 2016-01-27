@@ -44,7 +44,7 @@ handle_call({remove_user, Username}, _From, State) ->
 handle_call({send_msg, From, To, Msg}, _From, State) ->
 	case ets:lookup(State#msg_router_state.user_list, To) of
 	[{_, Pid}] ->
-		secure_chat_handler:receive_msg(Pid, From, Msg),
+		secure_chat_user:receive_msg(Pid, From, Msg),
 		{reply, ok, State};
 	_ ->
 		{reply, ok, State}

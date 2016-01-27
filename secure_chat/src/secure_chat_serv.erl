@@ -29,18 +29,17 @@ init([Port]) ->
 	{ok, #server{listen_socket=Socket, redis_connection=RedisConnection}}.
 
 handle_cast(accept, State) ->
-	io:format("Accepting~n"),
 	case gen_tcp:accept(State#server.listen_socket) of
 		{ok, Socket} ->
-			{ok, NewPid} = secure_chat_handler:start(Socket, State#server.redis_connection),
+			{ok, NewPid} = secure_chat_user:start(Socket, State#server.redis_connection),
 			gen_tcp:controlling_process(Socket, NewPid),
-			gen_server:cast(self(), accept);
-		Error ->
-			io:format("Error accepting connection ~p~n", [Error])
-	end,
-	{noreply, State}.
+			gen_server:cast(self(), accept),
+			{noreply, State};
+		_ ->
+			{noreply, State}
+	end.
 
-handle_call(Request, _From, State) ->
+handle_call(_Request, _From, State) ->
 	{noreply, State}.
 
 handle_info(_Info, State) ->
