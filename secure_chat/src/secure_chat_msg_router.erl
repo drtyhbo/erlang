@@ -1,5 +1,5 @@
 -module(secure_chat_msg_router).
--export([start_link/0,
+-export([start_link/1,
 		add_user/2,
 		remove_user/1,
 		send_msg/3,
@@ -11,12 +11,14 @@
 		code_change/3]).
 -behavior(gen_server).
 
--record(msg_router_state, {user_list}).
+-record(msg_router_state,
+		{user_list,
+		redis_connection}).
 
 %% === Messages ===
 
-start_link() ->
-	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+start_link(RedisConnection) ->
+	gen_server:start_link({local, ?MODULE}, ?MODULE, [RedisConnection], []).
 
 add_user(Username, Pid) ->
 	gen_server:call(whereis(?MODULE), {add_user, Username, Pid}).
@@ -29,8 +31,8 @@ send_msg(From, To, Msg) ->
 
 %% === gen_server ===
 
-init([]) ->
-	{ok, #msg_router_state{user_list=ets:new(user_lookup, [])}}.
+init([RedisConnection]) ->
+	{ok, #msg_router_state{user_list=ets:new(user_lookup, []), redis_connection=RedisConnection}}.
 
 handle_cast(accept, State) ->
 	{noreply, State}.
@@ -47,7 +49,7 @@ handle_call({send_msg, From, To, Msg}, _From, State) ->
 		secure_chat_user:receive_msg(Pid, From, Msg),
 		{reply, ok, State};
 	_ ->
-		{reply, ok, State}
+		{reply, add_offline_message(State#msg_router_state.redis_connection, To, Msg), State}
 	end.
 
 handle_info(_Info, State) ->
@@ -58,3 +60,13 @@ terminate(_, _) ->
 
 code_change(_, State, _) ->
 	{ok, State}.
+
+%% ===
+
+add_offline_message(RedisConnection, To, Msg) ->
+	case eredis:q(RedisConnection, ["RPUSH", binary_to_list(To) ++ "_offline", Msg]) of
+	 	{ok, _} ->
+	 		ok;
+	 	_ ->
+	 		error
+	end.

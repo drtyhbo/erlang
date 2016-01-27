@@ -1,5 +1,5 @@
 -module(secure_chat_serv).
--export([start_link/1,
+-export([start_link/2,
 		init/1,
 		handle_cast/2,
 		handle_call/3,
@@ -13,8 +13,8 @@
 		redis_connection,
 		accept_pid}).
 
-start_link(Port) ->
-	case gen_server:start_link({local, ?MODULE}, ?MODULE, [Port], []) of
+start_link(Port, RedisConnection) ->
+	case gen_server:start_link({local, ?MODULE}, ?MODULE, [Port, RedisConnection], []) of
 		{ok, Pid} ->
 			io:format("Casting ~p~n", [Pid]),
 			gen_server:cast(Pid, accept),
@@ -23,8 +23,7 @@ start_link(Port) ->
 			Error
 	end.
 
-init([Port]) ->
-	{ok, RedisConnection} = eredis:start_link(),
+init([Port, RedisConnection]) ->
 	{ok, Socket} = gen_tcp:listen(Port, [binary, {active, true}, {reuseaddr, true}]),
 	{ok, #server{listen_socket=Socket, redis_connection=RedisConnection}}.
 
