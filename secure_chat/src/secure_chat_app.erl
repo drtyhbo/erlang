@@ -4,11 +4,13 @@
 %%%-------------------------------------------------------------------
 
 -module(secure_chat_app).
--behaviour(application).
 -export([start/2, stop/1, shutdown/0]).
+-include("secure_chat.hrl").
+-behaviour(application).
 
 start(_StartType, _StartArgs) ->
-	setup(),
+	lager:start(),
+	setup_mnesia(),
     secure_chat_sup:start_link().
 
 stop(_State) ->
@@ -18,5 +20,10 @@ shutdown() ->
 	secure_chat_sup:stop(),
 	application:stop(chat).
 
-setup() ->
-	lager:start().
+setup_mnesia() ->
+	ok = application:start(mnesia),
+	mnesia:create_schema([node()]),
+	{atomic, ok} = mnesia:create_table(message, [
+		{attributes, record_info(fields, message)},
+		{type, bag}]),
+	mnesia:wait_for_tables([message], 5000).

@@ -24,11 +24,18 @@ init([]) ->
 		shutdown => 5000,
 		type => worker,
 		modules => [secure_chat_serv]},
-	UserListChildSpec = #{
-		id => secure_chat_user_list,
-		start => {secure_chat_msg_router, start_link, [RedisConnection]},
+	MsgRouterChildSpec = #{
+		id => secure_chat_msg_router,
+		start => {secure_chat_msg_router, start_link, []},
 		restart => permanent,
 		shutdown => 5000,
 		type => worker,
-		modules => [secure_chat_serv]},
-	{ok, {SupFlags, [ListenerChildSpec, UserListChildSpec]}}.
+		modules => [secure_chat_msg_router]},
+	MsgStoreChildSpec = #{
+		id => secure_chat_msg_store,
+		start => {secure_chat_msg_store, start_link, [RedisConnection]},
+		restart => permanent,
+		shutdown => 5000,
+		type => worker,
+		modules => [secure_chat_msg_store]},
+	{ok, {SupFlags, [ListenerChildSpec, MsgRouterChildSpec, MsgStoreChildSpec]}}.

@@ -1,8 +1,8 @@
 -module(secure_chat_msg_router).
--export([start_link/1,
+-export([start_link/0,
 		add_user/2,
 		remove_user/1,
-		send_msg/3,
+		send_msg/2,
 		init/1,
 		handle_cast/2,
 		handle_call/3,
@@ -11,14 +11,12 @@
 		code_change/3]).
 -behavior(gen_server).
 
--record(msg_router_state,
-		{user_list,
-		redis_connection}).
+-record(msg_router_state, {user_list}).
 
 %% === Messages ===
 
-start_link(RedisConnection) ->
-	gen_server:start_link({local, ?MODULE}, ?MODULE, [RedisConnection], []).
+start_link() ->
+	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 add_user(Username, Pid) ->
 	gen_server:call(whereis(?MODULE), {add_user, Username, Pid}).
@@ -26,13 +24,16 @@ add_user(Username, Pid) ->
 remove_user(Username) ->
 	gen_server:call(whereis(?MODULE), {remove_user, Username}).
 
-send_msg(From, To, Msg) ->
-	gen_server:call(whereis(?MODULE), {send_msg, From, To, Msg}).
+send_msg(To, Msg) ->
+	gen_server:call(whereis(?MODULE), {send_msg, To, Msg}).
+
+get_offline_messages(Username) ->
+	gen_server:call(whereis(?MODULE), {offline_messages, Username}).
 
 %% === gen_server ===
 
-init([RedisConnection]) ->
-	{ok, #msg_router_state{user_list=ets:new(user_lookup, []), redis_connection=RedisConnection}}.
+init([]) ->
+	{ok, #msg_router_state{user_list=ets:new(user_lookup, [])}}.
 
 handle_cast(accept, State) ->
 	{noreply, State}.
@@ -43,13 +44,13 @@ handle_call({add_user, Username, Pid}, _From, State) ->
 handle_call({remove_user, Username}, _From, State) ->
 	ets:delete(State#msg_router_state.user_list, Username),
 	{reply, ok, State};
-handle_call({send_msg, From, To, Msg}, _From, State) ->
+handle_call({send_msg, To, Msg}, _From, State) ->
 	case ets:lookup(State#msg_router_state.user_list, To) of
 	[{_, Pid}] ->
-		secure_chat_user:receive_msg(Pid, From, Msg),
+		secure_chat_user:receive_msg(Pid, Msg),
 		{reply, ok, State};
 	_ ->
-		{reply, add_offline_message(State#msg_router_state.redis_connection, To, Msg), State}
+		{reply, offline, State}
 	end.
 
 handle_info(_Info, State) ->
@@ -60,13 +61,3 @@ terminate(_, _) ->
 
 code_change(_, State, _) ->
 	{ok, State}.
-
-%% ===
-
-add_offline_message(RedisConnection, To, Msg) ->
-	case eredis:q(RedisConnection, ["RPUSH", binary_to_list(To) ++ "_offline", Msg]) of
-	 	{ok, _} ->
-	 		ok;
-	 	_ ->
-	 		error
-	end.

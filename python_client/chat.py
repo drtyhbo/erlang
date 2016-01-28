@@ -82,7 +82,8 @@ class ChatClient(asyncore.dispatcher):
 
     def handle_read(self):
         data = self.recv(8192)
-        self.process_json(json.loads(data))
+        print data
+        #self.process_json(json.loads(data))
 
 c = ChatClient()
 
