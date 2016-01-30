@@ -3,7 +3,7 @@ var client = new twilio.RestClient('ACf35df294df44300a91862f2583733c3e', '4b3d17
 
 exports.sendSMS = function(to, body, cb) {
 	client.sms.messages.create({
-	    to: '+' + to,
+	    to: '+1' + to,
 	    from: '18312747128',
 	    body: body
 	}, cb);

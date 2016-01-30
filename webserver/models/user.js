@@ -1,4 +1,5 @@
-var client = require('./redis').client;
+var client = require('./redis').client,
+	utils = require('../utils/utils.js');
 
 exports.create = function(phoneNumber, cb) {
 	client.hget(phoneNumber, 'code', function(err, code) {
@@ -10,6 +11,26 @@ exports.create = function(phoneNumber, cb) {
 			});
 		} else {
 			cb(null, code);
+		}
+	});
+};
+
+exports.login = function(phoneNumber, code, cb) {
+	client.hget(phoneNumber, 'code', function(err, retrievedCode) {
+		if (!code || retrievedCode != code || err) {
+			cb("Codes don't match");
+		} else {
+			client.hget(phoneNumber, 'session', function(err, sessionToken) {
+				if (sessionToken) {
+					cb(null, sessionToken);
+					return
+				}
+
+				sessionToken = utils.generateSessionToken();
+				client.hset(phoneNumber, 'session', sessionToken, function(err, response) {
+					cb(err, response == 1 ? sessionToken : null);
+				});
+			});
 		}
 	});
 };

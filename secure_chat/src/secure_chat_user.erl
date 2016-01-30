@@ -25,12 +25,15 @@
 -define(SOCK_CLOSED(), {tcp_closed, _Port}).
 
 % Incoming JSON
--define(IN_CONNECT_JSON(Username, SessionToken), [{<<"c">>, Username}, {<<"s">>, SessionToken}]).
+-define(IN_CONNECT_JSON(Username, SessionToken), [{<<"s">>, SessionToken}, {<<"c">>, Username}]).
 -define(IN_MSG_JSON(ClientId, To, Msg), [{<<"i">>, ClientId}, {<<"r">>, To}, {<<"m">>, Msg}]).
 
 % Outgoing JSON
 -define(OUT_CONNECTED_JSON(), {struct, [{<<"r">>, <<"connected">>}]}).
--define(OUT_SEND_MSG_JSON(TS, From, Msg), {struct, [{<<"d">>, TS},{<<"f">>, From},{<<"m">>, {struct, Msg}}]}).
+-define(OUT_CONNECTION_FAILED_JSON(), {struct, [{<<"r">>, <<"not_connected">>}]}).
+-define(OUT_MSG_JSON(TS, From, Msg), {struct, [{<<"d">>, TS},{<<"f">>, From},{<<"m">>, {struct, Msg}}]}).
+-define(OUT_MSGS_JSON(Msgs), {struct, [{<<"m">>, Msgs}]}).
+-define(OUT_OFFLINE_MSGS_JSON(Msgs), {struct, [{<<"o">>, Msgs}]}).
 -define(OUT_ERROR_JSON(Error), {struct, [{<<"e">>, Error}]}).
 -define(OUT_MSG_IS_DELIVERED(MsgId), {struct, [{<<"did">>, MsgId}]}).
 
@@ -98,11 +101,16 @@ logged_out(Event, State) ->
 	{next_state, logged_out, State}.
 
 logged_in(check_offline_msgs, State) ->
-	send_msgs(State#user_state.socket, secure_chat_msg_store:get_offline_msgs(State#user_state.username)),
+	case secure_chat_msg_store:get_offline_msgs(State#user_state.username) of
+		[] ->
+			ok;
+		Msgs ->
+			receive_offline_msgs(State#user_state.socket, Msgs)
+	end,
 	{next_state, logged_in, State};
 logged_in({receive_msg, Msg}, State) ->
 	secure_chat_msg_router:msg_is_received(Msg),
-	send_msgs(State#user_state.socket, [Msg]),
+	receive_msgs(State#user_state.socket, [Msg]),
 	{next_state, logged_in, State};
 logged_in({msg_is_delivered, Msg}, State) ->
 	send_json(State#user_state.socket, ?OUT_MSG_IS_DELIVERED(Msg#message.client_id)),
@@ -113,15 +121,46 @@ logged_in(Event, State) ->
 
 %% ==== JSON Handlers ====
 
-handle_json(logged_out, ?IN_CONNECT_JSON(Username, SessionToken), State) ->
-	case eredis:q(State#user_state.redis_connection, ["HGET", Username, "s"]) of
+handle_json(logged_out, Json, State) ->
+	Type = proplists:get_value(<<"t">>, Json),
+	case Type of
+		<<"c">> ->
+			handle_connect_json(Json, State);
+		Unknown ->
+			io:format("Unknown message type ~p ~n", [Unknown]),
+			State
+	end;
+handle_json(logged_in, Json, State) ->
+	Type = proplists:get_value(<<"t">>, Json),
+	case Type of
+		<<"m">> ->
+			handle_msg_json(Json, State);
+		Unknown ->
+			io:format("Unknown message type ~p ~n", [Unknown]),
+			State
+	end;
+handle_json(FSMState, Json, State) ->
+	io:format("Unknown JSON received ~p~n", [Json]),
+	{next_state, FSMState, State}.
+
+%% === JSON Parsing ===
+
+handle_connect_json(Json, State) ->
+	Username = proplists:get_value(<<"u">>, Json),
+	SessionToken = proplists:get_value(<<"s">>, Json),
+	case eredis:q(State#user_state.redis_connection, ["HGET", Username, "session"]) of
 	 	{ok, RedisSessionToken} when RedisSessionToken =:= SessionToken ->
 			connect(),
 			State#user_state{username = Username};
 	 	_ ->
+	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
 	 		State
-	 end;
-handle_json(logged_in, ?IN_MSG_JSON(ClientId, To, Msg), State) ->
+	 end.
+
+handle_msg_json(Json, State) ->
+	To = proplists:get_value(<<"r">>, Json),
+	ClientId = proplists:get_value(<<"i">>, Json),
+	Msg = proplists:get_value(<<"m">>, Json),
 	secure_chat_msg_router:route_msg(#message{
 		to=To,
 		from=State#user_state.username,
@@ -129,18 +168,22 @@ handle_json(logged_in, ?IN_MSG_JSON(ClientId, To, Msg), State) ->
 		ts=secure_chat_utils:timestamp(),
 		client_id=ClientId,
 		msg=Msg}),
-	State;
-handle_json(FSMState, Json, State) ->
-	io:format("Unknown JSON received ~p~n", [Json]),
-	{next_state, FSMState, State}.
+	State.
 
 %% === Socket functions ===
 
-send_msgs(_Socket, []) ->
-	ok;
-send_msgs(Socket, [H|T]) ->
-	send_json(Socket, ?OUT_SEND_MSG_JSON(H#message.ts, H#message.from, H#message.msg)),
-	send_msgs(Socket, T).
+receive_msgs(Socket, Msgs) ->
+	JsonList = lists:reverse(generate_msgs_json(Msgs, [])),
+	send_json(Socket, ?OUT_MSGS_JSON(JsonList)).
+
+receive_offline_msgs(Socket, Msgs) ->
+	JsonList = lists:reverse(generate_msgs_json(Msgs, [])),
+	send_json(Socket, ?OUT_OFFLINE_MSGS_JSON(JsonList)).
+
+generate_msgs_json([], JsonList) ->
+	JsonList;
+generate_msgs_json([H|T], JsonList) ->
+	generate_msgs_json(T, [?OUT_MSG_JSON(H#message.ts, H#message.from, H#message.msg)|JsonList]).
 
 send_json(Socket, Json) ->
-	gen_tcp:send(Socket, mochijson2:encode(Json)).
+	gen_tcp:send(Socket, mochijson2:encode(Json) ++ "\n").

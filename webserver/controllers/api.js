@@ -8,7 +8,20 @@ router.post('/register/', function(req, res) {
 	var phoneNumber = req.body.phone;
 	user.create(phoneNumber, function(err, code) {
 		twilio.sendSMS(phoneNumber, "Your code is " + code, function(err, message) {
-			res.send(err + ' ' + message);
+			res.send({
+				'status': 'ok'
+			});
+		});
+	});
+});
+
+router.post('/confirm/', function(req, res) {
+	var phoneNumber = req.body.phone;
+	var code = req.body.code;
+	user.login(phoneNumber, code, function(err, sessionToken) {
+		res.send({
+			'status': 'ok',
+			'sessionToken': sessionToken
 		});
 	});
 });

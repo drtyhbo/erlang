@@ -45,15 +45,19 @@ class ChatClient(asyncore.dispatcher):
 
     def login(self, username, session_token):
         self.__send_json({
-            "c": username,
+            "t": "c",
+            "u": username,
             "s": session_token
         })
 
     def send_message(self, to_username, message):
         self.__send_json({
+            "t": "m",
             "r": to_username,
             "i": self.msg_id,
-            "m": message
+            "m": {
+                "m": message
+            }
         })
         self.msg_id = self.msg_id + 1
 

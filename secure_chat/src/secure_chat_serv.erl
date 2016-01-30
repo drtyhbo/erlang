@@ -16,7 +16,6 @@
 start_link(Port, RedisConnection) ->
 	case gen_server:start_link({local, ?MODULE}, ?MODULE, [Port, RedisConnection], []) of
 		{ok, Pid} ->
-			io:format("Casting ~p~n", [Pid]),
 			gen_server:cast(Pid, accept),
 			{ok, Pid};
 		Error ->
@@ -30,6 +29,7 @@ init([Port, RedisConnection]) ->
 handle_cast(accept, State) ->
 	case gen_tcp:accept(State#server.listen_socket) of
 		{ok, Socket} ->
+			io:format("New connection ~n"),
 			{ok, NewPid} = secure_chat_user:start(Socket, State#server.redis_connection),
 			gen_tcp:controlling_process(Socket, NewPid),
 			gen_server:cast(self(), accept),
