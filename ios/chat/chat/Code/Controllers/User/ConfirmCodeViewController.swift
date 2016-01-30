@@ -30,15 +30,22 @@ class ConfirmCodeViewController: UIViewController {
         activityIndicator.hidden = false
 
         APIManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "") {
-            sessionToken in
+            sessionToken, error in
             if let sessionToken = sessionToken {
                 User.username = self.phoneNumber
                 User.sessionToken = sessionToken
 
                 self.navigationController?.pushViewController(ChatViewController(), animated: true)
+            } else if let error = error {
+                switch(error.error) {
+                case "mismatch":
+                    print ("mismatch")
+                default:
+                    print ("error")
+                }
             }
-            self.confirmButton.hidden = true
-            self.activityIndicator.hidden = false
+            self.confirmButton.hidden = false
+            self.activityIndicator.hidden = true
         }
     }
 

@@ -18,7 +18,7 @@ exports.create = function(phoneNumber, cb) {
 exports.login = function(phoneNumber, code, cb) {
 	client.hget(phoneNumber, 'code', function(err, retrievedCode) {
 		if (!code || retrievedCode != code || err) {
-			cb("Codes don't match");
+			cb("mismatch");
 		} else {
 			client.hget(phoneNumber, 'session', function(err, sessionToken) {
 				if (sessionToken) {
@@ -27,7 +27,7 @@ exports.login = function(phoneNumber, code, cb) {
 				}
 
 				sessionToken = utils.generateSessionToken();
-				client.hset(phoneNumber, 'session', sessionToken, function(err, response) {
+				client.hmset(phoneNumber, ['session', sessionToken, 'active', true], function(err, response) {
 					cb(err, response == 1 ? sessionToken : null);
 				});
 			});

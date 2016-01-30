@@ -19,10 +19,16 @@ router.post('/confirm/', function(req, res) {
 	var phoneNumber = req.body.phone;
 	var code = req.body.code;
 	user.login(phoneNumber, code, function(err, sessionToken) {
-		res.send({
-			'status': 'ok',
-			'sessionToken': sessionToken
-		});
+		if (err) {
+			res.send({
+				'status': err
+			});
+		} else {
+			res.send({
+				'status': 'ok',
+				'sessionToken': sessionToken
+			});
+		}
 	});
 });
 

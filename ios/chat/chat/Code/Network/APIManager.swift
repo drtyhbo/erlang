@@ -11,6 +11,14 @@ import Foundation
 import SwiftyJSON
 
 class APIManager {
+    class Error {
+        let error: String
+
+        init(_ error: String) {
+            self.error = error
+        }
+    }
+
     static let domain = "http://127.0.0.1:3000"
 
     static func registerPhoneNumber(phoneNumber: String, callback: Bool->Void) {
@@ -18,22 +26,26 @@ class APIManager {
             "phone": phoneNumber
         ]) {
             json in
-            callback(isStatusOkJson(json))
+            callback(errorFromJson(json) == nil)
         }
     }
 
-    static func confirmPhoneNumber(phoneNumber: String, withCode code: String, callback: String?->Void) {
+    static func confirmPhoneNumber(phoneNumber: String, withCode code: String, callback: (String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
             "phone": phoneNumber,
             "code": code
         ]) {
             json in
-            callback(json?["sessionToken"].string)
+            callback(json?["sessionToken"].string, errorFromJson(json))
         }
     }
 
-    private static func isStatusOkJson(json: JSON?) -> Bool {
-        return json != nil && json!["status"].string == "ok"
+    private static func errorFromJson(json: JSON?) -> Error? {
+        if let json = json {
+            return json["status"] == "ok" ? nil : Error(json["status"].string ?? "invalid")
+        } else {
+            return Error("invalid")
+        }
     }
 
     private static func sendRequestToUrl(url: String, parameters: [String:AnyObject], callback: JSON?->Void) {
