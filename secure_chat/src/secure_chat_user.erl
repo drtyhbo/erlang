@@ -1,6 +1,7 @@
 -module(secure_chat_user).
 -export([start/2,
 		receive_msg/2,
+		msg_is_delivered/1,
 		init/1,
 		handle_info/3,
 		handle_event/3,
@@ -24,13 +25,14 @@
 -define(SOCK_CLOSED(), {tcp_closed, _Port}).
 
 % Incoming JSON
--define(IN_CONNECT_JSON(Username, SessionToken), {struct, [{<<"c">>, Username},{<<"s">>, SessionToken}]}).
--define(IN_SEND_MSG_JSON(To, Msg), {struct, [{<<"r">>, To},{<<"m">>, Msg}]}).
+-define(IN_CONNECT_JSON(Username, SessionToken), [{<<"c">>, Username}, {<<"s">>, SessionToken}]).
+-define(IN_MSG_JSON(ClientId, To, Msg), [{<<"i">>, ClientId}, {<<"r">>, To}, {<<"m">>, Msg}]).
 
 % Outgoing JSON
 -define(OUT_CONNECTED_JSON(), {struct, [{<<"r">>, <<"connected">>}]}).
--define(OUT_SEND_MSG_JSON(TS, From, Msg), {struct, [{<<"d">>, TS},{<<"f">>, From},{<<"m">>, Msg}]}).
+-define(OUT_SEND_MSG_JSON(TS, From, Msg), {struct, [{<<"d">>, TS},{<<"f">>, From},{<<"m">>, {struct, Msg}}]}).
 -define(OUT_ERROR_JSON(Error), {struct, [{<<"e">>, Error}]}).
+-define(OUT_MSG_IS_DELIVERED(MsgId), {struct, [{<<"did">>, MsgId}]}).
 
 %% === Messages ===
 
@@ -43,15 +45,27 @@ connect() ->
 receive_msg(Pid, Msg) ->
 	gen_fsm:send_event(Pid, {receive_msg, Msg}).
 
+msg_is_delivered(Msg) ->
+	gen_fsm:send_event(Msg#message.from_pid, {msg_is_delivered, Msg}).
+
 %% === gen_fsm ===
 
 init([Socket, RedisConnection]) ->
 	{ok, logged_out, #user_state{socket = Socket,
 			redis_connection = RedisConnection}}.
 
+flatten({struct, L}) ->
+    flatten(L);
+flatten([H | T]) ->
+    [flatten(H) | flatten(T)];
+flatten({K, V}) ->
+    {K, flatten(V)};
+flatten(Term) ->
+    Term.
+
 handle_info(?RECEIVE_SOCK_MSG(Msg), FSMState, State) ->
-	Json = mochijson2:decode(Msg),
-	NewState = handle_json(FSMState, Json, State),
+	FlatJson = flatten(mochijson2:decode(Msg)),
+	NewState = handle_json(FSMState, FlatJson, State),
 	{next_state, FSMState, NewState};
 handle_info(?SOCK_CLOSED(), _FSMState, State) ->
 	{stop, disconnect, State};
@@ -79,17 +93,23 @@ logged_out(connect, State) ->
 	send_json(State#user_state.socket, ?OUT_CONNECTED_JSON()),
 	gen_fsm:send_event(self(), check_offline_msgs),
 	{next_state, logged_in, State};
-logged_out(Event, _State) ->
-	io:format("Received unknown logged_out event ~p~n", [Event]).
+logged_out(Event, State) ->
+	io:format("Received unknown logged_out event ~p~n", [Event]),
+	{next_state, logged_out, State}.
 
 logged_in(check_offline_msgs, State) ->
 	send_msgs(State#user_state.socket, secure_chat_msg_store:get_offline_msgs(State#user_state.username)),
 	{next_state, logged_in, State};
 logged_in({receive_msg, Msg}, State) ->
+	secure_chat_msg_router:msg_is_received(Msg),
 	send_msgs(State#user_state.socket, [Msg]),
 	{next_state, logged_in, State};
-logged_in(Event, _State) ->
-	io:format("Received unknown logged_in event ~p~n", [Event]).
+logged_in({msg_is_delivered, Msg}, State) ->
+	send_json(State#user_state.socket, ?OUT_MSG_IS_DELIVERED(Msg#message.client_id)),
+	{next_state, logged_in, State};
+logged_in(Event, State) ->
+	io:format("Received unknown logged_in event ~p~n", [Event]),
+	{next_state, logged_in, State}.
 
 %% ==== JSON Handlers ====
 
@@ -100,28 +120,19 @@ handle_json(logged_out, ?IN_CONNECT_JSON(Username, SessionToken), State) ->
 			State#user_state{username = Username};
 	 	_ ->
 	 		State
-	end;
-handle_json(logged_in, ?IN_SEND_MSG_JSON(To, Msg), State) ->
-	NewMsg = #message{ts=secure_chat_utils:timestamp(), from=State#user_state.username, to=To, msg=Msg},
-	case route_msg(To, NewMsg) of
-		ok ->
-			State;
-		_ ->
-			send_json(State#user_state.socket, ?OUT_ERROR_JSON("send_message")),
-			State
-	end;
-handle_json(FSMState, _, State) ->
+	 end;
+handle_json(logged_in, ?IN_MSG_JSON(ClientId, To, Msg), State) ->
+	secure_chat_msg_router:route_msg(#message{
+		to=To,
+		from=State#user_state.username,
+		from_pid=self(),
+		ts=secure_chat_utils:timestamp(),
+		client_id=ClientId,
+		msg=Msg}),
+	State;
+handle_json(FSMState, Json, State) ->
+	io:format("Unknown JSON received ~p~n", [Json]),
 	{next_state, FSMState, State}.
-
-%% === Message routing ===
-
-route_msg(To, Msg) ->
-	case secure_chat_msg_router:send_msg(To, Msg) of
-		ok ->
-			ok;
-		offline ->
-			secure_chat_msg_store:store_offline_msg(Msg)
-	end.
 
 %% === Socket functions ===
 

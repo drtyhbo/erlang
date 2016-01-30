@@ -8,6 +8,7 @@ import StringIO
 
 HOST = '127.0.0.1'
 PORT = 49165
+MSG_ID = 0
 
 def process_line(line):
     pieces = line.split(' ')
@@ -35,6 +36,8 @@ class ChatClient(asyncore.dispatcher):
         self.to_write = ''
         self.read_buffer = StringIO.StringIO()
 
+        self.msg_id = 0
+
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect((HOST, PORT))
 
@@ -49,8 +52,10 @@ class ChatClient(asyncore.dispatcher):
     def send_message(self, to_username, message):
         self.__send_json({
             "r": to_username,
+            "i": self.msg_id,
             "m": message
         })
+        self.msg_id = self.msg_id + 1
 
     def __send_json(self, json_to_write):
         self.to_write += json.dumps(json_to_write)

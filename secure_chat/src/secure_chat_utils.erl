@@ -3,5 +3,5 @@
 
 -spec timestamp() -> integer().
 timestamp() ->
-	{Mega, Sec, Micro} = os:timestamp(),
+	{Mega, Sec, _Micro} = os:timestamp(),
 	(Mega * 1000000 + Sec).
