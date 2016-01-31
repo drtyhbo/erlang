@@ -11,7 +11,8 @@
 -record(server,
 		{listen_socket,
 		redis_connection,
-		accept_pid}).
+		user_list,
+		pending_msgs}).
 
 start_link(Port, RedisConnection) ->
 	case gen_server:start_link({local, ?MODULE}, ?MODULE, [Port, RedisConnection], []) of
@@ -24,13 +25,19 @@ start_link(Port, RedisConnection) ->
 
 init([Port, RedisConnection]) ->
 	{ok, Socket} = gen_tcp:listen(Port, [binary, {active, true}, {reuseaddr, true}]),
-	{ok, #server{listen_socket=Socket, redis_connection=RedisConnection}}.
+	UserList = ets:new(user_lookup, [public]),
+	PendingMsgs = ets:new(pending_msgs, [public, {keypos, 3}]),
+	{ok, #server{listen_socket=Socket, redis_connection=RedisConnection, user_list=UserList, pending_msgs=PendingMsgs}}.
 
 handle_cast(accept, State) ->
 	case gen_tcp:accept(State#server.listen_socket) of
 		{ok, Socket} ->
 			io:format("New connection ~n"),
-			{ok, NewPid} = secure_chat_user:start(Socket, State#server.redis_connection),
+			{ok, NewPid} = secure_chat_user:start(
+				Socket,
+				State#server.redis_connection,
+				State#server.user_list,
+				State#server.pending_msgs),
 			gen_tcp:controlling_process(Socket, NewPid),
 			gen_server:cast(self(), accept),
 			{noreply, State};

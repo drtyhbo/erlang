@@ -33,6 +33,9 @@ class PhoneNumberViewController: UIViewController {
                 let confirmCodeViewController = ConfirmCodeViewController(phoneNumber: phoneNumber)
                 self.navigationController?.pushViewController(confirmCodeViewController, animated: true)
             }
+
+            self.confirmButton.hidden = false
+            self.activityIndicator.hidden = true
         }
     }
 
