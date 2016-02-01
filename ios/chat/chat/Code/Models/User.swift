@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 class User {
-    static var username: String? {
+    static var userId: String? {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(usernameKey)
+            return NSUserDefaults.standardUserDefaults().stringForKey(userIdKey)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: usernameKey)
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: userIdKey)
             NSUserDefaults.standardUserDefaults().synchronize()
         }
     }
@@ -30,6 +30,6 @@ class User {
         }
     }
 
-    private static let usernameKey = "username"
+    private static let userIdKey = "userId"
     private static let sessionTokenKey = "sessionToken"
 }

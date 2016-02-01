@@ -27,10 +27,10 @@ class ChatClient {
     }
 
     func connect() {
-        if let username = User.username, sessionToken = User.sessionToken {
+        if let userId = User.userId, sessionToken = User.sessionToken {
             let connectJson = JSON([
                 "t": "c",
-                "u": username,
+                "u": userId,
                 "s": sessionToken,
             ])
             connection.sendJson(connectJson)

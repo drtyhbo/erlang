@@ -19,7 +19,7 @@
 -record(user_state,
 		{socket,
 		redis_connection,
-		username,
+		user_id,
 		local_id,
 		user_list,
 		pending_msgs}).
@@ -31,7 +31,7 @@
 -define(SOCK_CLOSED(), {tcp_closed, _Port}).
 
 % Incoming JSON
--define(IN_CONNECT_JSON(Username, SessionToken), [{<<"s">>, SessionToken}, {<<"c">>, Username}]).
+-define(IN_CONNECT_JSON(UserId, SessionToken), [{<<"s">>, SessionToken}, {<<"c">>, UserId}]).
 -define(IN_MSG_JSON(ClientId, To, Msg), [{<<"i">>, ClientId}, {<<"r">>, To}, {<<"m">>, Msg}]).
 
 % Outgoing JSON
@@ -106,14 +106,14 @@ code_change(_, FSMState, State, _) ->
 	{ok, FSMState, State}.
 
 terminate(_Reason, _StateName, State) ->
-	secure_chat_msg_router:remove_user(State#user_state.user_list, State#user_state.username),
+	secure_chat_msg_router:remove_user(State#user_state.user_list, State#user_state.user_id),
 	gen_tcp:close(State#user_state.socket),
 	ok.
 
 %% ==== FSM Events ====
 
 logged_out(connect, State) ->
-	secure_chat_msg_router:add_user(State#user_state.user_list, State#user_state.username, self()),
+	secure_chat_msg_router:add_user(State#user_state.user_list, State#user_state.user_id, self()),
 	send_json(State#user_state.socket, ?OUT_CONNECTED_JSON()),
 	gen_fsm:send_event(self(), check_offline_msgs),
 	{next_state, logged_in, State};
@@ -122,7 +122,7 @@ logged_out(Event, State) ->
 	{next_state, logged_out, State}.
 
 logged_in(check_offline_msgs, State) ->
-	case secure_chat_msg_store:get_offline_msgs(State#user_state.username) of
+	case secure_chat_msg_store:get_offline_msgs(State#user_state.user_id) of
 		[] ->
 			ok;
 		Msgs ->
@@ -168,12 +168,12 @@ handle_json(FSMState, Json, State) ->
 %% === JSON Parsing ===
 
 handle_connect_json(Json, State) ->
-	Username = proplists:get_value(<<"u">>, Json),
+	UserId = proplists:get_value(<<"u">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	case eredis:q(State#user_state.redis_connection, ["HGET", Username, "session"]) of
+	case eredis:q(State#user_state.redis_connection, ["HGET", UserId, "session"]) of
 	 	{ok, RedisSessionToken} when RedisSessionToken =:= SessionToken ->
 			connect(),
-			State#user_state{username = Username};
+			State#user_state{user_id = user_id};
 	 	_ ->
 	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
 	 		State
@@ -187,7 +187,7 @@ handle_msg_json(Json, State) ->
 	NewMsg = #message{
 		to=To,
 		routing_info=#routing_info{local_id=LocalId},
-		from=State#user_state.username,
+		from=State#user_state.user_id,
 		from_pid=self(),
 		ts=secure_chat_utils:timestamp(),
 		client_id=ClientId,

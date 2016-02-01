@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
 
-        let rootViewController: UIViewController = User.username == nil ? PhoneNumberViewController() : ChatViewController()
+        let rootViewController: UIViewController = User.userId == nil ? PhoneNumberViewController() : ChatViewController()
 
         let navigationController = UINavigationController(rootViewController: rootViewController)
         window?.rootViewController = navigationController

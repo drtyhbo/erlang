@@ -30,13 +30,13 @@ class APIManager {
         }
     }
 
-    static func confirmPhoneNumber(phoneNumber: String, withCode code: String, callback: (String?, Error?)->Void) {
+    static func confirmPhoneNumber(phoneNumber: String, withCode code: String, callback: (String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
             "phone": phoneNumber,
             "code": code
         ]) {
             json in
-            callback(json?["sessionToken"].string, errorFromJson(json))
+            callback(json?["id"].string, json?["sessionToken"].string, errorFromJson(json))
         }
     }
 
