@@ -3,7 +3,56 @@ var client = require('./redis').client,
 	Promise = require('bluebird').Promise;
 
 function userKeyFromId(id) {
-	return 'user_' + id;
+	return 'u' + id;
+}
+
+function userIdFromPhoneNumber(phoneNumber) {
+	return client.getAsync(phoneNumber);
+}
+
+function doesUserWithIdExist(userId) {
+	return client.existsAsync(userKeyFromId(userId)).then(function(response) {
+		return response != 0 ? Promise.resolve() : Promise.reject('id');
+	});
+}
+
+function friendRequestsKeyFromId(id) {
+	return 'fR' + id;
+}
+
+function friendListKeyFromId(id) {
+	return 'f' + id;
+}
+
+function isFriend(userId, friendUserId) {
+	return client.hgetAsync(friendListKeyFromId(userId), friendUserId).then(function(response) {
+		return Promise.resolve(response != null);
+	});
+}
+
+function addFriend(userId, friendUserId) {
+	return client.multi()
+			.hset(friendListKeyFromId(userId), friendUserId, true)
+			.hdel(friendRequestsKeyFromId(userId), friendUserId)
+			.execAsync()
+			.then(function() {
+				return Promise.resolve(true);
+			});
+}
+
+function addFriendAndRequest(userId, friendUserId) {
+	return client.multi()
+			.hset(friendListKeyFromId(userId), friendUserId, true)
+			.hdel(friendRequestsKeyFromId(userId), friendUserId)
+			.hset(friendRequestsKeyFromId(friendUserId), userId, true)
+			.execAsync()
+			.then(function(response) {
+				console.log(response);
+				if (response[2]) {
+					// Send notification.
+				}
+				return Promise.resolve(true);
+			});
 }
 
 function createNewUser(phoneNumber) {
@@ -66,6 +115,56 @@ exports.login = function(phoneNumber, code, cb) {
 	}).then(function(sessionToken) {
 		cb(null, sharedId, sessionToken);
 	}, function(err) {
+		cb(err);
+	});
+};
+
+exports.confirmSession = function(id, sessionToken, cb) {
+	client.hgetAsync(userKeyFromId(id), 'session').then(function(dbSessionToken) {
+		cb(null, sessionToken && dbSessionToken == sessionToken);
+	}, function(err) {
+		cb(err);
+	});
+};
+
+function addFriendHelper(userId, friendUserId, canRequest) {
+	if (!friendUserId) {
+		return Promise.reject('phone');
+	}
+
+	return isFriend(friendUserId, userId).then(function(isFriend) {
+		// If the other user already has me as a friend, we don't need to send a new
+		// request.
+		if (isFriend) {
+			return addFriend(userId, friendUserId);
+		} else if (canRequest) {
+			return addFriendAndRequest(userId, friendUserId);
+		} else {
+			return Promise.reject('not_requested');
+		}
+	}).then(function(success) {
+		return success ? Promise.resolve() : Promise.reject('error');
+	});
+}
+
+exports.addFriendFromPhoneNumber = function(userId, friendPhoneNumber, cb) {
+	userIdFromPhoneNumber(friendPhoneNumber).then(function(friendUserId) {
+		return addFriendHelper(userId, friendUserId, true);
+	}).then(function() {
+		cb(null);
+	}, function(err) {
+		console.log(err);
+		cb(err);
+	});
+};
+
+exports.addFriendFromId = function(userId, friendUserId, cb) {
+	doesUserWithIdExist(friendUserId).then(function() {
+		return addFriendHelper(userId, friendUserId, false);
+	}).then(function() {
+		cb(null);
+	}, function(err) {
+		console.log(err);
 		cb(err);
 	});
 };
