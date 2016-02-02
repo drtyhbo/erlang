@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>APLSlideMenu.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Alamofire.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,22 +47,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>0A20C977A05F95E4A5AED6962FDB85CE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0C3934CF8A993FD44F3B9A07C794DBDF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>5346080FD3D9A60C596335CBD2EF4C3E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>59A5075AB68AC6C66A94B048CC323DE1</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>75F84F5341C9D53F4826CD516C4D07EC</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8D29AA1253DB430B61A56E94B3F9F2D6</key>
+		<key>9104F19F4FED5A3F148B2EB86CC0532F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -67,12 +72,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>A198468AC578337FD7B1B9E70C80ABFD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>B9A04D3C9B208813656510FDA8ADAE02</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E4CBDE769BEBACFD570E7BD699A69D5D</key>
+		<key>FC0028F88313BEA4DECA049CA25D3FBA</key>
 		<dict>
 			<key>primary</key>
 			<true/>

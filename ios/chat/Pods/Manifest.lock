@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (3.1.5)
+  - APLSlideMenu (0.1.7)
   - CocoaAsyncSocket (7.4.2)
   - Mantle (1.4.1):
     - Mantle/extobjc (= 1.4.1)
@@ -74,6 +75,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - APLSlideMenu
   - CocoaAsyncSocket
   - SDWebImage
   - SwiftyJSON
@@ -81,6 +83,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Alamofire: 5f730ba29fd113b7ddd71c1e65d0c630acf5d7b0
+  APLSlideMenu: f9a41d50e325e2fd8e44c0913279020099f09b49
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   Mantle: 3219c0181d918508689af61c77891b12dbb28215
   SDWebImage: 247edd7dd80dd6124197b0d6a17846fe9d1df968

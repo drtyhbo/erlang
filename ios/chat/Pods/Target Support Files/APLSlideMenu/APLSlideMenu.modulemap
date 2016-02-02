@@ -1,0 +1,6 @@
+framework module APLSlideMenu {
+  umbrella header "APLSlideMenu-umbrella.h"
+
+  export *
+  module * { export * }
+}

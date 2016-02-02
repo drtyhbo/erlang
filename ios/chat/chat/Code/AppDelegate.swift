@@ -6,6 +6,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import APLSlideMenu
 import UIKit
 
 @UIApplicationMain
@@ -15,11 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         registerApplicationForNotifications(application)
 
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        let slideViewController = APLSlideMenuViewController()
+        slideViewController.bouncing = true
+        slideViewController.gestureSupport = .Drag
+        slideViewController.leftMenuViewController = AddFriendsViewController()
+        slideViewController.contentViewController = ChatViewController()
 
-        let rootViewController = AddFriendsViewController()
-        let navigationController = UINavigationController(rootViewController: rootViewController)
-        window?.rootViewController = navigationController
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window?.rootViewController = slideViewController
         window?.makeKeyAndVisible()
 
         ChatClient.sharedClient.connect()

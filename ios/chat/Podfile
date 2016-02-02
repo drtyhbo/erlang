@@ -4,6 +4,7 @@ use_frameworks!
 
 target 'chat' do
 pod 'Alamofire'
+pod "APLSlideMenu"
 pod 'CocoaAsyncSocket'
 pod 'SDWebImage'
 pod 'SwiftyJSON'
