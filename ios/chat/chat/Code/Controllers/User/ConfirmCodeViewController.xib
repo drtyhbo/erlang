@@ -7,9 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConfirmCodeViewController" customModule="chat" customModuleProvider="target">
             <connections>
-                <outlet property="activityIndicator" destination="KfX-0X-aeq" id="mfA-tb-8lC"/>
                 <outlet property="code" destination="5Tg-gf-kUD" id="3RJ-Ie-GFL"/>
-                <outlet property="confirmButton" destination="yta-dY-cUa" id="3RW-6Q-xoW"/>
                 <outlet property="view" destination="iN0-l3-epB" id="dpK-kc-Xhn"/>
             </connections>
         </placeholder>
@@ -23,25 +21,11 @@
                     <fontDescription key="fontDescription" type="system" pointSize="40"/>
                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                 </textField>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yta-dY-cUa">
-                    <rect key="frame" x="252" y="540" width="96" height="30"/>
-                    <state key="normal" title="Confirm Code"/>
-                    <connections>
-                        <action selector="tapConfirm" destination="-1" eventType="touchUpInside" id="vb4-T3-ZX3"/>
-                    </connections>
-                </button>
-                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="KfX-0X-aeq">
-                    <rect key="frame" x="290" y="545" width="20" height="20"/>
-                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="5Tg-gf-kUD" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="1DE-k6-kzd"/>
-                <constraint firstAttribute="bottom" secondItem="yta-dY-cUa" secondAttribute="bottom" constant="30" id="7X7-cs-pib"/>
-                <constraint firstItem="KfX-0X-aeq" firstAttribute="centerY" secondItem="yta-dY-cUa" secondAttribute="centerY" id="aGW-rU-mFg"/>
                 <constraint firstItem="5Tg-gf-kUD" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="aQ9-fg-SR7"/>
-                <constraint firstItem="yta-dY-cUa" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="tbt-3b-2A8"/>
-                <constraint firstItem="KfX-0X-aeq" firstAttribute="centerX" secondItem="yta-dY-cUa" secondAttribute="centerX" id="vEc-Eq-vwD"/>
             </constraints>
         </view>
     </objects>

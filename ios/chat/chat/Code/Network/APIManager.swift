@@ -19,7 +19,7 @@ class APIManager {
         }
     }
 
-    static let domain = "http://127.0.0.1:3000"
+    static let domain = "http://192.168.1.109:3000"
 
     static func registerPhoneNumber(phoneNumber: String, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
@@ -37,6 +37,28 @@ class APIManager {
         ]) {
             json in
             callback(json?["id"].string, json?["sessionToken"].string, errorFromJson(json))
+        }
+    }
+
+    static func addFriendWithPhoneNumber(phoneNumber: String, callback: Bool->Void) {
+        sendUserRequestToUrl("friend/add/", parameters: [
+            "phone": phoneNumber,
+        ]) {
+            json in
+            callback(errorFromJson(json) == nil)
+        }
+    }
+
+    static func usersExistForPhoneNumbers(phoneNumber: [String], callback: [Bool]->Void) {
+        sendUserRequestToUrl("friend/check/", parameters: [
+            "phone": [phoneNumber],
+        ]) {
+            json in
+            var exists: [Bool] = []
+            if let existsJson = json?["exists"].array {
+                exists = existsJson.map({ $0.bool! })
+            }
+            callback(exists)
         }
     }
 
@@ -58,5 +80,12 @@ class APIManager {
                     callback(nil)
                 }
             }
+    }
+
+    private static func sendUserRequestToUrl(url: String, var parameters: [String:AnyObject], callback: JSON?->Void) {
+        parameters["id"] = User.userId
+        parameters["session"] = User.sessionToken
+
+        sendRequestToUrl("user/\(url)", parameters: parameters, callback: callback)
     }
 }

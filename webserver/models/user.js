@@ -51,7 +51,6 @@ function addFriendAndRequest(userId, friendUserId) {
 			.hset(friendRequestsKeyFromId(friendUserId), userId, true)
 			.execAsync()
 			.then(function(response) {
-				console.log(response);
 				if (response[2]) {
 					// Send notification.
 				}
@@ -89,7 +88,6 @@ exports.create = function(phoneNumber, cb) {
 	}).then(function(code) {
 		cb(null, code);
 	}, function(err) {
-		console.log()
 		cb(err, null);
 	});
 };
@@ -157,7 +155,6 @@ exports.addFriendFromPhoneNumber = function(userId, friendPhoneNumber, cb) {
 	}).then(function() {
 		cb(null);
 	}, function(err) {
-		console.log(err);
 		cb(err);
 	});
 };
@@ -168,7 +165,6 @@ exports.addFriendFromId = function(userId, friendUserId, cb) {
 	}).then(function() {
 		cb(null);
 	}, function(err) {
-		console.log(err);
 		cb(err);
 	});
 };
@@ -179,7 +175,7 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 		multi.exists(phoneKeyFromPhoneNumber(phoneNumber));
 	}
 	multi.execAsync().then(function(exists) {
-		cb(null, exists);
+		cb(null, exists.map(function(doesExist) { return doesExist != 0; }));
 	}, function(err) {
 		cb(err);
 	});

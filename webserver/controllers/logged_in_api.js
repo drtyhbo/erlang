@@ -24,7 +24,7 @@ router.use(function(req, res, next) {
  * Request parameters:
  * userId - Current user id.
  * session - Current user session.
- * phone - The phone number of the friend.
+ * phone - The phone number of the users to check.
  */
 router.post('/friend/add/', function(req, res) {
 	var phone = req.body.phone;

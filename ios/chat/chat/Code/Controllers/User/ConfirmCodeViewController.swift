@@ -11,8 +11,6 @@ import UIKit
 
 class ConfirmCodeViewController: UIViewController {
     @IBOutlet weak var code: UITextField!
-    @IBOutlet weak var confirmButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     private let phoneNumber: String!
 
@@ -25,10 +23,14 @@ class ConfirmCodeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func confirmCode() {
-        confirmButton.hidden = true
-        activityIndicator.hidden = false
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
+        let nextButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "confirmCode")
+        navigationItem.rightBarButtonItem = nextButton
+    }
+
+    @objc private func confirmCode() {
         APIManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "") {
             userId, sessionToken, error in
             if let userId = userId, sessionToken = sessionToken {
@@ -44,8 +46,6 @@ class ConfirmCodeViewController: UIViewController {
                     print ("error")
                 }
             }
-            self.confirmButton.hidden = false
-            self.activityIndicator.hidden = true
         }
     }
 

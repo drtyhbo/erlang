@@ -23,6 +23,11 @@
 		90AFD5B51C5D234400236D6B /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5B41C5D234400236D6B /* APIManager.swift */; };
 		90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5B61C5D280900236D6B /* ConfirmCodeViewController.swift */; };
 		90AFD5B91C5D281800236D6B /* ConfirmCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD5B81C5D281800236D6B /* ConfirmCodeViewController.xib */; };
+		90AFD5BB1C5E821B00236D6B /* AddFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5BA1C5E821B00236D6B /* AddFriendsViewController.swift */; };
+		90AFD5BD1C5E825B00236D6B /* AddFriendsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD5BC1C5E825B00236D6B /* AddFriendsViewController.xib */; };
+		90AFD5BF1C60724300236D6B /* AddFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5BE1C60724300236D6B /* AddFriendTableViewCell.swift */; };
+		90AFD5C11C60725100236D6B /* AddFriendTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD5C01C60725100236D6B /* AddFriendTableViewCell.xib */; };
+		90AFD5C31C607CA600236D6B /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5C21C607CA600236D6B /* Contact.swift */; };
 		90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF88B1C47459000A7AD51 /* Assets.xcassets */; };
 		90EBF8A81C4749F700A7AD51 /* andreas.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF8A61C4749F700A7AD51 /* andreas.jpg */; };
 		90EBF8A91C4749F700A7AD51 /* michele.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF8A71C4749F700A7AD51 /* michele.jpg */; };
@@ -51,6 +56,11 @@
 		90AFD5B41C5D234400236D6B /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		90AFD5B61C5D280900236D6B /* ConfirmCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmCodeViewController.swift; sourceTree = "<group>"; };
 		90AFD5B81C5D281800236D6B /* ConfirmCodeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfirmCodeViewController.xib; sourceTree = "<group>"; };
+		90AFD5BA1C5E821B00236D6B /* AddFriendsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFriendsViewController.swift; sourceTree = "<group>"; };
+		90AFD5BC1C5E825B00236D6B /* AddFriendsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddFriendsViewController.xib; sourceTree = "<group>"; };
+		90AFD5BE1C60724300236D6B /* AddFriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFriendTableViewCell.swift; sourceTree = "<group>"; };
+		90AFD5C01C60725100236D6B /* AddFriendTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddFriendTableViewCell.xib; sourceTree = "<group>"; };
+		90AFD5C21C607CA600236D6B /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		90EBF8811C47458F00A7AD51 /* chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90EBF88B1C47459000A7AD51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		90EBF8901C47459000A7AD51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -115,6 +125,10 @@
 				90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */,
 				90AFD5B61C5D280900236D6B /* ConfirmCodeViewController.swift */,
 				90AFD5B81C5D281800236D6B /* ConfirmCodeViewController.xib */,
+				90AFD5BA1C5E821B00236D6B /* AddFriendsViewController.swift */,
+				90AFD5BC1C5E825B00236D6B /* AddFriendsViewController.xib */,
+				90AFD5BE1C60724300236D6B /* AddFriendTableViewCell.swift */,
+				90AFD5C01C60725100236D6B /* AddFriendTableViewCell.xib */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -163,6 +177,7 @@
 			children = (
 				90EBF8AA1C474A0000A7AD51 /* Message.swift */,
 				90EBF8AC1C474A0E00A7AD51 /* User.swift */,
+				90AFD5C21C607CA600236D6B /* Contact.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -280,6 +295,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90AFD5BD1C5E825B00236D6B /* AddFriendsViewController.xib in Resources */,
 				90EBF8BF1C474CA700A7AD51 /* ChatRowTableViewCell.xib in Resources */,
 				90EBF8A81C4749F700A7AD51 /* andreas.jpg in Resources */,
 				90EBF8A91C4749F700A7AD51 /* michele.jpg in Resources */,
@@ -288,6 +304,7 @@
 				90EBF8C11C474CA700A7AD51 /* ChatViewController.xib in Resources */,
 				90AFD5B91C5D281800236D6B /* ConfirmCodeViewController.xib in Resources */,
 				90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */,
+				90AFD5C11C60725100236D6B /* AddFriendTableViewCell.xib in Resources */,
 				90AFD59D1C4CBD1100236D6B /* GIFSelectorCell.xib in Resources */,
 				90AFD5B31C5D204100236D6B /* PhoneNumberViewController.xib in Resources */,
 				90AFD5A91C4DE1B700236D6B /* NewMessagesCell.xib in Resources */,
@@ -351,6 +368,7 @@
 			files = (
 				90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */,
 				90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */,
+				90AFD5C31C607CA600236D6B /* Contact.swift in Sources */,
 				90AFD5B51C5D234400236D6B /* APIManager.swift in Sources */,
 				90EBF8BE1C474CA700A7AD51 /* ChatRowTableViewCell.swift in Sources */,
 				90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */,
@@ -360,7 +378,9 @@
 				90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */,
 				90EBF8AB1C474A0000A7AD51 /* Message.swift in Sources */,
 				90EBF8C01C474CA700A7AD51 /* ChatViewController.swift in Sources */,
+				90AFD5BF1C60724300236D6B /* AddFriendTableViewCell.swift in Sources */,
 				90AFD59F1C4CBD1E00236D6B /* GIFSelectorCell.swift in Sources */,
+				90AFD5BB1C5E821B00236D6B /* AddFriendsViewController.swift in Sources */,
 				90EBF8AD1C474A0E00A7AD51 /* User.swift in Sources */,
 				90AFD5A21C4D9D8300236D6B /* ChatRowContinuationTableViewCell.swift in Sources */,
 			);
