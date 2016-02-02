@@ -50,4 +50,26 @@ router.post('/friend/accept/', function(req, res) {
 	});
 });
 
+/*
+ * Request parameters:
+ * userId - Current user id.
+ * session - Current user session.
+ * friendId - The id of the friend.
+ */
+router.post('/friend/check/', function(req, res) {
+	var phone = req.body.phone;
+	if (!(phone instanceof Array)) {
+		phone = [phone];
+	}
+	user.checkUsersWithPhoneNumbers(phone, function(err, exists) {
+		var result = {
+			'status': err || 'ok'
+		};
+		if (exists) {
+			result['exists'] = exists
+		}
+		res.send(result);
+	});
+});
+
 module.exports = router;

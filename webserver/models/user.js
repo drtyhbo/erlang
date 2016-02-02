@@ -6,8 +6,12 @@ function userKeyFromId(id) {
 	return 'u' + id;
 }
 
+function phoneKeyFromPhoneNumber(phoneNumber) {
+	return 'p' + phoneNumber;
+}
+
 function userIdFromPhoneNumber(phoneNumber) {
-	return client.getAsync(phoneNumber);
+	return client.getAsync(phoneKeyFromPhoneNumber(phoneNumber));
 }
 
 function doesUserWithIdExist(userId) {
@@ -58,7 +62,7 @@ function addFriendAndRequest(userId, friendUserId) {
 function createNewUser(phoneNumber) {
 	var code = Math.floor(Math.random() * 900000) + 100000;
 	return client.incrAsync('user_id').then(function(id) {
-		return client.setAsync(phoneNumber, id).thenReturn(id);
+		return client.setAsync(phoneKeyFromPhoneNumber(phoneNumber), id).thenReturn(id);
 	}).then(function(id) {
 		return client.hmsetAsync(userKeyFromId(id), ['phoneNumber', phoneNumber]).thenReturn(id);
 	});
@@ -66,7 +70,7 @@ function createNewUser(phoneNumber) {
 
 exports.create = function(phoneNumber, cb) {
 	var userId;
-	client.getAsync(phoneNumber).then(function(id) {
+	userIdFromPhoneNumber(phoneNumber).then(function(id) {
 		if (!id) {
 			return createNewUser(phoneNumber);
 		} else {
@@ -92,7 +96,7 @@ exports.create = function(phoneNumber, cb) {
 
 exports.login = function(phoneNumber, code, cb) {
 	var sharedId;
-	client.getAsync(phoneNumber).then(function(id) {
+	userIdFromPhoneNumber(phoneNumber).then(function(id) {
 		if (!id) {
 			cb('unknown')
 		} else {
@@ -168,3 +172,15 @@ exports.addFriendFromId = function(userId, friendUserId, cb) {
 		cb(err);
 	});
 };
+
+exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
+	var multi = client.multi();
+	for (var i = 0, phoneNumber; phoneNumber = phoneNumbers[i]; i++) {
+		multi.exists(phoneKeyFromPhoneNumber(phoneNumber));
+	}
+	multi.execAsync().then(function(exists) {
+		cb(null, exists);
+	}, function(err) {
+		cb(err);
+	});
+}
