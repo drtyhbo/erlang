@@ -78,6 +78,7 @@ class ChatConnection {
                 s.writeData(jsonString.dataUsingEncoding(NSUTF8StringEncoding), withTimeout: 0, tag: 0)
             }
         }
+        jsonToSend = []
     }
 }
 

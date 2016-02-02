@@ -36,7 +36,8 @@ class FriendsListViewController: UIViewController {
 
         friendsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
 
-        APIManager.getFriends {
+        FriendManager.sharedManager.loadFriends {
+        
             friends in
 
             self.friends = friends

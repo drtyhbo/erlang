@@ -15,11 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         registerApplicationForNotifications(application)
 
+        MessageManager.sharedManager.setup()
+
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = MainViewController()
         window?.makeKeyAndVisible()
-
-        ChatClient.sharedClient.connect()
 
         return true
     }

@@ -18,14 +18,15 @@ class ChatRowTableViewCell: MessageTableViewCell {
 
     override var message: Message! {
         didSet {
-/*            userImage.sd_setImageWithURL(NSURL(string: message.author.profilePic!.url!))
-            userName.text = message.author.name!
+            if let from = message.from {
+                userName.text = from.name
+            }
 
             let timeFormatter = NSDateFormatter()
             timeFormatter.dateFormat = "H:mm"
-            dateLabel.text = timeFormatter.stringFromDate(message.createdAt!)
+            dateLabel.text = timeFormatter.stringFromDate(message.date)
 
-            messageLabel.text = message.message*/
+            messageLabel.text = message.message
         }
     }
 }

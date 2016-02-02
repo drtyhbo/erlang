@@ -130,6 +130,7 @@ logged_in(check_offline_msgs, State) ->
 	end,
 	{next_state, logged_in, State};
 logged_in({receive_msg, Msg}, State) ->
+	io:format("Receive msg ~p ~n", [Msg]),
 	secure_chat_user:msg_is_delivered(Msg),
 	receive_msgs(State#user_state.socket, [Msg]),
 	{next_state, logged_in, State};
@@ -144,21 +145,23 @@ logged_in(Event, State) ->
 %% ==== JSON Handlers ====
 
 handle_json(logged_out, Json, State) ->
+	io:format("Msg logged_out ~p ~n", [Json]),
 	Type = proplists:get_value(<<"t">>, Json),
 	case Type of
 		<<"c">> ->
 			handle_connect_json(Json, State);
 		Unknown ->
-			io:format("Unknown message type ~p ~n", [Unknown]),
+			io:format("Unknown logged_out message type ~p ~p ~n", [Unknown, Json]),
 			State
 	end;
 handle_json(logged_in, Json, State) ->
+	io:format("Msg logged_in ~p ~n", [Json]),
 	Type = proplists:get_value(<<"t">>, Json),
 	case Type of
 		<<"m">> ->
 			handle_msg_json(Json, State);
 		Unknown ->
-			io:format("Unknown message type ~p ~n", [Unknown]),
+			io:format("Unknown logged_in message type ~p ~p ~n", [Unknown, Json]),
 			State
 	end;
 handle_json(FSMState, Json, State) ->
@@ -170,10 +173,10 @@ handle_json(FSMState, Json, State) ->
 handle_connect_json(Json, State) ->
 	UserId = proplists:get_value(<<"u">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	case eredis:q(State#user_state.redis_connection, ["HGET", UserId, "session"]) of
+	case eredis:q(State#user_state.redis_connection, ["HGET", "u" ++ UserId, "session"]) of
 	 	{ok, RedisSessionToken} when RedisSessionToken =:= SessionToken ->
 			connect(),
-			State#user_state{user_id = user_id};
+			State#user_state{user_id = UserId};
 	 	_ ->
 	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
 	 		State
@@ -192,11 +195,14 @@ handle_msg_json(Json, State) ->
 		ts=secure_chat_utils:timestamp(),
 		client_id=ClientId,
 		msg=Msg},
+	io:format("Msg ~p ~n", [NewMsg]),
 	case secure_chat_msg_router:route_msg(State#user_state.user_list, NewMsg) of
 		ok ->
+			io:format("routed ~n"),
 			ets:insert(State#user_state.pending_msgs, NewMsg),
 			erlang:send_after(?OFFLINE_INTERVAL, self(), {check_offline_msg, NewMsg});
 		offline ->
+			io:format("offline ~n"),
 			store_offline_msg(NewMsg)
 	end,
 	State#user_state{local_id=LocalId + 1}.

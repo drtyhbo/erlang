@@ -5,6 +5,7 @@
 -include("secure_chat.hrl").
 
 add_user(UserList, UserId, Pid) ->
+	io:format("~p ~n", [{UserId, Pid}]),
 	ets:insert(UserList, {UserId, Pid}).
 
 remove_user(UserList, UserId) ->

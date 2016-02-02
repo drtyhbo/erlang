@@ -28,6 +28,12 @@ class ChatViewController: UIViewController {
         didSet {
             if let friend = friend {
                 friendNameLabel.text = friend.name
+
+                NSNotificationCenter.defaultCenter().removeObserver(self)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessageNotification, object: friend)
+
+                messages = MessageManager.sharedManager.messagesForFriend(friend)
+                tableView.reloadData()
             }
         }
     }
@@ -92,12 +98,12 @@ class ChatViewController: UIViewController {
 
     private func sendMessageWithText(text: String) {
         resetNewMessageView()
-/*        Message.sendMessage(text) {
-            message in
-            if let message = message {
-                self.appendMessage(message)
-            }
-        }*/
+
+        if let friend = friend {
+            let message = Message(from: nil, date: NSDate(), message: text)
+            MessageManager.sharedManager.appendMessage(message, forFriend: friend)
+            ChatClient.sharedClient.sendMessageWithText(text, to: friend)
+        }
     }
 
     private func sendMessageWithImageURL(imageURL: NSURL, width: Int, height: Int) {
@@ -190,6 +196,12 @@ class ChatViewController: UIViewController {
         })
     }
 
+    @objc private func didReceiveMessage(notification: NSNotification) {
+        if let message = notification.userInfo?["message"] as? Message {
+            appendMessage(message)
+        }
+    }
+
     @IBAction func didTapSend() {
         sendMessageWithText(newMessageView.text)
     }
@@ -212,19 +224,9 @@ extension ChatViewController: UITableViewDataSource {
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if newMessagesRow != nil && indexPath.row == newMessagesRow! {
-            return tableView.dequeueReusableCellWithIdentifier(newMessagesCellReuseIdentifier)!
-        } else {
-            let messageIndex = (newMessagesRow != nil && indexPath.row > newMessagesRow!) ? indexPath.row - 1 : indexPath.row
-            var cellReuseIdentifier = chatRowTableViewCellReuseIdentifier
-/*            if messageIndex != 0 && messages[messageIndex].author.objectId == messages[messageIndex - 1].author.objectId {
-                cellReuseIdentifier = chatRowContinuationTableViewCellReuseIdentifier
-            }*/
-
-            let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
-            cell.message = messages[messageIndex]
-            return cell
-        }
+        let cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
+        cell.message = messages[indexPath.row]
+        return cell
     }
 }
 
