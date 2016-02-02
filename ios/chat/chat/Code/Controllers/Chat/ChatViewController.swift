@@ -10,6 +10,8 @@ import CocoaAsyncSocket
 import UIKit
 
 class ChatViewController: UIViewController {
+    @IBOutlet weak var friendNameLabel: UILabel!
+
     @IBOutlet weak var tableView: UITableView!
 
     @IBOutlet weak var newMessageContainerBottomConstraint: NSLayoutConstraint!
@@ -21,6 +23,14 @@ class ChatViewController: UIViewController {
 
     @IBOutlet weak var messageHelperContainer: UIView!
     @IBOutlet weak var messageHelperContainerHeightConstraint: NSLayoutConstraint!
+
+    var friend: Friend? {
+        didSet {
+            if let friend = friend {
+                friendNameLabel.text = friend.name
+            }
+        }
+    }
 
     private let chatRowTableViewCellReuseIdentifier = "ChatRowTableViewCell"
     private let chatRowContinuationTableViewCellReuseIdentifier = "ChatRowContinuationTableViewCell"

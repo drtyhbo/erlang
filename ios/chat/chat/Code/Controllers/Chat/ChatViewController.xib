@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatViewController" customModule="chat" customModuleProvider="target">
             <connections>
+                <outlet property="friendNameLabel" destination="IvW-aD-nsE" id="03O-rs-z3S"/>
                 <outlet property="messageHelperContainer" destination="FUr-Se-ZmF" id="d8I-9P-Bfl"/>
                 <outlet property="messageHelperContainerHeightConstraint" destination="yh6-bd-Rpm" id="EiF-Iy-FX1"/>
                 <outlet property="messageLabel" destination="AL3-2y-Acy" id="b8g-PG-LEb"/>
@@ -23,7 +24,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Cpl-E8-vWn">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="552"/>
+                    <rect key="frame" x="0.0" y="50" width="600" height="502"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oGz-1j-zN4">
@@ -103,14 +104,41 @@
                     <variation key="default">
                         <mask key="constraints">
                             <exclude reference="5ce-jH-Irr"/>
-                            <exclude reference="1Rr-vr-Ndk"/>
                             <exclude reference="aKR-RC-OzV"/>
+                            <exclude reference="1Rr-vr-Ndk"/>
                             <exclude reference="3u4-mt-Qma"/>
                             <exclude reference="BOy-gn-tsZ"/>
                             <exclude reference="GSP-ff-pNr"/>
                             <exclude reference="OOU-vo-ySl"/>
                         </mask>
                     </variation>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dbw-Tz-uqC">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Michele Bolstad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IvW-aD-nsE">
+                            <rect key="frame" x="239" y="15" width="122" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zJ5-Ju-71U">
+                            <rect key="frame" x="0.0" y="49" width="600" height="1"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="NXy-VU-Lpx"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="IvW-aD-nsE" firstAttribute="centerY" secondItem="Dbw-Tz-uqC" secondAttribute="centerY" id="CNB-3e-VWq"/>
+                        <constraint firstItem="IvW-aD-nsE" firstAttribute="centerX" secondItem="Dbw-Tz-uqC" secondAttribute="centerX" id="Mbm-Tm-YGb"/>
+                        <constraint firstAttribute="height" constant="50" id="Y82-Sp-lT7"/>
+                        <constraint firstItem="zJ5-Ju-71U" firstAttribute="leading" secondItem="Dbw-Tz-uqC" secondAttribute="leading" id="YX2-QU-cHd"/>
+                        <constraint firstAttribute="bottom" secondItem="zJ5-Ju-71U" secondAttribute="bottom" id="dN5-HI-4Lc"/>
+                        <constraint firstAttribute="trailing" secondItem="zJ5-Ju-71U" secondAttribute="trailing" id="zzb-03-lrT"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -122,10 +150,15 @@
                 <constraint firstAttribute="trailing" secondItem="oGz-1j-zN4" secondAttribute="trailing" id="KP6-L7-IkI"/>
                 <constraint firstAttribute="bottom" secondItem="Cpl-E8-vWn" secondAttribute="bottom" constant="40" id="LaK-Up-Fm8"/>
                 <constraint firstItem="oGz-1j-zN4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="PGo-CN-CuT"/>
+                <constraint firstItem="Dbw-Tz-uqC" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="PoQ-AZ-BNO"/>
+                <constraint firstItem="Dbw-Tz-uqC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="V3C-RL-8kv"/>
                 <constraint firstAttribute="bottom" secondItem="oGz-1j-zN4" secondAttribute="bottom" id="a8j-JC-x2F"/>
+                <constraint firstItem="Cpl-E8-vWn" firstAttribute="top" secondItem="Dbw-Tz-uqC" secondAttribute="bottom" id="ejv-a2-yXf"/>
+                <constraint firstAttribute="trailing" secondItem="Dbw-Tz-uqC" secondAttribute="trailing" id="wnr-0E-jWJ"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="9ex-O4-xSb"/>
                     <exclude reference="LaK-Up-Fm8"/>
                 </mask>
             </variation>

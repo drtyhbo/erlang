@@ -66,7 +66,25 @@ router.post('/friend/check/', function(req, res) {
 			'status': err || 'ok'
 		};
 		if (exists) {
-			result['exists'] = exists
+			result['exists'] = exists;
+		}
+		res.send(result);
+	});
+});
+
+/*
+ * Request parameters:
+ * userId - Current user id.
+ * session - Current user session.
+
+ */
+router.post('/friend/all/', function(req, res) {
+	user.getFriendsForUserWithId(req.userId, function(err, friends) {
+		var result = {
+			'status': err || 'ok'
+		};
+		if (friends) {
+			result['friends'] = friends;
 		}
 		res.send(result);
 	});

@@ -58,6 +58,29 @@ function addFriendAndRequest(userId, friendUserId) {
 			});
 }
 
+function friendsForUserWithId(userId) {
+	var friends = [];
+	return client.hgetallAsync(friendListKeyFromId(userId)).then(function(response) {
+		var multi = client.multi();
+		for (id in response) {
+			friends.push({
+				id: id
+			});
+			multi.hget(userKeyFromId(id), 'name');
+		}
+		return multi.execAsync();
+	}).then(function(names) {
+		for (var i = names.length - 1; i >= 0; i--) {
+			if (!names[i]) {
+				friends.splice(i, 1);
+			} else {
+				friends[i].name = names[i]
+			}
+		}
+		return Promise.resolve(friends);
+	});
+}
+
 function createNewUser(phoneNumber) {
 	var code = Math.floor(Math.random() * 900000) + 100000;
 	return client.incrAsync('user_id').then(function(id) {
@@ -180,3 +203,11 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 		cb(err);
 	});
 }
+
+exports.getFriendsForUserWithId = function(id, cb) {
+	friendsForUserWithId(id).then(function(friends) {
+		cb(null, friends);
+	}, function(err) {
+		cb(err)
+	});
+};

@@ -62,6 +62,17 @@ class APIManager {
         }
     }
 
+    static func getFriends(callback: [Friend]->Void) {
+        sendUserRequestToUrl("friend/all/") {
+            json in
+            var friends: [Friend] = []
+            if let friendsJson = json?["friends"].array {
+                friends = friendsJson.map({ return Friend(id: $0["id"].string!, name: $0["name"].string!) })
+            }
+            callback(friends)
+        }
+    }
+
     private static func errorFromJson(json: JSON?) -> Error? {
         if let json = json {
             return json["status"] == "ok" ? nil : Error(json["status"].string ?? "invalid")
@@ -80,6 +91,10 @@ class APIManager {
                     callback(nil)
                 }
             }
+    }
+
+    private static func sendUserRequestToUrl(url: String, callback: JSON?->Void) {
+        sendUserRequestToUrl(url, parameters: [:], callback: callback)
     }
 
     private static func sendUserRequestToUrl(url: String, var parameters: [String:AnyObject], callback: JSON?->Void) {
