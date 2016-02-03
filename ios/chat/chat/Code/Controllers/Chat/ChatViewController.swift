@@ -33,6 +33,8 @@ class ChatViewController: UIViewController {
                 NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessageNotification, object: friend)
 
                 messages = MessageManager.sharedManager.messagesForFriend(friend)
+                MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
+
                 tableView.reloadData()
             }
         }

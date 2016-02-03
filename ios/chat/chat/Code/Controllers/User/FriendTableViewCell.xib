@@ -15,24 +15,50 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ndE-0H-PBu">
-                        <rect key="frame" x="11" y="16" width="10" height="10"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ndE-0H-PBu">
+                        <rect key="frame" x="8" y="12" width="20" height="20"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p3A-YG-wTz">
+                                <rect key="frame" x="0.0" y="2" width="20" height="17"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="p3A-YG-wTz" firstAttribute="leading" secondItem="ndE-0H-PBu" secondAttribute="leading" id="Nem-gQ-ct0"/>
+                            <constraint firstAttribute="height" constant="20" id="RgG-p5-rQP"/>
+                            <constraint firstAttribute="trailing" secondItem="p3A-YG-wTz" secondAttribute="trailing" id="UaL-Ie-4NV"/>
+                            <constraint firstItem="p3A-YG-wTz" firstAttribute="centerY" secondItem="ndE-0H-PBu" secondAttribute="centerY" id="eyL-5I-Q5N"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="20" id="fdk-xL-sqS"/>
+                            <constraint firstItem="p3A-YG-wTz" firstAttribute="centerX" secondItem="ndE-0H-PBu" secondAttribute="centerX" id="lIq-M1-0W2"/>
+                        </constraints>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ait-L7-hda">
-                        <rect key="frame" x="28" y="11" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <rect key="frame" x="33" y="13" width="38" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leadingMargin" constant="20" id="2Bv-96-4Ns"/>
+                    <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leadingMargin" constant="30" id="2Bv-96-4Ns"/>
                     <constraint firstItem="ait-L7-hda" firstAttribute="centerY" secondItem="ZCW-41-x5d" secondAttribute="centerY" id="8Hf-8L-36f"/>
+                    <constraint firstItem="ait-L7-hda" firstAttribute="centerY" secondItem="ndE-0H-PBu" secondAttribute="centerY" id="HVg-aW-1Qv"/>
+                    <constraint firstItem="ndE-0H-PBu" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leadingMargin" id="QdC-W0-41o"/>
+                    <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ndE-0H-PBu" secondAttribute="trailing" constant="5" id="SMm-Bp-OVp"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="2Bv-96-4Ns"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <connections>
+                <outlet property="badge" destination="ndE-0H-PBu" id="1v8-ZZ-Icz"/>
                 <outlet property="name" destination="ait-L7-hda" id="vEe-Jn-cMI"/>
+                <outlet property="unreadMessageCountLabel" destination="p3A-YG-wTz" id="4JB-A2-xkd"/>
             </connections>
             <point key="canvasLocation" x="258" y="226"/>
         </tableViewCell>
