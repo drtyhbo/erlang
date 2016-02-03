@@ -7,6 +7,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import Contacts
 import Foundation
 import UIKit
 
@@ -36,12 +37,30 @@ class FriendsListViewController: UIViewController {
 
         friendsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
 
-        FriendManager.sharedManager.loadFriends {
-        
+        let contacts = ContactsHelper().getAllContacts()
+        FriendManager.sharedManager.loadFriends(contacts.map({ $0.phoneNumber })) {
             friends in
 
             self.friends = friends
             self.friendsTable.reloadData()
+        }
+    }
+
+private func requestContactsAccess(completionHandler: Bool->Void) {
+        let authorizationStatus = CNContactStore.authorizationStatusForEntityType(CNEntityType.Contacts)
+     
+        switch authorizationStatus {
+        case .Authorized:
+            completionHandler(true)
+     
+        case .Denied, .NotDetermined:
+            CNContactStore().requestAccessForEntityType(CNEntityType.Contacts, completionHandler: {
+                access, accessError in
+                completionHandler(access)
+            })
+     
+        default:
+            completionHandler(false)
         }
     }
 }

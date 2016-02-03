@@ -37,6 +37,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
     }
 
+    func applicationDidBecomeActive(application: UIApplication) {
+        ChatClient.sharedClient.maybeConnect()
+    }
+
     private func registerApplicationForNotifications(application: UIApplication) {
         let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
         application.registerUserNotificationSettings(settings)

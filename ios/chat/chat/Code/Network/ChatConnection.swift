@@ -19,12 +19,13 @@ protocol ChatConnectionDelegate: class {
 class ChatConnection {
     weak var delegate: ChatConnectionDelegate?
 
+    var isConnected: Bool {
+        return s != nil && s.connectedHost() != nil
+    }
+
     private let host: String
     private let port: UInt16
 
-    private var isConnected: Bool {
-        return s != nil && s.connectedHost() != nil
-    }
     private var isConnecting = false
 
     private var s: AsyncSocket!

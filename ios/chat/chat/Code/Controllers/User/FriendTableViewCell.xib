@@ -15,15 +15,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ndE-0H-PBu">
+                        <rect key="frame" x="11" y="16" width="10" height="10"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ait-L7-hda">
-                        <rect key="frame" x="8" y="11" width="42" height="21"/>
+                        <rect key="frame" x="28" y="11" width="42" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leadingMargin" id="2Bv-96-4Ns"/>
+                    <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leadingMargin" constant="20" id="2Bv-96-4Ns"/>
                     <constraint firstItem="ait-L7-hda" firstAttribute="centerY" secondItem="ZCW-41-x5d" secondAttribute="centerY" id="8Hf-8L-36f"/>
                 </constraints>
             </tableViewCellContentView>

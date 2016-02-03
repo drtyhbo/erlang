@@ -29,7 +29,7 @@ class ChatViewController: UIViewController {
             if let friend = friend {
                 friendNameLabel.text = friend.name
 
-                NSNotificationCenter.defaultCenter().removeObserver(self)
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessageNotification, object: oldValue)
                 NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessageNotification, object: friend)
 
                 messages = MessageManager.sharedManager.messagesForFriend(friend)
@@ -53,7 +53,7 @@ class ChatViewController: UIViewController {
     init() {
         super.init(nibName: "ChatViewController", bundle: nil)
 
-        ChatClient.sharedClient.connect()
+        ChatClient.sharedClient.maybeConnect()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -70,6 +70,8 @@ class ChatViewController: UIViewController {
         tableView.registerNib(UINib(nibName: "ChatRowTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "ChatRowContinuationTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowContinuationTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
+
+        tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
@@ -100,8 +102,6 @@ class ChatViewController: UIViewController {
         resetNewMessageView()
 
         if let friend = friend {
-            let message = Message(from: nil, date: NSDate(), message: text)
-            MessageManager.sharedManager.appendMessage(message, forFriend: friend)
             ChatClient.sharedClient.sendMessageWithText(text, to: friend)
         }
     }
@@ -181,12 +181,15 @@ class ChatViewController: UIViewController {
         let info = notification.userInfo!
         let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
 
+        let tableViewOverhang = tableView.contentSize.height - (tableView.bounds.size.height - keyboardFrame.size.height)
+        if tableViewOverhang > 0 {
+            self.tableView.contentOffset.y = max(0, self.tableView.contentOffset.y + tableViewOverhang)
+        }
+
         newMessageContainerBottomConstraint.constant = keyboardFrame.size.height
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
-
-        self.tableView.contentOffset.y = self.tableView.contentOffset.y + keyboardFrame.size.height
     }
 
     @objc private func keyboardWillHide(notification: NSNotification) {
@@ -199,7 +202,15 @@ class ChatViewController: UIViewController {
     @objc private func didReceiveMessage(notification: NSNotification) {
         if let message = notification.userInfo?["message"] as? Message {
             appendMessage(message)
+
+            if let friend = friend {
+                MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
+            }
         }
+    }
+
+    @objc private func didTapOnMessages() {
+        newMessageView.resignFirstResponder()
     }
 
     @IBAction func didTapSend() {

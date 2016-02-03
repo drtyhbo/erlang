@@ -40,34 +40,20 @@ class APIManager {
         }
     }
 
-    static func addFriendWithPhoneNumber(phoneNumber: String, callback: Bool->Void) {
-        sendUserRequestToUrl("friend/add/", parameters: [
-            "phone": phoneNumber,
-        ]) {
-            json in
-            callback(errorFromJson(json) == nil)
-        }
-    }
-
-    static func usersExistForPhoneNumbers(phoneNumber: [String], callback: [Bool]->Void) {
+    static func getFriendsWithPhoneNumbers(phoneNumber: [String], callback: [Friend]->Void) {
         sendUserRequestToUrl("friend/check/", parameters: [
             "phone": [phoneNumber],
         ]) {
             json in
-            var exists: [Bool] = []
-            if let existsJson = json?["exists"].array {
-                exists = existsJson.map({ $0.bool! })
-            }
-            callback(exists)
-        }
-    }
 
-    static func getFriends(callback: [Friend]->Void) {
-        sendUserRequestToUrl("friend/all/") {
-            json in
             var friends: [Friend] = []
             if let friendsJson = json?["friends"].array {
-                friends = friendsJson.map({ return Friend(id: $0["id"].string!, name: $0["name"].string!) })
+                for i in 0..<friendsJson.count {
+                    if friendsJson[i].null == nil {
+                        let friendJson = friendsJson[i]
+                        friends.append(Friend(id: friendJson["id"].string!, name: friendJson["name"].string!))
+                    }
+                }
             }
             callback(friends)
         }

@@ -13,8 +13,8 @@ class FriendManager {
 
     private(set) var friends: [Friend] = []
 
-    func loadFriends(completion: [Friend]->Void) {
-        APIManager.getFriends {
+    func loadFriends(phoneNumbers: [String], completion: [Friend]->Void) {
+        APIManager.getFriendsWithPhoneNumbers(phoneNumbers) {
             friends in
 
             self.friends = friends

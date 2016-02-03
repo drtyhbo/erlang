@@ -17,6 +17,7 @@ class ChatClient {
 
     static let sharedClient = ChatClient()
 
+    static let ChatClientSentMessageNotification = "ChatClientSentMessage"
     static let ChatClientReceivedMessageNotification = "ChatClientReceivedMessage"
 
     private(set) var state: State = .Disconnected
@@ -30,18 +31,15 @@ class ChatClient {
         connection.delegate = self
     }
 
-    func connect() {
-        if let userId = User.userId, sessionToken = User.sessionToken {
-            let connectJson = JSON([
-                "t": "c",
-                "u": userId,
-                "s": sessionToken,
-            ])
-            connection.sendJson(connectJson)
+    func maybeConnect() {
+        if !connection.isConnected {
+            connect()
         }
     }
 
     func sendMessageWithText(text: String, to: Friend) {
+        NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientSentMessageNotification, object: nil, userInfo: ["sentMessage": SentMessage(toId: to.id, timestamp: Int(NSDate.timeIntervalSinceReferenceDate()), message: text)])
+
         let messageJson = JSON([
             "t": "m",
             "r": to.id,
@@ -51,6 +49,17 @@ class ChatClient {
             ]
         ])
         connection.sendJson(messageJson)
+    }
+
+    private func connect() {
+        if let userId = User.userId, sessionToken = User.sessionToken {
+            let connectJson = JSON([
+                "t": "c",
+                "u": userId,
+                "s": sessionToken,
+            ])
+            connection.sendJson(connectJson)
+        }
     }
 
     private func handleJson(json: JSON) {

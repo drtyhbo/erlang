@@ -61,12 +61,12 @@ router.post('/friend/check/', function(req, res) {
 	if (!(phone instanceof Array)) {
 		phone = [phone];
 	}
-	user.checkUsersWithPhoneNumbers(phone, function(err, exists) {
+	user.checkUsersWithPhoneNumbers(phone, function(err, users) {
 		var result = {
 			'status': err || 'ok'
 		};
-		if (exists) {
-			result['exists'] = exists;
+		if (users) {
+			result['friends'] = users;
 		}
 		res.send(result);
 	});

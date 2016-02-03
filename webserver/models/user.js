@@ -27,64 +27,8 @@ function doesUserWithIdExist(userId) {
 	});
 }
 
-function friendRequestsKeyFromId(id) {
-	return 'fr:{' + id + '}';
-}
-
-function friendListKeyFromId(id) {
-	return 'f:{' + id + '}';
-}
-
-function isFriend(userId, friendUserId) {
-	return redis.hgetAsync(friendListKeyFromId(userId), friendUserId).then(function(response) {
-		return Promise.resolve(response != null);
-	});
-}
-
-function addFriend(userId, friendUserId) {
-	return redis.hsetAsync(friendListKeyFromId(userId), friendUserId, true).then(function() {
-		return redis.hdelAsync(friendRequestsKeyFromId(userId), friendUserId);
-	}).then(function() {
-		return Promise.resolve(true);
-	});
-}
-
-function addFriendAndRequest(userId, friendUserId) {
-	return redis.multi()
-			.hset(friendListKeyFromId(userId), friendUserId, true)
-			.hdel(friendRequestsKeyFromId(userId), friendUserId)
-			.execAsync().then(function() {
-		return redis.hset(friendRequestsKeyFromId(friendUserId), userId, true);
-	}).then(function(response) {
-		if (response) {
-			// Send notification
-		}
-		return Promise.resolve(true);
-	});
-}
-
-function friendsForUserWithId(userId) {
-	/*var friends = [];
-	return redis.hgetallAsync(friendListKeyFromId(userId)).then(function(response) {
-		var multi = redis.multi();
-		for (id in response) {
-			friends.push({
-				id: id
-			});
-			multi.hget(userKeyFromId(id), 'name');
-		}
-		return multi.execAsync();
-	}).then(function(names) {
-		for (var i = names.length - 1; i >= 0; i--) {
-			if (!names[i]) {
-				friends.splice(i, 1);
-			} else {
-				friends[i].name = names[i]
-			}
-		}
-		return Promise.resolve(friends);
-	});*/
-	return Promise.resolve([]);
+function getUserInfo(userId, info) {
+	return redis.hmgetAsync(userKeyFromId(userId), info);
 }
 
 function createNewUser(phoneNumber) {
@@ -158,63 +102,40 @@ exports.confirmSession = function(id, sessionToken, cb) {
 	});
 };
 
-function addFriendHelper(userId, friendUserId, canRequest) {
-	if (!friendUserId) {
-		return Promise.reject('phone');
-	}
-
-	return isFriend(friendUserId, userId).then(function(isFriend) {
-		// If the other user already has me as a friend, we don't need to send a new
-		// request.
-		if (isFriend) {
-			return addFriend(userId, friendUserId);
-		} else if (canRequest) {
-			return addFriendAndRequest(userId, friendUserId);
-		} else {
-			return Promise.reject('not_requested');
-		}
-	}).then(function(success) {
-		return success ? Promise.resolve() : Promise.reject('error');
-	});
-}
-
-exports.addFriendFromPhoneNumber = function(userId, friendPhoneNumber, cb) {
-	userIdFromPhoneNumber(friendPhoneNumber).then(function(friendUserId) {
-		return addFriendHelper(userId, friendUserId, true);
-	}).then(function() {
-		cb(null);
-	}, function(err) {
-		cb(err);
-	});
-};
-
-exports.addFriendFromId = function(userId, friendUserId, cb) {
-	doesUserWithIdExist(friendUserId).then(function() {
-		return addFriendHelper(userId, friendUserId, false);
-	}).then(function() {
-		cb(null);
-	}, function(err) {
-		cb(err);
-	});
-};
-
 exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
+	var sharedIds;
+
 	var promises = [];
 	for (var i = 0, phoneNumber; phoneNumber = phoneNumbers[i]; i++) {
-		promises.push(redis.existsAsync(phoneKeyFromPhoneNumber(phoneNumber)));
+		promises.push(userIdFromPhoneNumber(phoneNumber));
 	}
-	Promise.all(promises).then(function(exists) {
-		console.log(exists);
-		//cb(null, exists.map(function(doesExist) { return doesExist != 0; }));
+	Promise.all(promises).then(function(ids) {
+		sharedIds = ids;
+
+		var infoPromises = [];
+		for (var i = 0; i < ids.length; i++) {
+			var id = ids[i];
+			if (id) {
+				infoPromises.push(getUserInfo(ids[i], ['name']));
+			} else {
+				infoPromises.push(Promise.resolve([null]));
+			}
+		}
+		return Promise.all(infoPromises);
+	}).then(function(allInfo) {
+		var results = [];
+		for (var i = 0; i < allInfo.length; i++) {
+			if (sharedIds[i] && allInfo[i]) {
+				results.push({
+					'id': sharedIds[i],
+					'name': allInfo[i][0]
+				});
+			} else {
+				results.push(null);
+			}
+		}
+		cb(null, results);
 	}, function(err) {
 		cb(err);
 	});
 }
-
-exports.getFriendsForUserWithId = function(id, cb) {
-	friendsForUserWithId(id).then(function(friends) {
-		cb(null, friends);
-	}, function(err) {
-		cb(err)
-	});
-};
