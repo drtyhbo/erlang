@@ -1,5 +1,5 @@
 -module(secure_chat_msg_store).
--export([start_link/1,
+-export([start_link/0,
 		store_offline_msg/1,
 		get_offline_msgs/1,
 		init/1,
@@ -11,12 +11,10 @@
 -include("secure_chat.hrl").
 -behavior(gen_server).
 
--record(msg_store_state, {redis_connection}).
-
 %% === Messages ===
 
-start_link(RedisConnection) ->
-	gen_server:start_link({local, ?MODULE}, ?MODULE, [RedisConnection], []).
+start_link() ->
+	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 store_offline_msg(Msg) ->
 	gen_server:call(whereis(?MODULE), {store_offline_msg, Msg}).
@@ -26,8 +24,8 @@ get_offline_msgs(For) ->
 
 %% === gen_server ===
 
-init([RedisConnection]) ->
-	{ok, #msg_store_state{redis_connection=RedisConnection}}.
+init([]) ->
+	{ok, {}}.
 
 handle_cast(_Request, State) ->
 	{noreply, State}.

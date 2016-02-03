@@ -1,5 +1,5 @@
 -module(secure_chat_user).
--export([start/4,
+-export([start/3,
 		receive_msg/2,
 		msg_is_delivered/1,
 		init/1,
@@ -18,7 +18,6 @@
 
 -record(user_state,
 		{socket,
-		redis_connection,
 		user_id,
 		local_id,
 		user_list,
@@ -45,8 +44,8 @@
 
 %% === Messages ===
 
-start(Socket, RedisConnection, UserList, PendingMsgs) ->
-	gen_fsm:start(?MODULE, [Socket, RedisConnection, UserList, PendingMsgs], []).
+start(Socket, UserList, PendingMsgs) ->
+	gen_fsm:start(?MODULE, [Socket, UserList, PendingMsgs], []).
 
 connect() ->
 	gen_fsm:send_event(self(), connect).
@@ -59,9 +58,9 @@ msg_is_delivered(Msg) ->
 
 %% === gen_fsm ===
 
-init([Socket, RedisConnection, UserList, PendingMsgs]) ->
-	UserState = #user_state{socket = Socket,
-			redis_connection = RedisConnection,
+init([Socket, UserList, PendingMsgs]) ->
+	UserState = #user_state{
+			socket = Socket,
 			local_id = 0,
 			user_list = UserList,
 			pending_msgs = PendingMsgs},
@@ -173,7 +172,7 @@ handle_json(FSMState, Json, State) ->
 handle_connect_json(Json, State) ->
 	UserId = proplists:get_value(<<"u">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	case eredis:q(State#user_state.redis_connection, ["HGET", "u" ++ UserId, "session"]) of
+	case eredis_cluster:q(["HGET", "u:{" ++ binary_to_list(UserId) ++ "}", "session"]) of
 	 	{ok, RedisSessionToken} when RedisSessionToken =:= SessionToken ->
 			connect(),
 			State#user_state{user_id = UserId};

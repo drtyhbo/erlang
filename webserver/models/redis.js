@@ -1,7 +1,12 @@
-var redis = require('redis'),
-	bluebird = require('bluebird');
+var Redis = require('ioredis');
+var bluebird = require('bluebird');
 
-bluebird.promisifyAll(redis.RedisClient.prototype);
-bluebird.promisifyAll(redis.Multi.prototype);
+bluebird.promisifyAll(Redis.Cluster.prototype);
 
-exports.client = redis.createClient();
+exports.redis = new Redis.Cluster([{
+	port: 30001,
+	host: '127.0.0.1'
+}, {
+	port: 30002,
+	host: '127.0.0.1'
+}]);

@@ -2,6 +2,10 @@
   {git,"https://github.com/wooga/eredis.git",
        {ref,"cbc013f516e464706493c01662e5e9dd82d1db01"}},
   0},
+ {<<"eredis_cluster">>,
+  {git,"https://github.com/adrienmo/eredis_cluster.git",
+       {ref,"6b3b0802d96ef1d4584761f1dc5ce09a077e60fc"}},
+  0},
  {<<"goldrush">>,
   {git,"git://github.com/DeadZen/goldrush.git",
        {ref,"64864ba7fcf40988361340e48680b49a2c2938cf"}},
@@ -13,4 +17,8 @@
  {<<"mochijson2">>,
   {git,"https://github.com/bjnortier/mochijson2.git",
        {ref,"e162b7f5be57b8a1fcf5cc99aa4948864af42bba"}},
-  0}].
+  0},
+ {<<"poolboy">>,
+  {git,"https://github.com/devinus/poolboy.git",
+       {ref,"3bb48a893ff5598f7c73731ac17545206d259fac"}},
+  1}].

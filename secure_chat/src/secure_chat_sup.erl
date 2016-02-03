@@ -12,21 +12,20 @@ stop() ->
     supervisor:delete_child(?MODULE, secure_user_chat_list).
 
 init([]) ->
-	{ok, RedisConnection} = eredis:start_link(),
 	SupFlags = #{
 		strategy => one_for_all,
 		intensity => 3,
 		period => 5000},
 	ListenerChildSpec = #{
 		id => secure_chat_serv,
-		start => {secure_chat_serv, start_link, [49165, RedisConnection]},
+		start => {secure_chat_serv, start_link, [49165]},
 		restart => permanent,
 		shutdown => 5000,
 		type => worker,
 		modules => [secure_chat_serv]},
 	MsgStoreChildSpec = #{
 		id => secure_chat_msg_store,
-		start => {secure_chat_msg_store, start_link, [RedisConnection]},
+		start => {secure_chat_msg_store, start_link, []},
 		restart => permanent,
 		shutdown => 5000,
 		type => worker,

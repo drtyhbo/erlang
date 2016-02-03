@@ -1,67 +1,72 @@
-var client = require('./redis').client,
+var redis = require('./redis').redis,
 	utils = require('../utils/utils.js'),
 	Promise = require('bluebird').Promise;
 
+var userKeys = {
+	phone: 'phone',
+	code: 'code',
+	session: 'session',
+	active: 'active'
+};
+
 function userKeyFromId(id) {
-	return 'u' + id;
+	return 'u:{' + id + '}';
 }
 
 function phoneKeyFromPhoneNumber(phoneNumber) {
-	return 'p' + phoneNumber;
+	return 'p:{' + phoneNumber + '}';
 }
 
 function userIdFromPhoneNumber(phoneNumber) {
-	return client.getAsync(phoneKeyFromPhoneNumber(phoneNumber));
+	return redis.getAsync(phoneKeyFromPhoneNumber(phoneNumber));
 }
 
 function doesUserWithIdExist(userId) {
-	return client.existsAsync(userKeyFromId(userId)).then(function(response) {
+	return redis.existsAsync(userKeyFromId(userId)).then(function(response) {
 		return response != 0 ? Promise.resolve() : Promise.reject('id');
 	});
 }
 
 function friendRequestsKeyFromId(id) {
-	return 'fR' + id;
+	return 'fr:{' + id + '}';
 }
 
 function friendListKeyFromId(id) {
-	return 'f' + id;
+	return 'f:{' + id + '}';
 }
 
 function isFriend(userId, friendUserId) {
-	return client.hgetAsync(friendListKeyFromId(userId), friendUserId).then(function(response) {
+	return redis.hgetAsync(friendListKeyFromId(userId), friendUserId).then(function(response) {
 		return Promise.resolve(response != null);
 	});
 }
 
 function addFriend(userId, friendUserId) {
-	return client.multi()
-			.hset(friendListKeyFromId(userId), friendUserId, true)
-			.hdel(friendRequestsKeyFromId(userId), friendUserId)
-			.execAsync()
-			.then(function() {
-				return Promise.resolve(true);
-			});
+	return redis.hsetAsync(friendListKeyFromId(userId), friendUserId, true).then(function() {
+		return redis.hdelAsync(friendRequestsKeyFromId(userId), friendUserId);
+	}).then(function() {
+		return Promise.resolve(true);
+	});
 }
 
 function addFriendAndRequest(userId, friendUserId) {
-	return client.multi()
+	return redis.multi()
 			.hset(friendListKeyFromId(userId), friendUserId, true)
 			.hdel(friendRequestsKeyFromId(userId), friendUserId)
-			.hset(friendRequestsKeyFromId(friendUserId), userId, true)
-			.execAsync()
-			.then(function(response) {
-				if (response[2]) {
-					// Send notification.
-				}
-				return Promise.resolve(true);
-			});
+			.execAsync().then(function() {
+		return redis.hset(friendRequestsKeyFromId(friendUserId), userId, true);
+	}).then(function(response) {
+		if (response) {
+			// Send notification
+		}
+		return Promise.resolve(true);
+	});
 }
 
 function friendsForUserWithId(userId) {
-	var friends = [];
-	return client.hgetallAsync(friendListKeyFromId(userId)).then(function(response) {
-		var multi = client.multi();
+	/*var friends = [];
+	return redis.hgetallAsync(friendListKeyFromId(userId)).then(function(response) {
+		var multi = redis.multi();
 		for (id in response) {
 			friends.push({
 				id: id
@@ -78,15 +83,16 @@ function friendsForUserWithId(userId) {
 			}
 		}
 		return Promise.resolve(friends);
-	});
+	});*/
+	return Promise.resolve([]);
 }
 
 function createNewUser(phoneNumber) {
 	var code = Math.floor(Math.random() * 900000) + 100000;
-	return client.incrAsync('user_id').then(function(id) {
-		return client.setAsync(phoneKeyFromPhoneNumber(phoneNumber), id).thenReturn(id);
+	return redis.incrAsync('user_id').then(function(id) {
+		return redis.setAsync(phoneKeyFromPhoneNumber(phoneNumber), id).thenReturn(id);
 	}).then(function(id) {
-		return client.hmsetAsync(userKeyFromId(id), ['phoneNumber', phoneNumber]).thenReturn(id);
+		return redis.hmsetAsync(userKeyFromId(id), [userKeys.phone, phoneNumber]).thenReturn(id);
 	});
 }
 
@@ -100,11 +106,11 @@ exports.create = function(phoneNumber, cb) {
 		}
 	}).then(function(id) {
 		userId = id;
-		return client.hgetAsync(userKeyFromId(id), 'code');
+		return redis.hgetAsync(userKeyFromId(id), userKeys.code);
 	}).then(function(code) {
 		if (!code) {
 			code = Math.floor(Math.random() * 900000) + 100000;
-			return client.hsetAsync(userKeyFromId(userId), 'code', code).thenReturn(code);
+			return redis.hsetAsync(userKeyFromId(userId), userKeys.code, code).thenReturn(code);
 		} else {
 			return Promise.resolve(code);
 		}
@@ -122,20 +128,20 @@ exports.login = function(phoneNumber, code, cb) {
 			cb('unknown')
 		} else {
 			sharedId = id;
-			return client.hgetAsync(userKeyFromId(id), 'code');
+			return redis.hgetAsync(userKeyFromId(id), userKeys.code);
 		}
 	}).then(function(retrievedCode) {
 		if (!code || retrievedCode != code) {
 			return Promise.reject('mismatch');
 		} else {
-			return client.hgetAsync(userKeyFromId(sharedId), 'session');
+			return redis.hgetAsync(userKeyFromId(sharedId), userKeys.session);
 		}
 	}).then(function(sessionToken) {
 		if (sessionToken) {
 			return Promise.resolve(sessionToken);
 		} else {
 			sessionToken = utils.generateSessionToken();
-			return client.hmsetAsync(userKeyFromId(sharedId), 'session', sessionToken, 'active', true).thenReturn(sessionToken);
+			return redis.hmsetAsync(userKeyFromId(sharedId), userKeys.session, sessionToken, userKeys.active, true).thenReturn(sessionToken);
 		}
 	}).then(function(sessionToken) {
 		cb(null, sharedId, sessionToken);
@@ -145,7 +151,7 @@ exports.login = function(phoneNumber, code, cb) {
 };
 
 exports.confirmSession = function(id, sessionToken, cb) {
-	client.hgetAsync(userKeyFromId(id), 'session').then(function(dbSessionToken) {
+	redis.hgetAsync(userKeyFromId(id), userKeys.session).then(function(dbSessionToken) {
 		cb(null, sessionToken && dbSessionToken == sessionToken);
 	}, function(err) {
 		cb(err);
@@ -193,12 +199,13 @@ exports.addFriendFromId = function(userId, friendUserId, cb) {
 };
 
 exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
-	var multi = client.multi();
+	var promises = [];
 	for (var i = 0, phoneNumber; phoneNumber = phoneNumbers[i]; i++) {
-		multi.exists(phoneKeyFromPhoneNumber(phoneNumber));
+		promises.push(redis.existsAsync(phoneKeyFromPhoneNumber(phoneNumber)));
 	}
-	multi.execAsync().then(function(exists) {
-		cb(null, exists.map(function(doesExist) { return doesExist != 0; }));
+	Promise.all(promises).then(function(exists) {
+		console.log(exists);
+		//cb(null, exists.map(function(doesExist) { return doesExist != 0; }));
 	}, function(err) {
 		cb(err);
 	});

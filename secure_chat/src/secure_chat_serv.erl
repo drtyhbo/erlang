@@ -1,5 +1,5 @@
 -module(secure_chat_serv).
--export([start_link/2,
+-export([start_link/1,
 		init/1,
 		handle_cast/2,
 		handle_call/3,
@@ -10,12 +10,11 @@
 
 -record(server,
 		{listen_socket,
-		redis_connection,
 		user_list,
 		pending_msgs}).
 
-start_link(Port, RedisConnection) ->
-	case gen_server:start_link({local, ?MODULE}, ?MODULE, [Port, RedisConnection], []) of
+start_link(Port) ->
+	case gen_server:start_link({local, ?MODULE}, ?MODULE, [Port], []) of
 		{ok, Pid} ->
 			gen_server:cast(Pid, accept),
 			{ok, Pid};
@@ -23,11 +22,11 @@ start_link(Port, RedisConnection) ->
 			Error
 	end.
 
-init([Port, RedisConnection]) ->
+init([Port]) ->
 	{ok, Socket} = gen_tcp:listen(Port, [binary, {active, true}, {reuseaddr, true}]),
 	UserList = ets:new(user_lookup, [public]),
 	PendingMsgs = ets:new(pending_msgs, [public, {keypos, 3}]),
-	{ok, #server{listen_socket=Socket, redis_connection=RedisConnection, user_list=UserList, pending_msgs=PendingMsgs}}.
+	{ok, #server{listen_socket=Socket, user_list=UserList, pending_msgs=PendingMsgs}}.
 
 handle_cast(accept, State) ->
 	case gen_tcp:accept(State#server.listen_socket) of
@@ -35,13 +34,13 @@ handle_cast(accept, State) ->
 			io:format("New connection ~n"),
 			{ok, NewPid} = secure_chat_user:start(
 				Socket,
-				State#server.redis_connection,
 				State#server.user_list,
 				State#server.pending_msgs),
 			gen_tcp:controlling_process(Socket, NewPid),
 			gen_server:cast(self(), accept),
 			{noreply, State};
 		_ ->
+			io:format("New connection ~n"),
 			{noreply, State}
 	end.
 

@@ -17,8 +17,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         MessageManager.sharedManager.setup()
 
+        let rootViewController: UIViewController
+        if User.userId == nil {
+            rootViewController = UINavigationController(rootViewController: PhoneNumberViewController())
+        } else {
+            rootViewController = MainViewController()
+        }
+
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        window?.rootViewController = MainViewController()
+        window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
 
         return true
