@@ -10,7 +10,6 @@
 
 -record(server,
 		{listen_socket,
-		user_list,
 		pending_msgs}).
 
 start_link(Port) ->
@@ -24,9 +23,8 @@ start_link(Port) ->
 
 init([Port]) ->
 	{ok, Socket} = gen_tcp:listen(Port, [binary, {active, true}, {reuseaddr, true}]),
-	UserList = ets:new(user_lookup, [public]),
 	PendingMsgs = ets:new(pending_msgs, [public, {keypos, 3}]),
-	{ok, #server{listen_socket=Socket, user_list=UserList, pending_msgs=PendingMsgs}}.
+	{ok, #server{listen_socket=Socket, pending_msgs=PendingMsgs}}.
 
 handle_cast(accept, State) ->
 	case gen_tcp:accept(State#server.listen_socket) of
@@ -34,7 +32,6 @@ handle_cast(accept, State) ->
 			io:format("New connection ~n"),
 			{ok, NewPid} = secure_chat_user:start(
 				Socket,
-				State#server.user_list,
 				State#server.pending_msgs),
 			gen_tcp:controlling_process(Socket, NewPid),
 			gen_server:cast(self(), accept),

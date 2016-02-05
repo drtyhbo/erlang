@@ -11,10 +11,8 @@
 start(_StartType, _StartArgs) ->
 	lager:start(),
 	eredis_cluster:start(),
-	eredis_cluster:connect([
-        {"127.0.0.1", 30001},
-        {"127.0.0.1", 30002}]),
 	setup_mnesia(),
+	syn:init(),
     secure_chat_sup:start_link().
 
 stop(_State) ->

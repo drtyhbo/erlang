@@ -1,5 +1,5 @@
 -module(secure_chat_user).
--export([start/3,
+-export([start/2,
 		receive_msg/2,
 		msg_is_delivered/1,
 		init/1,
@@ -20,7 +20,6 @@
 		{socket,
 		user_id,
 		local_id,
-		user_list,
 		pending_msgs}).
 -record(routing_info, {local_id}).
 
@@ -44,8 +43,8 @@
 
 %% === Messages ===
 
-start(Socket, UserList, PendingMsgs) ->
-	gen_fsm:start(?MODULE, [Socket, UserList, PendingMsgs], []).
+start(Socket, PendingMsgs) ->
+	gen_fsm:start(?MODULE, [Socket, PendingMsgs], []).
 
 connect() ->
 	gen_fsm:send_event(self(), connect).
@@ -58,11 +57,10 @@ msg_is_delivered(Msg) ->
 
 %% === gen_fsm ===
 
-init([Socket, UserList, PendingMsgs]) ->
+init([Socket, PendingMsgs]) ->
 	UserState = #user_state{
 			socket = Socket,
 			local_id = 0,
-			user_list = UserList,
 			pending_msgs = PendingMsgs},
 	{ok, logged_out, UserState}.
 
@@ -105,14 +103,13 @@ code_change(_, FSMState, State, _) ->
 	{ok, FSMState, State}.
 
 terminate(_Reason, _StateName, State) ->
-	secure_chat_msg_router:remove_user(State#user_state.user_list, State#user_state.user_id),
 	gen_tcp:close(State#user_state.socket),
 	ok.
 
 %% ==== FSM Events ====
 
 logged_out(connect, State) ->
-	secure_chat_msg_router:add_user(State#user_state.user_list, State#user_state.user_id, self()),
+	secure_chat_msg_router:add_user(State#user_state.user_id, self()),
 	send_json(State#user_state.socket, ?OUT_CONNECTED_JSON()),
 	gen_fsm:send_event(self(), check_offline_msgs),
 	{next_state, logged_in, State};
@@ -195,7 +192,7 @@ handle_msg_json(Json, State) ->
 		client_id=ClientId,
 		msg=Msg},
 	io:format("Msg ~p ~n", [NewMsg]),
-	case secure_chat_msg_router:route_msg(State#user_state.user_list, NewMsg) of
+	case secure_chat_msg_router:route_msg(NewMsg) of
 		ok ->
 			io:format("routed ~n"),
 			ets:insert(State#user_state.pending_msgs, NewMsg),

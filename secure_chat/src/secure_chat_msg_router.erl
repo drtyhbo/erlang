@@ -1,21 +1,17 @@
 -module(secure_chat_msg_router).
--export([add_user/3,
-		remove_user/2,
-		route_msg/2]).
+-export([add_user/2,
+		route_msg/1]).
 -include("secure_chat.hrl").
 
-add_user(UserList, UserId, Pid) ->
+add_user(UserId, Pid) ->
 	io:format("~p ~n", [{UserId, Pid}]),
-	ets:insert(UserList, {UserId, Pid}).
+	syn:register(UserId, Pid).
 
-remove_user(UserList, UserId) ->
-	ets:delete(UserList, UserId).
-
-route_msg(UserList, Msg) ->
-	case ets:lookup(UserList, Msg#message.to) of
-	[{_, Pid}] ->
+route_msg(Msg) ->
+	case syn:find_by_key(Msg#message.to) of
+	Pid ->
 		secure_chat_user:receive_msg(Pid, Msg),
 		ok;
-	_ ->
+	undefined ->
 		offline
 	end.
