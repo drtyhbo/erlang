@@ -6,16 +6,14 @@
 
 start(_StartType, _StartArgs) ->
 	connect_nodes(),
-
 	lager:start(),
-
 	eredis_cluster:start(),
-
-%	setup_mnesia(),
 
 	syn:start(),
 	syn:init(),
 
+	setup_mnesia(),
+    
     secure_chat_sup:start_link().
 
 stop(_State) ->
@@ -23,17 +21,17 @@ stop(_State) ->
 
 connect_nodes() ->
 	{ok, Nodes} = application:get_env(nodes),
-	[net_kernel:connect_node(Node) || Node <- Nodes].
+	[net_kernel:connect_node(Node) || Node <- Nodes, Node /= node()].
 
 setup_mnesia() ->
 	mnesia:stop(),
-	mnesia:create_schema([node()]),
+	mnesia:create_schema([node()|nodes()]),
 	mnesia:start(),
 
 	Result = mnesia:create_table(message, [
 		{attributes, record_info(fields, message)},
 		{type, bag},
-		{disc_copies, [node()]}
+		{disc_copies, [node()|nodes()]}
 	]),
 
 	case Result of
@@ -46,7 +44,7 @@ setup_mnesia() ->
 	end.
 
 add_table_to_current_node() ->
-%	mnesia:wait_for_tables([message], 5000),
+	%mnesia:wait_for_tables([message], 5000),
 	case mnesia:add_table_copy(message, node(), disc_copies) of
 		{atomic, ok} ->
 			ok;
