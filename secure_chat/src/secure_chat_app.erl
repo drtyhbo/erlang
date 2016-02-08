@@ -1,31 +1,57 @@
-%%%-------------------------------------------------------------------
-%% @doc secure_chat public API
-%% @end
-%%%-------------------------------------------------------------------
-
 -module(secure_chat_app).
--export([start/2, stop/1, shutdown/0]).
+-export([start/2, stop/1]).
 -include("secure_chat.hrl").
 -behaviour(application).
 
+
 start(_StartType, _StartArgs) ->
+	connect_nodes(),
+
 	lager:start(),
+
 	eredis_cluster:start(),
-	setup_mnesia(),
+
+%	setup_mnesia(),
+
+	syn:start(),
 	syn:init(),
+
     secure_chat_sup:start_link().
 
 stop(_State) ->
     ok.
 
-shutdown() ->
-	secure_chat_sup:stop(),
-	application:stop(chat).
+connect_nodes() ->
+	{ok, Nodes} = application:get_env(nodes),
+	[net_kernel:connect_node(Node) || Node <- Nodes].
 
 setup_mnesia() ->
-	ok = application:start(mnesia),
+	mnesia:stop(),
 	mnesia:create_schema([node()]),
-	{atomic, ok} = mnesia:create_table(message, [
+	mnesia:start(),
+
+	Result = mnesia:create_table(message, [
 		{attributes, record_info(fields, message)},
-		{type, bag}]),
-	mnesia:wait_for_tables([message], 5000).
+		{type, bag},
+		{disc_copies, [node()]}
+	]),
+
+	case Result of
+		{atomic, ok} ->
+			ok;
+		{aborted, {already_exists, message}} ->
+			add_table_to_current_node();
+		Other ->
+			{error, Other}
+	end.
+
+add_table_to_current_node() ->
+%	mnesia:wait_for_tables([message], 5000),
+	case mnesia:add_table_copy(message, node(), disc_copies) of
+		{atomic, ok} ->
+			ok;
+		{aborted, {already_exists, message}} ->
+			ok;
+		Other ->
+			{error, Other}
+	end.

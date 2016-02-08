@@ -19,7 +19,7 @@ class APIManager {
         }
     }
 
-    static let domain = "http://192.168.1.109:3000"
+    static let domain = Constants.host
 
     static func registerPhoneNumber(phoneNumber: String, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
@@ -68,7 +68,7 @@ class APIManager {
     }
 
     private static func sendRequestToUrl(url: String, parameters: [String:AnyObject], callback: JSON?->Void) {
-        Alamofire.request(.POST, "\(domain)/api/\(url)", parameters: parameters)
+        Alamofire.request(.POST, "http://\(domain)/api/\(url)", parameters: parameters)
             .responseJSON {
                 response in
                 if let json = response.result.value {

@@ -8,9 +8,7 @@
 		code_change/3]).
 -behavior(gen_server).
 
--record(server,
-		{listen_socket,
-		pending_msgs}).
+-record(server, {listen_socket}).
 
 start_link(Port) ->
 	case gen_server:start_link({local, ?MODULE}, ?MODULE, [Port], []) of
@@ -23,21 +21,16 @@ start_link(Port) ->
 
 init([Port]) ->
 	{ok, Socket} = gen_tcp:listen(Port, [binary, {active, true}, {reuseaddr, true}]),
-	PendingMsgs = ets:new(pending_msgs, [public, {keypos, 3}]),
-	{ok, #server{listen_socket=Socket, pending_msgs=PendingMsgs}}.
+	{ok, #server{listen_socket=Socket}}.
 
 handle_cast(accept, State) ->
 	case gen_tcp:accept(State#server.listen_socket) of
 		{ok, Socket} ->
-			io:format("New connection ~n"),
-			{ok, NewPid} = secure_chat_user:start(
-				Socket,
-				State#server.pending_msgs),
+			{ok, NewPid} = secure_chat_user:start(Socket),
 			gen_tcp:controlling_process(Socket, NewPid),
 			gen_server:cast(self(), accept),
 			{noreply, State};
 		_ ->
-			io:format("New connection ~n"),
 			{noreply, State}
 	end.
 

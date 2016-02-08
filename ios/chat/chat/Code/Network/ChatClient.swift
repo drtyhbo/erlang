@@ -22,12 +22,15 @@ class ChatClient {
 
     private(set) var state: State = .Disconnected
 
+    private let host = "192.168.1.102" //Constants.host
+    private let port: UInt16 = 49165
+
     private let connection: ChatConnection
 
     private var messageId = 0
 
     init() {
-        connection = ChatConnection(host: "192.168.1.109", port: 49165)
+        connection = ChatConnection(host: host, port: port)
         connection.delegate = self
     }
 

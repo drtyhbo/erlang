@@ -1,5 +1,5 @@
 -module(secure_chat_user).
--export([start/2,
+-export([start/1,
 		receive_msg/2,
 		msg_is_delivered/1,
 		init/1,
@@ -23,7 +23,9 @@
 		pending_msgs}).
 -record(routing_info, {local_id}).
 
+
 %% ==== Defines ====
+
 
 -define(RECEIVE_SOCK_MSG(Msg), {tcp, _Port, Msg}).
 -define(SOCK_CLOSED(), {tcp_closed, _Port}).
@@ -41,40 +43,38 @@
 -define(OUT_ERROR_JSON(Error), {struct, [{<<"e">>, Error}]}).
 -define(OUT_MSG_IS_DELIVERED(MsgId), {struct, [{<<"did">>, MsgId}]}).
 
+
 %% === Messages ===
 
-start(Socket, PendingMsgs) ->
-	gen_fsm:start(?MODULE, [Socket, PendingMsgs], []).
+
+start(Socket) ->
+	gen_fsm:start(?MODULE, [Socket], []).
 
 connect() ->
 	gen_fsm:send_event(self(), connect).
 
+% Called to receive a message from another user.
 receive_msg(Pid, Msg) ->
 	gen_fsm:send_event(Pid, {receive_msg, Msg}).
 
+% Called to indicate the specified message has been delivered.
 msg_is_delivered(Msg) ->
 	gen_fsm:send_event(Msg#message.from_pid, {msg_is_delivered, Msg}).
 
+
 %% === gen_fsm ===
 
-init([Socket, PendingMsgs]) ->
+
+init([Socket]) ->
 	UserState = #user_state{
 			socket = Socket,
 			local_id = 0,
-			pending_msgs = PendingMsgs},
+			pending_msgs = ets:new(pending_msgs, [private, {keypos, 3}])},
 	{ok, logged_out, UserState}.
 
-flatten({struct, L}) ->
-    flatten(L);
-flatten([H | T]) ->
-    [flatten(H) | flatten(T)];
-flatten({K, V}) ->
-    {K, flatten(V)};
-flatten(Term) ->
-    Term.
 
 handle_info(?RECEIVE_SOCK_MSG(Msg), FSMState, State) ->
-	FlatJson = flatten(mochijson2:decode(Msg)),
+	FlatJson = secure_chat_utils:flatten(mochijson2:decode(Msg)),
 	NewState = handle_json(FSMState, FlatJson, State),
 	{next_state, FSMState, NewState};
 handle_info(?SOCK_CLOSED(), _FSMState, State) ->
@@ -96,26 +96,32 @@ handle_info(_, FSMState, State) ->
 handle_event(_, FSMState, State) ->
 	{next_state, FSMState, State}.
 
+
 handle_sync_event(_, _, FSMState, State) ->
 	{next_state, FSMState, State}.
 
+
 code_change(_, FSMState, State, _) ->
 	{ok, FSMState, State}.
+
 
 terminate(_Reason, _StateName, State) ->
 	gen_tcp:close(State#user_state.socket),
 	ok.
 
+
 %% ==== FSM Events ====
 
+
 logged_out(connect, State) ->
-	secure_chat_msg_router:add_user(State#user_state.user_id, self()),
+	add_user(State#user_state.user_id, self()),
 	send_json(State#user_state.socket, ?OUT_CONNECTED_JSON()),
 	gen_fsm:send_event(self(), check_offline_msgs),
 	{next_state, logged_in, State};
 logged_out(Event, State) ->
 	io:format("Received unknown logged_out event ~p~n", [Event]),
 	{next_state, logged_out, State}.
+
 
 logged_in(check_offline_msgs, State) ->
 	case secure_chat_msg_store:get_offline_msgs(State#user_state.user_id) of
@@ -126,7 +132,6 @@ logged_in(check_offline_msgs, State) ->
 	end,
 	{next_state, logged_in, State};
 logged_in({receive_msg, Msg}, State) ->
-	io:format("Receive msg ~p ~n", [Msg]),
 	secure_chat_user:msg_is_delivered(Msg),
 	receive_msgs(State#user_state.socket, [Msg]),
 	{next_state, logged_in, State};
@@ -138,10 +143,11 @@ logged_in(Event, State) ->
 	io:format("Received unknown logged_in event ~p~n", [Event]),
 	{next_state, logged_in, State}.
 
+
 %% ==== JSON Handlers ====
 
+
 handle_json(logged_out, Json, State) ->
-	io:format("Msg logged_out ~p ~n", [Json]),
 	Type = proplists:get_value(<<"t">>, Json),
 	case Type of
 		<<"c">> ->
@@ -151,7 +157,6 @@ handle_json(logged_out, Json, State) ->
 			State
 	end;
 handle_json(logged_in, Json, State) ->
-	io:format("Msg logged_in ~p ~n", [Json]),
 	Type = proplists:get_value(<<"t">>, Json),
 	case Type of
 		<<"m">> ->
@@ -164,7 +169,26 @@ handle_json(FSMState, Json, State) ->
 	io:format("Unknown JSON received ~p~n", [Json]),
 	{next_state, FSMState, State}.
 
+
+%% === Message routing ===
+
+
+add_user(UserId, Pid) ->
+	syn:register(UserId, Pid).
+
+
+route_msg(Msg) ->
+	case syn:find_by_key(Msg#message.to) of
+	Pid when is_pid(Pid) ->
+		secure_chat_user:receive_msg(Pid, Msg),
+		ok;
+	_ ->
+		offline
+	end.
+
+
 %% === JSON Parsing ===
+
 
 handle_connect_json(Json, State) ->
 	UserId = proplists:get_value(<<"u">>, Json),
@@ -177,6 +201,7 @@ handle_connect_json(Json, State) ->
 	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
 	 		State
 	 end.
+
 
 handle_msg_json(Json, State) ->
 	To = proplists:get_value(<<"r">>, Json),
@@ -191,38 +216,42 @@ handle_msg_json(Json, State) ->
 		ts=secure_chat_utils:timestamp(),
 		client_id=ClientId,
 		msg=Msg},
-	io:format("Msg ~p ~n", [NewMsg]),
-	case secure_chat_msg_router:route_msg(NewMsg) of
+	case route_msg(NewMsg) of
 		ok ->
-			io:format("routed ~n"),
 			ets:insert(State#user_state.pending_msgs, NewMsg),
 			erlang:send_after(?OFFLINE_INTERVAL, self(), {check_offline_msg, NewMsg});
 		offline ->
-			io:format("offline ~n"),
 			store_offline_msg(NewMsg)
 	end,
 	State#user_state{local_id=LocalId + 1}.
 
+
 %% === Offline messages ===
+
 
 store_offline_msg(Msg) ->
 	secure_chat_msg_store:store_offline_msg(Msg),
 	secure_chat_user:msg_is_delivered(Msg).
 
+
 %% === Socket functions ===
+
 
 receive_msgs(Socket, Msgs) ->
 	JsonList = lists:reverse(generate_msgs_json(Msgs, [])),
 	send_json(Socket, ?OUT_MSGS_JSON(JsonList)).
 
+
 receive_offline_msgs(Socket, Msgs) ->
 	JsonList = lists:reverse(generate_msgs_json(Msgs, [])),
 	send_json(Socket, ?OUT_OFFLINE_MSGS_JSON(JsonList)).
+
 
 generate_msgs_json([], JsonList) ->
 	JsonList;
 generate_msgs_json([H|T], JsonList) ->
 	generate_msgs_json(T, [?OUT_MSG_JSON(H#message.ts, H#message.from, H#message.msg)|JsonList]).
+
 
 send_json(Socket, Json) ->
 	gen_tcp:send(Socket, mochijson2:encode(Json) ++ "\n").
