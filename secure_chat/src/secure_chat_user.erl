@@ -19,8 +19,7 @@
 -record(user_state,
 		{socket,
 		user_id,
-		local_id,
-		pending_msgs}).
+		local_id}).
 -record(routing_info, {local_id}).
 
 
@@ -68,8 +67,7 @@ msg_is_delivered(Msg) ->
 init([Socket]) ->
 	UserState = #user_state{
 			socket = Socket,
-			local_id = 0,
-			pending_msgs = ets:new(pending_msgs, [private, {keypos, 3}])},
+			local_id = 0},
 	{ok, logged_out, UserState}.
 
 
@@ -79,16 +77,6 @@ handle_info(?RECEIVE_SOCK_MSG(Msg), FSMState, State) ->
 	{next_state, FSMState, NewState};
 handle_info(?SOCK_CLOSED(), _FSMState, State) ->
 	{stop, disconnect, State};
-handle_info({check_offline_msg, Msg}, FSMState, State) ->
-	RoutingInfo = Msg#message.routing_info,
-	case ets:lookup(State#user_state.pending_msgs, RoutingInfo) of
-		[] ->
-			ok;
-		_ ->
-			store_offline_msg(Msg),
-			ets:delete(State#user_state.pending_msgs, RoutingInfo)
-	end,
-	{next_state, FSMState, State};
 handle_info(_, FSMState, State) ->
 	{next_state, FSMState, State}.
 
@@ -136,7 +124,7 @@ logged_in({receive_msg, Msg}, State) ->
 	receive_msgs(State#user_state.socket, [Msg]),
 	{next_state, logged_in, State};
 logged_in({msg_is_delivered, Msg}, State) ->
-	ets:delete(State#user_state.pending_msgs, Msg#message.routing_info),
+	secure_chat_msg_store:delete_offline_msg(Msg),
 	send_json(State#user_state.socket, ?OUT_MSG_IS_DELIVERED(Msg#message.client_id)),
 	{next_state, logged_in, State};
 logged_in(Event, State) ->
@@ -161,6 +149,8 @@ handle_json(logged_in, Json, State) ->
 	case Type of
 		<<"m">> ->
 			handle_msg_json(Json, State);
+		<<"a">> ->
+			handle_acknowledgement_json(Json, State);
 		Unknown ->
 			io:format("Unknown logged_in message type ~p ~p ~n", [Unknown, Json]),
 			State
@@ -175,16 +165,6 @@ handle_json(FSMState, Json, State) ->
 
 add_user(UserId, Pid) ->
 	syn:register(UserId, Pid).
-
-
-route_msg(Msg) ->
-	case syn:find_by_key(Msg#message.to) of
-	Pid when is_pid(Pid) ->
-		secure_chat_user:receive_msg(Pid, Msg),
-		ok;
-	_ ->
-		offline
-	end.
 
 
 %% === JSON Parsing ===
@@ -216,22 +196,31 @@ handle_msg_json(Json, State) ->
 		ts=secure_chat_utils:timestamp(),
 		client_id=ClientId,
 		msg=Msg},
-	case route_msg(NewMsg) of
-		ok ->
-			ets:insert(State#user_state.pending_msgs, NewMsg),
-			erlang:send_after(?OFFLINE_INTERVAL, self(), {check_offline_msg, NewMsg});
-		offline ->
-			store_offline_msg(NewMsg)
+	store_offline_msg(NewMsg),
+	case syn:find_by_key(To) of
+	Pid when is_pid(Pid) ->
+		secure_chat_user:receive_msg(Pid, NewMsg);
+	_ ->
+		ok
 	end,
 	State#user_state{local_id=LocalId + 1}.
+
+
+handle_acknowledgement_json(Json, State) ->
+	case proplists:get_value(<<"w">>, Json) of
+		<<"offline">> ->
+			secure_chat_msg_store:delete_offline_msgs(State#user_state.user_id);
+		DeleteType ->
+			io:format("Unknown delete message type ~p~n", [DeleteType])
+	end,
+	State.
 
 
 %% === Offline messages ===
 
 
 store_offline_msg(Msg) ->
-	secure_chat_msg_store:store_offline_msg(Msg),
-	secure_chat_user:msg_is_delivered(Msg).
+	secure_chat_msg_store:store_offline_msg(Msg).
 
 
 %% === Socket functions ===

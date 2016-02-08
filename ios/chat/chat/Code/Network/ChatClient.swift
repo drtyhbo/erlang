@@ -65,6 +65,13 @@ class ChatClient {
         }
     }
 
+    private func sendReceivedOfflineMessagesResponse() {
+        connection.sendJson(JSON([
+            "t": "a",
+            "w": "offline"
+        ]))
+    }
+
     private func handleJson(json: JSON) {
         if json["r"] == "connected" {
             state = .Connected
@@ -72,6 +79,7 @@ class ChatClient {
             handleMessagesJson(messages)
         } else if let offlineMessages = json["o"].array {
             handleMessagesJson(offlineMessages)
+            sendReceivedOfflineMessagesResponse()
         } else {
             print ("unknown json \(json.rawString()!)")
         }
