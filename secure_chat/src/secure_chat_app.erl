@@ -9,10 +9,10 @@ start(_StartType, _StartArgs) ->
 	lager:start(),
 	eredis_cluster:start(),
 
+	setup_mnesia(),
+
 	syn:start(),
 	syn:init(),
-
-	setup_mnesia(),
     
     secure_chat_sup:start_link().
 
@@ -24,7 +24,6 @@ connect_nodes() ->
 	[net_kernel:connect_node(Node) || Node <- Nodes, Node /= node()].
 
 setup_mnesia() ->
-	mnesia:stop(),
 	mnesia:create_schema([node()|nodes()]),
 	mnesia:start(),
 
