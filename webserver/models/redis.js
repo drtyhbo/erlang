@@ -12,4 +12,20 @@ bluebird.promisifyAll(Redis.Cluster.prototype);
 	host: '127.0.0.1'
 }]);*/
 
-exports.redis = new Redis(6379, 'chat-redis');
+var redis = new Redis({
+	port: 6379,
+	host: 'redis1.drtyhbo.com',
+	retryStrategy: function (times) {
+		return Math.random() * times * 1000;
+	}
+});
+
+redis.on('connect', function() {
+	console.log("**** Connected to redis ****");
+}).on('close', function() {
+	console.log("**** Disconnection from redis ****");
+}).on('reconnecting', function() {
+	console.log("**** Reconnecting to redis ****");
+});
+
+exports.redis = redis;

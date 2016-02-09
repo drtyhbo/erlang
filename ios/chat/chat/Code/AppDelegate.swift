@@ -38,7 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        ChatClient.sharedClient.maybeConnect()
     }
 
     private func registerApplicationForNotifications(application: UIApplication) {

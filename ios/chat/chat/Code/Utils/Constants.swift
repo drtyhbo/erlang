@@ -9,5 +9,5 @@
 import Foundation
 
 class Constants {
-    static let host = "chat1.drtyhbo.com"
+    static let host = "chat2.drtyhbo.com"
 }

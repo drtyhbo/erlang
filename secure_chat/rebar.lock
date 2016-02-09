@@ -23,6 +23,6 @@
        {ref,"3bb48a893ff5598f7c73731ac17545206d259fac"}},
   1},
  {<<"syn">>,
-  {git,"https://github.com/ostinelli/syn.git",
-       {ref,"95d712e5fc9de8624b35db88f8ce690ef8aaa4de"}},
+  {git,"https://github.com/drtyhbo/syn.git",
+       {ref,"491aec8ebabbcb02c6ac6be27143dc4bf72ec13f"}},
   0}].

@@ -19,10 +19,13 @@ class ChatClient {
 
     static let ChatClientSentMessageNotification = "ChatClientSentMessage"
     static let ChatClientReceivedMessageNotification = "ChatClientReceivedMessage"
+    static let ChatClientConnectingNotification = "ChatClientConnecting"
+    static let ChatClientDidConnectNotification = "ChatClientDidConnect"
+    static let ChatClientDidDisconnectNotification = "ChatClientDidDisconnect"
 
     private(set) var state: State = .Disconnected
 
-    private let host = "192.168.1.102" //Constants.host
+    private let host = Constants.host
     private let port: UInt16 = 49165
 
     private let connection: ChatConnection
@@ -32,6 +35,8 @@ class ChatClient {
     init() {
         connection = ChatConnection(host: host, port: port)
         connection.delegate = self
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
 
     func maybeConnect() {
@@ -55,6 +60,7 @@ class ChatClient {
     }
 
     private func connect() {
+        NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientConnectingNotification, object: nil)
         if let userId = User.userId, sessionToken = User.sessionToken {
             let connectJson = JSON([
                 "t": "c",
@@ -75,6 +81,7 @@ class ChatClient {
     private func handleJson(json: JSON) {
         if json["r"] == "connected" {
             state = .Connected
+            NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientDidConnectNotification, object: nil)
         } else if let messages = json["m"].array {
             handleMessagesJson(messages)
         } else if let offlineMessages = json["o"].array {
@@ -91,6 +98,12 @@ class ChatClient {
             NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessageNotification, object: nil, userInfo: ["receivedMessage": receivedMessage])
         }
     }
+
+    // Notifications
+
+    @objc private func applicationDidBecomeActive() {
+        maybeConnect()
+    }
 }
 
 extension ChatClient: ChatConnectionDelegate {
@@ -100,6 +113,7 @@ extension ChatClient: ChatConnectionDelegate {
 
     func chatConnectionOnDisconnect(chatConnection: ChatConnection) {
         state = .Disconnected
+        NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientDidDisconnectNotification, object: nil)
     }
 
     func chatConnection(chatConnection: ChatConnection, didReceiveJSON json: JSON) {

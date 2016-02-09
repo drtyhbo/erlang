@@ -2,8 +2,14 @@ setup:
 
 docker stop chat-redis && docker rm chat-redis && docker run --name chat-redis -d=true -v /var/data/redis:/data -p 6379:6379 redis redis-server --appendonly yes
 
-docker stop chat-webapp && docker rm chat-webapp && docker run -p 80:8080 --name chat-webapp --link chat-redis:chat-redis -d abinnewies/chat-webapp
+chat1:
+docker pull abinnewies/chat-webapp && docker stop chat-webapp && docker rm chat-webapp && docker run -p 80:8080 --name chat-webapp --link chat-redis:chat-redis -d abinnewies/chat-webapp
 
 docker pull abinnewies/chat-server && docker stop chat-server && docker rm chat-server && docker run -p 4369:4369 -p 9001-9005:9001-9005 -p 49165:49165 --name chat-server -link chat-redis:chat-redis -h chat1.drtyhbo.com -v /var/data/mnesia:/var/data/mnesia -d abinnewies/chat-server /usr/src/app/run.sh chat1
+
+chat2:
+docker pull abinnewies/chat-webapp && docker stop chat-webapp && docker rm chat-webapp && docker run -p 80:8080 --name chat-webapp -d abinnewies/chat-webapp
+
+docker pull abinnewies/chat-server && docker stop chat-server && docker rm chat-server && docker run -p 4369:4369 -p 9001-9005:9001-9005 -p 49165:49165 --name chat-server -h chat2.drtyhbo.com -v /var/data/mnesia:/var/data/mnesia -d abinnewies/chat-server /usr/src/app/run.sh chat2
 
 sudo docker run -it --link chat-redis:chat-redis --rm redis sh -c 'exec redis-cli -h "$CHAT_REDIS_PORT_6379_TCP_ADDR" -p "$CHAT_REDIS_PORT_6379_TCP_PORT"'

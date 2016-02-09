@@ -10,31 +10,84 @@ import APLSlideMenu
 import Foundation
 import UIKit
 
-class MainViewController: APLSlideMenuViewController {
+class MainViewController: UIViewController {
+    private let slideViewController: APLSlideMenuViewController
+    private var reconnectView: ReconnectView!
+
     init() {
+        slideViewController = APLSlideMenuViewController()
+
         super.init(nibName: nil, bundle: nil)
 
-        bouncing = true
-        gestureSupport = .Drag
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "chatClientConnecting", name: ChatClient.ChatClientConnectingNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "chatClientDidConnect", name: ChatClient.ChatClientDidConnectNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "chatClientDidDisconnect", name: ChatClient.ChatClientDidDisconnectNotification, object: nil)
 
-        let friendsListViewController = FriendsListViewController()
-        friendsListViewController.delegate = self
-        leftMenuViewController = friendsListViewController
-
-        let chatViewController = ChatViewController()
-        contentViewController = chatViewController
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        slideViewController.view.frame = view.bounds
+        slideViewController.bouncing = true
+        slideViewController.gestureSupport = .Drag
+
+        let friendsListViewController = FriendsListViewController()
+        friendsListViewController.delegate = self
+        slideViewController.leftMenuViewController = friendsListViewController
+
+        let chatViewController = ChatViewController()
+        slideViewController.contentViewController = chatViewController
+
+        view.addSubview(slideViewController.view)
+        addChildViewController(slideViewController)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        slideViewController.view.bounds.size = view.bounds.size
+    }
+
+    private func showReconnectView() {
+        if reconnectView == nil {
+            reconnectView = ReconnectView(frame: CGRect(x: 0, y: 0, width: view.bounds.size.width, height: 50))
+        }
+
+        view.insertSubview(reconnectView, atIndex: 0)
+
+        UIView.animateWithDuration(0.25) {
+            self.slideViewController.view.frame.origin.y = 50
+        }
+    }
+
+    private func hideReconnectView() {
+        UIView.animateWithDuration(0.25) {
+            self.slideViewController.view.frame.origin.y = 0
+        }
+    }
+
+    @objc private func chatClientConnecting() {
+        showReconnectView()
+    }
+
+    @objc private func chatClientDidConnect() {
+        hideReconnectView()
+    }
+
+    @objc private func chatClientDidDisconnect() {
+        showReconnectView()
+    }
 }
 
 extension MainViewController: FriendsListViewControllerDelegate {
     func friendsListViewController(friendsListViewController: FriendsListViewController, didSelectFriend friend: Friend) {
-        let chatViewController = contentViewController as! ChatViewController
+        let chatViewController = slideViewController.contentViewController as! ChatViewController
         chatViewController.friend = friend
 
-        hideMenu(true)
+        slideViewController.hideMenu(true)
     }
 }
