@@ -6,6 +6,7 @@ target 'chat' do
 pod 'Alamofire'
 pod "APLSlideMenu"
 pod 'CocoaAsyncSocket'
+pod 'MagicalRecord'
 pod 'SDWebImage'
 pod 'SwiftyJSON'
 pod 'TWTToast'

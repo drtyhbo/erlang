@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "39C1A4F3DCB875E905ADA530"
+               BlueprintIdentifier = "D0B24194DF80B2FF4379A54B"
                BuildableName = "TWTToast.framework"
                BlueprintName = "TWTToast"
                ReferencedContainer = "container:Pods.xcodeproj">
