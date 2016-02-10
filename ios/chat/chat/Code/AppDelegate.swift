@@ -6,6 +6,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import MagicalRecord
 import UIKit
 
 @UIApplicationMain
@@ -13,6 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        MagicalRecord.setupAutoMigratingCoreDataStack()
+
         registerApplicationForNotifications(application)
 
         MessageManager.sharedManager.setup()

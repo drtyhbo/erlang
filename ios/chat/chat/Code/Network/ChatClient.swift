@@ -94,7 +94,7 @@ class ChatClient {
 
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            let receivedMessage = ReceivedMessage(fromId: messageJson["f"].string!, timestamp: messageJson["d"].int!, message: messageJson["m"]["m"].string!)
+            let receivedMessage = ReceivedMessage(fromId: Int(messageJson["f"].string!)!, timestamp: messageJson["d"].int!, message: messageJson["m"]["m"].string!)
             NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessageNotification, object: nil, userInfo: ["receivedMessage": receivedMessage])
         }
     }

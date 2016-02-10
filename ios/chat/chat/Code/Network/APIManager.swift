@@ -40,22 +40,27 @@ class APIManager {
         }
     }
 
-    static func getFriendsWithPhoneNumbers(phoneNumber: [String], callback: [Friend]->Void) {
+    struct FriendData {
+        let id: Int
+        let name: String
+    }
+
+    static func getFriendsWithPhoneNumbers(phoneNumber: [String], callback: [FriendData]->Void) {
         sendUserRequestToUrl("friend/check/", parameters: [
             "phone": [phoneNumber],
         ]) {
             json in
 
-            var friends: [Friend] = []
+            var friendsData: [FriendData] = []
             if let friendsJson = json?["friends"].array {
                 for i in 0..<friendsJson.count {
                     if friendsJson[i].null == nil {
                         let friendJson = friendsJson[i]
-                        friends.append(Friend(id: friendJson["id"].string!, name: friendJson["name"].string!))
+                        friendsData.append(FriendData(id: Int(friendJson["id"].string!)!, name: friendJson["name"].string!))
                     }
                 }
             }
-            callback(friends)
+            callback(friendsData)
         }
     }
 

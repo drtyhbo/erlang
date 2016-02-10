@@ -22,8 +22,6 @@ class FriendsListViewController: UIViewController {
 
     private let friendCellReuseIdentifier = "FriendTableViewCell"
 
-    private var friends: [Friend] = []
-
     init() {
         super.init(nibName: "FriendsListViewController", bundle: nil)
     }
@@ -39,9 +37,6 @@ class FriendsListViewController: UIViewController {
 
         let contacts = ContactsHelper().getAllContacts()
         FriendManager.sharedManager.loadFriends(contacts.map({ $0.phoneNumber })) {
-            friends in
-
-            self.friends = friends
             self.friendsTable.reloadData()
         }
     }
@@ -71,16 +66,16 @@ extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
+        return FriendManager.sharedManager.friends.count
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(friendCellReuseIdentifier, forIndexPath: indexPath) as! FriendTableViewCell
-        cell.friend = friends[indexPath.row]
+        cell.friend = FriendManager.sharedManager.friends[indexPath.row]
         return cell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        delegate?.friendsListViewController(self, didSelectFriend: friends[indexPath.row])
+        delegate?.friendsListViewController(self, didSelectFriend: FriendManager.sharedManager.friends[indexPath.row])
     }
 }

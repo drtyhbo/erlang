@@ -9,11 +9,11 @@
 import Foundation
 
 class ReceivedMessage {
-    let fromId: String
+    let fromId: Int
     let timestamp: Int
     let message: String
 
-    init(fromId: String, timestamp: Int, message: String) {
+    init(fromId: Int, timestamp: Int, message: String) {
         self.fromId = fromId
         self.timestamp = timestamp
         self.message = message
@@ -21,11 +21,11 @@ class ReceivedMessage {
 }
 
 class SentMessage {
-    let toId: String
+    let toId: Int
     let timestamp: Int
     let message: String
 
-    init(toId: String, timestamp: Int, message: String) {
+    init(toId: Int, timestamp: Int, message: String) {
         self.toId = toId
         self.timestamp = timestamp
         self.message = message

@@ -6,19 +6,27 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import CoreData
 import Foundation
 
-class Friend: Hashable {
-    var hashValue: Int {
-        return Int(id)!
+@objc(Friend)
+class Friend: NSManagedObject {
+    @NSManaged var id: Int
+    @NSManaged var name: String
+
+    static func createWithId(id: Int, name: String) -> Friend {
+        let friend = Friend.MR_createEntity()!
+        friend.id = id
+        friend.name = name
+        return friend
     }
 
-    private(set) var id: String
-    private(set) var name: String
+    static func findWithId(id: Int) -> Friend? {
+        return Friend.MR_findFirstByAttribute("id", withValue: id)
+    }
 
-    init(id: String, name: String) {
-        self.id = id
-        self.name = name
+    static func findAll() -> [Friend] {
+        return Friend.MR_findAllSortedBy("name", ascending: true) as? [Friend] ?? []
     }
 }
 

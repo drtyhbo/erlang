@@ -12,6 +12,7 @@
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
 		9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */; };
+		9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */; };
 		90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5981C4C06F900236D6B /* GIFSelector.swift */; };
 		90AFD59B1C4C070500236D6B /* GIFSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59A1C4C070500236D6B /* GIFSelector.xib */; };
 		90AFD59D1C4CBD1100236D6B /* GIFSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */; };
@@ -53,6 +54,8 @@
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
 		9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReconnectView.xib; sourceTree = "<group>"; };
+		9031FFDD1C6B78D600BCC456 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
+		9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
 		90AFD5981C4C06F900236D6B /* GIFSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIFSelector.swift; sourceTree = "<group>"; };
 		90AFD59A1C4C070500236D6B /* GIFSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelector.xib; sourceTree = "<group>"; };
 		90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelectorCell.xib; sourceTree = "<group>"; };
@@ -227,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				90EBF8A51C4749F700A7AD51 /* Images */,
+				9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -419,6 +423,7 @@
 				90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */,
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
+				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
 				90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
@@ -533,6 +538,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Debug;
 		};
@@ -548,6 +554,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Release;
 		};
@@ -573,6 +580,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */,
+				9031FFDD1C6B78D600BCC456 /* chat.xcdatamodel */,
+			);
+			currentVersion = 9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */;
+			name = chat.xcdatamodeld;
+			path = ../chat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 90EBF8791C47458F00A7AD51 /* Project object */;
 }
