@@ -7,6 +7,7 @@
 //
 
 import CocoaAsyncSocket
+import CoreData
 import UIKit
 
 class ChatViewController: UIViewController {
@@ -32,7 +33,7 @@ class ChatViewController: UIViewController {
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessageNotification, object: oldValue)
                 NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessageNotification, object: friend)
 
-                messages = MessageManager.sharedManager.messagesForFriend(friend)
+                messages = MessageManager.sharedManager.getMessagesForFriend(friend)
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
 
                 tableView.reloadData()
@@ -202,7 +203,7 @@ class ChatViewController: UIViewController {
     }
 
     @objc private func didReceiveMessage(notification: NSNotification) {
-        if let message = notification.userInfo?["message"] as? Message {
+        if let message = (notification.userInfo?["message"] as? MessageManager.NewMessageNotificationWrapper)?.message {
             appendMessage(message)
 
             if let friend = friend {

@@ -50,7 +50,7 @@ class ChatClient {
 
         let messageJson = JSON([
             "t": "m",
-            "r": to.id,
+            "r": String(to.id),
             "i": messageId++,
             "m": [
                 "m": text
