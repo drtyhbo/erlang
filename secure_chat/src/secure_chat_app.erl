@@ -9,7 +9,7 @@ start(_StartType, _StartArgs) ->
 	lager:start(),
 	eredis_cluster:start(),
 
-	setup_mnesia(),
+	ok = setup_mnesia(),
 
 	syn:start(),
 	syn:init(),
@@ -24,15 +24,13 @@ connect_nodes() ->
 	[net_kernel:connect_node(Node) || Node <- Nodes, Node /= node()].
 
 setup_mnesia() ->
-	mnesia:create_schema([node()|nodes()]),
 	mnesia:start(),
-
+    mnesia:change_config(extra_db_nodes, [node() | nodes()]),
 	Result = mnesia:create_table(message, [
 		{attributes, record_info(fields, message)},
 		{type, bag},
-		{disc_copies, [node()|nodes()]}
+		{disc_copies, [node()]}
 	]),
-
 	case Result of
 		{atomic, ok} ->
 			ok;
@@ -43,11 +41,18 @@ setup_mnesia() ->
 	end.
 
 add_table_to_current_node() ->
-	%mnesia:wait_for_tables([message], 5000),
-	case mnesia:add_table_copy(message, node(), disc_copies) of
+	mnesia:wait_for_tables([message], 10000),
+	case mnesia:change_table_copy_type(schema, node(), disc_copies) of
 		{atomic, ok} ->
-			ok;
-		{aborted, {already_exists, message}} ->
+			case mnesia:add_table_copy(message, node(), disc_copies) of
+				{atomic, ok} ->
+					ok;
+				{aborted, {already_exists, message}} ->
+					ok;
+				Other ->
+					{error, Other}
+			end;
+		{aborted, {already_exists,schema, _, disc_copies}} ->
 			ok;
 		Other ->
 			{error, Other}
