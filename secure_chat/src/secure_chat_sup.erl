@@ -22,5 +22,6 @@ init([]) ->
 		period => 5000},
 	Children = [
 		?CHILD(secure_chat_serv, [49165]),
-		?CHILD(secure_chat_msg_store, [])],
+		?CHILD(secure_chat_msg_store, []),
+		?CHILD(secure_chat_pns, [])],
 	{ok, {SupFlags, Children}}.

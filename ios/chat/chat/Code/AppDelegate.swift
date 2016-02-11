@@ -16,8 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         MagicalRecord.setupAutoMigratingCoreDataStack()
 
-        registerApplicationForNotifications(application)
-
         MessageManager.sharedManager.setup()
 
         let rootViewController: UIViewController
@@ -35,17 +33,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        // http://stackoverflow.com/a/24979960
+        let tokenChars = UnsafePointer<CChar>(deviceToken.bytes)
+        var tokenString = ""
+
+        for i in 0..<deviceToken.length {
+            tokenString += String(format: "%02.2hhx", arguments: [tokenChars[i]])
+        }
+
+        APIManager.registerDeviceToken(tokenString) {
+            success in
+            print (success)
+        }
     }
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-    }
-
-    private func registerApplicationForNotifications(application: UIApplication) {
-        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-        application.registerUserNotificationSettings(settings)
-        application.registerForRemoteNotifications()
     }
 }

@@ -71,6 +71,16 @@ class APIManager {
         }
     }
 
+    static func registerDeviceToken(deviceToken: String, callback: Bool->Void) {
+        sendUserRequestToUrl("pns/register/", parameters: [
+            "token": deviceToken,
+            "type": "ios"
+        ]) {
+            json in
+            callback(json != nil && json!["status"].string == "ok")
+        }
+    }
+
     private static func errorFromJson(json: JSON?) -> Error? {
         if let json = json {
             return json["status"] == "ok" ? nil : Error(json["status"].string ?? "invalid")

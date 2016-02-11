@@ -84,6 +84,7 @@ class ChatViewController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
 
+        registerForNotifications()
     }
 
     @objc private func appDidBecomeActive() {
@@ -92,6 +93,12 @@ class ChatViewController: UIViewController {
 
     @objc private func appDidEnterBackground() {
         newMessageView.resignFirstResponder()
+    }
+
+    private func registerForNotifications() {
+        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication().registerForRemoteNotifications()
     }
 
     private func sizeTextView() {

@@ -7,7 +7,8 @@ var userKeys = {
 	code: 'code',
 	session: 'session',
 	active: 'active',
-	key: 'key'
+	key: 'key',
+	iosPushToken: 'iosToken'
 };
 
 function userKeyFromId(id) {
@@ -140,3 +141,11 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 		cb(err);
 	});
 }
+
+exports.setDeviceToken = function(userId, token, cb) {
+	redis.hsetAsync(userKeyFromId(userId), userKeys.iosPushToken, token).then(function() {
+		cb();
+	}, function(err) {
+		cb(err);
+	});
+};

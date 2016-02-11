@@ -7,6 +7,7 @@
 start(_StartType, _StartArgs) ->
 	connect_nodes(),
 	lager:start(),
+	apns:start(),
 	eredis_cluster:start(),
 
 	ok = setup_mnesia(),
