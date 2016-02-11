@@ -13,6 +13,7 @@
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
 		9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */; };
 		9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */; };
+		9031FFE31C6CC88B00BCC456 /* SecurityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */; };
 		90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5981C4C06F900236D6B /* GIFSelector.swift */; };
 		90AFD59B1C4C070500236D6B /* GIFSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59A1C4C070500236D6B /* GIFSelector.xib */; };
 		90AFD59D1C4CBD1100236D6B /* GIFSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */; };
@@ -56,6 +57,7 @@
 		9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReconnectView.xib; sourceTree = "<group>"; };
 		9031FFDD1C6B78D600BCC456 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
 		9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
+		9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityHelper.swift; path = chat/Code/Utils/SecurityHelper.swift; sourceTree = SOURCE_ROOT; };
 		90AFD5981C4C06F900236D6B /* GIFSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIFSelector.swift; sourceTree = "<group>"; };
 		90AFD59A1C4C070500236D6B /* GIFSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelector.xib; sourceTree = "<group>"; };
 		90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelectorCell.xib; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 		9031FFD01C6240B700BCC456 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */,
 				9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */,
 				9031FFD31C6671B800BCC456 /* Constants.swift */,
 			);
@@ -413,6 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				90AFD5CF1C6091F100236D6B /* MainViewController.swift in Sources */,
+				9031FFE31C6CC88B00BCC456 /* SecurityHelper.swift in Sources */,
 				90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */,
 				90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */,
 				9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */,

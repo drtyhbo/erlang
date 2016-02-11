@@ -23,8 +23,8 @@ class FriendManager {
 
             for friendData in friendsData {
                 var friend = Friend.findWithId(friendData.id)
-                if friend == nil {
-                    friend = Friend.createWithId(friendData.id, name: friendData.name)
+                if let key = NSData(base64EncodedString: friendData.base64Key, options: NSDataBase64DecodingOptions(rawValue: 0)) where friend == nil {
+                    friend = Friend.createWithId(friendData.id, name: friendData.name, key: key)
                     self.friends.append(friend!)
                 }
             }

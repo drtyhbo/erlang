@@ -13,11 +13,13 @@ import Foundation
 class Friend: NSManagedObject {
     @NSManaged var id: Int
     @NSManaged var name: String
+    @NSManaged var key: NSData
 
-    static func createWithId(id: Int, name: String) -> Friend {
+    static func createWithId(id: Int, name: String, key: NSData) -> Friend {
         let friend = Friend.MR_createEntity()!
         friend.id = id
         friend.name = name
+        friend.key = key
         return friend
     }
 

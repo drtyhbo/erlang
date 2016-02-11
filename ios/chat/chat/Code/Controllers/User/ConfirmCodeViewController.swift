@@ -31,7 +31,7 @@ class ConfirmCodeViewController: UIViewController {
     }
 
     @objc private func confirmCode() {
-        APIManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "") {
+        APIManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", key: SecurityHelper.sharedHelper.publicKey!) {
             userId, sessionToken, error in
             if let userId = userId, sessionToken = sessionToken {
                 User.userId = userId

@@ -36,7 +36,7 @@
 % Outgoing JSON
 -define(OUT_CONNECTED_JSON(), {struct, [{<<"r">>, <<"connected">>}]}).
 -define(OUT_CONNECTION_FAILED_JSON(), {struct, [{<<"r">>, <<"not_connected">>}]}).
--define(OUT_MSG_JSON(TS, From, Msg), {struct, [{<<"d">>, TS},{<<"f">>, From},{<<"m">>, {struct, Msg}}]}).
+-define(OUT_MSG_JSON(TS, From, Msg), {struct, [{<<"d">>, TS},{<<"f">>, From},{<<"m">>, Msg}]}).
 -define(OUT_MSGS_JSON(Msgs), {struct, [{<<"m">>, Msgs}]}).
 -define(OUT_OFFLINE_MSGS_JSON(Msgs), {struct, [{<<"o">>, Msgs}]}).
 -define(OUT_ERROR_JSON(Error), {struct, [{<<"e">>, Error}]}).

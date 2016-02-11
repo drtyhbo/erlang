@@ -6,7 +6,8 @@ var userKeys = {
 	phone: 'phone',
 	code: 'code',
 	session: 'session',
-	active: 'active'
+	active: 'active',
+	key: 'key'
 };
 
 function userKeyFromId(id) {
@@ -65,7 +66,7 @@ exports.create = function(phoneNumber, cb) {
 	});
 };
 
-exports.login = function(phoneNumber, code, cb) {
+exports.login = function(phoneNumber, code, key, cb) {
 	var sharedId;
 	userIdFromPhoneNumber(phoneNumber).then(function(id) {
 		if (!id) {
@@ -81,12 +82,11 @@ exports.login = function(phoneNumber, code, cb) {
 			return redis.hgetAsync(userKeyFromId(sharedId), userKeys.session);
 		}
 	}).then(function(sessionToken) {
-		if (sessionToken) {
-			return Promise.resolve(sessionToken);
-		} else {
+		if (!sessionToken) {
 			sessionToken = utils.generateSessionToken();
-			return redis.hmsetAsync(userKeyFromId(sharedId), userKeys.session, sessionToken, userKeys.active, true).thenReturn(sessionToken);
 		}
+
+		return redis.hmsetAsync(userKeyFromId(sharedId), userKeys.session, sessionToken, userKeys.active, true, userKeys.key, key).thenReturn(sessionToken);
 	}).then(function(sessionToken) {
 		cb(null, sharedId, sessionToken);
 	}, function(err) {
@@ -116,7 +116,7 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 		for (var i = 0; i < ids.length; i++) {
 			var id = ids[i];
 			if (id) {
-				infoPromises.push(getUserInfo(ids[i], ['name']));
+				infoPromises.push(getUserInfo(ids[i], ['name', 'key']));
 			} else {
 				infoPromises.push(Promise.resolve([null]));
 			}
@@ -128,7 +128,8 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 			if (sharedIds[i] && allInfo[i]) {
 				results.push({
 					'id': sharedIds[i],
-					'name': allInfo[i][0]
+					'name': allInfo[i][0],
+					'key': allInfo[i][1]
 				});
 			} else {
 				results.push(null);

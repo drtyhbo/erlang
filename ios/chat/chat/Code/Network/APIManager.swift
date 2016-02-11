@@ -20,6 +20,7 @@ class APIManager {
     }
 
     static let domain = Constants.host
+    static let webPort = Constants.webPort == "80" ? "" : ":\(Constants.webPort)"
 
     static func registerPhoneNumber(phoneNumber: String, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
@@ -30,10 +31,11 @@ class APIManager {
         }
     }
 
-    static func confirmPhoneNumber(phoneNumber: String, withCode code: String, callback: (String?, String?, Error?)->Void) {
+    static func confirmPhoneNumber(phoneNumber: String, withCode code: String, key: String, callback: (String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
             "phone": phoneNumber,
-            "code": code
+            "code": code,
+            "key": key,
         ]) {
             json in
             callback(json?["id"].string, json?["sessionToken"].string, errorFromJson(json))
@@ -43,6 +45,7 @@ class APIManager {
     struct FriendData {
         let id: Int
         let name: String
+        let base64Key: String
     }
 
     static func getFriendsWithPhoneNumbers(phoneNumber: [String], callback: [FriendData]->Void) {
@@ -54,9 +57,13 @@ class APIManager {
             var friendsData: [FriendData] = []
             if let friendsJson = json?["friends"].array {
                 for i in 0..<friendsJson.count {
-                    if friendsJson[i].null == nil {
-                        let friendJson = friendsJson[i]
-                        friendsData.append(FriendData(id: Int(friendJson["id"].string!)!, name: friendJson["name"].string!))
+                    if friendsJson[i].null != nil {
+                        continue
+                    }
+
+                    let friendJson = friendsJson[i]
+                    if let stringId = friendJson["id"].string, id = Int(stringId), name = friendJson["name"].string, base64Key = friendJson["key"].string {
+                        friendsData.append(FriendData(id: id, name: name, base64Key: base64Key))
                     }
                 }
             }
@@ -73,7 +80,7 @@ class APIManager {
     }
 
     private static func sendRequestToUrl(url: String, parameters: [String:AnyObject], callback: JSON?->Void) {
-        Alamofire.request(.POST, "http://\(domain)/api/\(url)", parameters: parameters)
+        Alamofire.request(.POST, "http://\(domain)\(webPort)/api/\(url)", parameters: parameters)
             .responseJSON {
                 response in
                 if let json = response.result.value {

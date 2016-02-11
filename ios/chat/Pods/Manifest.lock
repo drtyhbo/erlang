@@ -2,6 +2,7 @@ PODS:
   - Alamofire (3.1.5)
   - APLSlideMenu (0.1.7)
   - CocoaAsyncSocket (7.4.2)
+  - Heimdall (0.2.5)
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
@@ -80,6 +81,7 @@ DEPENDENCIES:
   - Alamofire
   - APLSlideMenu
   - CocoaAsyncSocket
+  - Heimdall
   - MagicalRecord
   - SDWebImage
   - SwiftyJSON
@@ -89,6 +91,7 @@ SPEC CHECKSUMS:
   Alamofire: 5f730ba29fd113b7ddd71c1e65d0c630acf5d7b0
   APLSlideMenu: f9a41d50e325e2fd8e44c0913279020099f09b49
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
+  Heimdall: e388795a9bb50c8403e27cbc48093b9b0380c879
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   Mantle: 3219c0181d918508689af61c77891b12dbb28215
   SDWebImage: 247edd7dd80dd6124197b0d6a17846fe9d1df968

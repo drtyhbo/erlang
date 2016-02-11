@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Heimdall.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>MagicalRecord.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,32 +57,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>14CDA46B7BDB7C033C72F1ACD5EE0BCC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2364D66CCE176046881AD5B6310182F4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>39D793BA1EC49DA2F5E26BFEA81AECA5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4EF2CDA9A4428313F67091CAA56BEBB8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>5346080FD3D9A60C596335CBD2EF4C3E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6975F7F04DE07EB31F4A34AB7069D24B</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>70B9866F57DFA72D6504C88FA4D73B7A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>84A6600AABCE607656BFC14AE5A3DB9B</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>899840BD6BE67826B018E269A2065BF2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8DEDAB8365AD32070CB34AB7B529E16B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -92,7 +92,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C1DF727F88EE909D457DB780B9AEC8DF</key>
+		<key>D9E1A8224D1668CB15846A76117A1A2C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E5911DAB94A4AA478A9A9170326B2F90</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FF0C40CEC423C34B0A04FEB4B49AA202</key>
 		<dict>
 			<key>primary</key>
 			<true/>

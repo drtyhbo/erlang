@@ -45,18 +45,23 @@ class ChatClient {
         }
     }
 
-    func sendMessageWithText(text: String, to: Friend) {
-        NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientSentMessageNotification, object: nil, userInfo: ["sentMessage": SentMessage(toId: to.id, timestamp: Int(NSDate.timeIntervalSinceReferenceDate()), message: text)])
+    func sendMessageWithText(text: String, to: Friend) -> Bool {
+        if let messageToEncrypt = createJsonFromMessage(text).rawString(), encryptedMessage = SecurityHelper.sharedHelper.encrypt(messageToEncrypt, withKey: to.key) {
+            let messageJson = JSON([
+                "t": "m",
+                "r": String(to.id),
+                "i": messageId++,
+                "m": encryptedMessage
+            ])
 
-        let messageJson = JSON([
-            "t": "m",
-            "r": String(to.id),
-            "i": messageId++,
-            "m": [
-                "m": text
-            ]
-        ])
-        connection.sendJson(messageJson)
+            connection.sendJson(messageJson)
+
+            NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientSentMessageNotification, object: nil, userInfo: ["sentMessage": SentMessage(toId: to.id, timestamp: Int(NSDate.timeIntervalSinceReferenceDate()), message: text)])
+
+            return true
+        }
+
+        return false
     }
 
     private func connect() {
@@ -92,10 +97,23 @@ class ChatClient {
         }
     }
 
+    private func createJsonFromMessage(message: String) -> JSON {
+        return JSON(["m": message])
+    }
+
+    private func messageFromJson(json: JSON) -> String? {
+        return json["m"].string
+    }
+
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            let receivedMessage = ReceivedMessage(fromId: Int(messageJson["f"].string!)!, timestamp: messageJson["d"].int!, message: messageJson["m"]["m"].string!)
-            NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessageNotification, object: nil, userInfo: ["receivedMessage": receivedMessage])
+            if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string, let decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage) {
+                let messageJson = JSON.parse(decryptedMessage)
+                if let message = messageFromJson(messageJson) {
+                    let receivedMessage = ReceivedMessage(fromId: fromId, timestamp: timestamp, message: message)
+                    NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessageNotification, object: nil, userInfo: ["receivedMessage": receivedMessage])
+                }
+            }
         }
     }
 
