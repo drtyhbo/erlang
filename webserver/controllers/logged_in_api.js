@@ -1,5 +1,6 @@
 var express = require('express'),
-	user = require('../models/user');
+	user = require('../models/user'),
+	file = require('../models/file');
 
 var router = express.Router();
 
@@ -54,6 +55,45 @@ router.post('/pns/register/', function(req, res) {
 		res.send({
 			'status': err || 'ok'
 		});
+	});
+});
+
+/*
+ * Request parameters:
+ * userId - Current user id.
+ * session - Current user session.
+ * friendId - The friend whom should have access.
+ */
+router.post('/file/create/', function(req, res) {
+	file.create(req.userId, req.body.friendId, function(err, fileId) {
+		var result = {
+			'status': err || 'ok'
+		};
+		if (fileId != undefined) {
+			result['fileId'] = fileId
+			result['fileUrl'] = file.generateSignedUrl(fileId, 'PUT');
+		}
+
+		res.send(result);
+	});
+});
+
+/*
+ * Request parameters:
+ * userId - Current user id.
+ * session - Current user session.
+ * fileId - The id of the file.
+ */
+router.post('/file/get/', function(req, res) {
+	file.hasAccess(req.body.fileId, req.userId, function(err, isMember) {
+		var result = {
+			'status': err || 'ok'
+		};
+		if (isMember) {
+			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, 'GET');
+		}
+
+		res.send(result);
 	});
 });
 

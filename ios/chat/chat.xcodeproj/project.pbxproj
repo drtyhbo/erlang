@@ -14,6 +14,9 @@
 		9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */; };
 		9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */; };
 		9031FFE31C6CC88B00BCC456 /* SecurityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */; };
+		9031FFE51C6E2BC100BCC456 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFE41C6E2BC100BCC456 /* File.swift */; };
+		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
+		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5981C4C06F900236D6B /* GIFSelector.swift */; };
 		90AFD59B1C4C070500236D6B /* GIFSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59A1C4C070500236D6B /* GIFSelector.xib */; };
 		90AFD59D1C4CBD1100236D6B /* GIFSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */; };
@@ -58,6 +61,9 @@
 		9031FFDD1C6B78D600BCC456 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
 		9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
 		9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityHelper.swift; path = chat/Code/Utils/SecurityHelper.swift; sourceTree = SOURCE_ROOT; };
+		9031FFE41C6E2BC100BCC456 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
+		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		90AFD5981C4C06F900236D6B /* GIFSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIFSelector.swift; sourceTree = "<group>"; };
 		90AFD59A1C4C070500236D6B /* GIFSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelector.xib; sourceTree = "<group>"; };
 		90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelectorCell.xib; sourceTree = "<group>"; };
@@ -225,6 +231,9 @@
 				90AFD5C81C608F2E00236D6B /* Friend.swift */,
 				90AFD5D01C61102C00236D6B /* FriendManager.swift */,
 				90AFD5D21C6110B900236D6B /* MessageManager.swift */,
+				9031FFE41C6E2BC100BCC456 /* File.swift */,
+				9049633A1C6F9D750078C9DF /* PhoneNumber.swift */,
+				9049633C1C70DE9D0078C9DF /* MessageSender.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -430,7 +439,10 @@
 				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
 				90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
+				9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */,
+				9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */,
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
+				9031FFE51C6E2BC100BCC456 /* File.swift in Sources */,
 				90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */,
 				90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */,
 				90EBF8AB1C474A0000A7AD51 /* Message.swift in Sources */,

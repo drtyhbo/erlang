@@ -22,18 +22,18 @@ class APIManager {
     static let domain = Constants.host
     static let webPort = Constants.webPort == "80" ? "" : ":\(Constants.webPort)"
 
-    static func registerPhoneNumber(phoneNumber: String, callback: Bool->Void) {
+    static func registerPhoneNumber(phoneNumber: PhoneNumber, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
-            "phone": phoneNumber
+            "phone": phoneNumber.toString()
         ]) {
             json in
             callback(errorFromJson(json) == nil)
         }
     }
 
-    static func confirmPhoneNumber(phoneNumber: String, withCode code: String, key: String, callback: (String?, String?, Error?)->Void) {
+    static func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, key: String, callback: (String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
-            "phone": phoneNumber,
+            "phone": phoneNumber.toString(),
             "code": code,
             "key": key,
         ]) {
@@ -48,9 +48,9 @@ class APIManager {
         let base64Key: String
     }
 
-    static func getFriendsWithPhoneNumbers(phoneNumber: [String], callback: [FriendData]->Void) {
+    static func getFriendsWithPhoneNumbers(phoneNumbers: [PhoneNumber], callback: [FriendData]->Void) {
         sendUserRequestToUrl("friend/check/", parameters: [
-            "phone": [phoneNumber],
+            "phone": [phoneNumbers.map({ $0.toString() })],
         ]) {
             json in
 
@@ -78,6 +78,24 @@ class APIManager {
         ]) {
             json in
             callback(json != nil && json!["status"].string == "ok")
+        }
+    }
+
+    struct FileData {
+        let fileId: Int
+        let uploadUrl: NSURL
+    }
+
+    static func createFileForFriend(friend: Friend, callback: FileData?->Void) {
+        sendUserRequestToUrl("file/create/", parameters: [
+            "friendId": friend.id
+        ]) {
+            json in
+            if let json = json, fileId = json["fileId"].int, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
+                callback(FileData(fileId: fileId, uploadUrl: fileUrl))
+            } else {
+                callback(nil)
+            }
         }
     }
 

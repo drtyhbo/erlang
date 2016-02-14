@@ -19,6 +19,7 @@ class ChatClient {
 
     static let ChatClientSentMessageNotification = "ChatClientSentMessage"
     static let ChatClientReceivedMessageNotification = "ChatClientReceivedMessage"
+    static let ChatClientMessageDidSend = "ChatClientMessageDidSend"
     static let ChatClientConnectingNotification = "ChatClientConnecting"
     static let ChatClientDidConnectNotification = "ChatClientDidConnect"
     static let ChatClientDidDisconnectNotification = "ChatClientDidDisconnect"
@@ -29,8 +30,6 @@ class ChatClient {
     private let port: UInt16 = 49165
 
     private let connection: ChatConnection
-
-    private var messageId = 0
 
     init() {
         connection = ChatConnection(host: host, port: port)
@@ -45,18 +44,18 @@ class ChatClient {
         }
     }
 
-    func sendMessageWithText(text: String, to: Friend) -> Bool {
-        if let messageToEncrypt = createJsonFromMessage(text).rawString(), encryptedMessage = SecurityHelper.sharedHelper.encrypt(messageToEncrypt, withKey: to.key) {
+    func sendMessageWithJson(json: JSON, to: Friend, messageId: Int) -> Bool {
+        if let messageToEncrypt = json.rawString(), encryptedMessage = SecurityHelper.sharedHelper.encrypt(messageToEncrypt, withKey: to.key) {
             let messageJson = JSON([
                 "t": "m",
                 "r": String(to.id),
-                "i": messageId++,
+                "i": messageId,
                 "m": encryptedMessage
             ])
 
             connection.sendJson(messageJson)
 
-            NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientSentMessageNotification, object: nil, userInfo: ["sentMessage": SentMessage(toId: to.id, timestamp: Int(NSDate.timeIntervalSinceReferenceDate()), message: text)])
+            NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientSentMessageNotification, object: nil, userInfo: ["sentMessage": SentMessage(toId: to.id, timestamp: Int(NSDate.timeIntervalSinceReferenceDate()), message: json["m"].string!)])
 
             return true
         }
@@ -92,13 +91,11 @@ class ChatClient {
         } else if let offlineMessages = json["o"].array {
             handleMessagesJson(offlineMessages)
             sendReceivedOfflineMessagesResponse()
+        } else if let sentMessageId = json["did"].int {
+            NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientMessageDidSend, object: nil, userInfo: ["messageId": sentMessageId])
         } else {
             print ("unknown json \(json.rawString()!)")
         }
-    }
-
-    private func createJsonFromMessage(message: String) -> JSON {
-        return JSON(["m": message])
     }
 
     private func messageFromJson(json: JSON) -> String? {

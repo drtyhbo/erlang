@@ -17,7 +17,7 @@ class FriendManager {
         return Friend.findAll()
     }();
 
-    func loadFriends(phoneNumbers: [String], completion: Void->Void) {
+    func loadFriends(phoneNumbers: [PhoneNumber], completion: Void->Void) {
         APIManager.getFriendsWithPhoneNumbers(phoneNumbers) {
             friendsData in
 

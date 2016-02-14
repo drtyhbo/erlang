@@ -175,7 +175,7 @@ handle_connect_json(Json, State) ->
 	UserId = proplists:get_value(<<"u">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
 	case eredis_cluster:q(["HMGET", secure_chat_redis:user_id_to_key(UserId), "session", "name"]) of
-	 	{ok, [RedisSessionToken, Name]} when RedisSessionToken =:= SessionToken ->
+	 	{ok, [RedisSessionToken, Name]} when RedisSessionToken =:= SessionToken, Name =/= undefined ->
 			connect(),
 			State#user_state{user_id = UserId, name = binary_to_list(Name)};
 	 	_ ->

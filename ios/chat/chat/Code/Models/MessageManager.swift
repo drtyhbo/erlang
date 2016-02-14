@@ -9,6 +9,7 @@
 import CoreData
 import Foundation
 import MagicalRecord
+import SwiftyJSON
 
 class MessageManager {
     // This is a bit annoying... I couldn't figure out how to cast between AnyObject and Message
@@ -31,9 +32,15 @@ class MessageManager {
 
     private var unreadMessageCountForFriend: [Friend:Int] = [:]
 
+    private var messageSender = MessageSender()
+
     func setup() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didSendMessage:", name: ChatClient.ChatClientSentMessageNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: ChatClient.ChatClientReceivedMessageNotification, object: nil)
+    }
+
+    func sendMessageWithText(text: String, to: Friend) {
+        messageSender.sendMessageWithJson(JSON(["m": text]), to: to)
     }
 
     func getMessagesForFriend(friend: Friend) -> [Message] {

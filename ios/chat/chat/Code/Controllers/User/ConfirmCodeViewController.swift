@@ -12,9 +12,9 @@ import UIKit
 class ConfirmCodeViewController: UIViewController {
     @IBOutlet weak var code: UITextField!
 
-    private let phoneNumber: String!
+    private let phoneNumber: PhoneNumber!
 
-    init(phoneNumber: String) {
+    init(phoneNumber: PhoneNumber) {
         self.phoneNumber = phoneNumber
         super.init(nibName: "ConfirmCodeViewController", bundle: nil)
     }

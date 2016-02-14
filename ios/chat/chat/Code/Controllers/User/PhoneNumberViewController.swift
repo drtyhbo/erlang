@@ -28,7 +28,7 @@ class PhoneNumberViewController: UIViewController {
     }
 
     @objc private func confirmPhoneNumber() {
-        let phoneNumber = self.phoneNumber.text ?? ""
+        let phoneNumber = PhoneNumber(phoneNumber: self.phoneNumber.text ?? "")
         APIManager.registerPhoneNumber(phoneNumber) {
             result in
             if result {

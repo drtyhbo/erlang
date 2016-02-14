@@ -95,6 +95,11 @@ exports.login = function(phoneNumber, code, key, cb) {
 	});
 };
 
+// Returns a promise.
+exports.exists = function(id) {
+	return redis.existsAsync(userKeyFromId(id));
+};
+
 exports.confirmSession = function(id, sessionToken, cb) {
 	redis.hgetAsync(userKeyFromId(id), userKeys.session).then(function(dbSessionToken) {
 		cb(null, sessionToken && dbSessionToken == sessionToken);

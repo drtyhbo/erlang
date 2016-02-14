@@ -112,7 +112,7 @@ class ChatViewController: UIViewController {
         resetNewMessageView()
 
         if let friend = friend {
-            ChatClient.sharedClient.sendMessageWithText(text, to: friend)
+            MessageManager.sharedManager.sendMessageWithText(text, to: friend)
         }
     }
 

@@ -11,11 +11,11 @@ import Foundation
 
 class Contact {
     let name: String
-    let phoneNumber: String
+    let phoneNumber: PhoneNumber
 
     init(name: String, phoneNumber: String) {
         self.name = name
-        self.phoneNumber = phoneNumber
+        self.phoneNumber = PhoneNumber(phoneNumber: phoneNumber)
     }
 }
 
