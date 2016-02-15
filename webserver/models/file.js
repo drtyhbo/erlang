@@ -3,7 +3,9 @@ var redis = require('./redis').redis,
 	sig = require('amazon-s3-url-signer'),
 	Promise = require('bluebird').Promise;
 
-var fileBucket = sig.urlSigner('AKIAIRKB5XME5BRBKYWQ', 'mC2r6bNkM6AaxWqBO6iJ3enL6yACsbOjOEvWrwYv');
+var fileBucket = sig.urlSigner('AKIAIRKB5XME5BRBKYWQ', 'mC2r6bNkM6AaxWqBO6iJ3enL6yACsbOjOEvWrwYv', {
+	useSubdomain: true,
+	protocol: "https"});
 
 function fileIdKey() {
 	return "file_id";
@@ -41,6 +43,6 @@ exports.hasAccess = function(fileId, userId, cb) {
 	})
 };
 
-exports.generateSignedUrl = function(fileId, method) {
-	return fileBucket.getUrl(method, 'files/' + fileId, 'drtyhbo-chat', 1);
+exports.generateSignedUrl = function(fileId, method, contentType) {
+	return fileBucket.getUrl(method, 'files/' + fileId, 'drtyhbo-chat', contentType, 100);
 }

@@ -10,7 +10,7 @@ import Alamofire
 import Foundation
 import SwiftyJSON
 
-class APIManager {
+class APIManager: NSObject {
     class Error {
         let error: String
 
@@ -19,26 +19,28 @@ class APIManager {
         }
     }
 
-    static let domain = Constants.host
-    static let webPort = Constants.webPort == "80" ? "" : ":\(Constants.webPort)"
+    static let sharedManager = APIManager()
 
-    static func registerPhoneNumber(phoneNumber: PhoneNumber, callback: Bool->Void) {
+    let domain = Constants.host
+    let webPort = Constants.webPort == "80" ? "" : ":\(Constants.webPort)"
+
+    func registerPhoneNumber(phoneNumber: PhoneNumber, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
             "phone": phoneNumber.toString()
         ]) {
             json in
-            callback(errorFromJson(json) == nil)
+            callback(self.errorFromJson(json) == nil)
         }
     }
 
-    static func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, key: String, callback: (String?, String?, Error?)->Void) {
+    func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, key: String, callback: (String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
             "phone": phoneNumber.toString(),
             "code": code,
             "key": key,
         ]) {
             json in
-            callback(json?["id"].string, json?["sessionToken"].string, errorFromJson(json))
+            callback(json?["id"].string, json?["sessionToken"].string, self.errorFromJson(json))
         }
     }
 
@@ -48,7 +50,7 @@ class APIManager {
         let base64Key: String
     }
 
-    static func getFriendsWithPhoneNumbers(phoneNumbers: [PhoneNumber], callback: [FriendData]->Void) {
+    func getFriendsWithPhoneNumbers(phoneNumbers: [PhoneNumber], callback: [FriendData]->Void) {
         sendUserRequestToUrl("friend/check/", parameters: [
             "phone": [phoneNumbers.map({ $0.toString() })],
         ]) {
@@ -71,7 +73,7 @@ class APIManager {
         }
     }
 
-    static func registerDeviceToken(deviceToken: String, callback: Bool->Void) {
+    func registerDeviceToken(deviceToken: String, callback: Bool->Void) {
         sendUserRequestToUrl("pns/register/", parameters: [
             "token": deviceToken,
             "type": "ios"
@@ -86,9 +88,10 @@ class APIManager {
         let uploadUrl: NSURL
     }
 
-    static func createFileForFriend(friend: Friend, callback: FileData?->Void) {
+    func createFileForFriend(friend: Friend, contentType: String, callback: FileData?->Void) {
         sendUserRequestToUrl("file/create/", parameters: [
-            "friendId": friend.id
+            "friendId": friend.id,
+            "contentType": contentType
         ]) {
             json in
             if let json = json, fileId = json["fileId"].int, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
@@ -99,7 +102,38 @@ class APIManager {
         }
     }
 
-    private static func errorFromJson(json: JSON?) -> Error? {
+    func getFileWithId(fileId: Int, callback: NSURL?->Void) {
+        sendUserRequestToUrl("file/get/", parameters: [
+            "fileId": fileId
+        ]) {
+            json in
+            if let json = json, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
+                callback(fileUrl)
+            } else {
+                callback(nil)
+            }
+        }
+    }
+
+    func uploadFileWithLocalUrl(localUrl: NSURL, toS3Url s3Url: NSURL, contentType: String, callback: Bool->Void) {
+        let headers = [
+            "Content-Type": contentType]
+        Alamofire.upload(.PUT, s3Url, headers: headers, file: localUrl)
+            .progress {
+                bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                print("\(totalBytesWritten) \(totalBytesExpectedToWrite)")
+            }
+            .response {
+                response in
+                if let response = response.1 {
+                    callback(response.statusCode == 200)
+                } else {
+                    callback(false)
+                }
+            }
+    }
+
+    private func errorFromJson(json: JSON?) -> Error? {
         if let json = json {
             return json["status"] == "ok" ? nil : Error(json["status"].string ?? "invalid")
         } else {
@@ -107,7 +141,7 @@ class APIManager {
         }
     }
 
-    private static func sendRequestToUrl(url: String, parameters: [String:AnyObject], callback: JSON?->Void) {
+    private func sendRequestToUrl(url: String, parameters: [String:AnyObject], callback: JSON?->Void) {
         Alamofire.request(.POST, "http://\(domain)\(webPort)/api/\(url)", parameters: parameters)
             .responseJSON {
                 response in
@@ -119,11 +153,11 @@ class APIManager {
             }
     }
 
-    private static func sendUserRequestToUrl(url: String, callback: JSON?->Void) {
+    private func sendUserRequestToUrl(url: String, callback: JSON?->Void) {
         sendUserRequestToUrl(url, parameters: [:], callback: callback)
     }
 
-    private static func sendUserRequestToUrl(url: String, var parameters: [String:AnyObject], callback: JSON?->Void) {
+    private func sendUserRequestToUrl(url: String, var parameters: [String:AnyObject], callback: JSON?->Void) {
         parameters["id"] = User.userId
         parameters["session"] = User.sessionToken
 

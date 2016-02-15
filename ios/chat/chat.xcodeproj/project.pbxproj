@@ -17,6 +17,8 @@
 		9031FFE51C6E2BC100BCC456 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFE41C6E2BC100BCC456 /* File.swift */; };
 		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
+		904963411C722CBA0078C9DF /* ImageRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* ImageRowTableViewCell.swift */; };
+		904963451C722CE30078C9DF /* ImageRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 904963441C722CE30078C9DF /* ImageRowTableViewCell.xib */; };
 		90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5981C4C06F900236D6B /* GIFSelector.swift */; };
 		90AFD59B1C4C070500236D6B /* GIFSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59A1C4C070500236D6B /* GIFSelector.xib */; };
 		90AFD59D1C4CBD1100236D6B /* GIFSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */; };
@@ -64,6 +66,8 @@
 		9031FFE41C6E2BC100BCC456 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
+		904963401C722CBA0078C9DF /* ImageRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRowTableViewCell.swift; sourceTree = "<group>"; };
+		904963441C722CE30078C9DF /* ImageRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageRowTableViewCell.xib; sourceTree = "<group>"; };
 		90AFD5981C4C06F900236D6B /* GIFSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIFSelector.swift; sourceTree = "<group>"; };
 		90AFD59A1C4C070500236D6B /* GIFSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelector.xib; sourceTree = "<group>"; };
 		90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelectorCell.xib; sourceTree = "<group>"; };
@@ -226,14 +230,14 @@
 		90EBF8A31C4749E000A7AD51 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				90EBF8AA1C474A0000A7AD51 /* Message.swift */,
-				90EBF8AC1C474A0E00A7AD51 /* User.swift */,
+				9031FFE41C6E2BC100BCC456 /* File.swift */,
 				90AFD5C81C608F2E00236D6B /* Friend.swift */,
 				90AFD5D01C61102C00236D6B /* FriendManager.swift */,
+				90EBF8AA1C474A0000A7AD51 /* Message.swift */,
 				90AFD5D21C6110B900236D6B /* MessageManager.swift */,
-				9031FFE41C6E2BC100BCC456 /* File.swift */,
-				9049633A1C6F9D750078C9DF /* PhoneNumber.swift */,
 				9049633C1C70DE9D0078C9DF /* MessageSender.swift */,
+				9049633A1C6F9D750078C9DF /* PhoneNumber.swift */,
+				90EBF8AC1C474A0E00A7AD51 /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -281,6 +285,8 @@
 				90AFD59E1C4CBD1E00236D6B /* GIFSelectorCell.swift */,
 				90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */,
 				90AFD5A81C4DE1B700236D6B /* NewMessagesCell.xib */,
+				904963401C722CBA0078C9DF /* ImageRowTableViewCell.swift */,
+				904963441C722CE30078C9DF /* ImageRowTableViewCell.xib */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -322,6 +328,9 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = S4Y2T39EMH;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -361,6 +370,7 @@
 				90AFD5C71C608EDC00236D6B /* FriendsListViewController.xib in Resources */,
 				90EBF8C11C474CA700A7AD51 /* ChatViewController.xib in Resources */,
 				90AFD5B91C5D281800236D6B /* ConfirmCodeViewController.xib in Resources */,
+				904963451C722CE30078C9DF /* ImageRowTableViewCell.xib in Resources */,
 				90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */,
 				90AFD5CD1C6090B800236D6B /* FriendTableViewCell.xib in Resources */,
 				90AFD59D1C4CBD1100236D6B /* GIFSelectorCell.xib in Resources */,
@@ -444,6 +454,7 @@
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
 				9031FFE51C6E2BC100BCC456 /* File.swift in Sources */,
 				90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */,
+				904963411C722CBA0078C9DF /* ImageRowTableViewCell.swift in Sources */,
 				90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */,
 				90EBF8AB1C474A0000A7AD51 /* Message.swift in Sources */,
 				90EBF8C01C474CA700A7AD51 /* ChatViewController.swift in Sources */,

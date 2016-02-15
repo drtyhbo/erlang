@@ -10,7 +10,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-        "amazon-s3-url-signer": "~0.0.7",
+        "amazon-s3-url-signer": "https://github.com/drtyhbo/amazon-s3-url-signer.git",
 		"bluebird": "~3.1.4",
 		"body-parser": "~1.14.2",
 		"connect": "~3.4.1",

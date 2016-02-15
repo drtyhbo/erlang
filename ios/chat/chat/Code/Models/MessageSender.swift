@@ -10,10 +10,35 @@ import Foundation
 import SwiftyJSON
 
 class MessageSender {
-    private struct OutgoingMessage {
+    struct File {
+        let localUrl: NSURL
+        let contentType: String
+        let fileId: Int
+        let uploadUrl: NSURL
+
+        init(data: NSData, contentType: String, fileId: Int, uploadUrl: NSURL) {
+            self.fileId = fileId
+            self.contentType = contentType
+            self.uploadUrl = uploadUrl
+
+            let documentsDirectory = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+            localUrl = documentsDirectory.URLByAppendingPathComponent(NSUUID().UUIDString)
+            data.writeToURL(localUrl, atomically: true)
+        }
+    }
+
+    private class OutgoingMessage {
         let messageJson: JSON
         let to: Friend
         let messageId: Int
+        var files: [File]
+
+        init(messageJson: JSON, to: Friend, messageId: Int, files: [File]) {
+            self.messageJson = messageJson
+            self.to = to
+            self.messageId = messageId
+            self.files = files
+        }
     }
 
     private var messageId = 0
@@ -24,8 +49,8 @@ class MessageSender {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "messageDidSend:", name: ChatClient.ChatClientMessageDidSend, object: nil)
     }
 
-    func sendMessageWithJson(json: JSON, to: Friend) {
-        outgoingMessages.append(OutgoingMessage(messageJson: json, to: to, messageId: messageId++))
+    func sendMessageWithJson(json: JSON, to: Friend, files: [File] = []) {
+        outgoingMessages.append(OutgoingMessage(messageJson: json, to: to, messageId: messageId++, files: files))
         maybeSendNextOutgoingMessage()
     }
 
@@ -46,6 +71,26 @@ class MessageSender {
         isSending = true
 
         let outgoingMessage = outgoingMessages.first!
+        if outgoingMessage.files.count > 0 {
+            uploadFile(outgoingMessage.files.first!)
+        } else {
+            sendOutgoingMessage(outgoingMessage)
+        }
+    }
+
+    private func uploadFile(file: File) {
+        APIManager.sharedManager.uploadFileWithLocalUrl(file.localUrl, toS3Url: file.uploadUrl, contentType: file.contentType) {
+            success in
+            if success {
+                if let outgoingMessage = self.outgoingMessages.first {
+                    outgoingMessage.files.removeAtIndex(0)
+                }
+                self.sendNextOutgoingMessage()
+            }
+        }
+    }
+
+    private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
         ChatClient.sharedClient.sendMessageWithJson(outgoingMessage.messageJson, to: outgoingMessage.to, messageId: outgoingMessage.messageId)
     }
 

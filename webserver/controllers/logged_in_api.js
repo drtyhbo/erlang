@@ -71,7 +71,7 @@ router.post('/file/create/', function(req, res) {
 		};
 		if (fileId != undefined) {
 			result['fileId'] = fileId
-			result['fileUrl'] = file.generateSignedUrl(fileId, 'PUT');
+			result['fileUrl'] = file.generateSignedUrl(fileId, 'PUT', req.body.contentType);
 		}
 
 		res.send(result);
@@ -90,7 +90,7 @@ router.post('/file/get/', function(req, res) {
 			'status': err || 'ok'
 		};
 		if (isMember) {
-			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, 'GET');
+			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, 'GET', "");
 		}
 
 		res.send(result);

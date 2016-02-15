@@ -43,6 +43,21 @@ class MessageManager {
         messageSender.sendMessageWithJson(JSON(["m": text]), to: to)
     }
 
+    func sendMessageWithImage(image: UIImage, to: Friend) {
+        let contentType = "image/jpeg"
+        APIManager.sharedManager.createFileForFriend(to, contentType: contentType) {
+            fileData in
+            if let fileData = fileData {
+                let files = [MessageSender.File(data: UIImageJPEGRepresentation(image, 0.5)!, contentType: contentType, fileId: fileData.fileId, uploadUrl: fileData.uploadUrl)]
+                let messageJson = JSON([
+                    "i": fileData.fileId,
+                    "w": image.size.width,
+                    "h": image.size.height])
+                self.messageSender.sendMessageWithJson(messageJson, to: to, files: files)
+            }
+        }
+    }
+
     func getMessagesForFriend(friend: Friend) -> [Message] {
         return Message.findForFriend(friend)
     }
@@ -71,8 +86,8 @@ class MessageManager {
     }
 
     @objc private func didSendMessage(notification: NSNotification) {
-        if let sentMessage = notification.userInfo?["sentMessage"] as? SentMessage, let friend = FriendManager.sharedManager.getFriendById(sentMessage.toId) {
-            let message = Message.createWithFrom(nil, to: friend, date: NSDate(timeIntervalSince1970: NSTimeInterval(sentMessage.timestamp)), messageData: sentMessage.message)
+        if let sentMessage = notification.userInfo?["sentMessage"] as? SentMessage, friend = FriendManager.sharedManager.getFriendById(sentMessage.toId), messageData = sentMessage.message.rawString() {
+            let message = Message.createWithFrom(nil, to: friend, date: NSDate(timeIntervalSince1970: NSTimeInterval(sentMessage.timestamp)), messageData: messageData)
             NSManagedObjectContext.MR_defaultContext().MR_saveToPersistentStoreAndWait()
             addMessage(message, forFriend: friend)
         }

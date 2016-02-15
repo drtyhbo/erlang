@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class ReceivedMessage {
     let fromId: Int
@@ -23,9 +24,9 @@ class ReceivedMessage {
 class SentMessage {
     let toId: Int
     let timestamp: Int
-    let message: String
+    let message: JSON
 
-    init(toId: Int, timestamp: Int, message: String) {
+    init(toId: Int, timestamp: Int, message: JSON) {
         self.toId = toId
         self.timestamp = timestamp
         self.message = message

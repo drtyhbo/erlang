@@ -9,13 +9,29 @@
 import CoreData
 import Foundation
 import MagicalRecord
+import SwiftyJSON
 
 @objc(Message)
 class Message: NSManagedObject {
+    struct ImageInfo {
+        let fileId: Int
+        let width: Int
+        let height: Int
+    }
+
     @NSManaged private(set) var from: Friend?
     @NSManaged private(set) var to: Friend?
     @NSManaged private(set) var date: NSDate
     @NSManaged private(set) var message: String
+
+    var imageInfo: ImageInfo? {
+        let json = JSON.parse(message)
+        guard let fileId = json["i"].int, width = json["w"].int, height = json["h"].int else {
+            return nil
+        }
+
+        return ImageInfo(fileId: fileId, width: width, height: height)
+    }
 
     static func createWithFrom(from: Friend?, to: Friend?, date: NSDate, messageData: String) -> Message {
         let message = Message.MR_createEntity()!
