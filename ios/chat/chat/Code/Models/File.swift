@@ -8,16 +8,23 @@
 
 import CoreData
 import Foundation
+import UIKit
 
 @objc(File)
 class File: NSManagedObject {
     @NSManaged var id: Int
     @NSManaged var data: NSData
+    @NSManaged var contentType: String
 
-    static func createWithId(id: Int, data: NSData) -> File {
+    var image: UIImage? {
+        return UIImage(data: data)
+    }
+
+    static func createWithId(id: Int, data: NSData, contentType: String) -> File {
         let file = File.MR_createEntity()!
         file.id = id
         file.data = data
+        file.contentType = contentType
         return file
     }
 

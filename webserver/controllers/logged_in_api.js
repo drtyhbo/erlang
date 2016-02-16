@@ -65,13 +65,13 @@ router.post('/pns/register/', function(req, res) {
  * friendId - The friend whom should have access.
  */
 router.post('/file/create/', function(req, res) {
-	file.create(req.userId, req.body.friendId, function(err, fileId) {
+	var numIds = req.body.numIds || 1;
+	file.create(req.userId, req.body.friendId, numIds, function(err, fileId) {
 		var result = {
 			'status': err || 'ok'
 		};
 		if (fileId != undefined) {
 			result['fileId'] = fileId
-			result['fileUrl'] = file.generateSignedUrl(fileId, 'PUT');
 		}
 
 		res.send(result);
@@ -90,7 +90,7 @@ router.post('/file/get/', function(req, res) {
 			'status': err || 'ok'
 		};
 		if (isMember) {
-			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, 'GET');
+			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, req.body.method.toUpperCase(), req.body.contentType);
 		}
 
 		res.send(result);

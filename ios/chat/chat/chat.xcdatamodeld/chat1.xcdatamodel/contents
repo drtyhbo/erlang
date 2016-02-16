@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
-    <entity name="File" syncable="YES">
+    <entity name="File" representedClassName="File" syncable="YES">
+        <attribute name="contentType" attributeType="String" syncable="YES"/>
         <attribute name="data" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
     </entity>
@@ -18,8 +19,8 @@
         <relationship name="to" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="receivedMessages" inverseEntity="Friend" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Message" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="File" positionX="-36" positionY="72" width="128" height="90"/>
         <element name="Friend" positionX="-54" positionY="9" width="128" height="120"/>
-        <element name="File" positionX="-36" positionY="72" width="128" height="75"/>
+        <element name="Message" positionX="-63" positionY="-18" width="128" height="105"/>
     </elements>
 </model>

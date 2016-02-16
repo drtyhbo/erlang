@@ -14,8 +14,7 @@ bluebird.promisifyAll(Redis.Cluster.prototype);
 
 var redis = new Redis({
 	port: 6379,
-	host: 'localhost',
-//	host: 'redis1.drtyhbo.com',
+	host: 'redis1',
 	retryStrategy: function (times) {
 		return Math.random() * times * 1000;
 	}

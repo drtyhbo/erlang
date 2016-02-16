@@ -9,8 +9,6 @@
 import Foundation
 
 class Constants {
-//    static let host = "chat2.drtyhbo.com"
-//    static let webPort = "80"
-    static let host = "192.168.1.122"
-    static let webPort = "8080"
+    static let host = "chat1.drtyhbo.com"
+    static let webPort = "80"
 }

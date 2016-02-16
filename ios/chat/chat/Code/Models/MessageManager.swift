@@ -35,12 +35,32 @@ class MessageManager {
     private var messageSender = MessageSender()
 
     func setup() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didSendMessage:", name: ChatClient.ChatClientSentMessageNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: ChatClient.ChatClientReceivedMessageNotification, object: nil)
     }
 
-    func sendMessageWithText(text: String, to: Friend) {
-        messageSender.sendMessageWithJson(JSON(["m": text]), to: to)
+    func sendMessageWithText(text: String, to: Friend, callback: Message?->Void) {
+        let message = Message.createWithText(text, to: to)
+        CoreData.save()
+
+        messageSender.sendMessage(message)
+        callback(message)
+    }
+
+    func sendMessageWithImage(image: UIImage, to: Friend, callback: Message?->Void) {
+        APIManager.sharedManager.createFileForFriend(to, numFiles: 2) {
+            fileId in
+            var message: Message?
+            if let fileId = fileId {
+                let imageFile = File.createWithId(fileId, data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
+                let thumbnailFile = File.createWithId(fileId + 1, data: UIImageJPEGRepresentation(image.resizeToPercentage(0.25), 0.2)!, contentType: "image/jpeg")
+                message = Message.createWithImageFile(imageFile, thumbnailFile: thumbnailFile, to: to)
+                if message != nil {
+                    self.messageSender.sendMessage(message!, files: [imageFile, thumbnailFile])
+                }
+                CoreData.save()
+            }
+            callback(message)
+        }
     }
 
     func getMessagesForFriend(friend: Friend) -> [Message] {
@@ -70,18 +90,10 @@ class MessageManager {
         NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewMessageNotification, object: friend, userInfo: ["message": NewMessageNotificationWrapper(message: message)])
     }
 
-    @objc private func didSendMessage(notification: NSNotification) {
-        if let sentMessage = notification.userInfo?["sentMessage"] as? SentMessage, let friend = FriendManager.sharedManager.getFriendById(sentMessage.toId) {
-            let message = Message.createWithFrom(nil, to: friend, date: NSDate(timeIntervalSince1970: NSTimeInterval(sentMessage.timestamp)), messageData: sentMessage.message)
-            NSManagedObjectContext.MR_defaultContext().MR_saveToPersistentStoreAndWait()
-            addMessage(message, forFriend: friend)
-        }
-    }
-
     @objc private func didReceiveMessage(notification: NSNotification) {
         if let receivedMessage = notification.userInfo?["receivedMessage"] as? ReceivedMessage, let friend = FriendManager.sharedManager.getFriendById(receivedMessage.fromId) {
-            let message = Message.createWithFrom(friend, to: nil, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageData: receivedMessage.message)
-            NSManagedObjectContext.MR_defaultContext().MR_saveToPersistentStoreAndWait()
+            let message = Message.createWithFrom(friend, to: nil, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson)
+            CoreData.save()
             addMessage(message, forFriend: friend)
         }
     }

@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             tokenString += String(format: "%02.2hhx", arguments: [tokenChars[i]])
         }
 
-        APIManager.registerDeviceToken(tokenString) {
+        APIManager.sharedManager.registerDeviceToken(tokenString) {
             success in
             print (success)
         }

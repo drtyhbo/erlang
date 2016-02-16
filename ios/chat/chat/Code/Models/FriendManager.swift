@@ -18,7 +18,7 @@ class FriendManager {
     }();
 
     func loadFriends(phoneNumbers: [PhoneNumber], completion: Void->Void) {
-        APIManager.getFriendsWithPhoneNumbers(phoneNumbers) {
+        APIManager.sharedManager.getFriendsWithPhoneNumbers(phoneNumbers) {
             friendsData in
 
             for friendData in friendsData {

@@ -44,6 +44,7 @@ class ChatViewController: UIViewController {
     private let chatRowTableViewCellReuseIdentifier = "ChatRowTableViewCell"
     private let chatRowContinuationTableViewCellReuseIdentifier = "ChatRowContinuationTableViewCell"
     private let newMessagesCellReuseIdentifier = "NewMessagesCellReuseIdentifier"
+    private let imageRowTableViewCell = "ImageRowTableViewCell"
 
     private let messageHelperHeight: CGFloat = 100
 
@@ -52,6 +53,8 @@ class ChatViewController: UIViewController {
 
     private var messageHelper: MessageHelper!
     private var newMessagesRow: Int?
+
+    private var imagePickerController: UIImagePickerController?
 
     init() {
         super.init(nibName: "ChatViewController", bundle: nil)
@@ -73,6 +76,7 @@ class ChatViewController: UIViewController {
         tableView.registerNib(UINib(nibName: "ChatRowTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "ChatRowContinuationTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowContinuationTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "ImageRowTableViewCell", bundle: nil), forCellReuseIdentifier: imageRowTableViewCell)
 
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
 
@@ -112,7 +116,12 @@ class ChatViewController: UIViewController {
         resetNewMessageView()
 
         if let friend = friend {
-            MessageManager.sharedManager.sendMessageWithText(text, to: friend)
+            MessageManager.sharedManager.sendMessageWithText(text, to: friend) {
+                message in
+                if let message = message {
+                    self.appendMessage(message)
+                }
+            }
         }
     }
 
@@ -128,6 +137,15 @@ class ChatViewController: UIViewController {
 
     private func sendMessageWithImage(image: UIImage) {
         resetNewMessageView()
+
+        if let friend = friend {
+            MessageManager.sharedManager.sendMessageWithImage(image, to: friend) {
+                message in
+                if let message = message {
+                    self.appendMessage(message)
+                }
+            }
+        }
 /*        Message.sendImageFile(PFFile(data: UIImageJPEGRepresentation(image, 0.8)!)!, width: Int(image.size.width), height: Int(image.size.height)) {
             message in
             if let message = message {
@@ -232,6 +250,8 @@ class ChatViewController: UIViewController {
         imagePickerController.delegate = self
         imagePickerController.sourceType = .PhotoLibrary
         presentViewController(imagePickerController, animated: true, completion: nil)
+
+        self.imagePickerController = imagePickerController
     }
 }
 
@@ -245,9 +265,16 @@ extension ChatViewController: UITableViewDataSource {
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
-        cell.message = messages[indexPath.row]
-        return cell
+        let message = messages[indexPath.row]
+        if let imageInfo = message.imageInfo {
+            let cell = tableView.dequeueReusableCellWithIdentifier(imageRowTableViewCell, forIndexPath: indexPath) as! ImageRowTableViewCell
+            cell.imageInfo = imageInfo
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
+            cell.message = message
+            return cell
+        }
     }
 }
 
@@ -290,6 +317,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             sendMessageWithImage(image)
             dismissViewControllerAnimated(true, completion: nil)
+            self.imagePickerController = nil
         }
     }
 }

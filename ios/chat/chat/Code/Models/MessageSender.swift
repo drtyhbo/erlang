@@ -10,10 +10,16 @@ import Foundation
 import SwiftyJSON
 
 class MessageSender {
-    private struct OutgoingMessage {
-        let messageJson: JSON
-        let to: Friend
+    private class OutgoingMessage {
+        let message: Message
         let messageId: Int
+        var files: [File]
+
+        init(message: Message, messageId: Int, files: [File]) {
+            self.message = message
+            self.messageId = messageId
+            self.files = files
+        }
     }
 
     private var messageId = 0
@@ -24,8 +30,8 @@ class MessageSender {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "messageDidSend:", name: ChatClient.ChatClientMessageDidSend, object: nil)
     }
 
-    func sendMessageWithJson(json: JSON, to: Friend) {
-        outgoingMessages.append(OutgoingMessage(messageJson: json, to: to, messageId: messageId++))
+    func sendMessage(message: Message, files: [File] = []) {
+        outgoingMessages.append(OutgoingMessage(message: message, messageId: messageId++, files: files))
         maybeSendNextOutgoingMessage()
     }
 
@@ -46,7 +52,34 @@ class MessageSender {
         isSending = true
 
         let outgoingMessage = outgoingMessages.first!
-        ChatClient.sharedClient.sendMessageWithJson(outgoingMessage.messageJson, to: outgoingMessage.to, messageId: outgoingMessage.messageId)
+        if outgoingMessage.files.count > 0 {
+            uploadFile(outgoingMessage.files.first!, toUser: outgoingMessage.message.to!)
+        } else {
+            sendOutgoingMessage(outgoingMessage)
+        }
+    }
+
+    private func uploadFile(file: File, toUser to: Friend) {
+        APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
+            uploadUrl in
+
+            if let uploadUrl = uploadUrl, encryptedFileData = SecurityHelper.sharedHelper.encrypt(file.data, withKey: to.key) {
+                APIManager.sharedManager.uploadData(encryptedFileData, toS3Url: uploadUrl, contentType: file.contentType) {
+                    success in
+                    if success {
+                        if let outgoingMessage = self.outgoingMessages.first {
+                            outgoingMessage.files.removeAtIndex(0)
+                        }
+                        self.sendNextOutgoingMessage()
+                    }
+                }
+            }
+        }
+    }
+
+    private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
+        let message = outgoingMessage.message
+        ChatClient.sharedClient.sendMessageWithJson(message.json, to: message.to!, messageId: outgoingMessage.messageId)
     }
 
     @objc private func messageDidSend(notification: NSNotification) {
