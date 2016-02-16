@@ -53,7 +53,7 @@ class MessageSender {
 
         let outgoingMessage = outgoingMessages.first!
         if outgoingMessage.files.count > 0 {
-            uploadFile(outgoingMessage.files.first!)
+            uploadFile(outgoingMessage.files.first!, toUser: outgoingMessage.message.to!)
         } else {
             sendOutgoingMessage(outgoingMessage)
         }
@@ -65,12 +65,12 @@ class MessageSender {
         return tempUrl
     }
 
-    private func uploadFile(file: File) {
+    private func uploadFile(file: File, toUser to: Friend) {
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
-            if let uploadUrl = uploadUrl {
-                let tempUrl = self.writeDataToTemporaryFile(file.data)
+            if let uploadUrl = uploadUrl, encryptedFileData = SecurityHelper.sharedHelper.encrypt(file.data, withKey: to.key) {
+                let tempUrl = self.writeDataToTemporaryFile(encryptedFileData)
                 APIManager.sharedManager.uploadFileWithLocalUrl(tempUrl, toS3Url: uploadUrl, contentType: file.contentType) {
                     success in
                     if success {

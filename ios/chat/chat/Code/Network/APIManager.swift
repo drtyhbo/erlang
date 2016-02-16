@@ -132,6 +132,23 @@ class APIManager: NSObject {
             }
     }
 
+    func downloadFileWithUrl(url: NSURL, callback: (NSData?, String?)->Void) {
+        let destinationUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent(NSUUID().UUIDString)
+        let destination: (NSURL, NSHTTPURLResponse)->NSURL = {
+            temporaryUrl, response in
+            return destinationUrl
+        }
+
+        Alamofire.download(.GET, url, destination: destination)
+            .response { _, response, data, error in
+                if let response = response, data = NSData(contentsOfURL: destinationUrl) {
+                    callback(data, response.MIMEType)
+                } else {
+                    callback(nil, nil)
+                }
+            }
+    }
+
     private func errorFromJson(json: JSON?) -> Error? {
         if let json = json {
             return json["status"] == "ok" ? nil : Error(json["status"].string ?? "invalid")

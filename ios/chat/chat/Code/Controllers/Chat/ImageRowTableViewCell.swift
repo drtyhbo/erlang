@@ -36,24 +36,12 @@ class ImageRowTableViewCell: UITableViewCell {
     }
 
     private func loadImageWithId(thumbnailId: Int) {
-        if let file = File.findWithId(thumbnailId), thumbnail = file.image {
-            messageImageView.image = thumbnail
-            messageImageView.hidden = false
+        FileHelper.getFileWithId(thumbnailId) {
+            file in
 
-            return
-        }
-
-        APIManager.sharedManager.getUrlForFileWithId(thumbnailId) {
-            url in
-
-            if let url = url {
-                self.messageImageView.sd_setImageWithURL(url) {
-                    image, error, cacheType, imageURL in
-                    if image != nil {
-                        // Save the file to Core Data.
-                        self.messageImageView.hidden = false
-                    }
-                }
+            if let image = file?.image {
+                self.messageImageView.image = image
+                self.messageImageView.hidden = false
             }
         }
     }

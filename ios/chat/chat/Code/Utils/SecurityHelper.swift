@@ -28,9 +28,25 @@ class SecurityHelper {
         }
     }
 
+    func encrypt(dataToEncrypt: NSData, withKey key: NSData) -> NSData? {
+        if let heimdall = Heimdall(publicTag: "com.drtyhbo", publicKeyData: key) {
+            return heimdall.encrypt(dataToEncrypt)
+        } else {
+            return nil
+        }
+    }
+
     func decrypt(stringToDecrypt: String) -> String? {
         if let heimdall = Heimdall(tagPrefix: "com.dryhbo") {
             return heimdall.decrypt(stringToDecrypt)
+        } else {
+            return nil
+        }
+    }
+
+    func decrypt(dataToDecrypt: NSData) -> NSData? {
+        if let heimdall = Heimdall(tagPrefix: "com.dryhbo") {
+            return heimdall.decrypt(dataToDecrypt)
         } else {
             return nil
         }
