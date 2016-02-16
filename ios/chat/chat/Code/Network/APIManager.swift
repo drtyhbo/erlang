@@ -114,7 +114,14 @@ class APIManager: NSObject {
         }
     }
 
-    func uploadFileWithLocalUrl(localUrl: NSURL, toS3Url s3Url: NSURL, contentType: String, callback: Bool->Void) {
+    private func temporaryFileUrl() -> NSURL {
+        return NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent(NSUUID().UUIDString)
+    }
+
+    func uploadData(data: NSData, toS3Url s3Url: NSURL, contentType: String, callback: Bool->Void) {
+        let localUrl = temporaryFileUrl()
+        data.writeToURL(localUrl, atomically: true)
+
         let headers = [
             "Content-Type": contentType]
         Alamofire.upload(.PUT, s3Url, headers: headers, file: localUrl)
@@ -133,7 +140,7 @@ class APIManager: NSObject {
     }
 
     func downloadFileWithUrl(url: NSURL, callback: (NSData?, String?)->Void) {
-        let destinationUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent(NSUUID().UUIDString)
+        let destinationUrl = temporaryFileUrl()
         let destination: (NSURL, NSHTTPURLResponse)->NSURL = {
             temporaryUrl, response in
             return destinationUrl

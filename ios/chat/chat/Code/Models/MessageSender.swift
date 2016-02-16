@@ -59,19 +59,12 @@ class MessageSender {
         }
     }
 
-    private func writeDataToTemporaryFile(data: NSData) -> NSURL {
-        let tempUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent(NSUUID().UUIDString)
-        data.writeToURL(tempUrl, atomically: true)
-        return tempUrl
-    }
-
     private func uploadFile(file: File, toUser to: Friend) {
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
             if let uploadUrl = uploadUrl, encryptedFileData = SecurityHelper.sharedHelper.encrypt(file.data, withKey: to.key) {
-                let tempUrl = self.writeDataToTemporaryFile(encryptedFileData)
-                APIManager.sharedManager.uploadFileWithLocalUrl(tempUrl, toS3Url: uploadUrl, contentType: file.contentType) {
+                APIManager.sharedManager.uploadData(encryptedFileData, toS3Url: uploadUrl, contentType: file.contentType) {
                     success in
                     if success {
                         if let outgoingMessage = self.outgoingMessages.first {
