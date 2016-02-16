@@ -10,30 +10,13 @@ import Foundation
 import SwiftyJSON
 
 class MessageSender {
-    struct File {
-        let localUrl: NSURL
-        let contentType: String
-        let fileId: Int
-
-        init(data: NSData, contentType: String, fileId: Int) {
-            self.fileId = fileId
-            self.contentType = contentType
-
-            let documentsDirectory = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-            localUrl = documentsDirectory.URLByAppendingPathComponent(NSUUID().UUIDString)
-            data.writeToURL(localUrl, atomically: true)
-        }
-    }
-
     private class OutgoingMessage {
-        let messageJson: JSON
-        let to: Friend
+        let message: Message
         let messageId: Int
         var files: [File]
 
-        init(messageJson: JSON, to: Friend, messageId: Int, files: [File]) {
-            self.messageJson = messageJson
-            self.to = to
+        init(message: Message, messageId: Int, files: [File]) {
+            self.message = message
             self.messageId = messageId
             self.files = files
         }
@@ -47,8 +30,8 @@ class MessageSender {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "messageDidSend:", name: ChatClient.ChatClientMessageDidSend, object: nil)
     }
 
-    func sendMessageWithJson(json: JSON, to: Friend, files: [File] = []) {
-        outgoingMessages.append(OutgoingMessage(messageJson: json, to: to, messageId: messageId++, files: files))
+    func sendMessage(message: Message, files: [File] = []) {
+        outgoingMessages.append(OutgoingMessage(message: message, messageId: messageId++, files: files))
         maybeSendNextOutgoingMessage()
     }
 
@@ -76,12 +59,19 @@ class MessageSender {
         }
     }
 
+    private func writeDataToTemporaryFile(data: NSData) -> NSURL {
+        let tempUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent(NSUUID().UUIDString)
+        data.writeToURL(tempUrl, atomically: true)
+        return tempUrl
+    }
+
     private func uploadFile(file: File) {
-        APIManager.sharedManager.getUrlForFileWithId(file.fileId, method: "PUT", contentType: file.contentType) {
+        APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
             if let uploadUrl = uploadUrl {
-                APIManager.sharedManager.uploadFileWithLocalUrl(file.localUrl, toS3Url: uploadUrl, contentType: file.contentType) {
+                let tempUrl = self.writeDataToTemporaryFile(file.data)
+                APIManager.sharedManager.uploadFileWithLocalUrl(tempUrl, toS3Url: uploadUrl, contentType: file.contentType) {
                     success in
                     if success {
                         if let outgoingMessage = self.outgoingMessages.first {
@@ -95,7 +85,8 @@ class MessageSender {
     }
 
     private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
-        ChatClient.sharedClient.sendMessageWithJson(outgoingMessage.messageJson, to: outgoingMessage.to, messageId: outgoingMessage.messageId)
+        let message = outgoingMessage.message
+        ChatClient.sharedClient.sendMessageWithJson(message.json, to: message.to!, messageId: outgoingMessage.messageId)
     }
 
     @objc private func messageDidSend(notification: NSNotification) {

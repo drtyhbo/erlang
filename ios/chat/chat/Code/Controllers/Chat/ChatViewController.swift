@@ -116,7 +116,12 @@ class ChatViewController: UIViewController {
         resetNewMessageView()
 
         if let friend = friend {
-            MessageManager.sharedManager.sendMessageWithText(text, to: friend)
+            MessageManager.sharedManager.sendMessageWithText(text, to: friend) {
+                message in
+                if let message = message {
+                    self.appendMessage(message)
+                }
+            }
         }
     }
 
@@ -134,7 +139,12 @@ class ChatViewController: UIViewController {
         resetNewMessageView()
 
         if let friend = friend {
-            MessageManager.sharedManager.sendMessageWithImage(image, to: friend)
+            MessageManager.sharedManager.sendMessageWithImage(image, to: friend) {
+                message in
+                if let message = message {
+                    self.appendMessage(message)
+                }
+            }
         }
 /*        Message.sendImageFile(PFFile(data: UIImageJPEGRepresentation(image, 0.8)!)!, width: Int(image.size.width), height: Int(image.size.height)) {
             message in

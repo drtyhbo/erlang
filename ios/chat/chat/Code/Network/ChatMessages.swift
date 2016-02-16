@@ -12,12 +12,12 @@ import SwiftyJSON
 class ReceivedMessage {
     let fromId: Int
     let timestamp: Int
-    let message: String
+    let messageJson: JSON
 
-    init(fromId: Int, timestamp: Int, message: String) {
+    init(fromId: Int, timestamp: Int, messageJson: JSON) {
         self.fromId = fromId
         self.timestamp = timestamp
-        self.message = message
+        self.messageJson = messageJson
     }
 }
 

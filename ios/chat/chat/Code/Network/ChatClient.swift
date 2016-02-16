@@ -17,7 +17,6 @@ class ChatClient {
 
     static let sharedClient = ChatClient()
 
-    static let ChatClientSentMessageNotification = "ChatClientSentMessage"
     static let ChatClientReceivedMessageNotification = "ChatClientReceivedMessage"
     static let ChatClientMessageDidSend = "ChatClientMessageDidSend"
     static let ChatClientConnectingNotification = "ChatClientConnecting"
@@ -54,8 +53,6 @@ class ChatClient {
             ])
 
             connection.sendJson(messageJson)
-
-            NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientSentMessageNotification, object: nil, userInfo: ["sentMessage": SentMessage(toId: to.id, timestamp: Int(NSDate.timeIntervalSinceReferenceDate()), message: json)])
 
             return true
         }
@@ -98,18 +95,11 @@ class ChatClient {
         }
     }
 
-    private func messageFromJson(json: JSON) -> String? {
-        return json["m"].string
-    }
-
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
             if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string, let decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage) {
-                let messageJson = JSON.parse(decryptedMessage)
-                if let message = messageFromJson(messageJson) {
-                    let receivedMessage = ReceivedMessage(fromId: fromId, timestamp: timestamp, message: message)
-                    NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessageNotification, object: nil, userInfo: ["receivedMessage": receivedMessage])
-                }
+                let receivedMessage = ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON.parse(decryptedMessage))
+                NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessageNotification, object: nil, userInfo: ["receivedMessage": receivedMessage])
             }
         }
     }

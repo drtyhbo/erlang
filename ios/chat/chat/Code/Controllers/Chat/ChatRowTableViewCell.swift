@@ -26,7 +26,7 @@ class ChatRowTableViewCell: MessageTableViewCell {
             timeFormatter.dateFormat = "H:mm"
             dateLabel.text = timeFormatter.stringFromDate(message.date)
 
-            messageLabel.text = message.message
+            messageLabel.text = message.text ?? ""
         }
     }
 }

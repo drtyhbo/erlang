@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4895AA0B7AE4B2174643D2F7 /* Pods_chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F57DF795FECAD58982D83601 /* Pods_chat.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		900EC8FB1C72A9B800AE5C73 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FA1C72A9B800AE5C73 /* CoreData.swift */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -57,6 +58,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		900EC8FA1C72A9B800AE5C73 /* CoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				9049633C1C70DE9D0078C9DF /* MessageSender.swift */,
 				9049633A1C6F9D750078C9DF /* PhoneNumber.swift */,
 				90EBF8AC1C474A0E00A7AD51 /* User.swift */,
+				900EC8FA1C72A9B800AE5C73 /* CoreData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */,
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
+				900EC8FB1C72A9B800AE5C73 /* CoreData.swift in Sources */,
 				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
 				9049634A1C7239790078C9DF /* UIImage.swift in Sources */,
 				90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */,

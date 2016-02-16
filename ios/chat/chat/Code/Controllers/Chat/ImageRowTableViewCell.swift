@@ -36,6 +36,13 @@ class ImageRowTableViewCell: UITableViewCell {
     }
 
     private func loadImageWithId(thumbnailId: Int) {
+        if let file = File.findWithId(thumbnailId), thumbnail = file.image {
+            messageImageView.image = thumbnail
+            messageImageView.hidden = false
+
+            return
+        }
+
         APIManager.sharedManager.getUrlForFileWithId(thumbnailId) {
             url in
 
