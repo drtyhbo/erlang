@@ -3,6 +3,9 @@ FROM abinnewies/erlang
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app
 
+RUN mkdir -p /etc/certs
+COPY certs/* /etc/certs/
+
 RUN cd /usr/src/app \
     && rebar3 release
 

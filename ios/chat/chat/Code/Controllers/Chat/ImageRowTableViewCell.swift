@@ -27,7 +27,7 @@ class ImageRowTableViewCell: UITableViewCell {
                 widthConstraint.constant = imageSize.width
                 heightConstraint.constant = imageSize.height
 
-                loadImageWithId(imageInfo.fileId)
+                loadImageWithId(imageInfo.thumbnailId)
             } else {
                 heightConstraint.constant = 0
                 messageImageView.hidden = true
@@ -35,14 +35,17 @@ class ImageRowTableViewCell: UITableViewCell {
         }
     }
 
-    private func loadImageWithId(fileId: Int) {
-        APIManager.sharedManager.getFileWithId(fileId) {
+    private func loadImageWithId(thumbnailId: Int) {
+        APIManager.sharedManager.getUrlForFileWithId(thumbnailId) {
             url in
-            self.messageImageView.sd_setImageWithURL(url) {
-                image, error, cacheType, imageURL in
-                if image != nil {
-                    // Save the file to Core Data.
-                    self.messageImageView.hidden = false
+
+            if let url = url {
+                self.messageImageView.sd_setImageWithURL(url) {
+                    image, error, cacheType, imageURL in
+                    if image != nil {
+                        // Save the file to Core Data.
+                        self.messageImageView.hidden = false
+                    }
                 }
             }
         }

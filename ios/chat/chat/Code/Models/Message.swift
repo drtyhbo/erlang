@@ -14,9 +14,13 @@ import SwiftyJSON
 @objc(Message)
 class Message: NSManagedObject {
     struct ImageInfo {
-        let fileId: Int
+        let imageId: Int
         let width: Int
         let height: Int
+
+        let thumbnailId: Int
+        let thumbnailWidth: Int
+        let thumbnailHeight: Int
     }
 
     @NSManaged private(set) var from: Friend?
@@ -26,11 +30,13 @@ class Message: NSManagedObject {
 
     var imageInfo: ImageInfo? {
         let json = JSON.parse(message)
-        guard let fileId = json["i"].int, width = json["w"].int, height = json["h"].int else {
+        let imageInfo = json["i"]
+
+        guard let imageId = imageInfo["i"].int, width = imageInfo["w"].int, height = imageInfo["h"].int, thumbnailId = imageInfo["ti"].int, thumbnailWidth = imageInfo["tw"].int, thumbnailHeight = imageInfo["th"].int else {
             return nil
         }
 
-        return ImageInfo(fileId: fileId, width: width, height: height)
+        return ImageInfo(imageId: imageId, width: width, height: height, thumbnailId: thumbnailId, thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight)
     }
 
     static func createWithFrom(from: Friend?, to: Friend?, date: NSDate, messageData: String) -> Message {

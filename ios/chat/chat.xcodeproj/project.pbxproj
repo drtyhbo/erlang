@@ -19,6 +19,7 @@
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		904963411C722CBA0078C9DF /* ImageRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* ImageRowTableViewCell.swift */; };
 		904963451C722CE30078C9DF /* ImageRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 904963441C722CE30078C9DF /* ImageRowTableViewCell.xib */; };
+		9049634A1C7239790078C9DF /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963491C7239790078C9DF /* UIImage.swift */; };
 		90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5981C4C06F900236D6B /* GIFSelector.swift */; };
 		90AFD59B1C4C070500236D6B /* GIFSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59A1C4C070500236D6B /* GIFSelector.xib */; };
 		90AFD59D1C4CBD1100236D6B /* GIFSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */; };
@@ -68,6 +69,7 @@
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		904963401C722CBA0078C9DF /* ImageRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRowTableViewCell.swift; sourceTree = "<group>"; };
 		904963441C722CE30078C9DF /* ImageRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageRowTableViewCell.xib; sourceTree = "<group>"; };
+		904963491C7239790078C9DF /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImage.swift; path = Extensions/UIImage.swift; sourceTree = "<group>"; };
 		90AFD5981C4C06F900236D6B /* GIFSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIFSelector.swift; sourceTree = "<group>"; };
 		90AFD59A1C4C070500236D6B /* GIFSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelector.xib; sourceTree = "<group>"; };
 		90AFD59C1C4CBD1100236D6B /* GIFSelectorCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIFSelectorCell.xib; sourceTree = "<group>"; };
@@ -158,6 +160,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		904963481C72396B0078C9DF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				904963491C7239790078C9DF /* UIImage.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		90AFD5AB1C5CE43200236D6B /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,6 +227,7 @@
 		90EBF89C1C47497500A7AD51 /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				904963481C72396B0078C9DF /* Extensions */,
 				90EBF8B61C474CA700A7AD51 /* AppDelegate.swift */,
 				90EBF8B71C474CA700A7AD51 /* Controllers */,
 				90EBF8A31C4749E000A7AD51 /* Models */,
@@ -447,6 +458,7 @@
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
 				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
+				9049634A1C7239790078C9DF /* UIImage.swift in Sources */,
 				90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
 				9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */,

@@ -83,29 +83,28 @@ class APIManager: NSObject {
         }
     }
 
-    struct FileData {
-        let fileId: Int
-        let uploadUrl: NSURL
-    }
-
-    func createFileForFriend(friend: Friend, contentType: String, callback: FileData?->Void) {
+    func createFileForFriend(friend: Friend, numFiles: Int, callback: Int?->Void) {
         sendUserRequestToUrl("file/create/", parameters: [
             "friendId": friend.id,
-            "contentType": contentType
-        ]) {
+            "numIds": numFiles]) {
             json in
-            if let json = json, fileId = json["fileId"].int, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
-                callback(FileData(fileId: fileId, uploadUrl: fileUrl))
+            if let json = json, fileId = json["fileId"].int {
+                callback(fileId)
             } else {
                 callback(nil)
             }
         }
     }
 
-    func getFileWithId(fileId: Int, callback: NSURL?->Void) {
+    func getUrlForFileWithId(fileId: Int, callback: NSURL?->Void) {
+        getUrlForFileWithId(fileId, method: "GET", contentType: "", callback: callback)
+    }
+
+    func getUrlForFileWithId(fileId: Int, method: String, contentType: String, callback: NSURL?->Void) {
         sendUserRequestToUrl("file/get/", parameters: [
-            "fileId": fileId
-        ]) {
+            "fileId": fileId,
+            "method": method,
+            "contentType": contentType]) {
             json in
             if let json = json, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
                 callback(fileUrl)

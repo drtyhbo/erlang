@@ -13,6 +13,7 @@ import Foundation
 class File: NSManagedObject {
     @NSManaged var id: Int
     @NSManaged var data: NSData
+    @NSManaged var thumbData: NSData?
 
     static func createWithId(id: Int, data: NSData) -> File {
         let file = File.MR_createEntity()!

@@ -14,12 +14,10 @@ class MessageSender {
         let localUrl: NSURL
         let contentType: String
         let fileId: Int
-        let uploadUrl: NSURL
 
-        init(data: NSData, contentType: String, fileId: Int, uploadUrl: NSURL) {
+        init(data: NSData, contentType: String, fileId: Int) {
             self.fileId = fileId
             self.contentType = contentType
-            self.uploadUrl = uploadUrl
 
             let documentsDirectory = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
             localUrl = documentsDirectory.URLByAppendingPathComponent(NSUUID().UUIDString)
@@ -79,13 +77,19 @@ class MessageSender {
     }
 
     private func uploadFile(file: File) {
-        APIManager.sharedManager.uploadFileWithLocalUrl(file.localUrl, toS3Url: file.uploadUrl, contentType: file.contentType) {
-            success in
-            if success {
-                if let outgoingMessage = self.outgoingMessages.first {
-                    outgoingMessage.files.removeAtIndex(0)
+        APIManager.sharedManager.getUrlForFileWithId(file.fileId, method: "PUT", contentType: file.contentType) {
+            uploadUrl in
+
+            if let uploadUrl = uploadUrl {
+                APIManager.sharedManager.uploadFileWithLocalUrl(file.localUrl, toS3Url: uploadUrl, contentType: file.contentType) {
+                    success in
+                    if success {
+                        if let outgoingMessage = self.outgoingMessages.first {
+                            outgoingMessage.files.removeAtIndex(0)
+                        }
+                        self.sendNextOutgoingMessage()
+                    }
                 }
-                self.sendNextOutgoingMessage()
             }
         }
     }

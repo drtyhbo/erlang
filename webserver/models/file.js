@@ -19,15 +19,22 @@ function userKeyFromId(userId) {
 	return 'u:' + userId;
 }
 
-exports.create = function(userId, friendId, cb) {
+exports.create = function(userId, friendId, numIds, cb) {
 	user.exists(friendId).then(function(exists) {
 		if (exists) {
-			return redis.incrAsync(fileIdKey());
+			return redis.incrbyAsync(fileIdKey(), numIds);
 		} else {
 			return Promise.reject();
 		}
 	}).then(function(fileId) {
-		return redis.saddAsync(fileKeyFromId(fileId), userKeyFromId(userId), userKeyFromId(friendId)).thenReturn(fileId);
+		var firstFileId = fileId - numIds;
+
+		var promises = [];
+		for (var i = 0; i < numIds; i++) {
+			promises.push(redis.saddAsync(fileKeyFromId(firstFileId + i), userKeyFromId(userId), userKeyFromId(friendId)));
+		}
+		
+		return Promise.all(promises).thenReturn(firstFileId);
 	}).then(function(fileId) {
 		cb(null, fileId);
 	}, function(err) {
@@ -44,5 +51,5 @@ exports.hasAccess = function(fileId, userId, cb) {
 };
 
 exports.generateSignedUrl = function(fileId, method, contentType) {
-	return fileBucket.getUrl(method, 'files/' + fileId, 'drtyhbo-chat', contentType, 100);
+	return fileBucket.getUrl(method, 'files/' + fileId, 'drtyhbo-chat', contentType || '', 100);
 }

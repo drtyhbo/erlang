@@ -44,15 +44,23 @@ class MessageManager {
     }
 
     func sendMessageWithImage(image: UIImage, to: Friend) {
-        let contentType = "image/jpeg"
-        APIManager.sharedManager.createFileForFriend(to, contentType: contentType) {
-            fileData in
-            if let fileData = fileData {
-                let files = [MessageSender.File(data: UIImageJPEGRepresentation(image, 0.5)!, contentType: contentType, fileId: fileData.fileId, uploadUrl: fileData.uploadUrl)]
+        APIManager.sharedManager.createFileForFriend(to, numFiles: 2) {
+            fileId in
+            if let fileId = fileId {
+                let contentType = "image/jpeg"
+                let thumbnail = image.resizeToPercentage(0.25)
                 let messageJson = JSON([
-                    "i": fileData.fileId,
-                    "w": image.size.width,
-                    "h": image.size.height])
+                    "i": [
+                        "i": fileId,
+                        "w": image.size.width,
+                        "h": image.size.height,
+                        "ti": fileId + 1,
+                        "tw": thumbnail.size.width,
+                        "th": thumbnail.size.height
+                    ]])
+
+                let files = [MessageSender.File(data: UIImageJPEGRepresentation(image, 0.5)!, contentType: contentType, fileId: fileId),
+                    MessageSender.File(data: UIImageJPEGRepresentation(thumbnail, 0.2)!, contentType: contentType, fileId: fileId + 1)]
                 self.messageSender.sendMessageWithJson(messageJson, to: to, files: files)
             }
         }
