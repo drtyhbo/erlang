@@ -44,7 +44,7 @@ class ChatClient {
     }
 
     func sendMessageWithJson(json: JSON, to: Friend, messageId: Int) -> Bool {
-        if let messageToEncrypt = json.rawString(), encryptedMessage = SecurityHelper.sharedHelper.encrypt(messageToEncrypt, withKey: to.key) {
+        if let messageToEncrypt = json.rawString(), encryptedMessage = SecurityHelper.sharedHelper.encrypt(messageToEncrypt, publicTag: "com.drtyhbo.\(to.id)", withKey: to.key) {
             let messageJson = JSON([
                 "t": "m",
                 "r": String(to.id),

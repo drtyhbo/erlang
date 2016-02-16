@@ -266,15 +266,23 @@ extension ChatViewController: UITableViewDataSource {
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let message = messages[indexPath.row]
-        if let imageInfo = message.imageInfo {
-            let cell = tableView.dequeueReusableCellWithIdentifier(imageRowTableViewCell, forIndexPath: indexPath) as! ImageRowTableViewCell
-            cell.imageInfo = imageInfo
-            return cell
+
+        var cell: MessageTableViewCell
+        if message.imageInfo != nil {
+            cell = tableView.dequeueReusableCellWithIdentifier(imageRowTableViewCell, forIndexPath: indexPath) as! ImageRowTableViewCell
         } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
-            cell.message = message
-            return cell
+            cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
         }
+
+        cell.message = message
+
+        if let previousMessage: Message = indexPath.row > 0 ? messages[indexPath.row - 1] : nil {
+            cell.hasHeader = indexPath.row == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from
+        } else {
+            cell.hasHeader = indexPath.row == 0
+        }
+
+        return cell
     }
 }
 

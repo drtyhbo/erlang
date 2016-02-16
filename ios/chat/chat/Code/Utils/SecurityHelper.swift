@@ -20,16 +20,16 @@ class SecurityHelper {
         }
     }
 
-    func encrypt(stringToEncrypt: String, withKey key: NSData) -> String? {
-        if let heimdall = Heimdall(publicTag: "com.drtyhbo", publicKeyData: key) {
+    func encrypt(stringToEncrypt: String, publicTag: String, withKey key: NSData) -> String? {
+        if let heimdall = Heimdall(publicTag: publicTag, publicKeyData: key) {
             return heimdall.encrypt(stringToEncrypt)
         } else {
             return nil
         }
     }
 
-    func encrypt(dataToEncrypt: NSData, withKey key: NSData) -> NSData? {
-        if let heimdall = Heimdall(publicTag: "com.drtyhbo", publicKeyData: key) {
+    func encrypt(dataToEncrypt: NSData, publicTag: String, withKey key: NSData) -> NSData? {
+        if let heimdall = Heimdall(publicTag: publicTag, publicKeyData: key) {
             return heimdall.encrypt(dataToEncrypt)
         } else {
             return nil

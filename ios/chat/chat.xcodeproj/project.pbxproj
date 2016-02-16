@@ -10,6 +10,7 @@
 		4895AA0B7AE4B2174643D2F7 /* Pods_chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F57DF795FECAD58982D83601 /* Pods_chat.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		900EC8FB1C72A9B800AE5C73 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FA1C72A9B800AE5C73 /* CoreData.swift */; };
 		900EC8FD1C72B04900AE5C73 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FC1C72B04900AE5C73 /* FileHelper.swift */; };
+		900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -61,6 +62,7 @@
 /* Begin PBXFileReference section */
 		900EC8FA1C72A9B800AE5C73 /* CoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		900EC8FC1C72B04900AE5C73 /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
+		900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatProfilePic.swift; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				90AFD5A81C4DE1B700236D6B /* NewMessagesCell.xib */,
 				904963401C722CBA0078C9DF /* ImageRowTableViewCell.swift */,
 				904963441C722CE30078C9DF /* ImageRowTableViewCell.xib */,
+				900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				90AFD5991C4C06F900236D6B /* GIFSelector.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
 				9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */,
+				900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */,
 				9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */,
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
 				9031FFE51C6E2BC100BCC456 /* File.swift in Sources */,

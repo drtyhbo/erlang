@@ -23,13 +23,17 @@ class FriendManager {
 
             for friendData in friendsData {
                 var friend = Friend.findWithId(friendData.id)
-                if let key = NSData(base64EncodedString: friendData.base64Key, options: NSDataBase64DecodingOptions(rawValue: 0)) where friend == nil {
-                    friend = Friend.createWithId(friendData.id, name: friendData.name, key: key)
-                    self.friends.append(friend!)
+                if let key = NSData(base64EncodedString: friendData.base64Key, options: NSDataBase64DecodingOptions(rawValue: 0)) {
+                    if let friend = friend {
+                        friend.key = key
+                    } else {
+                        friend = Friend.createWithId(friendData.id, name: friendData.name, key: key)
+                        self.friends.append(friend!)
+                    }
                 }
             }
 
-            NSManagedObjectContext.MR_defaultContext().MR_saveToPersistentStoreAndWait()
+            CoreData.save()
 
             completion()
         }

@@ -63,7 +63,7 @@ class MessageSender {
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
-            if let uploadUrl = uploadUrl, encryptedFileData = SecurityHelper.sharedHelper.encrypt(file.data, withKey: to.key) {
+            if let uploadUrl = uploadUrl, encryptedFileData = SecurityHelper.sharedHelper.encrypt(file.data, publicTag: "com.drtyhbo.\(to.id)", withKey: to.key) {
                 APIManager.sharedManager.uploadData(encryptedFileData, toS3Url: uploadUrl, contentType: file.contentType) {
                     success in
                     if success {

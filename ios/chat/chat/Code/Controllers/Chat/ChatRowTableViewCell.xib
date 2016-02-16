@@ -9,58 +9,80 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="96" id="Agv-Gy-7yo" customClass="ChatRowTableViewCell" customModule="chat" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="403" height="96"/>
+            <rect key="frame" x="0.0" y="0.0" width="403" height="120"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Agv-Gy-7yo" id="agl-Zr-hu5">
-                <rect key="frame" x="0.0" y="0.0" width="403" height="95"/>
+                <rect key="frame" x="0.0" y="0.0" width="403" height="119"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="andreas.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="eXu-B3-MYT">
-                        <rect key="frame" x="8" y="8" width="32" height="32"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="andreas.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="eXu-B3-MYT" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="8" y="8" width="48" height="48"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="32" id="jjJ-kO-vlW"/>
-                            <constraint firstAttribute="height" constant="32" id="oGB-qj-JIg"/>
+                            <constraint firstAttribute="width" constant="48" id="jjJ-kO-vlW"/>
+                            <constraint firstAttribute="height" constant="48" id="oGB-qj-JIg"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Andreas" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-CS-OFM">
-                        <rect key="frame" x="48" y="8" width="49" height="14"/>
-                        <fontDescription key="fontDescription" type="system" weight="black" pointSize="11"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="5:10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kmo-eR-fpe">
-                        <rect key="frame" x="98" y="7" width="25" height="15"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeS-uW-exS">
+                        <rect key="frame" x="64" y="8" width="90" height="17"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Andreas" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-CS-OFM">
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="17"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="14"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5:10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kmo-eR-fpe">
+                                <rect key="frame" x="65" y="1" width="25" height="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="6Vl-VD-XTN"/>
+                            <constraint firstItem="Kmo-eR-fpe" firstAttribute="centerY" secondItem="CRu-CS-OFM" secondAttribute="centerY" id="9rC-5Z-eUG"/>
+                            <constraint firstItem="CRu-CS-OFM" firstAttribute="top" secondItem="SeS-uW-exS" secondAttribute="top" id="Ejd-mt-fTz"/>
+                            <constraint firstItem="CRu-CS-OFM" firstAttribute="leading" secondItem="SeS-uW-exS" secondAttribute="leading" id="QBa-QY-xbP"/>
+                            <constraint firstAttribute="bottom" secondItem="CRu-CS-OFM" secondAttribute="bottom" id="kQz-qz-u7V"/>
+                            <constraint firstAttribute="trailing" secondItem="Kmo-eR-fpe" secondAttribute="trailing" id="ow2-oE-N6h"/>
+                            <constraint firstItem="Kmo-eR-fpe" firstAttribute="leading" secondItem="CRu-CS-OFM" secondAttribute="trailing" constant="5" id="pso-eo-oy2"/>
+                        </constraints>
+                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GF-UR-H8J">
-                        <rect key="frame" x="48" y="25" width="347" height="62"/>
+                        <rect key="frame" x="64" y="33" width="331" height="86"/>
                         <string key="text">So what are you guys thinking?
 
 Maybe hit the gym at 5pm?</string>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="3GF-UR-H8J" firstAttribute="top" secondItem="SeS-uW-exS" secondAttribute="bottom" constant="8" id="HWG-5h-GPM"/>
+                    <constraint firstAttribute="bottom" secondItem="3GF-UR-H8J" secondAttribute="bottom" id="Ixv-DE-pkF"/>
+                    <constraint firstItem="SeS-uW-exS" firstAttribute="top" secondItem="eXu-B3-MYT" secondAttribute="top" id="Pcz-z2-pYi"/>
                     <constraint firstItem="eXu-B3-MYT" firstAttribute="top" secondItem="agl-Zr-hu5" secondAttribute="topMargin" id="QLK-Pq-rfS"/>
                     <constraint firstAttribute="trailingMargin" secondItem="3GF-UR-H8J" secondAttribute="trailing" id="Qaq-oQ-eEr"/>
                     <constraint firstAttribute="bottomMargin" secondItem="3GF-UR-H8J" secondAttribute="bottom" id="ZDP-Qs-2qi"/>
-                    <constraint firstItem="Kmo-eR-fpe" firstAttribute="bottom" secondItem="CRu-CS-OFM" secondAttribute="bottom" id="cJQ-tv-Jj1"/>
-                    <constraint firstItem="Kmo-eR-fpe" firstAttribute="leading" secondItem="CRu-CS-OFM" secondAttribute="trailing" constant="5" id="cfR-Vh-MSo"/>
-                    <constraint firstItem="3GF-UR-H8J" firstAttribute="top" secondItem="CRu-CS-OFM" secondAttribute="bottom" constant="3" id="ivP-3a-v1i"/>
-                    <constraint firstItem="CRu-CS-OFM" firstAttribute="top" secondItem="eXu-B3-MYT" secondAttribute="top" id="jeM-me-Ykw"/>
-                    <constraint firstItem="CRu-CS-OFM" firstAttribute="leading" secondItem="eXu-B3-MYT" secondAttribute="trailing" constant="8" id="nCL-jz-6qT"/>
-                    <constraint firstItem="3GF-UR-H8J" firstAttribute="leading" secondItem="CRu-CS-OFM" secondAttribute="leading" id="saN-Jo-NoQ"/>
+                    <constraint firstItem="3GF-UR-H8J" firstAttribute="leading" secondItem="SeS-uW-exS" secondAttribute="leading" id="Zn5-5f-DzC"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="eXu-B3-MYT" secondAttribute="bottom" id="eVr-5V-noE"/>
+                    <constraint firstItem="SeS-uW-exS" firstAttribute="leading" secondItem="eXu-B3-MYT" secondAttribute="trailing" constant="8" id="lom-Hd-ASm"/>
                     <constraint firstItem="eXu-B3-MYT" firstAttribute="leading" secondItem="agl-Zr-hu5" secondAttribute="leadingMargin" id="xn5-4p-U07"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="ZDP-Qs-2qi"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <connections>
                 <outlet property="dateLabel" destination="Kmo-eR-fpe" id="h5a-Hq-akE"/>
+                <outlet property="headerHeightConstraint" destination="6Vl-VD-XTN" id="bEC-hh-z2R"/>
                 <outlet property="messageLabel" destination="3GF-UR-H8J" id="Zhg-PT-PEp"/>
                 <outlet property="userImage" destination="eXu-B3-MYT" id="EUm-h4-h7M"/>
+                <outlet property="userImageHeightConstraint" destination="oGB-qj-JIg" id="ggI-0N-fsc"/>
                 <outlet property="userName" destination="CRu-CS-OFM" id="2xa-H8-Tua"/>
             </connections>
             <point key="canvasLocation" x="409.5" y="363"/>

@@ -9,13 +9,19 @@
 import Foundation
 import UIKit
 
-class ImageRowTableViewCell: UITableViewCell {
+class ImageRowTableViewCell: MessageTableViewCell {
     @IBOutlet weak var messageImageView: UIImageView!
 
     @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
 
-    var imageInfo: Message.ImageInfo? {
+    override var message: Message! {
+        didSet {
+            imageInfo = message.imageInfo
+        }
+    }
+
+    private var imageInfo: Message.ImageInfo? {
         didSet {
             if let imageInfo = imageInfo {
                 let screenSize = UIScreen.mainScreen().bounds.size
@@ -39,9 +45,13 @@ class ImageRowTableViewCell: UITableViewCell {
         FileHelper.getFileWithId(thumbnailId) {
             file in
 
-            if let image = file?.image {
-                self.messageImageView.image = image
-                self.messageImageView.hidden = false
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                if let image = file?.image {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.messageImageView.image = image
+                        self.messageImageView.hidden = false
+                    }
+                }
             }
         }
     }
