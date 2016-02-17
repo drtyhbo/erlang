@@ -27,8 +27,9 @@ class MessageManager {
     static let sharedManager = MessageManager()
 
     static let NewMessageNotification = "NewMessage"
-    static let UnreadMessageCountUpdated = "UnreadMessageCountUpdated"
-    static let UnreadMessageCountReset = "UnreadMessageCountReset"
+    static let FriendUnreadMessageCountUpdated = "FriendUnreadMessageCountUpdated"
+    static let FriendUnreadMessageCountReset = "FriendUnreadMessageCountReset"
+    static let TotalUnreadMessageCountUpdated = "TotalUnreadMessageCountUpdated"
 
     private var unreadMessageCountForFriend: [Friend:Int] = [:]
 
@@ -83,7 +84,13 @@ class MessageManager {
     }
 
     private func sendUnreadMessagesCountUpdatedNotificationForFriend(friend: Friend, withUnreadMessageCount unreadMessageCount: Int) {
-        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.UnreadMessageCountUpdated, object: friend, userInfo: ["unreadMessageCount": unreadMessageCount])
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.FriendUnreadMessageCountUpdated, object: friend, userInfo: ["unreadMessageCount": unreadMessageCount])
+
+        var totalUnreadMessageCount = 0
+        for (_, count) in unreadMessageCountForFriend {
+            totalUnreadMessageCount += count
+        }
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.TotalUnreadMessageCountUpdated, object: friend, userInfo: ["unreadMessageCount": totalUnreadMessageCount])
     }
 
     private func sendNewMessageNotificationForFriend(friend: Friend, withMessage message: Message) {

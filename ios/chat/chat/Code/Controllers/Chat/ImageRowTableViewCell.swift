@@ -42,6 +42,8 @@ class ImageRowTableViewCell: MessageTableViewCell {
     }
 
     private func loadImageWithId(thumbnailId: Int) {
+        messageImageView.image = nil
+
         FileHelper.getFileWithId(thumbnailId) {
             file in
 

@@ -37,7 +37,7 @@ class ConfirmCodeViewController: UIViewController {
                 User.userId = userId
                 User.sessionToken = sessionToken
 
-                self.navigationController?.pushViewController(ChatViewController(), animated: true)
+                self.navigationController?.pushViewController(MainViewController(), animated: true)
             } else if let error = error {
                 switch(error.error) {
                 case "mismatch":

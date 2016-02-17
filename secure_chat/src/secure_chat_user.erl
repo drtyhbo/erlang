@@ -121,11 +121,10 @@ logged_in(check_offline_msgs, State) ->
 	end,
 	{next_state, logged_in, State};
 logged_in({receive_msg, Msg}, State) ->
-	secure_chat_user:msg_is_delivered(Msg),
+	secure_chat_msg_store:delete_offline_msg(Msg),
 	receive_msgs(State#user_state.socket, [Msg]),
 	{next_state, logged_in, State};
 logged_in({msg_is_delivered, Msg}, State) ->
-	secure_chat_msg_store:delete_offline_msg(Msg),
 	send_json(State#user_state.socket, ?OUT_MSG_IS_DELIVERED(Msg#message.client_id)),
 	{next_state, logged_in, State};
 logged_in(Event, State) ->
@@ -198,6 +197,7 @@ handle_msg_json(Json, State) ->
 		client_id=ClientId,
 		msg=Msg},
 	store_offline_msg(NewMsg),
+	msg_is_delivered(NewMsg),
 	case syn:find_by_key(To) of
 	Pid when is_pid(Pid) ->
 		secure_chat_user:receive_msg(Pid, NewMsg);

@@ -5,6 +5,9 @@ docker stop redis1 && docker rm redis1 && docker run --name redis1 -d=true -v /v
 chat1:
 docker pull abinnewies/chat-webapp && docker stop web1 && docker rm web1 && docker run -p 80:8080 --name web1 --link redis1:redis1 -d abinnewies/chat-webapp
 
+docker run -it --link redis1:redis1 --rm redis sh -c 'exec redis-cli -h "$REDIS1_PORT_6379_TCP_ADDR" -p "$REDIS1_PORT_6379_TCP_PORT"'
+
+
 docker pull abinnewies/chat-server && docker stop chat1 && docker rm chat1 && docker run -p 49165:49165 --name chat1 --link redis1:redis1 -h chat1 -v /var/data/mnesia:/var/data/mnesia -d abinnewies/chat-server /usr/src/app/run.sh chat1
 
 chat2:

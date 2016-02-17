@@ -6,6 +6,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import APLSlideMenu
 import CocoaAsyncSocket
 import CoreData
 import UIKit
@@ -24,6 +25,9 @@ class ChatViewController: UIViewController {
 
     @IBOutlet weak var messageHelperContainer: UIView!
     @IBOutlet weak var messageHelperContainerHeightConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var unreadMessagesContainer: UIView!
+    @IBOutlet weak var unreadMessagesCount: UILabel!
 
     var friend: Friend? {
         didSet {
@@ -80,6 +84,8 @@ class ChatViewController: UIViewController {
 
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
 
+        unreadMessagesContainer.layer.cornerRadius = unreadMessagesContainer.bounds.size.height / 2
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
 
@@ -87,6 +93,8 @@ class ChatViewController: UIViewController {
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: friend)
+
 
         registerForNotifications()
     }
@@ -237,6 +245,13 @@ class ChatViewController: UIViewController {
         }
     }
 
+    @objc private func unreadMessageCountUpdated(notification: NSNotification) {
+        if let totalUnreadMessageCount = notification.userInfo?["unreadMessageCount"] as? Int {
+            unreadMessagesContainer.hidden = totalUnreadMessageCount == 0
+            unreadMessagesCount.text = "\(totalUnreadMessageCount)"
+        }
+    }
+
     @objc private func didTapOnMessages() {
         newMessageView.resignFirstResponder()
     }
@@ -252,6 +267,12 @@ class ChatViewController: UIViewController {
         presentViewController(imagePickerController, animated: true, completion: nil)
 
         self.imagePickerController = imagePickerController
+    }
+
+    @IBAction func didTapMenu() {
+        if let slideMenuViewController = parentViewController as? APLSlideMenuViewController {
+            slideMenuViewController.showLeftMenu(true)
+        }
     }
 }
 

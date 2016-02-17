@@ -32,7 +32,7 @@ class FriendTableViewCell: UITableViewCell {
         }
 
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessagesBadgeUpdated:", name: MessageManager.UnreadMessageCountUpdated, object: friend)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessagesBadgeUpdated:", name: MessageManager.FriendUnreadMessageCountUpdated, object: friend)
 
         name.text = friend.name
         updateBadgeWithCount(MessageManager.sharedManager.unreadMessageCountForFriend(friend))

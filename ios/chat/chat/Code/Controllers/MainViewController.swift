@@ -11,7 +11,9 @@ import Foundation
 import UIKit
 
 class MainViewController: UIViewController {
+    private let currentFriendKey = "CurrentFriend"
     private let slideViewController: APLSlideMenuViewController
+
     private var reconnectView: ReconnectView!
 
     init() {
@@ -32,6 +34,8 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationController?.setNavigationBarHidden(true, animated: true)
+
         slideViewController.view.frame = view.bounds
         slideViewController.bouncing = true
         slideViewController.gestureSupport = .Drag
@@ -45,6 +49,13 @@ class MainViewController: UIViewController {
 
         view.addSubview(slideViewController.view)
         addChildViewController(slideViewController)
+
+        let friendId = NSUserDefaults.standardUserDefaults().integerForKey(currentFriendKey)
+        if friendId > 0 {
+            if let friend = Friend.findWithId(friendId) {
+                chatViewController.friend = friend
+            }
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -85,6 +96,9 @@ class MainViewController: UIViewController {
 
 extension MainViewController: FriendsListViewControllerDelegate {
     func friendsListViewController(friendsListViewController: FriendsListViewController, didSelectFriend friend: Friend) {
+        NSUserDefaults.standardUserDefaults().setInteger(friend.id, forKey: currentFriendKey)
+        NSUserDefaults.standardUserDefaults().synchronize()
+
         let chatViewController = slideViewController.contentViewController as! ChatViewController
         chatViewController.friend = friend
 

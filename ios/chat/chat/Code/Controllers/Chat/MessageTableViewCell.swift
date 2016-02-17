@@ -14,6 +14,7 @@ class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
 
+    @IBOutlet weak var userImageTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var userImageHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var headerHeightConstraint: NSLayoutConstraint!
 
@@ -29,11 +30,13 @@ class MessageTableViewCell: UITableViewCell {
 
     var hasHeader = true {
         didSet {
+            userImageTopConstraint.constant = hasHeader ? userImageTop : 0
             userImageHeightConstraint.constant = hasHeader ? userImageHeight : 0
             headerHeightConstraint.constant = hasHeader ? headerHeight : 0
         }
     }
 
+    private let userImageTop: CGFloat = 24
     private let userImageHeight: CGFloat = 48
     private let headerHeight: CGFloat = 17
 }
