@@ -41,7 +41,7 @@ class FriendsListViewController: UIViewController {
         }
     }
 
-private func requestContactsAccess(completionHandler: Bool->Void) {
+    private func requestContactsAccess(completionHandler: Bool->Void) {
         let authorizationStatus = CNContactStore.authorizationStatusForEntityType(CNEntityType.Contacts)
      
         switch authorizationStatus {

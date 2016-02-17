@@ -16,7 +16,7 @@ class MessageTableViewCell: UITableViewCell {
 
     @IBOutlet weak var userImageTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var userImageHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var headerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet var headerHeightConstraint: NSLayoutConstraint!
 
     var message: Message! {
         didSet {
@@ -30,13 +30,21 @@ class MessageTableViewCell: UITableViewCell {
 
     var hasHeader = true {
         didSet {
-            userImageTopConstraint.constant = hasHeader ? userImageTop : 0
-            userImageHeightConstraint.constant = hasHeader ? userImageHeight : 0
-            headerHeightConstraint.constant = hasHeader ? headerHeight : 0
+            userImageTopConstraint.constant = hasHeader ? MessageTableViewCell.userImageTopMax : MessageTableViewCell.userImageTopMin
+            userImageHeightConstraint.constant = hasHeader ? MessageTableViewCell.userImageHeight : 0
+
+            if !hasHeader {
+                headerHeightConstraint.constant = 0
+            }
+            headerHeightConstraint.active = !hasHeader
         }
     }
 
-    private let userImageTop: CGFloat = 24
-    private let userImageHeight: CGFloat = 48
-    private let headerHeight: CGFloat = 17
+    private static let userImageTopMax: CGFloat = 24
+    private static let userImageTopMin: CGFloat = 8
+    private static let userImageHeight: CGFloat = 48
+
+    class func estimatedHeightForMessage(message: Message, hasHeader: Bool) -> CGFloat {
+        return hasHeader ? (userImageTopMax + 19) : userImageTopMin
+    }
 }

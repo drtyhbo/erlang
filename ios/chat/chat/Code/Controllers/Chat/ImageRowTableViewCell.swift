@@ -21,6 +21,8 @@ class ImageRowTableViewCell: MessageTableViewCell {
         }
     }
 
+    private static let paddingBetweenHeaderAndContent: CGFloat = 8
+
     private var imageInfo: Message.ImageInfo? {
         didSet {
             if let imageInfo = imageInfo {
@@ -31,7 +33,7 @@ class ImageRowTableViewCell: MessageTableViewCell {
                     imageSize = CGSize(width: newWidth, height: imageSize.height / imageSize.width * newWidth)
                 }
                 widthConstraint.constant = imageSize.width
-                heightConstraint.constant = imageSize.height
+                heightConstraint.constant = round(imageSize.height)
 
                 loadImageWithId(imageInfo.thumbnailId)
             } else {
@@ -39,6 +41,25 @@ class ImageRowTableViewCell: MessageTableViewCell {
                 messageImageView.hidden = true
             }
         }
+    }
+
+    override class func estimatedHeightForMessage(message: Message, hasHeader: Bool) -> CGFloat {
+        guard let imageInfo = message.imageInfo else {
+            return super.estimatedHeightForMessage(message, hasHeader: hasHeader)
+        }
+
+        return super.estimatedHeightForMessage(message, hasHeader: hasHeader) + dimensionsForImageWithInfo(imageInfo).height + ImageRowTableViewCell.paddingBetweenHeaderAndContent
+    }
+
+    private static func dimensionsForImageWithInfo(imageInfo: Message.ImageInfo) -> (width: CGFloat, height: CGFloat) {
+        let screenSize = UIScreen.mainScreen().bounds.size
+        var imageSize = CGSize(width: imageInfo.width, height: imageInfo.height)
+        if imageInfo.width + 60 > Int(screenSize.width) {
+            let newWidth = screenSize.width - 60
+            imageSize = CGSize(width: newWidth, height: imageSize.height / imageSize.width * newWidth)
+        }
+
+        return (width: imageSize.width, height: round(imageSize.height))
     }
 
     private func loadImageWithId(thumbnailId: Int) {

@@ -23,9 +23,6 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var newMessageView: UITextView!
     @IBOutlet weak var newMessageViewHeightConstraint: NSLayoutConstraint!
 
-    @IBOutlet weak var messageHelperContainer: UIView!
-    @IBOutlet weak var messageHelperContainerHeightConstraint: NSLayoutConstraint!
-
     @IBOutlet weak var unreadMessagesContainer: UIView!
     @IBOutlet weak var unreadMessagesCount: UILabel!
 
@@ -40,7 +37,9 @@ class ChatViewController: UIViewController {
                 messages = MessageManager.sharedManager.getMessagesForFriend(friend)
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
 
-                tableView.reloadData()
+                reloadDataWithCompletion {
+                    self.tableView.contentOffset.y = self.tableView.contentSize.height - self.tableView.bounds.size.height + self.tableView.contentInset.bottom
+                }
             }
         }
     }
@@ -81,6 +80,7 @@ class ChatViewController: UIViewController {
         tableView.registerNib(UINib(nibName: "ChatRowContinuationTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowContinuationTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "ImageRowTableViewCell", bundle: nil), forCellReuseIdentifier: imageRowTableViewCell)
+        tableView.contentInset = UIEdgeInsets(top: -8, left: 0, bottom: 16, right: 0)
 
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
 
@@ -97,6 +97,15 @@ class ChatViewController: UIViewController {
 
 
         registerForNotifications()
+    }
+
+    private func reloadDataWithCompletion(completion: Void->Void) {
+        tableView.reloadData()
+
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.layoutIfNeeded()
+            completion()
+        }
     }
 
     @objc private func appDidBecomeActive() {
@@ -163,40 +172,8 @@ class ChatViewController: UIViewController {
     }
 
     private func resetNewMessageView() {
-        clearMessageHelper()
         newMessageView.text = ""
         sizeTextView()
-    }
-
-    private func setMessageHelper(messageHelper: MessageHelper, withTitle title: String) {
-        newMessageView.text = ""
-
-        self.messageHelper = messageHelper
-
-        messageHelper.frame = CGRect(x: 0, y: 0, width: view.bounds.size.width, height: messageHelperHeight)
-        messageHelperContainer.addSubview(messageHelper)
-        messageHelperContainerHeightConstraint.constant = messageHelperHeight
-        UIView.animateWithDuration(0.25) {
-            self.view.layoutIfNeeded()
-        }
-
-        messageLabel.text = "\(title.uppercaseString):"
-    }
-
-    private func clearMessageHelper() {
-        if messageHelper == nil {
-            return
-        }
-
-        messageHelper.removeFromSuperview()
-        messageHelper = nil
-
-        messageHelperContainerHeightConstraint.constant = 0
-        UIView.animateWithDuration(0.25) {
-            self.view.layoutIfNeeded()
-        }
-
-        messageLabel.text = ""
     }
 
     private func appendMessage(message: Message) {
@@ -211,6 +188,15 @@ class ChatViewController: UIViewController {
         self.tableView.endUpdates()
 
         CATransaction.commit()
+    }
+
+    private func doesRowAtIndexPathHaveHeader(indexPath: NSIndexPath) -> Bool {
+        let message = messages[indexPath.row]
+        if let previousMessage: Message = indexPath.row > 0 ? messages[indexPath.row - 1] : nil {
+            return indexPath.row == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from
+        } else {
+            return indexPath.row == 0
+        }
     }
 
     @objc private func keyboardWillShow(notification: NSNotification) {
@@ -296,14 +282,19 @@ extension ChatViewController: UITableViewDataSource {
         }
 
         cell.message = message
-
-        if let previousMessage: Message = indexPath.row > 0 ? messages[indexPath.row - 1] : nil {
-            cell.hasHeader = indexPath.row == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from
-        } else {
-            cell.hasHeader = indexPath.row == 0
-        }
+        cell.hasHeader = doesRowAtIndexPathHaveHeader(indexPath)
 
         return cell
+    }
+
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        let message = messages[indexPath.row]
+
+        if message.imageInfo != nil {
+            return ImageRowTableViewCell.estimatedHeightForMessage(message, hasHeader: doesRowAtIndexPathHaveHeader(indexPath))
+        } else {
+            return ChatRowTableViewCell.estimatedHeightForMessage(message, hasHeader: doesRowAtIndexPathHaveHeader(indexPath))
+        }
     }
 }
 
@@ -314,24 +305,14 @@ extension ChatViewController: UITableViewDelegate {
     }
 }
 
+extension ChatViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+    }
+}
+
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(textView: UITextView) {
-        if textView.text.lowercaseString.hasPrefix("gif") && messageHelper == nil {
-            let gifSelector = GIFSelector()
-            gifSelector.delegate = self
-            setMessageHelper(gifSelector, withTitle: "gif")
-        } else if messageHelper != nil {
-            messageHelper.searchQuery = textView.text
-        }
         sizeTextView()
-    }
-
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        if text == "" && range.location == 0 && range.length == 0 && messageHelper != nil {
-            clearMessageHelper()
-            return false
-        }
-        return true
     }
 }
 

@@ -18,4 +18,12 @@ class ChatRowTableViewCell: MessageTableViewCell {
             messageLabel.text = message.text ?? ""
         }
     }
+
+    private static let paddingBetweenHeaderAndContent: CGFloat = 8
+
+    override class func estimatedHeightForMessage(message: Message, hasHeader: Bool) -> CGFloat {
+        let text = message.text ?? ""
+        let boundingRect = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - 64, height: 9999), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(16)], context: nil)
+        return super.estimatedHeightForMessage(message, hasHeader: hasHeader) + boundingRect.height + ChatRowTableViewCell.paddingBetweenHeaderAndContent
+    }
 }

@@ -15,23 +15,23 @@
                 <rect key="frame" x="0.0" y="0.0" width="401" height="136"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RFL-lt-6l6">
-                        <rect key="frame" x="64" y="33" width="128" height="95"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RFL-lt-6l6">
+                        <rect key="frame" x="64" y="41" width="128" height="95"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.93725490196078431" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="95" id="E9o-cF-mu3"/>
                             <constraint firstAttribute="width" constant="128" id="JKS-Dl-XIe"/>
                         </constraints>
                     </imageView>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="andreas.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="u9C-sS-3er" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
-                        <rect key="frame" x="8" y="8" width="48" height="48"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="andreas.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="u9C-sS-3er" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="8" y="16" width="48" height="48"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="48" id="qCi-1k-tKD"/>
                             <constraint firstAttribute="height" constant="48" id="rgq-D4-Wn1"/>
                         </constraints>
                     </imageView>
-                    <view clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t1K-Mv-Rlq">
-                        <rect key="frame" x="64" y="8" width="101" height="17"/>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t1K-Mv-Rlq">
+                        <rect key="frame" x="64" y="16" width="101" height="17"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Andreas" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eTL-Qo-fsC">
                                 <rect key="frame" x="0.0" y="0.0" width="68" height="17"/>

@@ -23,16 +23,16 @@
                         </constraints>
                     </imageView>
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeS-uW-exS">
-                        <rect key="frame" x="64" y="16" width="90" height="17"/>
+                        <rect key="frame" x="64" y="16" width="98" height="17"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Andreas" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-CS-OFM">
-                                <rect key="frame" x="0.0" y="0.0" width="60" height="17"/>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="14"/>
+                                <rect key="frame" x="0.0" y="0.0" width="68" height="17"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="16"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5:10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kmo-eR-fpe">
-                                <rect key="frame" x="65" y="1" width="25" height="15"/>
+                                <rect key="frame" x="73" y="1" width="25" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -73,6 +73,7 @@ Maybe hit the gym at 5pm?</string>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
+                        <exclude reference="eVr-5V-noE"/>
                         <exclude reference="ZDP-Qs-2qi"/>
                     </mask>
                 </variation>

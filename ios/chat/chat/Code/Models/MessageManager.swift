@@ -64,8 +64,8 @@ class MessageManager {
         }
     }
 
-    func getMessagesForFriend(friend: Friend) -> [Message] {
-        return Message.findForFriend(friend)
+    func getMessagesForFriend(friend: Friend, beforeDate: NSDate? = nil) -> [Message] {
+        return Message.findForFriend(friend, beforeDate: beforeDate)
     }
 
     func unreadMessageCountForFriend(friend: Friend) -> Int {
