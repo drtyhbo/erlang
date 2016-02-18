@@ -45,6 +45,6 @@ class MessageTableViewCell: UITableViewCell {
     private static let userImageHeight: CGFloat = 48
 
     class func estimatedHeightForMessage(message: Message, hasHeader: Bool) -> CGFloat {
-        return hasHeader ? (userImageTopMax + 19) : userImageTopMin
+        return hasHeader ? (userImageTopMax + 17) : userImageTopMin
     }
 }

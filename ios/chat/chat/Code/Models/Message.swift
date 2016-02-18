@@ -59,10 +59,10 @@ class Message: NSManagedObject {
         return message
     }
 
-    static func findForFriend(friend: Friend, beforeDate: NSDate?) -> [Message] {
+    static func findForFriend(friend: Friend, beforeDate: NSDate?, fetchLimit: Int) -> [Message] {
         let predicate = NSPredicate(format: "(from == %@ || to == %@) && date < %@", friend, friend, beforeDate ?? NSDate())
         let fetchRequest = Message.MR_requestAllSortedBy("date", ascending: false, withPredicate: predicate)
-        fetchRequest.fetchLimit = 30
+        fetchRequest.fetchLimit = fetchLimit
         return (Message.MR_executeFetchRequest(fetchRequest) as? [Message] ?? []).reverse()
     }
 

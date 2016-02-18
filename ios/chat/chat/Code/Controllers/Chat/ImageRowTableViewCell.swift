@@ -68,13 +68,9 @@ class ImageRowTableViewCell: MessageTableViewCell {
         FileHelper.getFileWithId(thumbnailId) {
             file in
 
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                if let image = file?.image {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.messageImageView.image = image
-                        self.messageImageView.hidden = false
-                    }
-                }
+            if let image = file?.image {
+                self.messageImageView.image = image
+                self.messageImageView.hidden = false
             }
         }
     }

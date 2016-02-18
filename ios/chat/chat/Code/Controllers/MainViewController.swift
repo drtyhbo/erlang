@@ -15,6 +15,7 @@ class MainViewController: UIViewController {
     private let slideViewController: APLSlideMenuViewController
 
     private var reconnectView: ReconnectView!
+    private var reconnectViewTimer: NSTimer!
 
     init() {
         slideViewController = APLSlideMenuViewController()
@@ -63,7 +64,12 @@ class MainViewController: UIViewController {
         slideViewController.view.bounds.size = view.bounds.size
     }
 
-    private func showReconnectView() {
+    private func maybeShowReconnectView() {
+        reconnectViewTimer?.invalidate()
+        reconnectViewTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "showReconnectView", userInfo: nil, repeats: false)
+    }
+
+    @objc private func showReconnectView() {
         if reconnectView == nil {
             reconnectView = ReconnectView(frame: CGRect(x: 0, y: 0, width: view.bounds.size.width, height: 50))
         }
@@ -76,13 +82,14 @@ class MainViewController: UIViewController {
     }
 
     private func hideReconnectView() {
+        reconnectViewTimer?.invalidate()
         UIView.animateWithDuration(0.25) {
             self.slideViewController.view.frame.origin.y = 0
         }
     }
 
     @objc private func chatClientConnecting() {
-        showReconnectView()
+        maybeShowReconnectView()
     }
 
     @objc private func chatClientDidConnect() {
@@ -90,7 +97,7 @@ class MainViewController: UIViewController {
     }
 
     @objc private func chatClientDidDisconnect() {
-        showReconnectView()
+        maybeShowReconnectView()
     }
 }
 

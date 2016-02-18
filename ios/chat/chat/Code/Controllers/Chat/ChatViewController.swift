@@ -34,12 +34,12 @@ class ChatViewController: UIViewController {
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessageNotification, object: oldValue)
                 NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessageNotification, object: friend)
 
-                messages = MessageManager.sharedManager.getMessagesForFriend(friend)
+                messages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: nil, fetchLimit: fetchLimit)
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
 
-                reloadDataWithCompletion {
-                    self.tableView.contentOffset.y = self.tableView.contentSize.height - self.tableView.bounds.size.height + self.tableView.contentInset.bottom
-                }
+                tableView.reloadData()
+                tableView.layoutIfNeeded()
+                tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: messages.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
             }
         }
     }
@@ -49,10 +49,12 @@ class ChatViewController: UIViewController {
     private let newMessagesCellReuseIdentifier = "NewMessagesCellReuseIdentifier"
     private let imageRowTableViewCell = "ImageRowTableViewCell"
 
+    private let fetchLimit = 15
     private let messageHelperHeight: CGFloat = 100
 
     private var messages: [Message] = []
     private var lastMessageDate: NSDate?
+    private var isFetchingMessages = false
 
     private var messageHelper: MessageHelper!
     private var newMessagesRow: Int?
@@ -178,22 +180,38 @@ class ChatViewController: UIViewController {
 
     private func appendMessage(message: Message) {
         self.messages.append(message)
-        CATransaction.begin()
-        CATransaction.setCompletionBlock {
+
+        UIView.performWithoutAnimation {
+            self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.messages.count - 1, inSection: 0)], withRowAnimation: .None)
             self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.messages.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
         }
+    }
 
-        self.tableView.beginUpdates()
-        self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.messages.count - 1, inSection: 0)], withRowAnimation: .None)
-        self.tableView.endUpdates()
+    private func fetchMoreMessages() {
+        guard let friend = friend else {
+            return
+        }
 
-        CATransaction.commit()
+        if isFetchingMessages {
+            return
+        }
+        isFetchingMessages = true
+
+        let newMessages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: messages[0].date, fetchLimit: fetchLimit)
+        if newMessages.count > 0 {
+            messages = newMessages + messages
+            tableView.reloadData()
+
+            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: newMessages.count, inSection: 0), atScrollPosition: .Top, animated: false)
+        }
+
+        isFetchingMessages = false
     }
 
     private func doesRowAtIndexPathHaveHeader(indexPath: NSIndexPath) -> Bool {
         let message = messages[indexPath.row]
         if let previousMessage: Message = indexPath.row > 0 ? messages[indexPath.row - 1] : nil {
-            return indexPath.row == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from
+            return indexPath.row == 0 || abs(indexPath.row - messages.count) % fetchLimit == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from
         } else {
             return indexPath.row == 0
         }
@@ -293,7 +311,8 @@ extension ChatViewController: UITableViewDataSource {
         if message.imageInfo != nil {
             return ImageRowTableViewCell.estimatedHeightForMessage(message, hasHeader: doesRowAtIndexPathHaveHeader(indexPath))
         } else {
-            return ChatRowTableViewCell.estimatedHeightForMessage(message, hasHeader: doesRowAtIndexPathHaveHeader(indexPath))
+            let height = ChatRowTableViewCell.estimatedHeightForMessage(message, hasHeader: doesRowAtIndexPathHaveHeader(indexPath))
+            return height
         }
     }
 }
@@ -306,7 +325,10 @@ extension ChatViewController: UITableViewDelegate {
 }
 
 extension ChatViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 200 {
+            fetchMoreMessages()
+        }
     }
 }
 
