@@ -23,6 +23,14 @@
                             <constraint firstAttribute="width" constant="128" id="JKS-Dl-XIe"/>
                         </constraints>
                     </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8e7-Bc-5eS">
+                        <rect key="frame" x="64" y="37" width="0.0" height="4"/>
+                        <color key="backgroundColor" red="0.66274509800000003" green="0.28235294119999998" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" id="EAQ-BU-vgw"/>
+                            <constraint firstAttribute="height" constant="4" id="L1h-aI-NLf"/>
+                        </constraints>
+                    </view>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="andreas.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="u9C-sS-3er" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
                         <rect key="frame" x="8" y="16" width="48" height="48"/>
                         <constraints>
@@ -63,16 +71,23 @@
                     <constraint firstItem="RFL-lt-6l6" firstAttribute="leading" secondItem="gi5-jm-Km4" secondAttribute="leading" constant="48" id="68L-VU-ybT"/>
                     <constraint firstItem="RFL-lt-6l6" firstAttribute="top" secondItem="t1K-Mv-Rlq" secondAttribute="bottom" constant="8" id="9yS-mr-J9Y"/>
                     <constraint firstItem="u9C-sS-3er" firstAttribute="top" secondItem="gi5-jm-Km4" secondAttribute="top" constant="16" id="MS8-Xk-kM0"/>
+                    <constraint firstItem="8e7-Bc-5eS" firstAttribute="top" secondItem="RFL-lt-6l6" secondAttribute="top" constant="-4" id="Mmx-Z8-oNT"/>
+                    <constraint firstItem="RFL-lt-6l6" firstAttribute="leading" secondItem="8e7-Bc-5eS" secondAttribute="leading" id="Q0m-QC-nk8"/>
                     <constraint firstItem="RFL-lt-6l6" firstAttribute="leading" secondItem="t1K-Mv-Rlq" secondAttribute="leading" id="SW3-QT-1kW"/>
                     <constraint firstItem="t1K-Mv-Rlq" firstAttribute="top" secondItem="u9C-sS-3er" secondAttribute="top" id="W7M-6n-nwa"/>
+                    <constraint firstItem="8e7-Bc-5eS" firstAttribute="top" secondItem="gi5-jm-Km4" secondAttribute="top" constant="20" symbolic="YES" id="fUV-Db-edM"/>
                     <constraint firstItem="t1K-Mv-Rlq" firstAttribute="leading" secondItem="u9C-sS-3er" secondAttribute="trailing" constant="8" id="h6q-DP-qbO"/>
                     <constraint firstItem="RFL-lt-6l6" firstAttribute="top" secondItem="gi5-jm-Km4" secondAttribute="topMargin" id="hep-Kp-LUh"/>
                     <constraint firstItem="u9C-sS-3er" firstAttribute="leading" secondItem="gi5-jm-Km4" secondAttribute="leadingMargin" id="iCh-gR-jlA"/>
+                    <constraint firstItem="RFL-lt-6l6" firstAttribute="top" secondItem="t1K-Mv-Rlq" secondAttribute="bottom" constant="8" symbolic="YES" id="k7x-dS-GL5"/>
+                    <constraint firstItem="RFL-lt-6l6" firstAttribute="bottom" secondItem="8e7-Bc-5eS" secondAttribute="bottom" id="vCh-A9-0o9"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
                         <exclude reference="68L-VU-ybT"/>
                         <exclude reference="hep-Kp-LUh"/>
+                        <exclude reference="vCh-A9-0o9"/>
+                        <exclude reference="fUV-Db-edM"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>
@@ -81,6 +96,8 @@
                 <outlet property="headerHeightConstraint" destination="Z3a-vo-WNj" id="htW-Vu-55w"/>
                 <outlet property="heightConstraint" destination="E9o-cF-mu3" id="rbt-I2-5Vv"/>
                 <outlet property="messageImageView" destination="RFL-lt-6l6" id="spY-CZ-Ykg"/>
+                <outlet property="percentUploadedView" destination="8e7-Bc-5eS" id="Sgx-Ku-H5A"/>
+                <outlet property="percentUploadedWidthConstraint" destination="EAQ-BU-vgw" id="beq-pK-Opb"/>
                 <outlet property="userImage" destination="u9C-sS-3er" id="L7w-cR-5q3"/>
                 <outlet property="userImageHeightConstraint" destination="rgq-D4-Wn1" id="li6-BQ-Bbk"/>
                 <outlet property="userImageTopConstraint" destination="MS8-Xk-kM0" id="WUx-Om-R49"/>

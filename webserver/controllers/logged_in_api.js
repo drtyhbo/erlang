@@ -97,4 +97,24 @@ router.post('/file/get/', function(req, res) {
 	});
 });
 
+/*
+ * Request parameters:
+ * userId - Current user id.
+ * session - Current user session.
+ * url - The id of the file.
+ */
+router.post('/url/metadata/', function(req, res) {
+	file.hasAccess(req.body.fileId, req.userId, function(err, isMember) {
+		var result = {
+			'status': err || 'ok'
+		};
+		if (isMember) {
+			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, req.body.method.toUpperCase(), req.body.contentType);
+		}
+
+		res.send(result);
+	});
+});
+
+
 module.exports = router;

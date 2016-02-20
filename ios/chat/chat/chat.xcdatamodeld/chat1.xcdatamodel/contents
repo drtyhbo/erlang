@@ -16,11 +16,17 @@
         <attribute name="date" attributeType="Date" indexed="YES" syncable="YES"/>
         <attribute name="message" attributeType="Transformable" syncable="YES"/>
         <relationship name="from" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="sentMessages" inverseEntity="Friend" syncable="YES"/>
+        <relationship name="pendingMessage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PendingMessage" inverseName="message" inverseEntity="PendingMessage" syncable="YES"/>
         <relationship name="to" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="receivedMessages" inverseEntity="Friend" syncable="YES"/>
+    </entity>
+    <entity name="PendingMessage" representedClassName="PendingMessage" syncable="YES">
+        <attribute name="date" attributeType="Date" syncable="YES"/>
+        <relationship name="message" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="pendingMessage" inverseEntity="Message" syncable="YES"/>
     </entity>
     <elements>
         <element name="File" positionX="-36" positionY="72" width="128" height="90"/>
         <element name="Friend" positionX="-54" positionY="9" width="128" height="120"/>
-        <element name="Message" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Message" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="PendingMessage" positionX="-54" positionY="54" width="128" height="75"/>
     </elements>
 </model>

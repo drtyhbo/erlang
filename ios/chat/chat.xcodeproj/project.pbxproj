@@ -11,6 +11,7 @@
 		900EC8FB1C72A9B800AE5C73 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FA1C72A9B800AE5C73 /* CoreData.swift */; };
 		900EC8FD1C72B04900AE5C73 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FC1C72B04900AE5C73 /* FileHelper.swift */; };
 		900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */; };
+		9018D0EB1C77645100027508 /* PendingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9018D0EA1C77645100027508 /* PendingMessage.swift */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -63,6 +64,7 @@
 		900EC8FA1C72A9B800AE5C73 /* CoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		900EC8FC1C72B04900AE5C73 /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatProfilePic.swift; sourceTree = "<group>"; };
+		9018D0EA1C77645100027508 /* PendingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PendingMessage.swift; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 				90EBF8AC1C474A0E00A7AD51 /* User.swift */,
 				900EC8FA1C72A9B800AE5C73 /* CoreData.swift */,
 				900EC8FC1C72B04900AE5C73 /* FileHelper.swift */,
+				9018D0EA1C77645100027508 /* PendingMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				90AFD5CF1C6091F100236D6B /* MainViewController.swift in Sources */,
+				9018D0EB1C77645100027508 /* PendingMessage.swift in Sources */,
 				9031FFE31C6CC88B00BCC456 /* SecurityHelper.swift in Sources */,
 				90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */,
 				90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */,

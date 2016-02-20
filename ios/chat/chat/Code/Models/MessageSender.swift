@@ -10,15 +10,27 @@ import Foundation
 import SwiftyJSON
 
 class MessageSender {
+    static let SendingProgressNotification = "MessageSenderSendingProgressNotification"
+    static let SendingCompleteNotification = "MessageSenderSendingCompleteNotification"
+
     private class OutgoingMessage {
         let message: Message
         let messageId: Int
-        var files: [File]
+        private(set) var files: [File]
+        private(set) var bytesSent: Int
+        private(set) var totalBytes: Int
 
         init(message: Message, messageId: Int, files: [File]) {
             self.message = message
             self.messageId = messageId
             self.files = files
+            self.bytesSent = 0
+            self.totalBytes = files.reduce(0, combine: {$0 + $1.data.length})
+        }
+
+        func finishFileAtIndex(fileIndex: Int) {
+            bytesSent += files[fileIndex].data.length
+            files.removeAtIndex(fileIndex)
         }
     }
 
@@ -31,6 +43,7 @@ class MessageSender {
     }
 
     func sendMessage(message: Message, files: [File] = []) {
+        PendingMessage.createWithMessage(message)
         outgoingMessages.append(OutgoingMessage(message: message, messageId: messageId++, files: files))
         maybeSendNextOutgoingMessage()
     }
@@ -64,11 +77,25 @@ class MessageSender {
             uploadUrl in
 
             if let uploadUrl = uploadUrl, encryptedFileData = SecurityHelper.sharedHelper.encrypt(file.data, publicTag: "com.drtyhbo.\(to.id)", withKey: to.key) {
-                APIManager.sharedManager.uploadData(encryptedFileData, toS3Url: uploadUrl, contentType: file.contentType) {
+                APIManager.sharedManager.uploadData(
+                    encryptedFileData,
+                    toS3Url: uploadUrl,
+                    contentType: file.contentType,
+                    progressCallback: {
+                        bytesSent, totalBytes in
+                        guard let outgoingMessage = self.outgoingMessages.first else {
+                            return
+                        }
+
+                        dispatch_async(dispatch_get_main_queue()) {
+                            let percentComplete = Float(outgoingMessage.bytesSent + bytesSent) / Float(outgoingMessage.totalBytes)
+                            NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingProgressNotification, object: outgoingMessage.message, userInfo: ["percentComplete": percentComplete])
+                        }
+                    }) {
                     success in
                     if success {
                         if let outgoingMessage = self.outgoingMessages.first {
-                            outgoingMessage.files.removeAtIndex(0)
+                            outgoingMessage.finishFileAtIndex(0)
                         }
                         self.sendNextOutgoingMessage()
                     }
@@ -86,6 +113,11 @@ class MessageSender {
         if let messageId = notification.userInfo?["messageId"] as? Int {
             for i in 0..<outgoingMessages.count {
                 if outgoingMessages[i].messageId == messageId {
+                    PendingMessage.deletePendingMessage(outgoingMessages[i].message)
+                    CoreData.save()
+
+                    NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingCompleteNotification, object: outgoingMessages[i].message, userInfo: nil)
+
                     outgoingMessages.removeAtIndex(i)
                     sendNextOutgoingMessage()
                     break

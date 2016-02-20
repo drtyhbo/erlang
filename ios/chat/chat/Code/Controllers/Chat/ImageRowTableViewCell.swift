@@ -12,12 +12,27 @@ import UIKit
 class ImageRowTableViewCell: MessageTableViewCell {
     @IBOutlet weak var messageImageView: UIImageView!
 
+    @IBOutlet weak var percentUploadedView: UIView!
+    @IBOutlet weak var percentUploadedWidthConstraint: NSLayoutConstraint!
+
     @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
 
     override var message: Message! {
         didSet {
             imageInfo = message.imageInfo
+
+            NSNotificationCenter.defaultCenter().removeObserver(self)
+
+            let isPending = PendingMessage.isMessagePending(message)
+            if isPending {
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didUpdateProgressNotification:", name: MessageSender.SendingProgressNotification, object: nil)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSendingNotification:", name: MessageSender.SendingCompleteNotification, object: nil)
+            }
+
+            messageImageView.alpha = isPending ? 0.5 : 1
+            percentUploadedView.hidden = !isPending
+            percentUploadedWidthConstraint.constant = 0
         }
     }
 
@@ -73,5 +88,22 @@ class ImageRowTableViewCell: MessageTableViewCell {
                 self.messageImageView.hidden = false
             }
         }
+    }
+
+    @objc private func didUpdateProgressNotification(notification: NSNotification) {
+        guard let senderMessage = notification.object as? Message, percentComplete = notification.userInfo?["percentComplete"] as? Float where senderMessage.localId == message.localId else {
+            return
+        }
+
+        percentUploadedWidthConstraint.constant = CGFloat(percentComplete) * messageImageView.bounds.size.width
+    }
+
+    @objc private func didFinishSendingNotification(notification: NSNotification) {
+        guard let senderMessage = notification.object as? Message where senderMessage.localId == message.localId else {
+            return
+        }
+
+        messageImageView.alpha = 1
+        percentUploadedView.hidden = true
     }
 }

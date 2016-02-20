@@ -118,7 +118,7 @@ class APIManager: NSObject {
         return NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent(NSUUID().UUIDString)
     }
 
-    func uploadData(data: NSData, toS3Url s3Url: NSURL, contentType: String, callback: Bool->Void) {
+    func uploadData(data: NSData, toS3Url s3Url: NSURL, contentType: String, progressCallback: (Int, Int)->Void, callback: Bool->Void) {
         let localUrl = temporaryFileUrl()
         data.writeToURL(localUrl, atomically: true)
 
@@ -127,7 +127,7 @@ class APIManager: NSObject {
         Alamofire.upload(.PUT, s3Url, headers: headers, file: localUrl)
             .progress {
                 bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                print("\(totalBytesWritten) \(totalBytesExpectedToWrite)")
+                progressCallback(Int(totalBytesWritten), Int(totalBytesExpectedToWrite))
             }
             .response {
                 response in

@@ -28,6 +28,10 @@ class Message: NSManagedObject {
     @NSManaged private(set) var date: NSDate
     @NSManaged private(set) var message: String
 
+    var localId: String {
+        return objectID.URIRepresentation().lastPathComponent ?? ""
+    }
+
     var imageInfo: ImageInfo? {
         let imageInfo = json["i"]
 

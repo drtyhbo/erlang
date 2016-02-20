@@ -41,9 +41,9 @@ class MessageManager {
 
     func sendMessageWithText(text: String, to: Friend, callback: Message?->Void) {
         let message = Message.createWithText(text, to: to)
+        messageSender.sendMessage(message)
         CoreData.save()
 
-        messageSender.sendMessage(message)
         callback(message)
     }
 
