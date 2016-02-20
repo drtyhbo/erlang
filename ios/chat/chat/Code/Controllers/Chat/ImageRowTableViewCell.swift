@@ -58,12 +58,12 @@ class ImageRowTableViewCell: MessageTableViewCell {
         }
     }
 
-    override class func estimatedHeightForMessage(message: Message, hasHeader: Bool) -> CGFloat {
+    override class func estimatedHeightForMessage(message: Message, headerType: HeaderType) -> CGFloat {
         guard let imageInfo = message.imageInfo else {
-            return super.estimatedHeightForMessage(message, hasHeader: hasHeader)
+            return super.estimatedHeightForMessage(message, headerType: headerType)
         }
 
-        return super.estimatedHeightForMessage(message, hasHeader: hasHeader) + dimensionsForImageWithInfo(imageInfo).height + ImageRowTableViewCell.paddingBetweenHeaderAndContent
+        return super.estimatedHeightForMessage(message, headerType: headerType) + dimensionsForImageWithInfo(imageInfo).height + ImageRowTableViewCell.paddingBetweenHeaderAndContent
     }
 
     private static func dimensionsForImageWithInfo(imageInfo: Message.ImageInfo) -> (width: CGFloat, height: CGFloat) {

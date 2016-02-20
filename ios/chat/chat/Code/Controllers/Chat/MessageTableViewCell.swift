@@ -10,6 +10,12 @@ import Foundation
 import UIKit
 
 class MessageTableViewCell: UITableViewCell {
+    enum HeaderType {
+        case Full
+        case FullNoPadding
+        case PaddingOnly
+    }
+
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
@@ -28,23 +34,37 @@ class MessageTableViewCell: UITableViewCell {
         }
     }
 
-    var hasHeader = true {
+    var headerType: HeaderType = .Full {
         didSet {
-            userImageTopConstraint.constant = hasHeader ? MessageTableViewCell.userImageTopMax : MessageTableViewCell.userImageTopMin
-            userImageHeightConstraint.constant = hasHeader ? MessageTableViewCell.userImageHeight : 0
-
-            if !hasHeader {
-                headerHeightConstraint.constant = 0
+            switch (headerType) {
+                case .Full:
+                    userImageTopConstraint.constant = MessageTableViewCell.paddingTopMax
+                    userImageHeightConstraint.constant = MessageTableViewCell.userImageHeight
+                    headerHeightConstraint.active = false
+                case .FullNoPadding:
+                    userImageTopConstraint.constant = 0
+                    userImageHeightConstraint.constant = MessageTableViewCell.userImageHeight
+                    headerHeightConstraint.active = false
+                case .PaddingOnly:
+                    userImageTopConstraint.constant = MessageTableViewCell.paddingTopMin
+                    userImageHeightConstraint.constant = 0
+                    headerHeightConstraint.constant = 0
+                    headerHeightConstraint.active = true
             }
-            headerHeightConstraint.active = !hasHeader
         }
     }
 
-    private static let userImageTopMax: CGFloat = 24
-    private static let userImageTopMin: CGFloat = 8
+    private static let paddingTopMax: CGFloat = 24
+    private static let paddingTopMin: CGFloat = 8
     private static let userImageHeight: CGFloat = 48
 
-    class func estimatedHeightForMessage(message: Message, hasHeader: Bool) -> CGFloat {
-        return hasHeader ? (userImageTopMax + 17) : userImageTopMin
+    class func estimatedHeightForMessage(message: Message, headerType: HeaderType) -> CGFloat {
+        if headerType == .Full {
+            return paddingTopMax + 17
+        } else if headerType == .FullNoPadding {
+            return 17
+        } else {
+            return paddingTopMin
+        }
     }
 }

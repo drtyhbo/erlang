@@ -12,6 +12,11 @@ import CoreData
 import UIKit
 
 class ChatViewController: UIViewController {
+    enum RowType {
+        case Message(AnyObject, Int)
+        case Date(NSDate)
+    }
+
     @IBOutlet weak var friendNameLabel: UILabel!
 
     @IBOutlet weak var tableView: UITableView!
@@ -34,12 +39,11 @@ class ChatViewController: UIViewController {
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessageNotification, object: oldValue)
                 NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessageNotification, object: friend)
 
-                messages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: nil, fetchLimit: fetchLimit)
-                MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
+                rows = []
+                messages = []
 
-                tableView.reloadData()
-                tableView.layoutIfNeeded()
-                tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: messages.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
+                loadMessages()
+                MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
             }
         }
     }
@@ -48,13 +52,14 @@ class ChatViewController: UIViewController {
     private let chatRowContinuationTableViewCellReuseIdentifier = "ChatRowContinuationTableViewCell"
     private let newMessagesCellReuseIdentifier = "NewMessagesCellReuseIdentifier"
     private let imageRowTableViewCell = "ImageRowTableViewCell"
+    private let dayTableViewCellReuseIdentifier = "DayTableViewCell"
 
-    private let fetchLimit = 15
+    private let fetchLimit = 30
     private let messageHelperHeight: CGFloat = 100
 
+    private var rows: [RowType] = []
     private var messages: [Message] = []
     private var lastMessageDate: NSDate?
-    private var isFetchingMessages = false
 
     private var messageHelper: MessageHelper!
     private var newMessagesRow: Int?
@@ -82,6 +87,7 @@ class ChatViewController: UIViewController {
         tableView.registerNib(UINib(nibName: "ChatRowContinuationTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowContinuationTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "ImageRowTableViewCell", bundle: nil), forCellReuseIdentifier: imageRowTableViewCell)
+        tableView.registerNib(UINib(nibName: "DayTableViewCell", bundle: nil), forCellReuseIdentifier: dayTableViewCellReuseIdentifier)
         tableView.contentInset = UIEdgeInsets(top: -8, left: 0, bottom: 16, right: 0)
 
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
@@ -179,41 +185,91 @@ class ChatViewController: UIViewController {
     }
 
     private func appendMessage(message: Message) {
-        self.messages.append(message)
+        messages.append(message)
+
+        let previousRowCount = rows.count
+        calculateRows()
 
         UIView.performWithoutAnimation {
-            self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: self.messages.count - 1, inSection: 0)], withRowAnimation: .None)
-            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.messages.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
+            let newRowCount = self.rows.count - previousRowCount
+
+            var indexPaths: [NSIndexPath] = []
+            for i in 0..<newRowCount {
+                indexPaths.append(NSIndexPath(forRow: self.rows.count - 1 - i, inSection: 0))
+            }
+
+            self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.rows.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
         }
     }
 
-    private func fetchMoreMessages() {
+    private func loadMessages() {
         guard let friend = friend else {
             return
         }
 
-        if isFetchingMessages {
-            return
-        }
-        isFetchingMessages = true
-
-        let newMessages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: messages[0].date, fetchLimit: fetchLimit)
+        let firstBatch = messages.count == 0
+        let newMessages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: messages.count == 0 ? nil : messages[0].date, fetchLimit: fetchLimit)
         if newMessages.count > 0 {
             messages = newMessages + messages
+
+            let previousRowCount = rows.count
+            calculateRows()
+
             tableView.reloadData()
-
-            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: newMessages.count, inSection: 0), atScrollPosition: .Top, animated: false)
+            tableView.layoutIfNeeded()
+            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: (rows.count - previousRowCount) - (firstBatch ? 1 : 0), inSection: 0), atScrollPosition: firstBatch ? .Bottom : .Top, animated: false)
         }
-
-        isFetchingMessages = false
     }
 
-    private func doesRowAtIndexPathHaveHeader(indexPath: NSIndexPath) -> Bool {
-        let message = messages[indexPath.row]
-        if let previousMessage: Message = indexPath.row > 0 ? messages[indexPath.row - 1] : nil {
-            return indexPath.row == 0 || abs(indexPath.row - messages.count) % fetchLimit == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from
-        } else {
-            return indexPath.row == 0
+    private func calculateRows() {
+        rows = []
+        if messages.count == 0 {
+            return
+        }
+
+        guard let gregorian = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian) else {
+            return
+        }
+
+        var previousDayOfYear = gregorian.ordinalityOfUnit(.Day, inUnit: .Year, forDate: messages[0].date)
+        rows = [.Message(messages[0], 0)]
+        for i in 1..<messages.count {
+            let message = messages[i]
+
+            let dayOfYear = gregorian.ordinalityOfUnit(.Day, inUnit: .Year, forDate: message.date)
+            if dayOfYear != previousDayOfYear {
+                rows.append(.Date(message.date))
+            }
+            previousDayOfYear = dayOfYear
+
+            rows.append(.Message(message, i))
+        }
+    }
+
+    private func headerTypeForRowAtIndexPath(indexPath: NSIndexPath) -> MessageTableViewCell.HeaderType {
+        if indexPath.row == 0 {
+            return .Full
+        }
+
+        switch(rows[indexPath.row - 1]) {
+            case .Date(_):
+                return .FullNoPadding
+            default:
+                break
+        }
+
+        let row = rows[indexPath.row]
+        switch(row) {
+            case .Message(let object, let messageIndex):
+                let message = object as! Message
+                if let previousMessage: Message = messageIndex > 0 ? messages[messageIndex - 1] : nil {
+                    return (messageIndex == 0 || abs(messageIndex - messages.count) % fetchLimit == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from) ? .Full : .PaddingOnly
+                } else {
+                    return messageIndex == 0 ? .Full : .PaddingOnly
+                }
+            default:
+                return .PaddingOnly
         }
     }
 
@@ -286,33 +342,46 @@ extension ChatViewController: UITableViewDataSource {
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count + (newMessagesRow != nil ? 1 : 0)
+        return rows.count
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let message = messages[indexPath.row]
+        let row = rows[indexPath.row]
 
-        var cell: MessageTableViewCell
-        if message.imageInfo != nil {
-            cell = tableView.dequeueReusableCellWithIdentifier(imageRowTableViewCell, forIndexPath: indexPath) as! ImageRowTableViewCell
-        } else {
-            cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
+        switch(row) {
+        case .Message(let object, _):
+            let message = object as! Message
+
+            var cell: MessageTableViewCell
+            if message.imageInfo != nil {
+                cell = tableView.dequeueReusableCellWithIdentifier(imageRowTableViewCell, forIndexPath: indexPath) as! ImageRowTableViewCell
+            } else {
+                cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
+            }
+
+            cell.message = message
+            cell.headerType = headerTypeForRowAtIndexPath(indexPath)
+
+            return cell
+        case .Date(let date):
+            let cell = tableView.dequeueReusableCellWithIdentifier(dayTableViewCellReuseIdentifier) as! DayTableViewCell
+            cell.date = date
+            return cell
         }
-
-        cell.message = message
-        cell.hasHeader = doesRowAtIndexPathHaveHeader(indexPath)
-
-        return cell
     }
 
     func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let message = messages[indexPath.row]
-
-        if message.imageInfo != nil {
-            return ImageRowTableViewCell.estimatedHeightForMessage(message, hasHeader: doesRowAtIndexPathHaveHeader(indexPath))
-        } else {
-            let height = ChatRowTableViewCell.estimatedHeightForMessage(message, hasHeader: doesRowAtIndexPathHaveHeader(indexPath))
-            return height
+        switch(rows[indexPath.row]) {
+        case .Message(let object, _):
+            let message = object as! Message
+            if message.imageInfo != nil {
+                return ImageRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
+            } else {
+                let height = ChatRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
+                return height
+            }
+        case .Date(_):
+            return DayTableViewCell.estimatedRowHeight
         }
     }
 }
@@ -327,7 +396,7 @@ extension ChatViewController: UITableViewDelegate {
 extension ChatViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         if scrollView.contentOffset.y < 200 {
-            fetchMoreMessages()
+            loadMessages()
         }
     }
 }

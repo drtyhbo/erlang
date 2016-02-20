@@ -48,6 +48,8 @@
 		90AFD5D11C61102C00236D6B /* FriendManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5D01C61102C00236D6B /* FriendManager.swift */; };
 		90AFD5D31C6110B900236D6B /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5D21C6110B900236D6B /* MessageManager.swift */; };
 		90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5D41C61118E00236D6B /* ChatMessages.swift */; };
+		90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */; };
+		90C0F4A11C78CE10007F58BD /* DayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */; };
 		90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF88B1C47459000A7AD51 /* Assets.xcassets */; };
 		90EBF8A81C4749F700A7AD51 /* andreas.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF8A61C4749F700A7AD51 /* andreas.jpg */; };
 		90EBF8A91C4749F700A7AD51 /* michele.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF8A71C4749F700A7AD51 /* michele.jpg */; };
@@ -102,6 +104,8 @@
 		90AFD5D01C61102C00236D6B /* FriendManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendManager.swift; sourceTree = "<group>"; };
 		90AFD5D21C6110B900236D6B /* MessageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
 		90AFD5D41C61118E00236D6B /* ChatMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessages.swift; sourceTree = "<group>"; };
+		90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayTableViewCell.swift; sourceTree = "<group>"; };
+		90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DayTableViewCell.xib; sourceTree = "<group>"; };
 		90EBF8811C47458F00A7AD51 /* chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90EBF88B1C47459000A7AD51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		90EBF8901C47459000A7AD51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -310,6 +314,8 @@
 				904963401C722CBA0078C9DF /* ImageRowTableViewCell.swift */,
 				904963441C722CE30078C9DF /* ImageRowTableViewCell.xib */,
 				900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */,
+				90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */,
+				90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -390,6 +396,7 @@
 				90EBF8A91C4749F700A7AD51 /* michele.jpg in Resources */,
 				90AFD5A31C4D9D8300236D6B /* ChatRowContinuationTableViewCell.xib in Resources */,
 				90AFD59B1C4C070500236D6B /* GIFSelector.xib in Resources */,
+				90C0F4A11C78CE10007F58BD /* DayTableViewCell.xib in Resources */,
 				90AFD5C71C608EDC00236D6B /* FriendsListViewController.xib in Resources */,
 				90EBF8C11C474CA700A7AD51 /* ChatViewController.xib in Resources */,
 				90AFD5B91C5D281800236D6B /* ConfirmCodeViewController.xib in Resources */,
@@ -467,6 +474,7 @@
 				90AFD5C51C608EB200236D6B /* FriendsListViewController.swift in Sources */,
 				9031FFD41C6671B800BCC456 /* Constants.swift in Sources */,
 				90EBF8BE1C474CA700A7AD51 /* ChatRowTableViewCell.swift in Sources */,
+				90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */,
 				90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */,
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
