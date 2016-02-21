@@ -72,6 +72,13 @@ class MediaRowTableViewCell: MessageTableViewCell {
         moviePlayer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapMovie"))
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        moviePlayer.pause()
+        hideMoviePlayer()
+    }
+
     private func updateThumbnail() {
         guard let thumbnailInfo = message.thumbnailInfo else {
             heightConstraint.constant = 0
