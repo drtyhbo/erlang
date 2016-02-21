@@ -1,11 +1,7 @@
 var redis = require('./redis').redis,
 	user = require('./user'),
-	sig = require('amazon-s3-url-signer'),
-	Promise = require('bluebird').Promise;
-
-var fileBucket = sig.urlSigner('AKIAIRKB5XME5BRBKYWQ', 'mC2r6bNkM6AaxWqBO6iJ3enL6yACsbOjOEvWrwYv', {
-	useSubdomain: true,
-	protocol: "https"});
+	Promise = require('bluebird').Promise,
+	s3 = require('../utils/s3');
 
 function fileIdKey() {
 	return "file_id";
@@ -51,5 +47,5 @@ exports.hasAccess = function(fileId, userId, cb) {
 };
 
 exports.generateSignedUrl = function(fileId, method, contentType) {
-	return fileBucket.getUrl(method, 'files/' + fileId, 'drtyhbo-chat', contentType || '', 100);
+	return s3.getUrl(method, 'files/' + fileId, contentType);
 }

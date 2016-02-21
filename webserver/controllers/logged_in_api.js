@@ -1,6 +1,7 @@
 var express = require('express'),
 	user = require('../models/user'),
-	file = require('../models/file');
+	file = require('../models/file'),
+	s3 = require('../utils/s3');
 
 var router = express.Router();
 
@@ -94,6 +95,17 @@ router.post('/file/get/', function(req, res) {
 		}
 
 		res.send(result);
+	});
+});
+
+/*
+ * Request parameters:
+ * userId - Current user id.
+ * session - Current user session.
+ */
+router.post('/profilepic/', function(req, res) {
+	res.send({
+		'profilePicUrl': s3.generateSignedUrl('PUT', 'user/' + req.userId, 'image/jpeg')
 	});
 });
 
