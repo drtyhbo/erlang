@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="friendsTable" destination="YaS-dx-vLu" id="6lm-fc-p8Q"/>
                 <outlet property="profilePic" destination="BH3-TE-Lud" id="Hr5-UV-nzE"/>
+                <outlet property="updatingProfilePicActivityIndicator" destination="f5K-Vx-awm" id="nqE-vl-rcw"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Jw5-aP-fXx"/>
             </connections>
         </placeholder>
@@ -25,23 +26,39 @@
                         <outlet property="delegate" destination="-1" id="6KW-wS-wqW"/>
                     </connections>
                 </tableView>
-                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User" translatesAutoresizingMaskIntoConstraints="NO" id="BH3-TE-Lud" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qIp-jG-va9">
                     <rect key="frame" x="10" y="542" width="48" height="48"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ProfilePic" translatesAutoresizingMaskIntoConstraints="NO" id="BH3-TE-Lud" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="48" id="Ee7-BT-tEA"/>
+                                <constraint firstAttribute="height" constant="48" id="ueI-cW-1Dm"/>
+                            </constraints>
+                        </imageView>
+                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="f5K-Vx-awm">
+                            <rect key="frame" x="6" y="5" width="37" height="37"/>
+                        </activityIndicatorView>
+                    </subviews>
                     <constraints>
-                        <constraint firstAttribute="width" constant="48" id="Ee7-BT-tEA"/>
-                        <constraint firstAttribute="height" constant="48" id="ueI-cW-1Dm"/>
+                        <constraint firstAttribute="width" constant="48" id="6HR-dD-N8F"/>
+                        <constraint firstItem="BH3-TE-Lud" firstAttribute="top" secondItem="qIp-jG-va9" secondAttribute="top" id="Alu-iU-ZzQ"/>
+                        <constraint firstAttribute="bottom" secondItem="BH3-TE-Lud" secondAttribute="bottom" id="Hoa-lZ-Zyc"/>
+                        <constraint firstAttribute="height" constant="48" id="aNe-Gu-das"/>
+                        <constraint firstAttribute="trailing" secondItem="BH3-TE-Lud" secondAttribute="trailing" id="nmE-yI-W3i"/>
+                        <constraint firstItem="BH3-TE-Lud" firstAttribute="leading" secondItem="qIp-jG-va9" secondAttribute="leading" id="zHI-OM-ajh"/>
                     </constraints>
-                </imageView>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.12156862745098039" green="0.12941176470588234" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0ea-Z2-IYM"/>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6NK-Rq-uxc"/>
+                <constraint firstAttribute="bottom" secondItem="qIp-jG-va9" secondAttribute="bottom" constant="10" id="En9-Y1-GSm"/>
                 <constraint firstAttribute="trailing" secondItem="YaS-dx-vLu" secondAttribute="trailing" id="Tym-qB-EJi"/>
-                <constraint firstItem="BH3-TE-Lud" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="UFR-Ra-6eq"/>
+                <constraint firstItem="qIp-jG-va9" firstAttribute="top" secondItem="YaS-dx-vLu" secondAttribute="bottom" constant="10" id="bsb-oI-lHV"/>
                 <constraint firstAttribute="bottom" secondItem="YaS-dx-vLu" secondAttribute="bottom" id="jP9-E6-Zwe"/>
-                <constraint firstAttribute="bottom" secondItem="BH3-TE-Lud" secondAttribute="bottom" constant="10" id="tMv-dh-Wwq"/>
-                <constraint firstItem="BH3-TE-Lud" firstAttribute="top" secondItem="YaS-dx-vLu" secondAttribute="bottom" constant="10" id="zop-Ko-vr2"/>
+                <constraint firstItem="qIp-jG-va9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="w45-bM-KTA"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
@@ -51,6 +68,6 @@
         </view>
     </objects>
     <resources>
-        <image name="User" width="48" height="48"/>
+        <image name="ProfilePic" width="48" height="48"/>
     </resources>
 </document>

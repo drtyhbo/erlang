@@ -11,7 +11,7 @@ import UIKit
 
 extension UIImage {
     func resizeToSize(size: CGSize) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        UIGraphicsBeginImageContextWithOptions(size, false, 1)
         drawInRect(CGRect(origin: CGPoint(x: 0, y: 0), size: size))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

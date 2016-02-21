@@ -32,10 +32,10 @@ class MessageTableViewCell: UITableViewCell {
             timeFormatter.dateFormat = "H:mm"
             dateLabel.text = timeFormatter.stringFromDate(message.date)
 
-            if message.from == nil {
-                userImage.image = User.profilePic ?? UIImage(named: "ProfilePic")
+            if let from = message.from {
+                userImage.sd_setImageWithURL(from.profilePicUrl, placeholderImage: UIImage(named: "ProfilePic"))
             } else {
-                userImage.image = UIImage(named: "ProfilePic")
+                userImage.image = User.profilePic ?? UIImage(named: "ProfilePic")
             }
         }
     }

@@ -36,7 +36,8 @@ class User {
         }
         set {
             if let profilePic = newValue {
-                UIImagePNGRepresentation(profilePic)!.writeToURL(profilePicUrl, atomically: true)
+                let profilePicData = UIImagePNGRepresentation(profilePic)
+                profilePicData?.writeToURL(profilePicUrl, atomically: true)
             }
         }
     }

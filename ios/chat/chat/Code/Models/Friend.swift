@@ -15,6 +15,10 @@ class Friend: NSManagedObject {
     @NSManaged var name: String
     @NSManaged var key: NSData
 
+    var profilePicUrl: NSURL {
+        return Constants.profilePicBaseUrl.URLByAppendingPathComponent("\(id)")
+    }
+
     override var hashValue: Int {
         return id
     }

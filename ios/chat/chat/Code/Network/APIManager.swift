@@ -156,6 +156,47 @@ class APIManager: NSObject {
             }
     }
 
+    private func getProfilePicUploadUrl(callback: NSURL?->Void) {
+        sendUserRequestToUrl("profilepic/") {
+            json in
+            if let json = json, uploadUrl = json["uploadUrl"].string {
+                callback(NSURL(string: uploadUrl))
+            } else {
+                callback(nil)
+            }
+        }
+    }
+
+    func uploadProfilePic(profilePic: UIImage, callback: Bool->Void) {
+        let localUrl = temporaryFileUrl()
+
+        guard let data = UIImageJPEGRepresentation(profilePic, 0.8) else {
+            callback(false)
+            return
+        }
+        data.writeToURL(localUrl, atomically: true)
+
+        getProfilePicUploadUrl {
+            s3Url in
+            guard let s3Url = s3Url else {
+                callback(false)
+                return
+            }
+
+            let headers = [
+                "Content-Type": "image/jpeg"]
+            Alamofire.upload(.PUT, s3Url, headers: headers, file: localUrl)
+                .response {
+                    response in
+                    if let response = response.1 {
+                        callback(response.statusCode == 200)
+                    } else {
+                        callback(false)
+                    }
+                }
+        }
+    }
+
     private func errorFromJson(json: JSON?) -> Error? {
         if let json = json {
             return json["status"] == "ok" ? nil : Error(json["status"].string ?? "invalid")

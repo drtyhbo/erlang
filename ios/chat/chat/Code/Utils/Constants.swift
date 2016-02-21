@@ -14,5 +14,7 @@ class Constants {
     static let webPort = "80"
 //    static let host = "192.168.1.122"
 //    static let webPort = "8080"
+
     static let profilePicSize = CGSize(width: 144, height: 144)
+    static let profilePicBaseUrl = NSURL(string: "https://s3-us-west-1.amazonaws.com/drtyhbo-chat-users/")!
 }

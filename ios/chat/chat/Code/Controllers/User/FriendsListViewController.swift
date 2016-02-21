@@ -18,6 +18,7 @@ protocol FriendsListViewControllerDelegate: class {
 class FriendsListViewController: UIViewController {
     @IBOutlet weak var friendsTable: UITableView!
     @IBOutlet weak var profilePic: ChatProfilePic!
+    @IBOutlet weak var updatingProfilePicActivityIndicator: UIActivityIndicatorView!
 
     weak var delegate: FriendsListViewControllerDelegate?
 
@@ -100,8 +101,21 @@ extension FriendsListViewController: UIImagePickerControllerDelegate, UINavigati
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
             let resizedImage = image.resizeToSize(Constants.profilePicSize)
-            self.profilePic.image = resizedImage
-            User.profilePic = resizedImage
+            self.profilePic.alpha = 0.75
+
+            self.updatingProfilePicActivityIndicator.hidden = false
+            self.updatingProfilePicActivityIndicator.startAnimating()
+
+            APIManager.sharedManager.uploadProfilePic(resizedImage) {
+                success in
+                self.profilePic.alpha = 1
+                self.updatingProfilePicActivityIndicator.hidden = true
+
+                if success {
+                    self.profilePic.image = resizedImage
+                    User.profilePic = resizedImage
+                }
+            }
         }
 
         dismissViewControllerAnimated(true, completion: nil)
