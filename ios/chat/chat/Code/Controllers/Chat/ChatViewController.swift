@@ -9,6 +9,7 @@
 import APLSlideMenu
 import CocoaAsyncSocket
 import CoreData
+import MobileCoreServices
 import UIKit
 
 class ChatViewController: UIViewController {
@@ -36,8 +37,8 @@ class ChatViewController: UIViewController {
             if let friend = friend {
                 friendNameLabel.text = friend.name
 
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessageNotification, object: oldValue)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessageNotification, object: friend)
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessagesNotification, object: oldValue)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessagesNotification, object: friend)
 
                 rows = []
                 messages = []
@@ -49,20 +50,14 @@ class ChatViewController: UIViewController {
     }
 
     private let chatRowTableViewCellReuseIdentifier = "ChatRowTableViewCell"
-    private let chatRowContinuationTableViewCellReuseIdentifier = "ChatRowContinuationTableViewCell"
     private let newMessagesCellReuseIdentifier = "NewMessagesCellReuseIdentifier"
-    private let imageRowTableViewCell = "ImageRowTableViewCell"
+    private let mediaRowTableViewCellReuseIdentifier = "MediaRowTableViewCell"
     private let dayTableViewCellReuseIdentifier = "DayTableViewCell"
 
     private let fetchLimit = 30
-    private let messageHelperHeight: CGFloat = 100
 
     private var rows: [RowType] = []
     private var messages: [Message] = []
-    private var lastMessageDate: NSDate?
-
-    private var messageHelper: MessageHelper!
-    private var newMessagesRow: Int?
 
     private var imagePickerController: UIImagePickerController?
 
@@ -84,9 +79,8 @@ class ChatViewController: UIViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
         tableView.registerNib(UINib(nibName: "ChatRowTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowTableViewCellReuseIdentifier)
-        tableView.registerNib(UINib(nibName: "ChatRowContinuationTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowContinuationTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
-        tableView.registerNib(UINib(nibName: "ImageRowTableViewCell", bundle: nil), forCellReuseIdentifier: imageRowTableViewCell)
+        tableView.registerNib(UINib(nibName: "MediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: mediaRowTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "DayTableViewCell", bundle: nil), forCellReuseIdentifier: dayTableViewCellReuseIdentifier)
         tableView.contentInset = UIEdgeInsets(top: -8, left: 0, bottom: 16, right: 0)
 
@@ -150,16 +144,6 @@ class ChatViewController: UIViewController {
         }
     }
 
-    private func sendMessageWithImageURL(imageURL: NSURL, width: Int, height: Int) {
-        resetNewMessageView()
-/*        Message.sendImageWithURL(imageURL, width: width, height: height) {
-            message in
-            if let message = message {
-                self.appendMessage(message)
-            }
-        }*/
-    }
-
     private func sendMessageWithImage(image: UIImage) {
         resetNewMessageView()
 
@@ -171,12 +155,19 @@ class ChatViewController: UIViewController {
                 }
             }
         }
-/*        Message.sendImageFile(PFFile(data: UIImageJPEGRepresentation(image, 0.8)!)!, width: Int(image.size.width), height: Int(image.size.height)) {
-            message in
-            if let message = message {
-                self.appendMessage(message)
+    }
+
+    private func sendMessageWithMediaUrl(mediaUrl: NSURL) {
+        resetNewMessageView()
+
+        if let friend = friend {
+            MessageManager.sharedManager.sendMessageWithMediaUrl(mediaUrl, to: friend) {
+                message in
+                if let message = message {
+                    self.appendMessage(message)
+                }
             }
-        }*/
+        }
     }
 
     private func resetNewMessageView() {
@@ -185,7 +176,11 @@ class ChatViewController: UIViewController {
     }
 
     private func appendMessage(message: Message) {
-        messages.append(message)
+        appendMessages([message])
+    }
+
+    private func appendMessages(newMessages: [Message]) {
+        messages = messages + newMessages
 
         let previousRowCount = rows.count
         calculateRows()
@@ -208,17 +203,18 @@ class ChatViewController: UIViewController {
             return
         }
 
-        let firstBatch = messages.count == 0
+        let isFirstBatch = messages.count == 0
         let newMessages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: messages.count == 0 ? nil : messages[0].date, fetchLimit: fetchLimit)
-        if newMessages.count > 0 {
-            messages = newMessages + messages
+        messages = newMessages + messages
 
-            let previousRowCount = rows.count
-            calculateRows()
+        let previousRowCount = rows.count
+        calculateRows()
 
-            tableView.reloadData()
-            tableView.layoutIfNeeded()
-            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: (rows.count - previousRowCount) - (firstBatch ? 1 : 0), inSection: 0), atScrollPosition: firstBatch ? .Bottom : .Top, animated: false)
+        tableView.reloadData()
+        tableView.layoutIfNeeded()
+
+        if rows.count > 0 {
+            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: (rows.count - previousRowCount) - (isFirstBatch ? 1 : 0), inSection: 0), atScrollPosition: isFirstBatch ? .Bottom : .Top, animated: false)
         }
     }
 
@@ -296,8 +292,8 @@ class ChatViewController: UIViewController {
     }
 
     @objc private func didReceiveMessage(notification: NSNotification) {
-        if let message = (notification.userInfo?["message"] as? MessageManager.NewMessageNotificationWrapper)?.message {
-            appendMessage(message)
+        if let messages = (notification.userInfo?["messages"] as? MessageManager.NewMessagesNotificationWrapper)?.messages {
+            appendMessages(messages)
 
             if let friend = friend {
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
@@ -324,6 +320,7 @@ class ChatViewController: UIViewController {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .PhotoLibrary
+        imagePickerController.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
         presentViewController(imagePickerController, animated: true, completion: nil)
 
         self.imagePickerController = imagePickerController
@@ -353,10 +350,10 @@ extension ChatViewController: UITableViewDataSource {
             let message = object as! Message
 
             var cell: MessageTableViewCell
-            if message.imageInfo != nil {
-                cell = tableView.dequeueReusableCellWithIdentifier(imageRowTableViewCell, forIndexPath: indexPath) as! ImageRowTableViewCell
-            } else {
+            if message.type == .Text {
                 cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
+            } else {
+                cell = tableView.dequeueReusableCellWithIdentifier(mediaRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MediaRowTableViewCell
             }
 
             cell.message = message
@@ -374,11 +371,11 @@ extension ChatViewController: UITableViewDataSource {
         switch(rows[indexPath.row]) {
         case .Message(let object, _):
             let message = object as! Message
-            if message.imageInfo != nil {
-                return ImageRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
+            if message.type == .Text {
+                return ChatRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
+
             } else {
-                let height = ChatRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
-                return height
+                return MediaRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
             }
         case .Date(_):
             return DayTableViewCell.estimatedRowHeight
@@ -407,18 +404,15 @@ extension ChatViewController: UITextViewDelegate {
     }
 }
 
-extension ChatViewController: GIFSelectorDelegate {
-    func gifSelector(gifSelector: GIFSelector, didSelectImageWithURL url: NSURL, width: Int, height: Int) {
-        sendMessageWithImageURL(url, width: width, height: height)
-    }
-}
-
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             sendMessageWithImage(image)
-            dismissViewControllerAnimated(true, completion: nil)
-            self.imagePickerController = nil
+        } else if let mediaUrl = info[UIImagePickerControllerMediaURL] as? NSURL {
+            sendMessageWithMediaUrl(mediaUrl)
         }
+
+        dismissViewControllerAnimated(true, completion: nil)
+        self.imagePickerController = nil
     }
 }

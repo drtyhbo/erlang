@@ -6,6 +6,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import AVFoundation
 import CoreData
 import Foundation
 import MagicalRecord
@@ -16,17 +17,17 @@ class MessageManager {
     // since the latter is @objc wrapped. Therefore Message objects are wrapped in
     // NewMessageNotificationWrapper objects when passed through the userInfo attribute of
     // notifications.
-    class NewMessageNotificationWrapper {
-        let message: Message
+    class NewMessagesNotificationWrapper {
+        let messages: [Message]
 
-        init(message: Message) {
-            self.message = message
+        init(messages: [Message]) {
+            self.messages = messages
         }
     }
 
     static let sharedManager = MessageManager()
 
-    static let NewMessageNotification = "NewMessage"
+    static let NewMessagesNotification = "NewMessages"
     static let FriendUnreadMessageCountUpdated = "FriendUnreadMessageCountUpdated"
     static let FriendUnreadMessageCountReset = "FriendUnreadMessageCountReset"
     static let TotalUnreadMessageCountUpdated = "TotalUnreadMessageCountUpdated"
@@ -36,7 +37,7 @@ class MessageManager {
     private var messageSender = MessageSender()
 
     func setup() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: ChatClient.ChatClientReceivedMessageNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessages:", name: ChatClient.ChatClientReceivedMessagesNotification, object: nil)
     }
 
     func sendMessageWithText(text: String, to: Friend, callback: Message?->Void) {
@@ -64,6 +65,36 @@ class MessageManager {
         }
     }
 
+    func sendMessageWithMediaUrl(mediaUrl: NSURL, to: Friend, callback: Message?->Void) {
+        APIManager.sharedManager.createFileForFriend(to, numFiles: 2) {
+            fileId in
+            guard let fileId = fileId else {
+                callback(nil)
+                return
+            }
+
+            self.imageFromMediaUrl(mediaUrl) {
+                image in
+
+                guard let image = image, movieData = NSData(contentsOfURL: mediaUrl) else {
+                    callback(nil)
+                    return
+                }
+
+                let movieFile = File.createWithId(fileId, data: movieData, contentType: "video/mp4")
+                let thumbnailFile = File.createWithId(fileId + 1, data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
+
+                let message = Message.createWithMovieFile(movieFile, thumbnailFile: thumbnailFile, to: to)
+                if message != nil {
+                    self.messageSender.sendMessage(message!, files: [movieFile, thumbnailFile])
+                }
+                CoreData.save()
+
+                callback(message)
+            }
+        }
+    }
+
     func getMessagesForFriend(friend: Friend, beforeDate: NSDate? = nil, fetchLimit: Int = 15) -> [Message] {
         return Message.findForFriend(friend, beforeDate: beforeDate, fetchLimit: fetchLimit)
     }
@@ -77,10 +108,10 @@ class MessageManager {
         sendUnreadMessagesCountUpdatedNotificationForFriend(friend, withUnreadMessageCount: 0)
     }
 
-    private func addMessage(message: Message, forFriend friend: Friend) {
-        unreadMessageCountForFriend[friend] = (unreadMessageCountForFriend[friend] ?? 0) + 1
+    private func addMessages(messages: [Message], forFriend friend: Friend) {
+        unreadMessageCountForFriend[friend] = (unreadMessageCountForFriend[friend] ?? 0) + messages.count
         sendUnreadMessagesCountUpdatedNotificationForFriend(friend, withUnreadMessageCount: unreadMessageCountForFriend[friend]!)
-        sendNewMessageNotificationForFriend(friend, withMessage: message)
+        sendNewMessagesNotificationForFriend(friend, withMessages: messages)
     }
 
     private func sendUnreadMessagesCountUpdatedNotificationForFriend(friend: Friend, withUnreadMessageCount unreadMessageCount: Int) {
@@ -93,15 +124,48 @@ class MessageManager {
         NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.TotalUnreadMessageCountUpdated, object: friend, userInfo: ["unreadMessageCount": totalUnreadMessageCount])
     }
 
-    private func sendNewMessageNotificationForFriend(friend: Friend, withMessage message: Message) {
-        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewMessageNotification, object: friend, userInfo: ["message": NewMessageNotificationWrapper(message: message)])
+    private func imageFromMediaUrl(mediaUrl: NSURL, completion: UIImage?->Void) {
+        let asset = AVURLAsset(URL: mediaUrl)
+        let assetGenerator = AVAssetImageGenerator(asset: asset)
+        assetGenerator.appliesPreferredTrackTransform = true
+        assetGenerator.generateCGImagesAsynchronouslyForTimes([NSValue(CMTime: CMTimeMake(0, 30))]) {
+            requestedTime, image, actualTime, result, error in
+
+            dispatch_async(dispatch_get_main_queue()) {
+                guard let image = image else {
+                    completion(nil)
+                    return
+                }
+
+                completion(UIImage(CGImage: image))
+            }
+        }
     }
 
-    @objc private func didReceiveMessage(notification: NSNotification) {
-        if let receivedMessage = notification.userInfo?["receivedMessage"] as? ReceivedMessage, let friend = FriendManager.sharedManager.getFriendById(receivedMessage.fromId) {
-            let message = Message.createWithFrom(friend, to: nil, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson)
-            CoreData.save()
-            addMessage(message, forFriend: friend)
+    private func sendNewMessagesNotificationForFriend(friend: Friend, withMessages messages: [Message]) {
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewMessagesNotification, object: friend, userInfo: ["messages": NewMessagesNotificationWrapper(messages: messages)])
+    }
+
+    @objc private func didReceiveMessages(notification: NSNotification) {
+        guard let receivedMessages = notification.userInfo?["receivedMessages"] as? [ReceivedMessage] else {
+            return
+        }
+
+        var messagesForFriends: [Friend:[Message]] = [:]
+        for receivedMessage in receivedMessages {
+            if let friend = FriendManager.sharedManager.getFriendById(receivedMessage.fromId) {
+                if messagesForFriends[friend] == nil {
+                    messagesForFriends[friend] = []
+                }
+
+                messagesForFriends[friend]!.append(Message.createWithFrom(friend, to: nil, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson))
+            }
+        }
+
+        CoreData.save()
+
+        for (friend, messages) in messagesForFriends {
+            addMessages(messages, forFriend: friend)
         }
     }
 }

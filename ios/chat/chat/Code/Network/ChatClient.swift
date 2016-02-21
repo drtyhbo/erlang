@@ -17,7 +17,7 @@ class ChatClient {
 
     static let sharedClient = ChatClient()
 
-    static let ChatClientReceivedMessageNotification = "ChatClientReceivedMessage"
+    static let ChatClientReceivedMessagesNotification = "ChatClientReceivedMessages"
     static let ChatClientMessageDidSend = "ChatClientMessageDidSend"
     static let ChatClientConnectingNotification = "ChatClientConnecting"
     static let ChatClientDidConnectNotification = "ChatClientDidConnect"
@@ -29,6 +29,9 @@ class ChatClient {
     private let port: UInt16 = 49165
 
     private let connection: ChatConnection
+
+    private var receivedMessages: [ReceivedMessage] = []
+    private var receivedMessagesTimer: NSTimer?
 
     init() {
         connection = ChatConnection(host: host, port: port)
@@ -97,11 +100,20 @@ class ChatClient {
 
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string, let decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage) {
-                let receivedMessage = ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON.parse(decryptedMessage))
-                NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessageNotification, object: nil, userInfo: ["receivedMessage": receivedMessage])
+            if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string {
+                let decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage)
+                self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON.parse(decryptedMessage!)))
             }
         }
+
+        self.receivedMessagesTimer?.invalidate()
+        self.receivedMessagesTimer = NSTimer.scheduledTimerWithTimeInterval(0.25, target: self, selector: "sendReceivedMessagesNotification", userInfo: nil, repeats: false)
+    }
+
+    @objc private func sendReceivedMessagesNotification() {
+        let receivedMessages = self.receivedMessages
+        NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessagesNotification, object: nil, userInfo: ["receivedMessages": receivedMessages])
+        self.receivedMessages = []
     }
 
     // Notifications

@@ -13,14 +13,20 @@ import SwiftyJSON
 
 @objc(Message)
 class Message: NSManagedObject {
-    struct ImageInfo {
-        let imageId: Int
+    enum Type {
+        case Text
+        case Image
+        case Movie
+    }
+
+    struct ThumbnailInfo {
+        let id: Int
         let width: Int
         let height: Int
+    }
 
-        let thumbnailId: Int
-        let thumbnailWidth: Int
-        let thumbnailHeight: Int
+    struct MovieInfo {
+        let id: Int
     }
 
     @NSManaged private(set) var from: Friend?
@@ -32,23 +38,55 @@ class Message: NSManagedObject {
         return objectID.URIRepresentation().lastPathComponent ?? ""
     }
 
-    var imageInfo: ImageInfo? {
-        let imageInfo = json["i"]
+    var type: Type {
+        if json["i"].null == nil {
+            return .Image
+        } else if json["v"].null == nil {
+            return .Movie
+        } else {
+            return .Text
+        }
+    }
 
-        guard let imageId = imageInfo["i"].int, width = imageInfo["w"].int, height = imageInfo["h"].int, thumbnailId = imageInfo["ti"].int, thumbnailWidth = imageInfo["tw"].int, thumbnailHeight = imageInfo["th"].int else {
+    var thumbnailInfo: ThumbnailInfo? {
+        let thumbnailJson: JSON
+        switch(type) {
+            case .Image:
+                thumbnailJson = json["i"]
+            case .Movie:
+                thumbnailJson = json["v"]
+            default:
+                return nil
+        }
+
+        guard let thumbnailId = thumbnailJson["ti"].int, thumbnailWidth = thumbnailJson["tw"].int, thumbnailHeight = thumbnailJson["th"].int else {
             return nil
         }
 
-        return ImageInfo(imageId: imageId, width: width, height: height, thumbnailId: thumbnailId, thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight)
+        return ThumbnailInfo(id: thumbnailId, width: thumbnailWidth, height: thumbnailHeight)
+    }
+
+    var movieInfo: MovieInfo? {
+        let movieJson: JSON
+        switch(type) {
+            case .Movie:
+                movieJson = json["v"]
+            default:
+                return nil
+        }
+
+        guard let movieId = movieJson["v"].int else {
+            return nil
+        }
+
+        return MovieInfo(id: movieId)
     }
 
     var text: String? {
         return json["m"].string
     }
 
-    var json: JSON {
-        return JSON.parse(message)
-    }
+    private(set) var json = JSON([:])
 
     static func createFromCurrentUserTo(to: Friend?, messageJson: JSON) -> Message {
         return createWithFrom(nil, to: to, date: NSDate(), messageJson: messageJson)
@@ -60,6 +98,7 @@ class Message: NSManagedObject {
         message.to = to
         message.date = date
         message.message = messageJson.rawString()!
+        message.json = messageJson
         return message
     }
 
@@ -91,5 +130,24 @@ class Message: NSManagedObject {
                 "th": thumbnail.size.height
             ]])
         return createFromCurrentUserTo(to, messageJson: messageJson)
+    }
+
+    static func createWithMovieFile(movieFile: File, thumbnailFile: File, to: Friend) -> Message? {
+        guard let thumbnail = thumbnailFile.image else {
+            return nil
+        }
+
+        let messageJson = JSON([
+            "v": [
+                "v": movieFile.id,
+                "ti": thumbnailFile.id,
+                "tw": thumbnail.size.width,
+                "th": thumbnail.size.height
+            ]])
+        return createFromCurrentUserTo(to, messageJson: messageJson)
+    }
+
+    override func awakeFromFetch() {
+        json = JSON.parse(message)
     }
 }

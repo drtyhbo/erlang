@@ -15,6 +15,10 @@ class Friend: NSManagedObject {
     @NSManaged var name: String
     @NSManaged var key: NSData
 
+    override var hashValue: Int {
+        return id
+    }
+
     static func createWithId(id: Int, name: String, key: NSData) -> Friend {
         let friend = Friend.MR_createEntity()!
         friend.id = id

@@ -13,8 +13,9 @@ import UIKit
 @objc(File)
 class File: NSManagedObject {
     @NSManaged var id: Int
-    @NSManaged var data: NSData
     @NSManaged var contentType: String
+    @NSManaged var data: NSData
+    @NSManaged var localPath: String?
 
     var image: UIImage? {
         return UIImage(data: data)

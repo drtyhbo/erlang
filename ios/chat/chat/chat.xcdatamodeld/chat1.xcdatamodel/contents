@@ -4,6 +4,7 @@
         <attribute name="contentType" attributeType="String" syncable="YES"/>
         <attribute name="data" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="localPath" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Friend" representedClassName="Friend" syncable="YES">
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
@@ -24,7 +25,7 @@
         <relationship name="message" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="pendingMessage" inverseEntity="Message" syncable="YES"/>
     </entity>
     <elements>
-        <element name="File" positionX="-36" positionY="72" width="128" height="90"/>
+        <element name="File" positionX="-36" positionY="72" width="128" height="105"/>
         <element name="Friend" positionX="-54" positionY="9" width="128" height="120"/>
         <element name="Message" positionX="-63" positionY="-18" width="128" height="120"/>
         <element name="PendingMessage" positionX="-54" positionY="54" width="128" height="75"/>

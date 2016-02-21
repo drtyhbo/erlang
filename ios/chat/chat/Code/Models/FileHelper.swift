@@ -35,4 +35,28 @@ class FileHelper {
             }
         }
     }
+
+    static func saveFileToTemporaryLocation(file: File) -> NSURL {
+        if let localPath = file.localPath {
+            if NSFileManager.defaultManager().fileExistsAtPath(localPath) {
+                return NSURL(fileURLWithPath: localPath)
+            }
+        }
+
+        let temporaryUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent("\(NSUUID().UUIDString)\(extensionForFile(file))")
+        file.data.writeToURL(temporaryUrl, atomically: true)
+        file.localPath = temporaryUrl.path
+        CoreData.save()
+
+        return temporaryUrl
+    }
+
+    private static func extensionForFile(file: File) -> String {
+        switch (file.contentType) {
+        case "video/mp4":
+            return ".mp4"
+        default:
+            return ""
+        }
+    }
 }
