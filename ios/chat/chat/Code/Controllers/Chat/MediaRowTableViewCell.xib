@@ -84,7 +84,7 @@
                             <constraint firstAttribute="height" constant="4" id="L1h-aI-NLf"/>
                         </constraints>
                     </view>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User" translatesAutoresizingMaskIntoConstraints="NO" id="u9C-sS-3er" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ProfilePic" translatesAutoresizingMaskIntoConstraints="NO" id="u9C-sS-3er" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
                         <rect key="frame" x="8" y="16" width="48" height="48"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="48" id="qCi-1k-tKD"/>
@@ -131,6 +131,6 @@
     </objects>
     <resources>
         <image name="Play" width="60" height="60"/>
-        <image name="User" width="48" height="48"/>
+        <image name="ProfilePic" width="48" height="48"/>
     </resources>
 </document>

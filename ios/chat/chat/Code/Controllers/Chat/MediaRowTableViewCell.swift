@@ -107,9 +107,14 @@ class MediaRowTableViewCell: MessageTableViewCell {
         FileHelper.getFileWithId(thumbnailId) {
             file in
 
-            if let image = file?.image {
-                self.messageImageView.image = image
-                self.messageImageView.hidden = false
+            self.messageImageView.image = nil
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+                if let image = file?.image {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.messageImageView.image = image
+                        self.messageImageView.hidden = false
+                    }
+                }
             }
         }
     }
