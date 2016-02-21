@@ -14,6 +14,7 @@ import UIKit
 
 class ChatViewController: UIViewController {
     enum RowType {
+        case ConversationStart
         case Message(AnyObject, Int)
         case Date(NSDate)
         case NewMessages
@@ -39,24 +40,26 @@ class ChatViewController: UIViewController {
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessagesNotification, object: oldValue)
                 NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessagesNotification, object: friend)
 
+                isAtTop = false
                 rows = []
                 messages = []
-
                 unreadMessageCount = MessageManager.sharedManager.unreadMessageCountForFriend(friend)
+
                 loadMessages()
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
             }
         }
     }
 
-    private let chatRowTableViewCellReuseIdentifier = "ChatRowTableViewCell"
-    private let newMessagesCellReuseIdentifier = "NewMessagesCellReuseIdentifier"
-    private let mediaRowTableViewCellReuseIdentifier = "MediaRowTableViewCell"
-    private let dayTableViewCellReuseIdentifier = "DayTableViewCell"
-    private let newMessagesTableViewCellReuseIdentifier = "NewMessagesTableViewCell"
+    private let chatRowCellReuseIdentifier = "ChatRowTableViewCell"
+    private let mediaRowCellReuseIdentifier = "MediaRowTableViewCell"
+    private let dayCellReuseIdentifier = "DayTableViewCell"
+    private let newMessagesCellReuseIdentifier = "NewMessagesTableViewCell"
+    private let conversationStartCellReuseIdentifier = "ConversationStartTableViewCell"
 
     private let fetchLimit = 30
 
+    private var isAtTop = false
     private var rows: [RowType] = []
     private var messages: [Message] = []
     private var unreadMessageCount = 0
@@ -80,12 +83,14 @@ class ChatViewController: UIViewController {
         tableView.delegate = self
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
-        tableView.registerNib(UINib(nibName: "ChatRowTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowTableViewCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "ChatRowTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
-        tableView.registerNib(UINib(nibName: "MediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: mediaRowTableViewCellReuseIdentifier)
-        tableView.registerNib(UINib(nibName: "DayTableViewCell", bundle: nil), forCellReuseIdentifier: dayTableViewCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "MediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: mediaRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "DayTableViewCell", bundle: nil), forCellReuseIdentifier: dayCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesTableViewCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
-        tableView.contentInset = UIEdgeInsets(top: -8, left: 0, bottom: 16, right: 0)
+        tableView.registerNib(UINib(nibName: "ConversationStartTableViewCell", bundle: nil), forCellReuseIdentifier: conversationStartCellReuseIdentifier)
+
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
 
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
 
@@ -208,6 +213,7 @@ class ChatViewController: UIViewController {
 
         let isFirstBatch = messages.count == 0
         let newMessages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: messages.count == 0 ? nil : messages[0].date, fetchLimit: fetchLimit)
+        isAtTop = newMessages.count < fetchLimit
         messages = newMessages + messages
 
         let previousRowCount = rows.count
@@ -247,6 +253,10 @@ class ChatViewController: UIViewController {
             rows.append(.Message(message, i))
         }
 
+        if isAtTop {
+            rows.insert(.ConversationStart, atIndex: 0)
+        }
+
         if unreadMessageCount > 0 {
             rows.insert(.NewMessages, atIndex: rows.count - unreadMessageCount)
         }
@@ -258,6 +268,8 @@ class ChatViewController: UIViewController {
         }
 
         switch(rows[indexPath.row - 1]) {
+            case .ConversationStart:
+                return .FullNoPadding
             case .Date(_):
                 return .FullNoPadding
             case .NewMessages:
@@ -357,14 +369,18 @@ extension ChatViewController: UITableViewDataSource {
         let row = rows[indexPath.row]
 
         switch(row) {
+        case .ConversationStart:
+            let cell = tableView.dequeueReusableCellWithIdentifier(conversationStartCellReuseIdentifier, forIndexPath: indexPath) as! ConversationStartTableViewCell
+            cell.friend = friend!
+            return cell
         case .Message(let object, _):
             let message = object as! Message
 
             var cell: MessageTableViewCell
             if message.type == .Text {
-                cell = tableView.dequeueReusableCellWithIdentifier(chatRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
+                cell = tableView.dequeueReusableCellWithIdentifier(chatRowCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
             } else {
-                cell = tableView.dequeueReusableCellWithIdentifier(mediaRowTableViewCellReuseIdentifier, forIndexPath: indexPath) as! MediaRowTableViewCell
+                cell = tableView.dequeueReusableCellWithIdentifier(mediaRowCellReuseIdentifier, forIndexPath: indexPath) as! MediaRowTableViewCell
             }
 
             cell.message = message
@@ -372,7 +388,7 @@ extension ChatViewController: UITableViewDataSource {
 
             return cell
         case .Date(let date):
-            let cell = tableView.dequeueReusableCellWithIdentifier(dayTableViewCellReuseIdentifier, forIndexPath: indexPath) as! DayTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(dayCellReuseIdentifier, forIndexPath: indexPath) as! DayTableViewCell
             cell.date = date
             return cell
         case .NewMessages:
@@ -382,6 +398,8 @@ extension ChatViewController: UITableViewDataSource {
 
     func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch(rows[indexPath.row]) {
+        case .ConversationStart:
+            return ConversationStartTableViewCell.rowHeight
         case .Message(let object, _):
             let message = object as! Message
             if message.type == .Text {
@@ -393,7 +411,18 @@ extension ChatViewController: UITableViewDataSource {
         case .Date(_):
             return DayTableViewCell.estimatedRowHeight
         case .NewMessages:
-            return NewMessagesTableViewCell.estimatedRowHeight
+            return NewMessagesTableViewCell.rowHeight
+        }
+    }
+
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        switch(rows[indexPath.row]) {
+        case .ConversationStart:
+            return ConversationStartTableViewCell.rowHeight
+        case .NewMessages:
+            return NewMessagesTableViewCell.rowHeight
+        default:
+            return UITableViewAutomaticDimension
         }
     }
 }

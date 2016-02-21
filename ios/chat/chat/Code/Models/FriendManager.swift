@@ -17,18 +17,25 @@ class FriendManager {
         return Friend.findAll()
     }();
 
-    func loadFriends(phoneNumbers: [PhoneNumber], completion: Void->Void) {
-        APIManager.sharedManager.getFriendsWithPhoneNumbers(phoneNumbers) {
+    func loadFriendsFromContacts(contacts: [Contact], completion: Void->Void) {
+        var contactsByPhoneNumber: [String: Contact] = [:]
+        for contact in contacts {
+            contactsByPhoneNumber[contact.phoneNumber.toString()] = contact
+        }
+
+        APIManager.sharedManager.getFriendsWithPhoneNumbers(contacts.map({ $0.phoneNumber })) {
             friendsData in
 
-            for friendData in friendsData {
-                var friend = Friend.findWithId(friendData.id)
-                if let key = NSData(base64EncodedString: friendData.base64Key, options: NSDataBase64DecodingOptions(rawValue: 0)) {
-                    if let friend = friend {
+            for i in 0..<friendsData.count {
+                let friendData = friendsData[i]
+
+                if let key = NSData(base64EncodedString: friendData.base64Key, options: NSDataBase64DecodingOptions(rawValue: 0)), name = contactsByPhoneNumber[friendData.phoneNumber]?.name {
+                    if let friend = Friend.findWithId(friendData.id) {
                         friend.key = key
+                        friend.name = name
                     } else {
-                        friend = Friend.createWithId(friendData.id, name: friendData.name, key: key)
-                        self.friends.append(friend!)
+                        let friend = Friend.createWithId(friendData.id, name: name, key: key)
+                        self.friends.append(friend)
                     }
                 }
             }

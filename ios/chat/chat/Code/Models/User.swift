@@ -10,6 +10,16 @@ import Foundation
 import UIKit
 
 class User {
+    static var phoneNumber: String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(phoneNumberKey)
+        }
+        set {
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: phoneNumberKey)
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+    }
+
     static var userId: String? {
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(userIdKey)
@@ -47,7 +57,7 @@ class User {
         return documentsDirectoryUrl.URLByAppendingPathComponent("ProfilePic.png")
     }
 
+    private static let phoneNumberKey = "phoneNumber"
     private static let userIdKey = "userId"
     private static let sessionTokenKey = "sessionToken"
-    private static let profilePicKey = "profilePic"
 }

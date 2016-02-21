@@ -46,7 +46,7 @@ class APIManager: NSObject {
 
     struct FriendData {
         let id: Int
-        let name: String
+        let phoneNumber: String
         let base64Key: String
     }
 
@@ -64,8 +64,8 @@ class APIManager: NSObject {
                     }
 
                     let friendJson = friendsJson[i]
-                    if let stringId = friendJson["id"].string, id = Int(stringId), name = friendJson["name"].string, base64Key = friendJson["key"].string {
-                        friendsData.append(FriendData(id: id, name: name, base64Key: base64Key))
+                    if let stringId = friendJson["id"].string, id = Int(stringId), phoneNumber = friendJson["phone"].string, base64Key = friendJson["key"].string {
+                        friendsData.append(FriendData(id: id, phoneNumber: phoneNumber, base64Key: base64Key))
                     }
                 }
             }

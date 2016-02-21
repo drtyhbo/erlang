@@ -23,19 +23,31 @@ class PhoneNumberViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let nextButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "confirmPhoneNumber")
-        navigationItem.rightBarButtonItem = nextButton
+        setupConfirmButton()
     }
 
     @objc private func confirmPhoneNumber() {
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+        activityIndicator.startAnimating()
+
         let phoneNumber = PhoneNumber(phoneNumber: self.phoneNumber.text ?? "")
         APIManager.sharedManager.registerPhoneNumber(phoneNumber) {
             result in
             if result {
+                User.phoneNumber = phoneNumber.toString()
+
                 let confirmCodeViewController = ConfirmCodeViewController(phoneNumber: phoneNumber)
                 self.navigationController?.pushViewController(confirmCodeViewController, animated: true)
+
+                self.setupConfirmButton()
             }
         }
+    }
+
+    private func setupConfirmButton() {
+        let nextButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "confirmPhoneNumber")
+        navigationItem.rightBarButtonItem = nextButton
     }
 }
 

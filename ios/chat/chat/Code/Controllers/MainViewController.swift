@@ -50,12 +50,16 @@ class MainViewController: UIViewController {
 
         view.addSubview(slideViewController.view)
         addChildViewController(slideViewController)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
 
         let friendId = NSUserDefaults.standardUserDefaults().integerForKey(currentFriendKey)
-        if friendId > 0 {
-            if let friend = Friend.findWithId(friendId) {
-                chatViewController.friend = friend
-            }
+        if let friend = Friend.findWithId(friendId) {
+            (slideViewController.contentViewController as! ChatViewController).friend = friend
+        } else {
+            slideViewController.showLeftMenu(true)
         }
     }
 

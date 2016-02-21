@@ -11,9 +11,12 @@ import UIKit
 
 class FriendTableViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var profilePic: ChatProfilePic!
 
     @IBOutlet weak var badge: UIView!
     @IBOutlet weak var unreadMessageCountLabel: UILabel!
+
+    static let cellHeight: CGFloat = 64
 
     var friend: Friend? {
         didSet {
@@ -26,6 +29,12 @@ class FriendTableViewCell: UITableViewCell {
         badge.layer.cornerRadius = badge.bounds.size.height / 2
     }
 
+    override func setSelected(selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        name.textColor = selected ? UIColor(0x1F2124) : UIColor.whiteColor()
+        name.font = selected ? UIFont.boldSystemFontOfSize(name.font.pointSize) : UIFont.systemFontOfSize(name.font.pointSize)
+    }
+
     private func configureCell() {
         guard let friend = friend else {
             return
@@ -36,6 +45,8 @@ class FriendTableViewCell: UITableViewCell {
 
         name.text = friend.name
         updateBadgeWithCount(MessageManager.sharedManager.unreadMessageCountForFriend(friend))
+
+        profilePic.sd_setImageWithURL(friend.profilePicUrl, placeholderImage: UIImage(named: "ProfilePic"))
     }
 
     private func updateBadgeWithCount(unreadMessageCount: Int) {

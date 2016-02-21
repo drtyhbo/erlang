@@ -42,8 +42,8 @@ class FriendsListViewController: UIViewController {
         profilePic.image = User.profilePic ?? UIImage(named: "ProfilePic")
         profilePic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapProfilePic"))
 
-        let contacts = ContactsHelper().getAllContacts()
-        FriendManager.sharedManager.loadFriends(contacts.map({ $0.phoneNumber })) {
+        let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.toString() != User.phoneNumber })
+        FriendManager.sharedManager.loadFriendsFromContacts(contacts) {
             self.friendsTable.reloadData()
         }
     }
@@ -84,6 +84,10 @@ extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return FriendManager.sharedManager.friends.count
+    }
+
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return FriendTableViewCell.cellHeight
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

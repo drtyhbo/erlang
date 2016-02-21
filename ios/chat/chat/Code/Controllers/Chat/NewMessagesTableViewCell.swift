@@ -10,5 +10,5 @@ import Foundation
 import UIKit
 
 class NewMessagesTableViewCell: UITableViewCell {
-    static let estimatedRowHeight: CGFloat = 50
+    static let rowHeight: CGFloat = 50
 }

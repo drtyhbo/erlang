@@ -12,7 +12,7 @@ class PhoneNumber {
     private var phoneNumber: String
 
     init(phoneNumber: String) {
-        self.phoneNumber = phoneNumber.characters.first! != "1" ? ("1" + phoneNumber) : phoneNumber
+        self.phoneNumber = phoneNumber.characters.count != 11 ? ("1" + phoneNumber) : phoneNumber
     }
 
     func toString() -> String {

@@ -122,7 +122,7 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 		for (var i = 0; i < ids.length; i++) {
 			var id = ids[i];
 			if (id) {
-				infoPromises.push(getUserInfo(ids[i], ['name', 'key']));
+				infoPromises.push(getUserInfo(ids[i], ['key']));
 			} else {
 				infoPromises.push(Promise.resolve([null]));
 			}
@@ -134,8 +134,8 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 			if (sharedIds[i] && allInfo[i]) {
 				results.push({
 					'id': sharedIds[i],
-					'name': allInfo[i][0],
-					'key': allInfo[i][1]
+					'key': allInfo[i][0],
+					'phone': phoneNumbers[i]
 				});
 			} else {
 				results.push(null);

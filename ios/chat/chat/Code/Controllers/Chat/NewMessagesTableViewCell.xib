@@ -50,6 +50,7 @@
                     <constraint firstAttribute="bottom" secondItem="Iob-hP-ReJ" secondAttribute="bottom" constant="13" id="b8m-FT-PK9"/>
                     <constraint firstItem="Iob-hP-ReJ" firstAttribute="centerY" secondItem="lgS-wv-j0v" secondAttribute="centerY" id="bDS-KS-76Q"/>
                     <constraint firstItem="Iob-hP-ReJ" firstAttribute="centerX" secondItem="lgS-wv-j0v" secondAttribute="centerX" id="elU-cg-5LI"/>
+                    <constraint firstItem="Iob-hP-ReJ" firstAttribute="centerY" secondItem="lgS-wv-j0v" secondAttribute="centerY" id="eue-KL-J5y"/>
                     <constraint firstItem="9r1-Zq-28b" firstAttribute="centerY" secondItem="lgS-wv-j0v" secondAttribute="centerY" id="hGw-ah-inh"/>
                     <constraint firstItem="q9p-NU-1tE" firstAttribute="leading" secondItem="Iob-hP-ReJ" secondAttribute="trailing" constant="10" id="la3-Ad-0Ll"/>
                     <constraint firstItem="Iob-hP-ReJ" firstAttribute="top" secondItem="lgS-wv-j0v" secondAttribute="top" constant="30" id="p7Q-LM-kCy"/>
@@ -58,10 +59,12 @@
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
+                        <exclude reference="2W6-Gk-kE2"/>
                         <exclude reference="F3u-vd-HPX"/>
                         <exclude reference="PfC-OH-KaN"/>
                         <exclude reference="ZkG-oe-TFi"/>
                         <exclude reference="aZP-or-eK7"/>
+                        <exclude reference="b8m-FT-PK9"/>
                         <exclude reference="bDS-KS-76Q"/>
                         <exclude reference="p7Q-LM-kCy"/>
                         <exclude reference="rmr-8j-tAI"/>
