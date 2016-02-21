@@ -14,6 +14,7 @@ class MessageTableViewCell: UITableViewCell {
         case Full
         case FullNoPadding
         case PaddingOnly
+        case NoPadding
     }
 
     @IBOutlet weak var userImage: UIImageView!
@@ -51,8 +52,8 @@ class MessageTableViewCell: UITableViewCell {
                     userImageTopConstraint.constant = 0
                     userImageHeightConstraint.constant = MessageTableViewCell.userImageHeight
                     headerHeightConstraint.active = false
-                case .PaddingOnly:
-                    userImageTopConstraint.constant = MessageTableViewCell.paddingTopMin
+                default:
+                    userImageTopConstraint.constant = headerType == .PaddingOnly ? MessageTableViewCell.paddingTopMin : 0
                     userImageHeightConstraint.constant = 0
                     headerHeightConstraint.constant = 0
                     headerHeightConstraint.active = true

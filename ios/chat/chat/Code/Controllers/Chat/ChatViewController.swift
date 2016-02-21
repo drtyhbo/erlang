@@ -16,6 +16,7 @@ class ChatViewController: UIViewController {
     enum RowType {
         case Message(AnyObject, Int)
         case Date(NSDate)
+        case NewMessages
     }
 
     @IBOutlet weak var friendNameLabel: UILabel!
@@ -23,8 +24,6 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     @IBOutlet weak var newMessageContainerBottomConstraint: NSLayoutConstraint!
-
-    @IBOutlet weak var messageLabel: UILabel!
 
     @IBOutlet weak var newMessageView: UITextView!
     @IBOutlet weak var newMessageViewHeightConstraint: NSLayoutConstraint!
@@ -43,6 +42,7 @@ class ChatViewController: UIViewController {
                 rows = []
                 messages = []
 
+                unreadMessageCount = MessageManager.sharedManager.unreadMessageCountForFriend(friend)
                 loadMessages()
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
             }
@@ -53,11 +53,13 @@ class ChatViewController: UIViewController {
     private let newMessagesCellReuseIdentifier = "NewMessagesCellReuseIdentifier"
     private let mediaRowTableViewCellReuseIdentifier = "MediaRowTableViewCell"
     private let dayTableViewCellReuseIdentifier = "DayTableViewCell"
+    private let newMessagesTableViewCellReuseIdentifier = "NewMessagesTableViewCell"
 
     private let fetchLimit = 30
 
     private var rows: [RowType] = []
     private var messages: [Message] = []
+    private var unreadMessageCount = 0
 
     private var imagePickerController: UIImagePickerController?
 
@@ -82,6 +84,7 @@ class ChatViewController: UIViewController {
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "MediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: mediaRowTableViewCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "DayTableViewCell", bundle: nil), forCellReuseIdentifier: dayTableViewCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "NewMessagesTableViewCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
         tableView.contentInset = UIEdgeInsets(top: -8, left: 0, bottom: 16, right: 0)
 
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
@@ -243,6 +246,10 @@ class ChatViewController: UIViewController {
 
             rows.append(.Message(message, i))
         }
+
+        if unreadMessageCount > 0 {
+            rows.insert(.NewMessages, atIndex: rows.count - unreadMessageCount)
+        }
     }
 
     private func headerTypeForRowAtIndexPath(indexPath: NSIndexPath) -> MessageTableViewCell.HeaderType {
@@ -253,6 +260,8 @@ class ChatViewController: UIViewController {
         switch(rows[indexPath.row - 1]) {
             case .Date(_):
                 return .FullNoPadding
+            case .NewMessages:
+                return .NoPadding
             default:
                 break
         }
@@ -295,11 +304,11 @@ class ChatViewController: UIViewController {
 
     @objc private func didReceiveMessage(notification: NSNotification) {
         if let messages = (notification.userInfo?["messages"] as? MessageManager.NewMessagesNotificationWrapper)?.messages {
-            appendMessages(messages)
-
             if let friend = friend {
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
             }
+
+            appendMessages(messages)
         }
     }
 
@@ -363,9 +372,11 @@ extension ChatViewController: UITableViewDataSource {
 
             return cell
         case .Date(let date):
-            let cell = tableView.dequeueReusableCellWithIdentifier(dayTableViewCellReuseIdentifier) as! DayTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(dayTableViewCellReuseIdentifier, forIndexPath: indexPath) as! DayTableViewCell
             cell.date = date
             return cell
+        case .NewMessages:
+            return tableView.dequeueReusableCellWithIdentifier(newMessagesCellReuseIdentifier, forIndexPath: indexPath)
         }
     }
 
@@ -381,6 +392,8 @@ extension ChatViewController: UITableViewDataSource {
             }
         case .Date(_):
             return DayTableViewCell.estimatedRowHeight
+        case .NewMessages:
+            return NewMessagesTableViewCell.estimatedRowHeight
         }
     }
 }

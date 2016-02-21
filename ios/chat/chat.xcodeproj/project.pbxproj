@@ -44,6 +44,8 @@
 		90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */; };
 		90C0F4A11C78CE10007F58BD /* DayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */; };
 		90C0F4A31C79621B007F58BD /* MoviePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F4A21C79621B007F58BD /* MoviePlayer.swift */; };
+		90C0F4AA1C7A1F95007F58BD /* NewMessagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F4A81C7A1F95007F58BD /* NewMessagesTableViewCell.swift */; };
+		90C0F4AB1C7A1F95007F58BD /* NewMessagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90C0F4A91C7A1F95007F58BD /* NewMessagesTableViewCell.xib */; };
 		90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF88B1C47459000A7AD51 /* Assets.xcassets */; };
 		90EBF8A81C4749F700A7AD51 /* andreas.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF8A61C4749F700A7AD51 /* andreas.jpg */; };
 		90EBF8A91C4749F700A7AD51 /* michele.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF8A71C4749F700A7AD51 /* michele.jpg */; };
@@ -94,6 +96,8 @@
 		90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayTableViewCell.swift; sourceTree = "<group>"; };
 		90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DayTableViewCell.xib; sourceTree = "<group>"; };
 		90C0F4A21C79621B007F58BD /* MoviePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviePlayer.swift; sourceTree = "<group>"; };
+		90C0F4A81C7A1F95007F58BD /* NewMessagesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessagesTableViewCell.swift; sourceTree = "<group>"; };
+		90C0F4A91C7A1F95007F58BD /* NewMessagesTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewMessagesTableViewCell.xib; sourceTree = "<group>"; };
 		90EBF8811C47458F00A7AD51 /* chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90EBF88B1C47459000A7AD51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		90EBF8901C47459000A7AD51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -287,6 +291,8 @@
 		90EBF8B81C474CA700A7AD51 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				90C0F4A81C7A1F95007F58BD /* NewMessagesTableViewCell.swift */,
+				90C0F4A91C7A1F95007F58BD /* NewMessagesTableViewCell.xib */,
 				90EBF8B91C474CA700A7AD51 /* ChatRowTableViewCell.swift */,
 				90EBF8BA1C474CA700A7AD51 /* ChatRowTableViewCell.xib */,
 				90EBF8BB1C474CA700A7AD51 /* ChatViewController.swift */,
@@ -372,6 +378,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90C0F4AB1C7A1F95007F58BD /* NewMessagesTableViewCell.xib in Resources */,
 				90EBF8BF1C474CA700A7AD51 /* ChatRowTableViewCell.xib in Resources */,
 				90EBF8A81C4749F700A7AD51 /* andreas.jpg in Resources */,
 				9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */,
@@ -447,6 +454,7 @@
 				9031FFE31C6CC88B00BCC456 /* SecurityHelper.swift in Sources */,
 				90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */,
 				90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */,
+				90C0F4AA1C7A1F95007F58BD /* NewMessagesTableViewCell.swift in Sources */,
 				9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */,
 				90AFD5B51C5D234400236D6B /* APIManager.swift in Sources */,
 				90AFD5C51C608EB200236D6B /* FriendsListViewController.swift in Sources */,

@@ -8,7 +8,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatViewController" customModule="chat" customModuleProvider="target">
             <connections>
                 <outlet property="friendNameLabel" destination="IvW-aD-nsE" id="03O-rs-z3S"/>
-                <outlet property="messageLabel" destination="AL3-2y-Acy" id="b8g-PG-LEb"/>
                 <outlet property="newMessageContainerBottomConstraint" destination="a8j-JC-x2F" id="DfV-0C-BEA"/>
                 <outlet property="newMessageView" destination="yps-z8-waJ" id="Kzu-Mb-0pc"/>
                 <outlet property="newMessageViewHeightConstraint" destination="9jE-1e-uwS" id="ha5-QI-5Fj"/>
