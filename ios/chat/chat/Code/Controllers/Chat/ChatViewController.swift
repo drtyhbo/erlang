@@ -210,11 +210,13 @@ class ChatViewController: UIViewController {
         let previousRowCount = rows.count
         calculateRows()
 
-        tableView.reloadData()
-        tableView.layoutIfNeeded()
+        if isFirstBatch || newMessages.count > 0 {
+            tableView.reloadData()
+            tableView.layoutIfNeeded()
 
-        if rows.count > 0 {
-            tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: (rows.count - previousRowCount) - (isFirstBatch ? 1 : 0), inSection: 0), atScrollPosition: isFirstBatch ? .Bottom : .Top, animated: false)
+            if rows.count > 0 {
+                tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: (rows.count - previousRowCount) - (isFirstBatch ? 1 : 0), inSection: 0), atScrollPosition: isFirstBatch ? .Bottom : .Top, animated: false)
+            }
         }
     }
 
@@ -272,11 +274,7 @@ class ChatViewController: UIViewController {
     @objc private func keyboardWillShow(notification: NSNotification) {
         let info = notification.userInfo!
         let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-
-        let tableViewOverhang = tableView.contentSize.height - (tableView.bounds.size.height - keyboardFrame.size.height)
-        if tableViewOverhang > 0 {
-            self.tableView.contentOffset.y = max(0, self.tableView.contentOffset.y + tableViewOverhang)
-        }
+        self.tableView.contentOffset.y += keyboardFrame.size.height
 
         newMessageContainerBottomConstraint.constant = keyboardFrame.size.height
         UIView.animateWithDuration(0.1, animations: { () -> Void in
@@ -285,6 +283,10 @@ class ChatViewController: UIViewController {
     }
 
     @objc private func keyboardWillHide(notification: NSNotification) {
+        let info = notification.userInfo!
+        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        self.tableView.contentOffset.y -= keyboardFrame.size.height
+
         newMessageContainerBottomConstraint.constant = 0
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.layoutIfNeeded()

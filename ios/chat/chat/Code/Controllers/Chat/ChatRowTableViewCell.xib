@@ -15,7 +15,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="403" height="119"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="andreas.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="eXu-B3-MYT" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User" translatesAutoresizingMaskIntoConstraints="NO" id="eXu-B3-MYT" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
                         <rect key="frame" x="8" y="16" width="48" height="48"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="48" id="jjJ-kO-vlW"/>
@@ -91,6 +91,6 @@ Maybe hit the gym at 5pm?</string>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="andreas.jpg" width="720" height="960"/>
+        <image name="User" width="48" height="48"/>
     </resources>
 </document>

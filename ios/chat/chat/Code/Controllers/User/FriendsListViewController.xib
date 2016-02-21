@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FriendsListViewController" customModule="chat" customModuleProvider="target">
             <connections>
                 <outlet property="friendsTable" destination="YaS-dx-vLu" id="6lm-fc-p8Q"/>
+                <outlet property="profilePic" destination="BH3-TE-Lud" id="Hr5-UV-nzE"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Jw5-aP-fXx"/>
             </connections>
         </placeholder>
@@ -17,21 +18,39 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YaS-dx-vLu">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="532"/>
                     <color key="backgroundColor" red="0.12156862745098039" green="0.12941176470588234" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="ojx-Ko-kf7"/>
                         <outlet property="delegate" destination="-1" id="6KW-wS-wqW"/>
                     </connections>
                 </tableView>
+                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User" translatesAutoresizingMaskIntoConstraints="NO" id="BH3-TE-Lud" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                    <rect key="frame" x="10" y="542" width="48" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="48" id="Ee7-BT-tEA"/>
+                        <constraint firstAttribute="height" constant="48" id="ueI-cW-1Dm"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="0.12156862745098039" green="0.12941176470588234" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0ea-Z2-IYM"/>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6NK-Rq-uxc"/>
                 <constraint firstAttribute="trailing" secondItem="YaS-dx-vLu" secondAttribute="trailing" id="Tym-qB-EJi"/>
+                <constraint firstItem="BH3-TE-Lud" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="UFR-Ra-6eq"/>
                 <constraint firstAttribute="bottom" secondItem="YaS-dx-vLu" secondAttribute="bottom" id="jP9-E6-Zwe"/>
+                <constraint firstAttribute="bottom" secondItem="BH3-TE-Lud" secondAttribute="bottom" constant="10" id="tMv-dh-Wwq"/>
+                <constraint firstItem="BH3-TE-Lud" firstAttribute="top" secondItem="YaS-dx-vLu" secondAttribute="bottom" constant="10" id="zop-Ko-vr2"/>
             </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="jP9-E6-Zwe"/>
+                </mask>
+            </variation>
         </view>
     </objects>
+    <resources>
+        <image name="User" width="48" height="48"/>
+    </resources>
 </document>

@@ -30,6 +30,23 @@ class User {
         }
     }
 
+    static var profilePic: UIImage? {
+        get {
+            return UIImage(contentsOfFile: profilePicUrl.path!)
+        }
+        set {
+            if let profilePic = newValue {
+                UIImagePNGRepresentation(profilePic)!.writeToURL(profilePicUrl, atomically: true)
+            }
+        }
+    }
+
+    static private var profilePicUrl: NSURL {
+        let documentsDirectoryUrl = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).last!)
+        return documentsDirectoryUrl.URLByAppendingPathComponent("ProfilePic.png")
+    }
+
     private static let userIdKey = "userId"
     private static let sessionTokenKey = "sessionToken"
+    private static let profilePicKey = "profilePic"
 }

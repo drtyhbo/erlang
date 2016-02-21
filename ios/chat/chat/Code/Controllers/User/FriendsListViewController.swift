@@ -17,10 +17,13 @@ protocol FriendsListViewControllerDelegate: class {
 
 class FriendsListViewController: UIViewController {
     @IBOutlet weak var friendsTable: UITableView!
+    @IBOutlet weak var profilePic: ChatProfilePic!
 
     weak var delegate: FriendsListViewControllerDelegate?
 
     private let friendCellReuseIdentifier = "FriendTableViewCell"
+
+    private var imagePickerController: UIImagePickerController?
 
     init() {
         super.init(nibName: "FriendsListViewController", bundle: nil)
@@ -34,6 +37,9 @@ class FriendsListViewController: UIViewController {
         super.viewDidLoad()
 
         friendsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
+
+        profilePic.image = User.profilePic ?? UIImage(named: "ProfilePic")
+        profilePic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapProfilePic"))
 
         let contacts = ContactsHelper().getAllContacts()
         FriendManager.sharedManager.loadFriends(contacts.map({ $0.phoneNumber })) {
@@ -58,6 +64,16 @@ class FriendsListViewController: UIViewController {
             completionHandler(false)
         }
     }
+
+    @objc private func didTapProfilePic() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .PhotoLibrary
+        imagePickerController.allowsEditing = true
+        presentViewController(imagePickerController, animated: true, completion: nil)
+
+        self.imagePickerController = imagePickerController
+    }
 }
 
 extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -77,5 +93,18 @@ extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         delegate?.friendsListViewController(self, didSelectFriend: FriendManager.sharedManager.friends[indexPath.row])
+    }
+}
+
+extension FriendsListViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            let resizedImage = image.resizeToSize(Constants.profilePicSize)
+            self.profilePic.image = resizedImage
+            User.profilePic = resizedImage
+        }
+
+        dismissViewControllerAnimated(true, completion: nil)
+        self.imagePickerController = nil
     }
 }

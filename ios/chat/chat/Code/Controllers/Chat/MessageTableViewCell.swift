@@ -31,6 +31,12 @@ class MessageTableViewCell: UITableViewCell {
             let timeFormatter = NSDateFormatter()
             timeFormatter.dateFormat = "H:mm"
             dateLabel.text = timeFormatter.stringFromDate(message.date)
+
+            if message.from == nil {
+                userImage.image = User.profilePic ?? UIImage(named: "ProfilePic")
+            } else {
+                userImage.image = UIImage(named: "ProfilePic")
+            }
         }
     }
 

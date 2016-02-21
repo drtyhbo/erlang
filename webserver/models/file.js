@@ -47,5 +47,5 @@ exports.hasAccess = function(fileId, userId, cb) {
 };
 
 exports.generateSignedUrl = function(fileId, method, contentType) {
-	return s3.getUrl(method, 'files/' + fileId, contentType);
+	return s3.generateSignedUrl(method, 'files/' + fileId, 'drtyhbo-chat', contentType);
 }
