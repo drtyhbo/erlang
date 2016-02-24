@@ -42,7 +42,7 @@ class FriendsListViewController: UIViewController {
         profilePic.image = User.profilePic ?? UIImage(named: "ProfilePic")
         profilePic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapProfilePic"))
 
-        let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.toString() != User.phoneNumber })
+        let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
         FriendManager.sharedManager.loadFriendsFromContacts(contacts) {
             self.friendsTable.reloadData()
         }
@@ -64,16 +64,6 @@ class FriendsListViewController: UIViewController {
         default:
             completionHandler(false)
         }
-    }
-
-    @objc private func didTapProfilePic() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .PhotoLibrary
-        imagePickerController.allowsEditing = true
-        presentViewController(imagePickerController, animated: true, completion: nil)
-
-        self.imagePickerController = imagePickerController
     }
 }
 
@@ -98,31 +88,5 @@ extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         delegate?.friendsListViewController(self, didSelectFriend: FriendManager.sharedManager.friends[indexPath.row])
-    }
-}
-
-extension FriendsListViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
-            let resizedImage = image.resizeToSize(Constants.profilePicSize)
-            self.profilePic.alpha = 0.75
-
-            self.updatingProfilePicActivityIndicator.hidden = false
-            self.updatingProfilePicActivityIndicator.startAnimating()
-
-            APIManager.sharedManager.uploadProfilePic(resizedImage) {
-                success in
-                self.profilePic.alpha = 1
-                self.updatingProfilePicActivityIndicator.hidden = true
-
-                if success {
-                    self.profilePic.image = resizedImage
-                    User.profilePic = resizedImage
-                }
-            }
-        }
-
-        dismissViewControllerAnimated(true, completion: nil)
-        self.imagePickerController = nil
     }
 }

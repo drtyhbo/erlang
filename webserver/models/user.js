@@ -8,7 +8,9 @@ var userKeys = {
 	session: 'session',
 	active: 'active',
 	key: 'key',
-	iosPushToken: 'iosToken'
+	iosPushToken: 'iosToken',
+	firstName: 'firstName',
+	lastName: 'lastName'
 };
 
 function userKeyFromId(id) {
@@ -80,16 +82,19 @@ exports.login = function(phoneNumber, code, key, cb) {
 		if (!code || retrievedCode != code) {
 			return Promise.reject('mismatch');
 		} else {
-			return redis.hgetAsync(userKeyFromId(sharedId), userKeys.session);
+			return redis.hmgetAsync(userKeyFromId(sharedId), userKeys.session, userKeys.firstName, userKeys.lastName);
 		}
-	}).then(function(sessionToken) {
-		if (!sessionToken) {
-			sessionToken = utils.generateSessionToken();
+	}).then(function(values) {
+		if (!values[0]) {
+			values[0] = utils.generateSessionToken();
 		}
 
-		return redis.hmsetAsync(userKeyFromId(sharedId), userKeys.session, sessionToken, userKeys.active, true, userKeys.key, key).thenReturn(sessionToken);
-	}).then(function(sessionToken) {
-		cb(null, sharedId, sessionToken);
+		return redis
+			.hmsetAsync(userKeyFromId(sharedId), userKeys.session, values[0], userKeys.active, true, userKeys.key, key)
+			.thenReturn(values);
+	}).then(function(values) {
+		console.log(values);
+		cb(null, sharedId, values[0], values[1], values[2]);
 	}, function(err) {
 		cb(err);
 	});
@@ -149,6 +154,19 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 
 exports.setDeviceToken = function(userId, token, cb) {
 	redis.hsetAsync(userKeyFromId(userId), userKeys.iosPushToken, token).then(function() {
+		cb();
+	}, function(err) {
+		cb(err);
+	});
+};
+
+exports.updateInfo = function(userId, firstName, lastName, cb) {
+	if (!firstName) {
+		cb('firstName required');
+		return;
+	}
+
+	redis.hmsetAsync(userKeyFromId(userId), userKeys.firstName, firstName, userKeys.lastName || '', lastName).then(function() {
 		cb();
 	}, function(err) {
 		cb(err);

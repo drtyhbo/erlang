@@ -20,7 +20,7 @@ class FriendManager {
     func loadFriendsFromContacts(contacts: [Contact], completion: Void->Void) {
         var contactsByPhoneNumber: [String: Contact] = [:]
         for contact in contacts {
-            contactsByPhoneNumber[contact.phoneNumber.toString()] = contact
+            contactsByPhoneNumber[contact.phoneNumber.fullNumber] = contact
         }
 
         APIManager.sharedManager.getFriendsWithPhoneNumbers(contacts.map({ $0.phoneNumber })) {

@@ -9,13 +9,15 @@
 import Foundation
 
 class PhoneNumber {
-    private var phoneNumber: String
-
-    init(phoneNumber: String) {
-        self.phoneNumber = phoneNumber.characters.count != 11 ? ("1" + phoneNumber) : phoneNumber
+    var fullNumber: String {
+        return "\(countryCode)\(phoneNumber)"
     }
 
-    func toString() -> String {
-        return phoneNumber
+    private(set) var countryCode: String
+    private(set) var phoneNumber: String
+
+    init(phoneNumber: String) {
+        countryCode = "1"
+        self.phoneNumber = phoneNumber
     }
 }

@@ -38,7 +38,7 @@ class ChatViewController: UIViewController {
                 friendNameLabel.text = friend.name
 
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessagesNotification, object: oldValue)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MessageManager.NewMessagesNotification, object: friend)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessagesNotification:", name: MessageManager.NewMessagesNotification, object: friend)
 
                 isAtTop = false
                 rows = []
@@ -314,7 +314,7 @@ class ChatViewController: UIViewController {
         })
     }
 
-    @objc private func didReceiveMessage(notification: NSNotification) {
+    @objc private func didReceiveMessagesNotification(notification: NSNotification) {
         if let messages = (notification.userInfo?["messages"] as? MessageManager.NewMessagesNotificationWrapper)?.messages {
             if let friend = friend {
                 MessageManager.sharedManager.markMessagesForFriendAsRead(friend)

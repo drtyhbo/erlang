@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class ConfirmCodeViewController: UIViewController {
+    @IBOutlet weak var instructionalLabel: UILabel!
     @IBOutlet weak var code: UITextField!
 
     private let phoneNumber: PhoneNumber!
@@ -26,18 +27,40 @@ class ConfirmCodeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let nextButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "confirmCode")
+        setupNextButton()
+        
+        navigationItem.title = PhoneNumberFormatter().formatPhoneNumber(phoneNumber.phoneNumber)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .Plain, target: nil, action: nil)
+
+        instructionalLabel.text = String(format: instructionalLabel.text!, PhoneNumberFormatter().formatPhoneNumber(phoneNumber.phoneNumber))
+
+        code.addTarget(self, action: "codeDidChange:", forControlEvents: .EditingChanged)
+        code.becomeFirstResponder()
+    }
+
+    private func setupNextButton() {
+        let nextButton = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: "confirmPhoneNumber")
         navigationItem.rightBarButtonItem = nextButton
     }
 
+    private func setupActivityIndicator() {
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+        activityIndicator.startAnimating()
+    }
+
     @objc private func confirmCode() {
+        code.enabled = false
         APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", key: SecurityHelper.sharedHelper.publicKey!) {
-            userId, sessionToken, error in
+            userId, sessionToken, firstName, lastName, error in
+            self.code.enabled = true
             if let userId = userId, sessionToken = sessionToken {
                 User.userId = userId
                 User.sessionToken = sessionToken
+                User.firstName = firstName
+                User.lastName = lastName
 
-                self.navigationController?.pushViewController(MainViewController(), animated: true)
+                self.navigationController?.pushViewController(UserInfoViewController(), animated: true)
             } else if let error = error {
                 switch(error.error) {
                 case "mismatch":
@@ -51,6 +74,12 @@ class ConfirmCodeViewController: UIViewController {
 
     @IBAction func tapConfirm() {
         confirmCode()
+    }
+
+    @objc private func codeDidChange(textField: UITextField) {
+        if textField.text?.characters.count == 6 {
+            confirmCode()
+        }
     }
 }
 

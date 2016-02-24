@@ -10,7 +10,12 @@ import Foundation
 import UIKit
 
 class PhoneNumberViewController: UIViewController {
-    @IBOutlet weak var phoneNumber: UITextField!
+    @IBOutlet weak var phoneNumberTextField: UITextField!
+
+    private var currentPhoneNumber: String {
+        let notDigits = NSCharacterSet.decimalDigitCharacterSet().invertedSet
+        return (phoneNumberTextField.text ?? "").componentsSeparatedByCharactersInSet(notDigits).joinWithSeparator("")
+    }
 
     init() {
         super.init(nibName: "PhoneNumberViewController", bundle: nil)
@@ -23,31 +28,50 @@ class PhoneNumberViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupConfirmButton()
+        setupNextButton()
+
+        navigationItem.title = "Phone Number"
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .Plain, target: nil, action: nil)
+
+        phoneNumberTextField.addTarget(self, action: "phoneNumberDidChange:", forControlEvents: .EditingChanged)
+        phoneNumberTextField.becomeFirstResponder()
     }
 
     @objc private func confirmPhoneNumber() {
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
-        activityIndicator.startAnimating()
+        setupActivityIndicator()
 
-        let phoneNumber = PhoneNumber(phoneNumber: self.phoneNumber.text ?? "")
+        let phoneNumber = PhoneNumber(phoneNumber: currentPhoneNumber)
         APIManager.sharedManager.registerPhoneNumber(phoneNumber) {
             result in
             if result {
-                User.phoneNumber = phoneNumber.toString()
+                User.phoneNumber = phoneNumber.fullNumber
 
                 let confirmCodeViewController = ConfirmCodeViewController(phoneNumber: phoneNumber)
                 self.navigationController?.pushViewController(confirmCodeViewController, animated: true)
 
-                self.setupConfirmButton()
+                self.setupNextButton()
             }
         }
     }
 
-    private func setupConfirmButton() {
-        let nextButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "confirmPhoneNumber")
+    private func setupNextButton() {
+        let nextButton = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: "confirmPhoneNumber")
         navigationItem.rightBarButtonItem = nextButton
+    }
+
+    private func setupActivityIndicator() {
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+        activityIndicator.startAnimating()
+    }
+
+    @objc private func phoneNumberDidChange(textField: UITextField) {
+        var phoneNumber = currentPhoneNumber
+        if phoneNumber.characters.count > 10 {
+            phoneNumber = phoneNumber.substringWithRange(phoneNumber.startIndex..<phoneNumber.startIndex.advancedBy(10))
+        }
+
+        textField.text = PhoneNumberFormatter().formatPhoneNumber(phoneNumber)
     }
 }
 
