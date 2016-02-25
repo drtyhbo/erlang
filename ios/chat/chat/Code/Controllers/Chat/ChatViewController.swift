@@ -58,6 +58,7 @@ class ChatViewController: UIViewController {
     private let conversationStartCellReuseIdentifier = "ConversationStartTableViewCell"
 
     private let fetchLimit = 30
+    private let keyboardNotifications = KeyboardNotifications()
 
     private var isAtTop = false
     private var rows: [RowType] = []
@@ -65,6 +66,10 @@ class ChatViewController: UIViewController {
     private var unreadMessageCount = 0
 
     private var imagePickerController: UIImagePickerController?
+
+    deinit {
+        keyboardNotifications.removeNotifications()
+    }
 
     init() {
         super.init(nibName: "ChatViewController", bundle: nil)
@@ -96,8 +101,13 @@ class ChatViewController: UIViewController {
 
         unreadMessagesContainer.layer.cornerRadius = unreadMessagesContainer.bounds.size.height / 2
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        keyboardNotifications.addNotificationsForWillShow({
+                size in
+                self.keyboardWillShowWithSize(size)
+            }, willHide: {
+                size in
+                self.keyboardWillHideWithSize(size)
+            });
 
         navigationItem.title = "Chat"
 
@@ -292,21 +302,17 @@ class ChatViewController: UIViewController {
         }
     }
 
-    @objc private func keyboardWillShow(notification: NSNotification) {
-        let info = notification.userInfo!
-        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        self.tableView.contentOffset.y += keyboardFrame.size.height
+    private func keyboardWillShowWithSize(keyboardSize: CGSize) {
+        self.tableView.contentOffset.y += keyboardSize.height
 
-        newMessageContainerBottomConstraint.constant = keyboardFrame.size.height
+        newMessageContainerBottomConstraint.constant = keyboardSize.height
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
     }
 
-    @objc private func keyboardWillHide(notification: NSNotification) {
-        let info = notification.userInfo!
-        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        self.tableView.contentOffset.y -= keyboardFrame.size.height
+    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
+        self.tableView.contentOffset.y -= keyboardSize.height
 
         newMessageContainerBottomConstraint.constant = 0
         UIView.animateWithDuration(0.1, animations: { () -> Void in

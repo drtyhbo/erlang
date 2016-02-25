@@ -13,6 +13,10 @@ class UserInfoViewController: UIViewController {
     @IBOutlet weak var profilePic: ChatProfilePic!
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
+    @IBOutlet weak var userInfoContainer: UIView!
+    @IBOutlet weak var userInfoContainerVerticalConstraint: NSLayoutConstraint!
+
+    private let keyboardNotifications = KeyboardNotifications()
 
     private var profilePicImage: UIImage?
     private var imagePickerController: UIImagePickerController!
@@ -29,6 +33,14 @@ class UserInfoViewController: UIViewController {
         super.viewDidLoad()
 
         setupNextButton()
+
+        keyboardNotifications.addNotificationsForWillShow({
+                size in
+                self.keyboardWillShowWithSize(size)
+            }, willHide: {
+                size in
+                self.keyboardWillHideWithSize(size)
+            });
 
         profilePic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapProfilePic"))
 
@@ -81,6 +93,17 @@ class UserInfoViewController: UIViewController {
         }
     }
 
+    private func keyboardWillShowWithSize(keyboardSize: CGSize) {
+        let overlap = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + userInfoContainer.bounds.size.height / 2)
+        if overlap < 0 {
+            userInfoContainerVerticalConstraint.constant = overlap
+        }
+    }
+
+    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
+        userInfoContainerVerticalConstraint.constant = 0
+    }
+
     @objc private func didTapProfilePic() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
@@ -89,6 +112,17 @@ class UserInfoViewController: UIViewController {
         presentViewController(imagePickerController, animated: true, completion: nil)
 
         self.imagePickerController = imagePickerController
+    }
+}
+
+extension UserInfoViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == firstName {
+            lastName.becomeFirstResponder()
+        } else if textField == lastName {
+            saveInfo()
+        }
+        return false
     }
 }
 

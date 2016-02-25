@@ -11,10 +11,18 @@ import UIKit
 
 class PhoneNumberViewController: UIViewController {
     @IBOutlet weak var phoneNumberTextField: UITextField!
+    @IBOutlet weak var phoneNumberContainer: UIView!
+    @IBOutlet weak var phoneNumberContainerVerticalConstraint: NSLayoutConstraint!
+
+    private let keyboardNotifications = KeyboardNotifications()
 
     private var currentPhoneNumber: String {
         let notDigits = NSCharacterSet.decimalDigitCharacterSet().invertedSet
         return (phoneNumberTextField.text ?? "").componentsSeparatedByCharactersInSet(notDigits).joinWithSeparator("")
+    }
+
+    deinit {
+        keyboardNotifications.removeNotifications()
     }
 
     init() {
@@ -32,6 +40,14 @@ class PhoneNumberViewController: UIViewController {
 
         navigationItem.title = "Phone Number"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .Plain, target: nil, action: nil)
+
+        keyboardNotifications.addNotificationsForWillShow({
+                size in
+                self.keyboardWillShowWithSize(size)
+            }, willHide: {
+                size in
+                self.keyboardWillHideWithSize(size)
+            });
 
         phoneNumberTextField.addTarget(self, action: "phoneNumberDidChange:", forControlEvents: .EditingChanged)
         phoneNumberTextField.becomeFirstResponder()
@@ -56,6 +72,7 @@ class PhoneNumberViewController: UIViewController {
 
     private func setupNextButton() {
         let nextButton = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: "confirmPhoneNumber")
+        nextButton.enabled = (phoneNumberTextField.text ?? "").characters.count == 10
         navigationItem.rightBarButtonItem = nextButton
     }
 
@@ -65,12 +82,24 @@ class PhoneNumberViewController: UIViewController {
         activityIndicator.startAnimating()
     }
 
+    private func keyboardWillShowWithSize(keyboardSize: CGSize) {
+        let overlap = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + phoneNumberContainer.bounds.size.height / 2)
+        if overlap < 0 {
+            phoneNumberContainerVerticalConstraint.constant = overlap
+        }
+    }
+
+    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
+        phoneNumberContainerVerticalConstraint.constant = 0
+    }
+
     @objc private func phoneNumberDidChange(textField: UITextField) {
         var phoneNumber = currentPhoneNumber
         if phoneNumber.characters.count > 10 {
             phoneNumber = phoneNumber.substringWithRange(phoneNumber.startIndex..<phoneNumber.startIndex.advancedBy(10))
         }
 
+        navigationItem.rightBarButtonItem?.enabled = phoneNumber.characters.count == 10
         textField.text = PhoneNumberFormatter().formatPhoneNumber(phoneNumber)
     }
 }

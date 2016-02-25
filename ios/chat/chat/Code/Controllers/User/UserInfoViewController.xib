@@ -10,6 +10,8 @@
                 <outlet property="firstName" destination="Ujj-yv-ND1" id="ytL-Zj-RG8"/>
                 <outlet property="lastName" destination="xkA-yX-wAY" id="O4S-Np-gkP"/>
                 <outlet property="profilePic" destination="Sny-7T-Kgo" id="Tla-4K-lq5"/>
+                <outlet property="userInfoContainer" destination="hcm-jg-sjY" id="VxO-h8-zaO"/>
+                <outlet property="userInfoContainerVerticalConstraint" destination="yWa-uy-ivo" id="hST-Os-3hw"/>
                 <outlet property="view" destination="iN0-l3-epB" id="4dS-lK-VPf"/>
             </connections>
         </placeholder>
@@ -21,10 +23,9 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LPz-dY-r22">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="238"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhP-Oi-dee">
-                            <rect key="frame" x="20" y="79" width="560" height="82"/>
-                            <string key="text">Last step we promise 😀  Please enter your first name and last name (optional). A profile picture is encouraged but not required!</string>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last step we promise 😀  First name is required, everything else is optional." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhP-Oi-dee">
+                            <rect key="frame" x="20" y="92" width="560" height="54"/>
+                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -76,25 +77,25 @@
                                     </variation>
                                 </view>
                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ProfilePic" translatesAutoresizingMaskIntoConstraints="NO" id="Sny-7T-Kgo" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
-                                    <rect key="frame" x="30" y="30" width="64" height="64"/>
+                                    <rect key="frame" x="20" y="20" width="84" height="84"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="64" id="O7j-HA-re3"/>
-                                        <constraint firstAttribute="width" constant="64" id="f7G-qT-8H2"/>
+                                        <constraint firstAttribute="height" constant="84" id="O7j-HA-re3"/>
+                                        <constraint firstAttribute="width" constant="84" id="f7G-qT-8H2"/>
                                     </constraints>
                                 </imageView>
                             </subviews>
                             <constraints>
-                                <constraint firstItem="Sny-7T-Kgo" firstAttribute="leading" secondItem="LJH-8J-lJ6" secondAttribute="leading" constant="30" id="2gW-l4-T7a"/>
+                                <constraint firstItem="Sny-7T-Kgo" firstAttribute="leading" secondItem="LJH-8J-lJ6" secondAttribute="leading" constant="20" id="2gW-l4-T7a"/>
                                 <constraint firstAttribute="width" constant="68" id="Hlg-vI-sF2"/>
                                 <constraint firstItem="Sny-7T-Kgo" firstAttribute="centerX" secondItem="LJH-8J-lJ6" secondAttribute="centerX" id="Irf-vf-PWm"/>
                                 <constraint firstAttribute="bottom" secondItem="3hL-6w-QSC" secondAttribute="bottom" id="R5y-dh-xtr"/>
                                 <constraint firstItem="Sny-7T-Kgo" firstAttribute="centerY" secondItem="LJH-8J-lJ6" secondAttribute="centerY" id="SH3-NT-gfJ"/>
                                 <constraint firstAttribute="trailing" secondItem="3hL-6w-QSC" secondAttribute="trailing" id="UXS-Rf-uxW"/>
-                                <constraint firstItem="Sny-7T-Kgo" firstAttribute="top" secondItem="LJH-8J-lJ6" secondAttribute="top" constant="30" id="ajE-MO-r4D"/>
-                                <constraint firstAttribute="bottom" secondItem="Sny-7T-Kgo" secondAttribute="bottom" constant="30" id="lvu-OK-o5y"/>
+                                <constraint firstItem="Sny-7T-Kgo" firstAttribute="top" secondItem="LJH-8J-lJ6" secondAttribute="top" constant="20" id="ajE-MO-r4D"/>
+                                <constraint firstAttribute="bottom" secondItem="Sny-7T-Kgo" secondAttribute="bottom" constant="20" id="lvu-OK-o5y"/>
                                 <constraint firstAttribute="height" constant="64" id="sOO-iB-lzo"/>
                                 <constraint firstItem="3hL-6w-QSC" firstAttribute="top" secondItem="LJH-8J-lJ6" secondAttribute="top" id="tPp-U2-TG3"/>
-                                <constraint firstItem="3hL-6w-QSC" firstAttribute="leading" secondItem="Sny-7T-Kgo" secondAttribute="trailing" constant="30" id="vAR-J1-5VB"/>
+                                <constraint firstItem="3hL-6w-QSC" firstAttribute="leading" secondItem="Sny-7T-Kgo" secondAttribute="trailing" constant="20" id="vAR-J1-5VB"/>
                             </constraints>
                             <variation key="default">
                                 <mask key="constraints">
@@ -115,10 +116,13 @@
                                         <constraint firstAttribute="height" constant="1" id="pSb-rG-DDz"/>
                                     </constraints>
                                 </view>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First Name" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ujj-yv-ND1">
-                                    <rect key="frame" x="10" y="19" width="101" height="24"/>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First Name" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="Ujj-yv-ND1">
+                                    <rect key="frame" x="10" y="19" width="455" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-1" id="lbJ-WB-esP"/>
+                                    </connections>
                                 </textField>
                             </subviews>
                             <constraints>
@@ -128,6 +132,7 @@
                                 <constraint firstAttribute="bottom" secondItem="X6v-GI-sgH" secondAttribute="bottom" id="InI-bq-N8C"/>
                                 <constraint firstAttribute="trailing" secondItem="X6v-GI-sgH" secondAttribute="trailing" id="Si5-5E-TU8"/>
                                 <constraint firstItem="Ujj-yv-ND1" firstAttribute="leading" secondItem="l8p-ti-J89" secondAttribute="leading" constant="10" id="ie2-Rh-kIY"/>
+                                <constraint firstAttribute="trailing" secondItem="Ujj-yv-ND1" secondAttribute="trailing" constant="10" id="mW7-dS-inC"/>
                                 <constraint firstAttribute="width" constant="128" id="p2L-bL-eQd"/>
                                 <constraint firstItem="Ujj-yv-ND1" firstAttribute="centerY" secondItem="l8p-ti-J89" secondAttribute="centerY" id="tkB-ws-DLM"/>
                             </constraints>
@@ -142,10 +147,13 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="faB-LO-0pR" userLabel="Last Name Container">
                             <rect key="frame" x="125" y="63" width="475" height="62"/>
                             <subviews>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last Name (optional)" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xkA-yX-wAY">
-                                    <rect key="frame" x="10" y="19" width="191" height="24"/>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last Name" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="xkA-yX-wAY">
+                                    <rect key="frame" x="10" y="19" width="455" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-1" id="mc9-0m-Soq"/>
+                                    </connections>
                                 </textField>
                             </subviews>
                             <constraints>
@@ -153,6 +161,7 @@
                                 <constraint firstItem="xkA-yX-wAY" firstAttribute="centerY" secondItem="faB-LO-0pR" secondAttribute="centerY" id="6Bi-gr-vbL"/>
                                 <constraint firstAttribute="height" constant="64" id="6om-cG-v8Z"/>
                                 <constraint firstAttribute="height" constant="64" id="9u4-6D-spR"/>
+                                <constraint firstAttribute="trailing" secondItem="xkA-yX-wAY" secondAttribute="trailing" constant="10" id="d8H-dW-40W"/>
                                 <constraint firstItem="xkA-yX-wAY" firstAttribute="leading" secondItem="faB-LO-0pR" secondAttribute="leading" constant="10" id="ow8-Hi-DZM"/>
                             </constraints>
                             <variation key="default">
@@ -213,6 +222,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ProfilePic" width="64" height="64"/>
+        <image name="ProfilePic" width="84" height="84"/>
     </resources>
 </document>

@@ -12,8 +12,13 @@ import UIKit
 class ConfirmCodeViewController: UIViewController {
     @IBOutlet weak var instructionalLabel: UILabel!
     @IBOutlet weak var code: UITextField!
+    @IBOutlet weak var confirmCodeContainer: UIView!
+    @IBOutlet weak var confirmCodeVerticalConstraint: NSLayoutConstraint!
 
+    private let keyboardNotifications = KeyboardNotifications()
     private let phoneNumber: PhoneNumber!
+
+    private var isConfirming = false
 
     init(phoneNumber: PhoneNumber) {
         self.phoneNumber = phoneNumber
@@ -27,10 +32,16 @@ class ConfirmCodeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupNextButton()
-        
         navigationItem.title = PhoneNumberFormatter().formatPhoneNumber(phoneNumber.phoneNumber)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .Plain, target: nil, action: nil)
+
+        keyboardNotifications.addNotificationsForWillShow({
+                size in
+                self.keyboardWillShowWithSize(size)
+            }, willHide: {
+                size in
+                self.keyboardWillHideWithSize(size)
+            });
 
         instructionalLabel.text = String(format: instructionalLabel.text!, PhoneNumberFormatter().formatPhoneNumber(phoneNumber.phoneNumber))
 
@@ -38,8 +49,14 @@ class ConfirmCodeViewController: UIViewController {
         code.becomeFirstResponder()
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
+        setupNextButton()
+    }
+
     private func setupNextButton() {
-        let nextButton = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: "confirmPhoneNumber")
+        let nextButton = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: "confirmCode")
         navigationItem.rightBarButtonItem = nextButton
     }
 
@@ -49,11 +66,27 @@ class ConfirmCodeViewController: UIViewController {
         activityIndicator.startAnimating()
     }
 
+    private func keyboardWillShowWithSize(keyboardSize: CGSize) {
+        let overlap = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + confirmCodeContainer.bounds.size.height / 2)
+        if overlap < 0 {
+            confirmCodeVerticalConstraint.constant = overlap
+        }
+    }
+
+    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
+        confirmCodeVerticalConstraint.constant = 0
+    }
+
     @objc private func confirmCode() {
-        code.enabled = false
+        setupActivityIndicator()
+        isConfirming = true
+
         APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", key: SecurityHelper.sharedHelper.publicKey!) {
             userId, sessionToken, firstName, lastName, error in
-            self.code.enabled = true
+
+            self.setupNextButton()
+            self.isConfirming = false
+
             if let userId = userId, sessionToken = sessionToken {
                 User.userId = userId
                 User.sessionToken = sessionToken
@@ -61,13 +94,6 @@ class ConfirmCodeViewController: UIViewController {
                 User.lastName = lastName
 
                 self.navigationController?.pushViewController(UserInfoViewController(), animated: true)
-            } else if let error = error {
-                switch(error.error) {
-                case "mismatch":
-                    print ("mismatch")
-                default:
-                    print ("error")
-                }
             }
         }
     }
@@ -84,6 +110,10 @@ class ConfirmCodeViewController: UIViewController {
 }
 
 extension ConfirmCodeViewController: UITextFieldDelegate {
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        return !isConfirming
+    }
+
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         confirmCode()
         return true

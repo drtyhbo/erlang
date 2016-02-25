@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PhoneNumberViewController" customModule="chat" customModuleProvider="target">
             <connections>
+                <outlet property="phoneNumberContainer" destination="bhn-7W-FME" id="5eu-q3-NE5"/>
+                <outlet property="phoneNumberContainerVerticalConstraint" destination="laZ-qf-zlb" id="9q9-Dv-AuR"/>
                 <outlet property="phoneNumberTextField" destination="B84-nj-gRo" id="miK-RA-DX9"/>
                 <outlet property="view" destination="iN0-l3-epB" id="oIk-fj-Q7R"/>
             </connections>
@@ -20,8 +22,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="236"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter your phone number." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VF0-xs-S4i">
-                            <rect key="frame" x="174" y="107" width="253" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="188" y="109" width="224" height="18"/>
+                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -45,9 +47,16 @@
                                         <constraint firstAttribute="height" constant="1" id="G4e-UT-745"/>
                                     </constraints>
                                 </view>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="us.png" translatesAutoresizingMaskIntoConstraints="NO" id="PRE-bV-VOR">
+                                    <rect key="frame" x="20" y="24" width="22" height="16"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="16" id="U4d-Bh-CU0"/>
+                                        <constraint firstAttribute="width" constant="22" id="i4f-ZU-D6r"/>
+                                    </constraints>
+                                </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="United States of America" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SF8-s0-JRR">
-                                    <rect key="frame" x="20" y="1" width="223" height="62"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                    <rect key="frame" x="52" y="1" width="191" height="62"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -63,15 +72,23 @@
                             <constraints>
                                 <constraint firstItem="SF8-s0-JRR" firstAttribute="leading" secondItem="Sfe-V4-q1i" secondAttribute="leading" constant="20" id="3tC-7r-Jpg"/>
                                 <constraint firstItem="IEY-O3-XI8" firstAttribute="leading" secondItem="Sfe-V4-q1i" secondAttribute="leading" id="DuC-dU-5tf"/>
+                                <constraint firstItem="PRE-bV-VOR" firstAttribute="leading" secondItem="Sfe-V4-q1i" secondAttribute="leading" constant="20" id="EWH-Ti-9UB"/>
                                 <constraint firstAttribute="height" constant="64" id="GAP-ob-b2p"/>
                                 <constraint firstItem="McU-al-qrX" firstAttribute="top" secondItem="Sfe-V4-q1i" secondAttribute="top" id="JJI-Z1-XNv"/>
                                 <constraint firstItem="SF8-s0-JRR" firstAttribute="centerY" secondItem="Sfe-V4-q1i" secondAttribute="centerY" id="L0E-QC-7Az"/>
                                 <constraint firstItem="McU-al-qrX" firstAttribute="leading" secondItem="Sfe-V4-q1i" secondAttribute="leading" id="Lc7-yB-omR"/>
                                 <constraint firstAttribute="trailing" secondItem="McU-al-qrX" secondAttribute="trailing" id="MDD-a6-eZr"/>
                                 <constraint firstItem="SF8-s0-JRR" firstAttribute="top" secondItem="McU-al-qrX" secondAttribute="bottom" id="MZP-Da-IQY"/>
+                                <constraint firstItem="PRE-bV-VOR" firstAttribute="centerY" secondItem="Sfe-V4-q1i" secondAttribute="centerY" id="YI9-RL-fA4"/>
+                                <constraint firstItem="SF8-s0-JRR" firstAttribute="leading" secondItem="PRE-bV-VOR" secondAttribute="trailing" constant="10" id="d3f-dx-Pf6"/>
                                 <constraint firstAttribute="trailing" secondItem="IEY-O3-XI8" secondAttribute="trailing" id="eEN-yU-qoj"/>
                                 <constraint firstAttribute="bottom" secondItem="IEY-O3-XI8" secondAttribute="bottom" id="mmw-s5-cJh"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="3tC-7r-Jpg"/>
+                                </mask>
+                            </variation>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xxn-0j-R39">
                             <rect key="frame" x="0.0" y="64" width="600" height="64"/>
@@ -81,7 +98,7 @@
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CyR-Fp-C0g">
                                             <rect key="frame" x="0.0" y="0.0" width="54" height="64"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -112,7 +129,7 @@
                                     </constraints>
                                 </view>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your phone number" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="B84-nj-gRo">
-                                    <rect key="frame" x="104" y="0.0" width="496" height="64"/>
+                                    <rect key="frame" x="94" y="0.0" width="506" height="64"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 </textField>
@@ -126,7 +143,7 @@
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstItem="B84-nj-gRo" firstAttribute="leading" secondItem="367-oa-D7q" secondAttribute="trailing" constant="30" id="0BL-gO-WZv"/>
+                                <constraint firstItem="B84-nj-gRo" firstAttribute="leading" secondItem="367-oa-D7q" secondAttribute="trailing" constant="20" id="0BL-gO-WZv"/>
                                 <constraint firstItem="B84-nj-gRo" firstAttribute="top" secondItem="xxn-0j-R39" secondAttribute="top" id="3v6-md-0Up"/>
                                 <constraint firstAttribute="trailing" secondItem="B84-nj-gRo" secondAttribute="trailing" id="5ms-Qz-ERE"/>
                                 <constraint firstAttribute="trailing" secondItem="Jcw-R6-mtQ" secondAttribute="trailing" id="Bmr-OM-efa"/>
@@ -171,4 +188,7 @@
             </variation>
         </view>
     </objects>
+    <resources>
+        <image name="us.png" width="21" height="15"/>
+    </resources>
 </document>
