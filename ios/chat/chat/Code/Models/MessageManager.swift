@@ -32,6 +32,14 @@ class MessageManager {
     static let FriendUnreadMessageCountReset = "FriendUnreadMessageCountReset"
     static let TotalUnreadMessageCountUpdated = "TotalUnreadMessageCountUpdated"
 
+    var unreadMessageCount: Int {
+        var unreadMessageCount = 0
+        for (_, count) in unreadMessageCountForFriend {
+            unreadMessageCount += count
+        }
+        return unreadMessageCount
+    }
+
     private var unreadMessageCountForFriend: [Friend:Int] = [:]
 
     private var messageSender = MessageSender()

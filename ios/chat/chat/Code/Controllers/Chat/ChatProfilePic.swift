@@ -12,6 +12,7 @@ import UIKit
 class ChatProfilePic: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
+        contentMode = .ScaleAspectFill
         layer.cornerRadius = 5
     }
 }

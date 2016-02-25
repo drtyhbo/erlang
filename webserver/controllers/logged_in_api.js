@@ -113,6 +113,23 @@ router.post('/profilepic/', function(req, res) {
  * Request parameters:
  * userId - Current user id.
  * session - Current user session.
+ * firstName - The user's first name.
+ * lastName - The user's last name.
+ */
+router.post('/info/update/', function(req, res) {
+	var firstName = req.body.firstName;
+	var lastName = req.body.lastName;
+	user.updateInfo(req.userId, firstName, lastName, function(err) {
+		res.send({
+			'status': err || 'ok'
+		});
+	});
+});
+
+/*
+ * Request parameters:
+ * userId - Current user id.
+ * session - Current user session.
  * url - The id of the file.
  */
 router.post('/url/metadata/', function(req, res) {

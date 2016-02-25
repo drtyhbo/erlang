@@ -203,7 +203,7 @@ handle_msg_json(Json, State) ->
 	_ ->
 		ok
 	end,
-	%%secure_chat_pns:send_notification(To, State#user_state.name ++ " has sent you a message"),
+	secure_chat_pns:send_content_available_notification(To),
 	State#user_state{local_id=LocalId + 1}.
 
 

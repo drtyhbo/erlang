@@ -40,6 +40,26 @@ class User {
         }
     }
 
+    static var firstName: String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(firstNameKey)
+        }
+        set {
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: firstNameKey)
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+    }
+
+    static var lastName: String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(lastNameKey)
+        }
+        set {
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: lastNameKey)
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+    }
+
     static var profilePic: UIImage? {
         get {
             return UIImage(contentsOfFile: profilePicUrl.path!)
@@ -60,4 +80,7 @@ class User {
     private static let phoneNumberKey = "phoneNumber"
     private static let userIdKey = "userId"
     private static let sessionTokenKey = "sessionToken"
+    private static let firstNameKey = "firstName"
+    private static let lastNameKey = "lastName"
+
 }

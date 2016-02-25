@@ -26,21 +26,21 @@ class APIManager: NSObject {
 
     func registerPhoneNumber(phoneNumber: PhoneNumber, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
-            "phone": phoneNumber.toString()
+            "phone": phoneNumber.fullNumber
         ]) {
             json in
             callback(self.errorFromJson(json) == nil)
         }
     }
 
-    func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, key: String, callback: (String?, String?, Error?)->Void) {
+    func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, key: String, callback: (String?, String?, String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
-            "phone": phoneNumber.toString(),
+            "phone": phoneNumber.fullNumber,
             "code": code,
             "key": key,
         ]) {
             json in
-            callback(json?["id"].string, json?["sessionToken"].string, self.errorFromJson(json))
+            callback(json?["id"].string, json?["sessionToken"].string, json?["firstName"].string, json?["lastName"].string, self.errorFromJson(json))
         }
     }
 
@@ -52,7 +52,7 @@ class APIManager: NSObject {
 
     func getFriendsWithPhoneNumbers(phoneNumbers: [PhoneNumber], callback: [FriendData]->Void) {
         sendUserRequestToUrl("friend/check/", parameters: [
-            "phone": [phoneNumbers.map({ $0.toString() })],
+            "phone": [phoneNumbers.map({ $0.fullNumber })],
         ]) {
             json in
 
@@ -77,6 +77,16 @@ class APIManager: NSObject {
         sendUserRequestToUrl("pns/register/", parameters: [
             "token": deviceToken,
             "type": "ios"
+        ]) {
+            json in
+            callback(json != nil && json!["status"].string == "ok")
+        }
+    }
+
+    func updateInfoWithFirstName(firstName: String, lastName: String, callback: Bool->Void) {
+        sendUserRequestToUrl("info/update/", parameters: [
+            "firstName": firstName,
+            "lastName": lastName
         ]) {
             json in
             callback(json != nil && json!["status"].string == "ok")
