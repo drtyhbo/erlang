@@ -18,6 +18,7 @@ class UserInfoViewController: UIViewController {
 
     private let keyboardNotifications = KeyboardNotifications()
 
+    private var isSaving = false
     private var profilePicImage: UIImage?
     private var imagePickerController: UIImagePickerController!
 
@@ -37,9 +38,6 @@ class UserInfoViewController: UIViewController {
         keyboardNotifications.addNotificationsForWillShow({
                 size in
                 self.keyboardWillShowWithSize(size)
-            }, willHide: {
-                size in
-                self.keyboardWillHideWithSize(size)
             });
 
         profilePic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapProfilePic"))
@@ -63,11 +61,13 @@ class UserInfoViewController: UIViewController {
     }
 
     @objc private func saveInfo() {
+        isSaving = true
         setupActivityIndicator()
 
         APIManager.sharedManager.updateInfoWithFirstName(firstName.text ?? "", lastName: lastName.text ?? "") {
             success in
             if !success {
+                self.isSaving = false
                 self.setupNextButton()
                 return
             }
@@ -84,27 +84,27 @@ class UserInfoViewController: UIViewController {
         APIManager.sharedManager.uploadProfilePic(profilePicImage) {
             success in
             if !success {
+                self.isSaving = false
                 self.setupNextButton()
                 return
             }
 
+            User.firstName = self.firstName.text
+            User.lastName = self.lastName.text
             User.profilePic = profilePicImage
             self.showMainViewController()
         }
     }
 
     private func keyboardWillShowWithSize(keyboardSize: CGSize) {
-        let overlap = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + userInfoContainer.bounds.size.height / 2)
-        if overlap < 0 {
-            userInfoContainerVerticalConstraint.constant = overlap
-        }
-    }
-
-    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
-        userInfoContainerVerticalConstraint.constant = 0
+        userInfoContainerVerticalConstraint.constant = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + userInfoContainer.bounds.size.height / 2)
     }
 
     @objc private func didTapProfilePic() {
+        if isSaving {
+            return
+        }
+
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .PhotoLibrary
@@ -123,6 +123,10 @@ extension UserInfoViewController: UITextFieldDelegate {
             saveInfo()
         }
         return false
+    }
+
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        return !isSaving
     }
 }
 

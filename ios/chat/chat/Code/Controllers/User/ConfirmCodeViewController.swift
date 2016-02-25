@@ -38,9 +38,6 @@ class ConfirmCodeViewController: UIViewController {
         keyboardNotifications.addNotificationsForWillShow({
                 size in
                 self.keyboardWillShowWithSize(size)
-            }, willHide: {
-                size in
-                self.keyboardWillHideWithSize(size)
             });
 
         instructionalLabel.text = String(format: instructionalLabel.text!, PhoneNumberFormatter().formatPhoneNumber(phoneNumber.phoneNumber))
@@ -67,14 +64,7 @@ class ConfirmCodeViewController: UIViewController {
     }
 
     private func keyboardWillShowWithSize(keyboardSize: CGSize) {
-        let overlap = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + confirmCodeContainer.bounds.size.height / 2)
-        if overlap < 0 {
-            confirmCodeVerticalConstraint.constant = overlap
-        }
-    }
-
-    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
-        confirmCodeVerticalConstraint.constant = 0
+        confirmCodeVerticalConstraint.constant = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + confirmCodeContainer.bounds.size.height / 2)
     }
 
     @objc private func confirmCode() {
@@ -93,7 +83,7 @@ class ConfirmCodeViewController: UIViewController {
                 User.firstName = firstName
                 User.lastName = lastName
 
-                self.navigationController?.pushViewController(UserInfoViewController(), animated: true)
+                self.navigationController?.pushViewController(firstName?.isEmpty == false ? MainViewController() : UserInfoViewController(), animated: true)
             }
         }
     }

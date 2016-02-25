@@ -78,26 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     @objc private func didReceiveNewMessagesNotification(notification: NSNotification) {
-        if let messages = (notification.userInfo?["messages"] as? MessageManager.NewMessagesNotificationWrapper)?.messages {
-            var currentBadgeNumber = UIApplication.sharedApplication().applicationIconBadgeNumber
-            for message in messages {
-                if let friend = message.from {
-                    currentBadgeNumber++
-
-                    let localNotification = UILocalNotification()
-                    localNotification.applicationIconBadgeNumber = currentBadgeNumber
-
-                    if let messageText = message.text {
-                        localNotification.alertBody = "\(friend.name): \(messageText)"
-                    } else {
-                        localNotification.alertBody = "\(friend.name) has sent you a message"
-                    }
-
-                    UIApplication.sharedApplication().presentLocalNotificationNow(localNotification)
-                }
-            }
-        }
-
         fetchCompletionHandler?()
     }
 }

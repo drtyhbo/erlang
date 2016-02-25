@@ -19,6 +19,7 @@
 -record(user_state,
 		{socket,
 		user_id,
+		first_name,
 		local_id}).
 -record(routing_info, {local_id}).
 
@@ -172,10 +173,10 @@ add_user(UserId, Pid) ->
 handle_connect_json(Json, State) ->
 	UserId = proplists:get_value(<<"u">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	case eredis_cluster:q(["HMGET", secure_chat_redis:user_id_to_key(UserId), "session"]) of
-	 	{ok, [RedisSessionToken]} when RedisSessionToken =:= SessionToken ->
+	case eredis_cluster:q(["HMGET", secure_chat_redis:user_id_to_key(UserId), "session", "firstName"]) of
+	 	{ok, [RedisSessionToken, FirstName]} when RedisSessionToken =:= SessionToken, FirstName =/= undefined ->
 			connect(),
-			State#user_state{user_id = UserId};
+			State#user_state{user_id = UserId, first_name = binary_to_list(FirstName)};
 	 	_ ->
 	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
 	 		State
@@ -203,7 +204,7 @@ handle_msg_json(Json, State) ->
 	_ ->
 		ok
 	end,
-	secure_chat_pns:send_content_available_notification(To),
+	secure_chat_pns:send_notification(To, State#user_state.first_name ++ " has sent you a message"),
 	State#user_state{local_id=LocalId + 1}.
 
 

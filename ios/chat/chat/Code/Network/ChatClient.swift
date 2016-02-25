@@ -100,9 +100,8 @@ class ChatClient {
 
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string {
-                let decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage)
-                self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON.parse(decryptedMessage!)))
+            if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string, decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage) {
+                self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON.parse(decryptedMessage)))
             }
         }
 

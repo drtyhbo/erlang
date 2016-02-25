@@ -17,14 +17,10 @@ protocol FriendsListViewControllerDelegate: class {
 
 class FriendsListViewController: UIViewController {
     @IBOutlet weak var friendsTable: UITableView!
-    @IBOutlet weak var profilePic: ChatProfilePic!
-    @IBOutlet weak var updatingProfilePicActivityIndicator: UIActivityIndicatorView!
 
     weak var delegate: FriendsListViewControllerDelegate?
 
     private let friendCellReuseIdentifier = "FriendTableViewCell"
-
-    private var imagePickerController: UIImagePickerController?
 
     init() {
         super.init(nibName: "FriendsListViewController", bundle: nil)
@@ -38,9 +34,6 @@ class FriendsListViewController: UIViewController {
         super.viewDidLoad()
 
         friendsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
-
-        profilePic.image = User.profilePic ?? UIImage(named: "ProfilePic")
-        profilePic.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapProfilePic"))
 
         let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
         FriendManager.sharedManager.loadFriendsFromContacts(contacts) {

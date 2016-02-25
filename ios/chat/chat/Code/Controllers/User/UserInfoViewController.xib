@@ -24,8 +24,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="238"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last step we promise 😀  First name is required, everything else is optional." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhP-Oi-dee">
-                            <rect key="frame" x="20" y="92" width="560" height="54"/>
-                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
+                            <rect key="frame" x="20" y="89" width="560" height="61"/>
+                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
