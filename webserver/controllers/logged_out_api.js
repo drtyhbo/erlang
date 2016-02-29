@@ -18,8 +18,8 @@ router.post('/register/', function(req, res) {
 router.post('/confirm/', function(req, res) {
 	var phoneNumber = req.body.phone;
 	var code = req.body.code;
-	var key = req.body.key;
-	user.login(phoneNumber, code, key, function(err, id, sessionToken, firstName, lastName) {
+	var preKeys = req.body.preKeys[0];
+	user.login(phoneNumber, code, preKeys, function(err, id, sessionToken, firstName, lastName) {
 		if (err) {
 			res.send({
 				'status': err

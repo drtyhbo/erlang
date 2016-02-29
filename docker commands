@@ -15,4 +15,4 @@ docker pull abinnewies/chat-webserver && docker stop chat-webserver && docker rm
 
 docker pull abinnewies/chat-server && docker stop chat-server && docker rm chat-server && docker run -p 4369:4369 -p 9001-9005:9001-9005 -p 49165:49165 --name chat-server -h chat2.drtyhbo.com -v /var/data/mnesia:/var/data/mnesia -d abinnewies/chat-server /usr/src/app/run.sh chat2
 
-sudo docker run -it --link chat-redis:chat-redis --rm redis sh -c 'exec redis-cli -h "$CHAT_REDIS_PORT_6379_TCP_ADDR" -p "$CHAT_REDIS_PORT_6379_TCP_PORT"'
+docker stop redis-cli && docker rm redis-cli && docker run -it --name redis-cli --link redis1:redis1 --rm redis sh -c 'exec redis-cli -h "$REDIS1_PORT_6379_TCP_ADDR" -p "$REDIS1_PORT_6379_TCP_PORT"'

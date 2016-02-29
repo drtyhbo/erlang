@@ -33,11 +33,11 @@ class APIManager: NSObject {
         }
     }
 
-    func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, key: String, callback: (String?, String?, String?, String?, Error?)->Void) {
+    func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, preKeys: [PreKey], callback: (String?, String?, String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
             "phone": phoneNumber.fullNumber,
             "code": code,
-            "key": key,
+            "preKeys": preKeys.map({ ["i": $0.index, "pk": $0.keyPair.publicKey.base64 ]})
         ]) {
             json in
             callback(json?["id"].string, json?["sessionToken"].string, json?["firstName"].string, json?["lastName"].string, self.errorFromJson(json))

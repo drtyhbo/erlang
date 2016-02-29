@@ -71,7 +71,9 @@ class ConfirmCodeViewController: UIViewController {
         setupActivityIndicator()
         isConfirming = true
 
-        APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", key: SecurityHelper.sharedHelper.publicKey!) {
+        let preKeys = PreKeyCache.sharedCache.generateInitialCache()
+
+        APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", preKeys: preKeys) {
             userId, sessionToken, firstName, lastName, error in
 
             self.setupNextButton()

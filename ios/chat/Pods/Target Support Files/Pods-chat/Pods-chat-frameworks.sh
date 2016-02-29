@@ -59,6 +59,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-chat/MagicalRecord.framework'
   install_framework 'Pods-chat/Mantle.framework'
   install_framework 'Pods-chat/SDWebImage.framework'
+  install_framework 'Pods-chat/Sodium.framework'
   install_framework 'Pods-chat/SwiftyJSON.framework'
   install_framework 'Pods-chat/TWTToast.framework'
 fi
@@ -70,6 +71,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-chat/MagicalRecord.framework'
   install_framework 'Pods-chat/Mantle.framework'
   install_framework 'Pods-chat/SDWebImage.framework'
+  install_framework 'Pods-chat/Sodium.framework'
   install_framework 'Pods-chat/SwiftyJSON.framework'
   install_framework 'Pods-chat/TWTToast.framework'
 fi

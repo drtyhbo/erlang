@@ -44,6 +44,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Sodium.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>SwiftyJSON.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -57,22 +62,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>14CDA46B7BDB7C033C72F1ACD5EE0BCC</key>
+		<key>1E6367AA8183E1B096D7CCB6D6600F25</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2364D66CCE176046881AD5B6310182F4</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>39D793BA1EC49DA2F5E26BFEA81AECA5</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>4EF2CDA9A4428313F67091CAA56BEBB8</key>
+		<key>51360F631C2D7B7211BD6D77FBAAEBF5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,7 +77,32 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>6FD6B09D584D5FC3F78728109982F251</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>78C6348637D7BCBFBEE61C5911BF7DA5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8168C89B71DFB80E1CFEE54932A8128F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8A48D71EFC7D33554462F183802E7B09</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>9666688CB41B38A9914616144C9C7A3E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B984DDA63249BA796B5DA523586F277C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -92,17 +112,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D9E1A8224D1668CB15846A76117A1A2C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E5911DAB94A4AA478A9A9170326B2F90</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FF0C40CEC423C34B0A04FEB4B49AA202</key>
+		<key>CFDAEFF2D750E882AC7FEB2D453F718E</key>
 		<dict>
 			<key>primary</key>
 			<true/>

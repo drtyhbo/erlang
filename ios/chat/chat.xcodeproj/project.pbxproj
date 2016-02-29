@@ -17,8 +17,16 @@
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
 		9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */; };
 		9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */; };
-		9031FFE31C6CC88B00BCC456 /* SecurityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */; };
 		9031FFE51C6E2BC100BCC456 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFE41C6E2BC100BCC456 /* File.swift */; };
+		90374E221C8495FE0008421F /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E1B1C8495FE0008421F /* Keychain.swift */; };
+		90374E231C8495FE0008421F /* PDKeychainBindings.m in Sources */ = {isa = PBXBuildFile; fileRef = 90374E1E1C8495FE0008421F /* PDKeychainBindings.m */; };
+		90374E241C8495FE0008421F /* PDKeychainBindingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90374E201C8495FE0008421F /* PDKeychainBindingsController.m */; };
+		90374E251C8495FE0008421F /* SecurityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E211C8495FE0008421F /* SecurityHelper.swift */; };
+		90374E271C8496230008421F /* PreKeyCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E261C8496230008421F /* PreKeyCache.swift */; };
+		90374E291C84967F0008421F /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E281C84967F0008421F /* KeyPair.swift */; };
+		90374E2B1C8496990008421F /* NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2A1C8496990008421F /* NSData.swift */; };
+		90374E2D1C8496B60008421F /* NSMutableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2C1C8496B60008421F /* NSMutableData.swift */; };
+		90374E2F1C8496C40008421F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2E1C8496C40008421F /* String.swift */; };
 		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
@@ -76,8 +84,19 @@
 		9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReconnectView.xib; sourceTree = "<group>"; };
 		9031FFDD1C6B78D600BCC456 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
 		9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
-		9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityHelper.swift; path = chat/Code/Utils/SecurityHelper.swift; sourceTree = SOURCE_ROOT; };
 		9031FFE41C6E2BC100BCC456 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		90374E191C8494F00008421F /* chat-bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "chat-bridging-header.h"; sourceTree = "<group>"; };
+		90374E1B1C8495FE0008421F /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		90374E1D1C8495FE0008421F /* PDKeychainBindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDKeychainBindings.h; sourceTree = "<group>"; };
+		90374E1E1C8495FE0008421F /* PDKeychainBindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDKeychainBindings.m; sourceTree = "<group>"; };
+		90374E1F1C8495FE0008421F /* PDKeychainBindingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDKeychainBindingsController.h; sourceTree = "<group>"; };
+		90374E201C8495FE0008421F /* PDKeychainBindingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDKeychainBindingsController.m; sourceTree = "<group>"; };
+		90374E211C8495FE0008421F /* SecurityHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityHelper.swift; sourceTree = "<group>"; };
+		90374E261C8496230008421F /* PreKeyCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreKeyCache.swift; sourceTree = "<group>"; };
+		90374E281C84967F0008421F /* KeyPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPair.swift; sourceTree = "<group>"; };
+		90374E2A1C8496990008421F /* NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSData.swift; path = Extensions/NSData.swift; sourceTree = "<group>"; };
+		90374E2C1C8496B60008421F /* NSMutableData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSMutableData.swift; path = Extensions/NSMutableData.swift; sourceTree = "<group>"; };
+		90374E2E1C8496C40008421F /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = Extensions/String.swift; sourceTree = "<group>"; };
 		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
@@ -161,11 +180,11 @@
 		9031FFD01C6240B700BCC456 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				9031FFE21C6CC88B00BCC456 /* SecurityHelper.swift */,
-				9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */,
+				90374E1A1C8495FE0008421F /* Security */,
 				9031FFD31C6671B800BCC456 /* Constants.swift */,
-				90FC19D91C7CB8BC004E7EFF /* PhoneNumberFormatter.swift */,
+				9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */,
 				90F1F78D1C7F52B200A75914 /* KeyboardNotifications.swift */,
+				90FC19D91C7CB8BC004E7EFF /* PhoneNumberFormatter.swift */,
 			);
 			name = Utils;
 			path = chat/Code/Utils;
@@ -180,11 +199,37 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		90374E1A1C8495FE0008421F /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				90374E1B1C8495FE0008421F /* Keychain.swift */,
+				90374E281C84967F0008421F /* KeyPair.swift */,
+				90374E1C1C8495FE0008421F /* PDKeychainBindings */,
+				90374E261C8496230008421F /* PreKeyCache.swift */,
+				90374E211C8495FE0008421F /* SecurityHelper.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		90374E1C1C8495FE0008421F /* PDKeychainBindings */ = {
+			isa = PBXGroup;
+			children = (
+				90374E1D1C8495FE0008421F /* PDKeychainBindings.h */,
+				90374E1E1C8495FE0008421F /* PDKeychainBindings.m */,
+				90374E1F1C8495FE0008421F /* PDKeychainBindingsController.h */,
+				90374E201C8495FE0008421F /* PDKeychainBindingsController.m */,
+			);
+			path = PDKeychainBindings;
+			sourceTree = "<group>";
+		};
 		904963481C72396B0078C9DF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				904963491C7239790078C9DF /* UIImage.swift */,
+				90374E2A1C8496990008421F /* NSData.swift */,
+				90374E2C1C8496B60008421F /* NSMutableData.swift */,
+				90374E2E1C8496C40008421F /* String.swift */,
 				90C0F4AC1C7A2AC3007F58BD /* UIColor.swift */,
+				904963491C7239790078C9DF /* UIImage.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -257,6 +302,7 @@
 				90AFD5AB1C5CE43200236D6B /* Network */,
 				9031FFD01C6240B700BCC456 /* Utils */,
 				9031FFD71C68EF7B00BCC456 /* Views */,
+				90374E191C8494F00008421F /* chat-bridging-header.h */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -474,7 +520,6 @@
 			files = (
 				90AFD5CF1C6091F100236D6B /* MainViewController.swift in Sources */,
 				9018D0EB1C77645100027508 /* PendingMessage.swift in Sources */,
-				9031FFE31C6CC88B00BCC456 /* SecurityHelper.swift in Sources */,
 				90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */,
 				90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */,
 				90C0F4AA1C7A1F95007F58BD /* NewMessagesTableViewCell.swift in Sources */,
@@ -487,18 +532,25 @@
 				90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */,
 				90C0F4AD1C7A2AC3007F58BD /* UIColor.swift in Sources */,
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
+				90374E2B1C8496990008421F /* NSData.swift in Sources */,
 				90F1F78E1C7F52B200A75914 /* KeyboardNotifications.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
 				900EC8FB1C72A9B800AE5C73 /* CoreData.swift in Sources */,
 				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
 				9049634A1C7239790078C9DF /* UIImage.swift in Sources */,
 				90FC19DC1C7CC11D004E7EFF /* UserInfoViewController.swift in Sources */,
+				90374E271C8496230008421F /* PreKeyCache.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
 				9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */,
 				900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */,
 				9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */,
+				90374E251C8495FE0008421F /* SecurityHelper.swift in Sources */,
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
+				90374E2D1C8496B60008421F /* NSMutableData.swift in Sources */,
+				90374E291C84967F0008421F /* KeyPair.swift in Sources */,
+				90374E2F1C8496C40008421F /* String.swift in Sources */,
 				9031FFE51C6E2BC100BCC456 /* File.swift in Sources */,
+				90374E241C8495FE0008421F /* PDKeychainBindingsController.m in Sources */,
 				90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */,
 				904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */,
 				90C0F4A31C79621B007F58BD /* MoviePlayer.swift in Sources */,
@@ -512,6 +564,8 @@
 				90AFD5D31C6110B900236D6B /* MessageManager.swift in Sources */,
 				90AFD5D11C61102C00236D6B /* FriendManager.swift in Sources */,
 				90EBF8AD1C474A0E00A7AD51 /* User.swift in Sources */,
+				90374E231C8495FE0008421F /* PDKeychainBindings.m in Sources */,
+				90374E221C8495FE0008421F /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,12 +662,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = chat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "chat/Code/chat-bridging-header.h";
 			};
 			name = Debug;
 		};
@@ -624,12 +679,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = chat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "chat/Code/chat-bridging-header.h";
 			};
 			name = Release;
 		};
