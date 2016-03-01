@@ -35,7 +35,8 @@ class FriendsListViewController: UIViewController {
 
         friendsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
 
-        let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
+//        let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
+        let contacts = ContactsHelper().getAllContacts()
         FriendManager.sharedManager.loadFriendsFromContacts(contacts) {
             self.friendsTable.reloadData()
         }

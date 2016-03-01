@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
+    <entity name="Conversation" representedClassName="Conversation" syncable="YES">
+        <attribute name="isRatcheting" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="messageNumber" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="preKeyIndex" attributeType="Integer 64" defaultValueString="-1" syncable="YES"/>
+        <attribute name="publicKey" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="friend" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="conversation" inverseEntity="Friend" syncable="YES"/>
+    </entity>
     <entity name="File" representedClassName="File" syncable="YES">
         <attribute name="contentType" attributeType="String" syncable="YES"/>
         <attribute name="data" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
@@ -8,8 +15,8 @@
     </entity>
     <entity name="Friend" representedClassName="Friend" syncable="YES">
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="key" attributeType="Binary" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="friend" inverseEntity="Conversation" syncable="YES"/>
         <relationship name="receivedMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="to" inverseEntity="Message" syncable="YES"/>
         <relationship name="sentMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="from" inverseEntity="Message" syncable="YES"/>
     </entity>
@@ -25,6 +32,7 @@
         <relationship name="message" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="pendingMessage" inverseEntity="Message" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Conversation" positionX="-54" positionY="54" width="128" height="120"/>
         <element name="File" positionX="-36" positionY="72" width="128" height="105"/>
         <element name="Friend" positionX="-54" positionY="9" width="128" height="120"/>
         <element name="Message" positionX="-63" positionY="-18" width="128" height="120"/>

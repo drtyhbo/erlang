@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import Heimdall
+//import Heimdall
 
 class SecurityHelper {
     static let sharedHelper = SecurityHelper()
 
-    var publicKey: String? {
+/*    var publicKey: String? {
         if let heimdall = Heimdall(tagPrefix: "com.dryhbo"), publicKeyData = heimdall.publicKeyDataX509() {
             return publicKeyData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0))
         } else {
@@ -50,5 +50,5 @@ class SecurityHelper {
         } else {
             return nil
         }
-    }
+    }*/
 }

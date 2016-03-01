@@ -46,29 +46,29 @@ class ChatClient {
         }
     }
 
-    func sendMessageWithJson(json: JSON, to: Friend, messageId: Int) -> Bool {
-        if let messageToEncrypt = json.rawString(), encryptedMessage = SecurityHelper.sharedHelper.encrypt(messageToEncrypt, publicTag: "com.drtyhbo.\(to.id)", withKey: to.key) {
-            let messageJson = JSON([
+    func sendMessageWithJson(json: JSON, to: Friend, messageId: Int) {
+        MessageCrypter.sharedCrypter.encryptMessage(json, forFriend: to) { encryptedMessage in
+            guard let encryptedMessage = encryptedMessage else {
+                return
+            }
+
+            let messageToSendJson = JSON([
                 "t": "m",
                 "r": String(to.id),
                 "i": messageId,
                 "m": encryptedMessage
             ])
 
-            connection.sendJson(messageJson)
-
-            return true
+            self.connection.sendJson(messageToSendJson)
         }
-
-        return false
     }
 
     private func connect() {
         NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientConnectingNotification, object: nil)
-        if let userId = User.userId, sessionToken = User.sessionToken {
+        if let sessionToken = User.sessionToken {
             let connectJson = JSON([
                 "t": "c",
-                "u": userId,
+                "u": "\(User.userId)",
                 "s": sessionToken,
             ])
             connection.sendJson(connectJson)
@@ -100,9 +100,9 @@ class ChatClient {
 
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string, decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage) {
+/*            if let fromId = Int(messageJson["f"].string!), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string, decryptedMessage = SecurityHelper.sharedHelper.decrypt(encryptedMessage) {
                 self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON.parse(decryptedMessage)))
-            }
+            }*/
         }
 
         self.receivedMessagesTimer?.invalidate()

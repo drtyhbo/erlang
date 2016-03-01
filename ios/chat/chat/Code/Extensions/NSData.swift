@@ -20,4 +20,8 @@ extension NSData {
     var base64: String {
         return base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0))
     }
+
+    static func fromBase64(base64: String) -> NSData? {
+        return NSData(base64EncodedString: base64, options: NSDataBase64DecodingOptions(rawValue: 0))
+    }
 }

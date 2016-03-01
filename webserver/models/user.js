@@ -156,7 +156,7 @@ exports.getPreKey = function(userId, cb) {
 
 		return multi.exec();
 	}).then(function(values) {
-		cb(values[0][1], sharedKeyIndex);
+		cb(values[0][1], parseInt(sharedKeyIndex, 10));
 	});
 };
 
@@ -181,25 +181,11 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 		promises.push(userIdFromPhoneNumber(phoneNumber));
 	}
 	Promise.all(promises).then(function(ids) {
-		sharedIds = ids;
-
-		var infoPromises = [];
-		for (var i = 0; i < ids.length; i++) {
-			var id = ids[i];
-			if (id) {
-				infoPromises.push(getUserInfo(ids[i], ['key']));
-			} else {
-				infoPromises.push(Promise.resolve([null]));
-			}
-		}
-		return Promise.all(infoPromises);
-	}).then(function(allInfo) {
 		var results = [];
-		for (var i = 0; i < allInfo.length; i++) {
-			if (sharedIds[i] && allInfo[i]) {
+		for (var i = 0; i < ids.length; i++) {
+			if (ids[i]) {
 				results.push({
-					'id': sharedIds[i],
-					'key': allInfo[i][0],
+					'id': ids[i],
 					'phone': phoneNumbers[i]
 				});
 			} else {

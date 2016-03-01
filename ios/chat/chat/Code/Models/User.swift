@@ -20,12 +20,12 @@ class User {
         }
     }
 
-    static var userId: String? {
+    static var userId: Int {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(userIdKey)
+            return NSUserDefaults.standardUserDefaults().integerForKey(userIdKey)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: userIdKey)
+            NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: userIdKey)
             NSUserDefaults.standardUserDefaults().synchronize()
         }
     }

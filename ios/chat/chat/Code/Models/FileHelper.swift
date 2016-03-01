@@ -26,10 +26,10 @@ class FileHelper {
                 data, contentType in
 
                 var file: File?
-                if let encryptedData = data, contentType = contentType, decryptedData = SecurityHelper.sharedHelper.decrypt(encryptedData) {
+/*                if let encryptedData = data, contentType = contentType, decryptedData = SecurityHelper.sharedHelper.decrypt(encryptedData) {
                     file = File.createWithId(id, data: decryptedData, contentType: contentType)
                     CoreData.save()
-                }
+                }*/
 
                 completion(file)
             }

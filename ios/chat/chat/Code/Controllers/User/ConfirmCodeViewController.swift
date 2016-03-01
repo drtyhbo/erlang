@@ -74,12 +74,12 @@ class ConfirmCodeViewController: UIViewController {
         let preKeys = PreKeyCache.sharedCache.generateInitialCache()
 
         APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", preKeys: preKeys) {
-            userId, sessionToken, firstName, lastName, error in
+            userIdString, sessionToken, firstName, lastName, error in
 
             self.setupNextButton()
             self.isConfirming = false
 
-            if let userId = userId, sessionToken = sessionToken {
+            if let userIdString = userIdString, userId = Int(userIdString), sessionToken = sessionToken {
                 User.userId = userId
                 User.sessionToken = sessionToken
                 User.firstName = firstName

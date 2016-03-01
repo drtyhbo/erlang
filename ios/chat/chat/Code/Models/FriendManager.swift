@@ -29,12 +29,11 @@ class FriendManager {
             for i in 0..<friendsData.count {
                 let friendData = friendsData[i]
 
-                if let key = NSData(base64EncodedString: friendData.base64Key, options: NSDataBase64DecodingOptions(rawValue: 0)), name = contactsByPhoneNumber[friendData.phoneNumber]?.name {
+                if let name = contactsByPhoneNumber[friendData.phoneNumber]?.name {
                     if let friend = Friend.findWithId(friendData.id) {
-                        friend.key = key
                         friend.name = name
                     } else {
-                        let friend = Friend.createWithId(friendData.id, name: name, key: key)
+                        let friend = Friend.createWithId(friendData.id, name: name)
                         self.friends.append(friend)
                     }
                 }

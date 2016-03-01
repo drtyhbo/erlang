@@ -47,7 +47,6 @@ class APIManager: NSObject {
     struct FriendData {
         let id: Int
         let phoneNumber: String
-        let base64Key: String
     }
 
     func getFriendsWithPhoneNumbers(phoneNumbers: [PhoneNumber], callback: [FriendData]->Void) {
@@ -64,12 +63,27 @@ class APIManager: NSObject {
                     }
 
                     let friendJson = friendsJson[i]
-                    if let stringId = friendJson["id"].string, id = Int(stringId), phoneNumber = friendJson["phone"].string, base64Key = friendJson["key"].string {
-                        friendsData.append(FriendData(id: id, phoneNumber: phoneNumber, base64Key: base64Key))
+                    if let stringId = friendJson["id"].string, id = Int(stringId), phoneNumber = friendJson["phone"].string {
+                        friendsData.append(FriendData(id: id, phoneNumber: phoneNumber))
                     }
                 }
             }
             callback(friendsData)
+        }
+    }
+
+    func getPrekeyForFriend(friend: Friend, callback: (Int?, NSData?)->Void) {
+        sendUserRequestToUrl("friend/prekey/", parameters: [
+            "userId": friend.id
+        ]) {
+            json in
+
+            guard let keyIndex = json?["keyIndex"].int, base64PublicKey = json?["publicKey"].string, publicKey = NSData.fromBase64(base64PublicKey) else {
+                callback(nil, nil)
+                return
+            }
+
+            callback(keyIndex, publicKey)
         }
     }
 

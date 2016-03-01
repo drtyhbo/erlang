@@ -25,8 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveNewMessagesNotification:", name: MessageManager.NewMessagesNotification, object: nil)
 
         let rootViewController: UIViewController
-        if User.userId == nil || User.firstName == nil {
-            let navigationController = UINavigationController(rootViewController: User.userId == nil ? PhoneNumberViewController() : UserInfoViewController())
+        if User.userId == 0 || User.firstName == nil {
+            let navigationController = UINavigationController(rootViewController: User.userId == 0 ? PhoneNumberViewController() : UserInfoViewController())
             navigationController.navigationBar.translucent = false
             rootViewController = navigationController
         } else {

@@ -8,7 +8,6 @@ target 'chat' do
 pod 'Alamofire'
 pod "APLSlideMenu"
 pod 'CocoaAsyncSocket'
-pod 'Heimdall'
 pod 'MagicalRecord'
 pod 'SDWebImage'
 pod 'Sodium'

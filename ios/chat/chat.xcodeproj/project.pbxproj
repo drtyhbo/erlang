@@ -27,6 +27,10 @@
 		90374E2B1C8496990008421F /* NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2A1C8496990008421F /* NSData.swift */; };
 		90374E2D1C8496B60008421F /* NSMutableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2C1C8496B60008421F /* NSMutableData.swift */; };
 		90374E2F1C8496C40008421F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2E1C8496C40008421F /* String.swift */; };
+		90374E311C85E6F80008421F /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E301C85E6F80008421F /* Conversation.swift */; };
+		90374E331C85E8220008421F /* MessageCrypter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E321C85E8220008421F /* MessageCrypter.swift */; };
+		90374E351C85EE520008421F /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E341C85EE520008421F /* Hash.swift */; };
+		90374E371C85F2260008421F /* libsodium-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90374E361C85F2260008421F /* libsodium-ios.a */; };
 		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
@@ -97,6 +101,10 @@
 		90374E2A1C8496990008421F /* NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSData.swift; path = Extensions/NSData.swift; sourceTree = "<group>"; };
 		90374E2C1C8496B60008421F /* NSMutableData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSMutableData.swift; path = Extensions/NSMutableData.swift; sourceTree = "<group>"; };
 		90374E2E1C8496C40008421F /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = Extensions/String.swift; sourceTree = "<group>"; };
+		90374E301C85E6F80008421F /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		90374E321C85E8220008421F /* MessageCrypter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCrypter.swift; sourceTree = "<group>"; };
+		90374E341C85EE520008421F /* Hash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hash.swift; sourceTree = "<group>"; };
+		90374E361C85F2260008421F /* libsodium-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsodium-ios.a"; path = "Pods/Sodium/Sodium/libsodium-ios.a"; sourceTree = SOURCE_ROOT; };
 		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
@@ -153,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90374E371C85F2260008421F /* libsodium-ios.a in Frameworks */,
 				4895AA0B7AE4B2174643D2F7 /* Pods_chat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -207,6 +216,8 @@
 				90374E1C1C8495FE0008421F /* PDKeychainBindings */,
 				90374E261C8496230008421F /* PreKeyCache.swift */,
 				90374E211C8495FE0008421F /* SecurityHelper.swift */,
+				90374E321C85E8220008421F /* MessageCrypter.swift */,
+				90374E341C85EE520008421F /* Hash.swift */,
 			);
 			path = Security;
 			sourceTree = "<group>";
@@ -220,6 +231,14 @@
 				90374E201C8495FE0008421F /* PDKeychainBindingsController.m */,
 			);
 			path = PDKeychainBindings;
+			sourceTree = "<group>";
+		};
+		90374E381C85F23F0008421F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				90374E361C85F2260008421F /* libsodium-ios.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		904963481C72396B0078C9DF /* Extensions */ = {
@@ -284,10 +303,11 @@
 		90EBF8831C47459000A7AD51 /* chat */ = {
 			isa = PBXGroup;
 			children = (
-				90EBF8A41C4749F700A7AD51 /* Resources */,
-				90EBF89C1C47497500A7AD51 /* Code */,
 				90EBF88B1C47459000A7AD51 /* Assets.xcassets */,
+				90EBF89C1C47497500A7AD51 /* Code */,
+				90374E381C85F23F0008421F /* Frameworks */,
 				90EBF8901C47459000A7AD51 /* Info.plist */,
+				90EBF8A41C4749F700A7AD51 /* Resources */,
 			);
 			path = chat;
 			sourceTree = "<group>";
@@ -310,6 +330,7 @@
 		90EBF8A31C4749E000A7AD51 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				90374E301C85E6F80008421F /* Conversation.swift */,
 				900EC8FA1C72A9B800AE5C73 /* CoreData.swift */,
 				9031FFE41C6E2BC100BCC456 /* File.swift */,
 				900EC8FC1C72B04900AE5C73 /* FileHelper.swift */,
@@ -522,6 +543,7 @@
 				9018D0EB1C77645100027508 /* PendingMessage.swift in Sources */,
 				90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */,
 				90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */,
+				90374E351C85EE520008421F /* Hash.swift in Sources */,
 				90C0F4AA1C7A1F95007F58BD /* NewMessagesTableViewCell.swift in Sources */,
 				9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */,
 				90AFD5B51C5D234400236D6B /* APIManager.swift in Sources */,
@@ -557,7 +579,9 @@
 				90FC19DA1C7CB8BC004E7EFF /* PhoneNumberFormatter.swift in Sources */,
 				90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */,
 				90EBF8AB1C474A0000A7AD51 /* Message.swift in Sources */,
+				90374E311C85E6F80008421F /* Conversation.swift in Sources */,
 				90EBF8C01C474CA700A7AD51 /* ChatViewController.swift in Sources */,
+				90374E331C85E8220008421F /* MessageCrypter.swift in Sources */,
 				900EC8FD1C72B04900AE5C73 /* FileHelper.swift in Sources */,
 				90AFD5C91C608F2E00236D6B /* Friend.swift in Sources */,
 				90C0F4AF1C7A410C007F58BD /* ConversationStartTableViewCell.swift in Sources */,
@@ -665,6 +689,10 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = chat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/Sodium/Sodium",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -682,6 +710,10 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = chat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/Sodium/Sodium",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
