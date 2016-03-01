@@ -5,11 +5,13 @@ var express = require('express'),
 app = express();
 
 app.use(morgan('combined'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(require('./controllers'));
 
-app.listen(8080, function() {
+var server = app.listen(8080, function() {
 
 });
+module.exports = server;

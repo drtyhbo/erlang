@@ -13,6 +13,8 @@ var userKeys = {
 	lastName: 'lastName'
 };
 
+const keyOfLastResort = 0xFFFF;
+
 function userKeyFromId(id) {
 	return 'u:{' + id + '}';
 }
@@ -125,7 +127,7 @@ function updatePreKeys(userId, preKeys) {
 
 	return redis.multi()
 		.hmset(preKeysKeyFromId(userId), keyValues)
-		.sadd(preKeyIndicesKeyFromId(userId), indices.filter(function(index) { return index != 0xFFFF; }))
+		.sadd(preKeyIndicesKeyFromId(userId), indices.filter(function(index) { return index != keyOfLastResort; }))
 		.exec().then(function(values) {
 			if (values.length == 2 && values[0][1] == 'OK') {
 				return Promise.resolve(true);
@@ -135,6 +137,28 @@ function updatePreKeys(userId, preKeys) {
 		});
 };
 exports.updatePreKeys = updatePreKeys;
+
+exports.getPreKey = function(userId, cb) {
+	var sharedKeyIndex;
+	redis.spopAsync(preKeyIndicesKeyFromId(userId)).then(function(keyIndex) {
+		if (keyIndex === null) {
+			keyIndex = keyOfLastResort;
+		}
+		sharedKeyIndex = keyIndex;
+
+		var multi = redis
+			.multi()
+			.hget(preKeysKeyFromId(userId), keyIndex);		
+
+		if (keyIndex != keyOfLastResort) {
+			multi.hdel(preKeysKeyFromId(userId), keyIndex)
+		}
+
+		return multi.exec();
+	}).then(function(values) {
+		cb(values[0][1], sharedKeyIndex);
+	});
+};
 
 // Returns a promise.
 exports.exists = function(id) {

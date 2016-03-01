@@ -6,13 +6,19 @@ var router = express.Router();
 
 router.post('/register/', function(req, res) {
 	var phoneNumber = req.body.phone;
-	user.create(phoneNumber, function(err, code) {
-		twilio.sendSMS(phoneNumber, code, function(err, message) {
-			res.send({
-				'status': 'ok'
+	if (!phoneNumber || phoneNumber.length != 11) {
+		res.send({
+			'status': 'error'
+		});
+	} else {
+		user.create(phoneNumber, function(err, code) {
+			twilio.sendSMS(phoneNumber, code, function(err, message) {
+				res.send({
+					'status': 'ok'
+				});
 			});
 		});
-	});
+	}
 });
 
 router.post('/confirm/', function(req, res) {
