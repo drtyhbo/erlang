@@ -86,6 +86,13 @@ class Message: NSManagedObject {
         return json["m"].string
     }
 
+    var secretKey: NSData? {
+        guard let keyString = json["k"].string else {
+            return nil
+        }
+        return NSData.fromBase64(keyString)
+    }
+
     private(set) var json = JSON([:])
 
     static func createFromCurrentUserTo(to: Friend?, messageJson: JSON) -> Message {
@@ -149,5 +156,11 @@ class Message: NSManagedObject {
 
     override func awakeFromFetch() {
         json = JSON.parse(message)
+    }
+
+    func wrapJsonWithKey(secretKey: NSData) -> JSON {
+        var messageJson = json
+        messageJson["k"] = JSON(secretKey.base64)
+        return messageJson
     }
 }

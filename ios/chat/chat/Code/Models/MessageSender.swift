@@ -20,12 +20,15 @@ class MessageSender {
         private(set) var bytesSent: Int
         private(set) var totalBytes: Int
 
+        private let secretKey: NSData?
+
         init(message: Message, messageId: Int, files: [File]) {
             self.message = message
             self.messageId = messageId
             self.files = files
-            self.bytesSent = 0
-            self.totalBytes = files.reduce(0, combine: {$0 + $1.data.length})
+            bytesSent = 0
+            totalBytes = files.reduce(0, combine: {$0 + $1.data.length})
+            secretKey = files.count > 0 ? MessageCrypter.sharedCrypter.sharedSecret() : nil
         }
 
         func finishFileAtIndex(fileIndex: Int) {
@@ -65,18 +68,18 @@ class MessageSender {
         isSending = true
 
         let outgoingMessage = outgoingMessages.first!
-        if outgoingMessage.files.count > 0 {
-            uploadFile(outgoingMessage.files.first!, toUser: outgoingMessage.message.to!)
+        if let secretKey = outgoingMessage.secretKey where outgoingMessage.files.count > 0 {
+            uploadFile(outgoingMessage.files.first!, toUser: outgoingMessage.message.to!, withSecretKey: secretKey)
         } else {
             sendOutgoingMessage(outgoingMessage)
         }
     }
 
-    private func uploadFile(file: File, toUser to: Friend) {
+    private func uploadFile(file: File, toUser to: Friend, withSecretKey secretKey: MessageCrypter.SharedSecret) {
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
-/*            if let uploadUrl = uploadUrl, encryptedFileData = SecurityHelper.sharedHelper.encrypt(file.data, publicTag: "com.drtyhbo.\(to.id)", withKey: to.key) {
+            if let uploadUrl = uploadUrl, encryptedFileData = MessageCrypter.sharedCrypter.encryptData(file.data, withSharedSecret: secretKey) {
                 APIManager.sharedManager.uploadData(
                     encryptedFileData,
                     toS3Url: uploadUrl,
@@ -100,13 +103,14 @@ class MessageSender {
                         self.sendNextOutgoingMessage()
                     }
                 }
-            }*/
+            }
         }
     }
 
     private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
         let message = outgoingMessage.message
-        ChatClient.sharedClient.sendMessageWithJson(message.json, to: message.to!, messageId: outgoingMessage.messageId)
+        let messageJson = outgoingMessage.secretKey != nil ? message.wrapJsonWithKey(outgoingMessage.secretKey!) : message.json
+        ChatClient.sharedClient.sendMessageWithJson(messageJson, to: message.to!, messageId: outgoingMessage.messageId)
     }
 
     @objc private func messageDidSend(notification: NSNotification) {

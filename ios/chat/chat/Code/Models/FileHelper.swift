@@ -9,9 +9,14 @@
 import Foundation
 
 class FileHelper {
-    static func getFileWithId(id: Int, completion: File?->Void) {
+    static func getFileWithId(id: Int, secretKey: NSData?, completion: File?->Void) {
         if let file = File.findWithId(id) {
             completion(file)
+            return
+        }
+
+        guard let secretKey = secretKey else {
+            completion(nil)
             return
         }
 
@@ -26,10 +31,10 @@ class FileHelper {
                 data, contentType in
 
                 var file: File?
-/*                if let encryptedData = data, contentType = contentType, decryptedData = SecurityHelper.sharedHelper.decrypt(encryptedData) {
+                if let encryptedData = data, contentType = contentType, decryptedData = MessageCrypter.sharedCrypter.decryptData(encryptedData, withSharedSecret: secretKey) {
                     file = File.createWithId(id, data: decryptedData, contentType: contentType)
                     CoreData.save()
-                }*/
+                }
 
                 completion(file)
             }

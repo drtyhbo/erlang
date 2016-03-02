@@ -104,7 +104,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
     private func loadImageWithId(thumbnailId: Int) {
         messageImageView.image = nil
 
-        FileHelper.getFileWithId(thumbnailId) {
+        FileHelper.getFileWithId(thumbnailId, secretKey: message.secretKey) {
             file in
 
             self.messageImageView.image = nil
@@ -149,7 +149,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
             loadingIndicator.hidden = false
             loadingIndicator.startAnimating()
 
-            FileHelper.getFileWithId(movieInfo.id) {
+            FileHelper.getFileWithId(movieInfo.id, secretKey: message.secretKey) {
                 file in
 
                 if let file = file {

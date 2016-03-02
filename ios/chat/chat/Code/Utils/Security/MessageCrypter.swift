@@ -13,9 +13,21 @@ import SwiftyJSON
 class MessageCrypter {
     static let sharedCrypter = MessageCrypter();
 
-    private typealias SharedSecret = NSData
+    typealias SharedSecret = NSData
 
     private let SharedRootKeyBytes = Int(crypto_scalarmult_bytes())
+
+    func sharedSecret() -> SharedSecret {
+        return Sodium()!.randomBytes.buf(32)!
+    }
+
+    func encryptData(data: NSData, withSharedSecret sharedSecret: SharedSecret) -> NSData? {
+        return Sodium()!.secretBox.seal(data, secretKey: sharedSecret)
+    }
+
+    func decryptData(data: NSData, withSharedSecret sharedSecret: SharedSecret) -> NSData? {
+        return Sodium()!.secretBox.open(data, secretKey: sharedSecret)
+    }
 
     func encryptMessage(message: JSON, forFriend friend: Friend, callback: String?->Void) {
         let conversation = Conversation.getOrCreateWithFriend(friend)
@@ -69,16 +81,15 @@ class MessageCrypter {
             return
         }
 
-        let sodium = Sodium()!
-        guard let encryptedMessage: NSData = try! sodium.secretBox.seal(message.rawData(), secretKey: messageKey) else {
+        guard let encryptedMessage = encryptData(try! message.rawData(), withSharedSecret: messageKey) else {
             callback(nil)
             return
         }
 
         var json = JSON([
-            "k": sodium.utils.bin2hex(keyPair.publicKey)!,
+            "k": keyPair.publicKey.base64,
             "c": conversation.messageNumber,
-            "m": sodium.utils.bin2hex(encryptedMessage)!])
+            "m": encryptedMessage.base64])
         if conversation.preKeyIndex >= 0 {
             json["pki"] = JSON(conversation.preKeyIndex)
         }
@@ -97,7 +108,7 @@ class MessageCrypter {
 
         let sodium = Sodium()!
         let json = JSON(data: messageData)
-        guard let otherPublicKeyHex = json["k"].string, otherPublicKey = sodium.utils.hex2bin(otherPublicKeyHex), messageNumber = json["c"].int, encryptedMessageHex = json["m"].string, encryptedMessage = sodium.utils.hex2bin(encryptedMessageHex) else {
+        guard let otherPublicKeyBase64 = json["k"].string, otherPublicKey = NSData.fromBase64(otherPublicKeyBase64), messageNumber = json["c"].int, encryptedMessageBase64 = json["m"].string, encryptedMessage = NSData.fromBase64(encryptedMessageBase64) else {
             return nil
         }
 
