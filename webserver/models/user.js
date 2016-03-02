@@ -98,7 +98,6 @@ exports.login = function(phoneNumber, code, preKeys, cb) {
 		if (!values[0]) {
 			values[0] = utils.generateSessionToken();
 		}
-
 		return redis
 			.hmsetAsync(userKeyFromId(sharedId), userKeys.session, values[0], userKeys.active, true)
 			.thenReturn(values);
@@ -115,6 +114,7 @@ exports.login = function(phoneNumber, code, preKeys, cb) {
 function updatePreKeys(userId, preKeys) {
 	var indices = preKeys['i'];
 	var publicKeys = preKeys['pk'];
+
 	if (indices.length != publicKeys.length) {
 		return Promise.reject("prekeys");
 	}
@@ -124,7 +124,6 @@ function updatePreKeys(userId, preKeys) {
 		keyValues.push(indices[i]);
 		keyValues.push(publicKeys[i]);
 	}
-
 	return redis.multi()
 		.hmset(preKeysKeyFromId(userId), keyValues)
 		.sadd(preKeyIndicesKeyFromId(userId), indices.filter(function(index) { return index != keyOfLastResort; }))
