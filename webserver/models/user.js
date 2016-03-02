@@ -2,6 +2,85 @@ var redis = require('./redis').redis,
 	utils = require('../utils/utils.js'),
 	Promise = require('bluebird').Promise;
 
+var User = function(id, code) {
+	this._id = id;
+	this._code = code || null;
+};
+
+User.redisKeys = {
+	phone: 'phone',
+	code: 'code',
+	session: 'session',
+	active: 'active',
+	key: 'key',
+	iosPushToken: 'iosToken',
+	firstName: 'firstName',
+	lastName: 'lastName'
+};
+
+// Creates a new user. Returns a promise that resolves to the user.
+User.create = function(phoneNumber) {
+	if (!phoneNumber || phoneNumber.length != 11) {
+		return Promise.reject();
+	}
+
+	var sharedId;
+	return this._getUserId(phoneNumber).then(function(id) {
+		if (!id) {
+			return User._create(phoneNumber);
+		} else {
+			return Promise.resolve(new User(id));
+		}
+	}).then(function(user) {
+		return user._generateCode().thenReturn(user);
+	}).then(function(user) {
+		return Promise.resolve(user);
+	});
+}
+
+User.prototype.getCode = function() {
+	if (this._code) {
+		return Promise.resolve(this._code);
+	} else {
+		return redis.hgetAsync(User._userKey(this._id), User.redisKeys.code);
+	}
+}
+
+User._userKey = function(id) {
+	return 'u:{' + id + '}';
+}
+
+User._phoneKey = function(phoneNumber) {
+	return 'p:{' + phoneNumber + '}';
+}
+
+User._getUserId = function(phoneNumber) {
+	return redis.getAsync(User._phoneKey(phoneNumber));
+}
+
+User._create = function(phoneNumber) {
+	var code = Math.floor(Math.random() * 900000) + 100000;
+	return redis.incrAsync('user_id').then(function(id) {
+		return redis.setAsync(User._phoneKey(phoneNumber), id).thenReturn(id);
+	}).then(function(id) {
+		return redis.hmsetAsync(User._userKey(id), [userKeys.phone, phoneNumber]).thenReturn(new User(id));
+	});
+}
+
+User.prototype._generateCode = function() {
+	var self = this;
+	return redis.hgetAsync(User._userKey(this._id), User.redisKeys.code).then(function(code) {
+		if (!code) {
+			self._code = Math.floor(Math.random() * 900000) + 100000;;
+			return redis.hsetAsync(User._userKey(self._id), User.redisKeys.code, self._code).thenReturn(self._code);
+		} else {
+			return Promise.resolve(code);
+		}
+	});
+}
+
+exports.User = User;
+
 var userKeys = {
 	phone: 'phone',
 	code: 'code',
