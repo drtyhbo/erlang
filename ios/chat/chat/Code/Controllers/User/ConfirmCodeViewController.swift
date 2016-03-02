@@ -38,9 +38,6 @@ class ConfirmCodeViewController: UIViewController {
         keyboardNotifications.addNotificationsForWillShow({
                 size in
                 self.keyboardWillShowWithSize(size)
-            }, willHide: {
-                size in
-                self.keyboardWillHideWithSize(size)
             });
 
         instructionalLabel.text = String(format: instructionalLabel.text!, PhoneNumberFormatter().formatPhoneNumber(phoneNumber.phoneNumber))
@@ -67,33 +64,28 @@ class ConfirmCodeViewController: UIViewController {
     }
 
     private func keyboardWillShowWithSize(keyboardSize: CGSize) {
-        let overlap = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + confirmCodeContainer.bounds.size.height / 2)
-        if overlap < 0 {
-            confirmCodeVerticalConstraint.constant = overlap
-        }
-    }
-
-    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
-        confirmCodeVerticalConstraint.constant = 0
+        confirmCodeVerticalConstraint.constant = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + confirmCodeContainer.bounds.size.height / 2)
     }
 
     @objc private func confirmCode() {
         setupActivityIndicator()
         isConfirming = true
 
-        APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", key: SecurityHelper.sharedHelper.publicKey!) {
-            userId, sessionToken, firstName, lastName, error in
+        let preKeys = PreKeyCache.sharedCache.generateInitialCache()
+
+        APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", preKeys: preKeys) {
+            userIdString, sessionToken, firstName, lastName, error in
 
             self.setupNextButton()
             self.isConfirming = false
 
-            if let userId = userId, sessionToken = sessionToken {
+            if let userIdString = userIdString, userId = Int(userIdString), sessionToken = sessionToken {
                 User.userId = userId
                 User.sessionToken = sessionToken
                 User.firstName = firstName
                 User.lastName = lastName
 
-                self.navigationController?.pushViewController(UserInfoViewController(), animated: true)
+                self.navigationController?.pushViewController(firstName?.isEmpty == false ? MainViewController() : UserInfoViewController(), animated: true)
             }
         }
     }

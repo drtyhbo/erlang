@@ -13,7 +13,7 @@ class KeyboardNotifications {
     private var willShowCallback: (CGSize->Void)?
     private var willHideCallback: (CGSize->Void)?
 
-    func addNotificationsForWillShow(willShow: CGSize->Void, willHide: CGSize->Void) {
+    func addNotificationsForWillShow(willShow: (CGSize->Void)? = nil, willHide: (CGSize->Void)? = nil) {
         willShowCallback = willShow
         willHideCallback = willHide
 

@@ -14,5 +14,6 @@ class ChatProfilePic: UIImageView {
         super.awakeFromNib()
         contentMode = .ScaleAspectFill
         layer.cornerRadius = 5
+        clipsToBounds = true
     }
 }

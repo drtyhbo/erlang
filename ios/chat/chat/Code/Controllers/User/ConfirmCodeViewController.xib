@@ -23,8 +23,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="236"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter the six-digit code we just sent via SMS to %@." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHx-bC-nDr">
-                            <rect key="frame" x="20" y="109" width="560" height="18"/>
-                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
+                            <rect key="frame" x="20" y="108" width="560" height="21"/>
+                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>

@@ -1,6 +1,6 @@
 -module(secure_chat_pns).
 -export([start_link/0,
-		send_content_available_notification/1,
+		send_notification/2,
 		init/1,
 		handle_cast/2,
 		handle_call/3,
@@ -17,8 +17,8 @@ start_link() ->
 	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 
-send_content_available_notification(UserId) ->
-	gen_server:cast(whereis(?MODULE), {send_content_available_notification, UserId}).
+send_notification(UserId, Message) ->
+	gen_server:cast(whereis(?MODULE), {send_notification, UserId, Message}).
 
 
 init([]) ->
@@ -34,10 +34,11 @@ init([]) ->
 	end.
 
 
-handle_cast({send_content_available_notification, UserId}, State) ->
+handle_cast({send_notification, UserId, Message}, State) ->
 	case eredis_cluster:q(["HGET", secure_chat_redis:user_id_to_key(UserId), "iosToken"]) of
 	 	{ok, DeviceToken} ->
 	 		apns:send_message(ios_apns, #apns_msg{
+	 			alert = Message,
 	 			content_available = true,
 				device_token = binary_to_list(DeviceToken)});
 	 	_ ->

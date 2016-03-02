@@ -24,8 +24,6 @@ router.use(function(req, res, next) {
 
 /*
  * Request parameters:
- * userId - Current user id.
- * session - Current user session.
  * phone - The phone numbers to check.
  */
 router.post('/friend/check/', function(req, res) {
@@ -39,6 +37,29 @@ router.post('/friend/check/', function(req, res) {
 		};
 		if (users) {
 			result['friends'] = users;
+		}
+		res.send(result);
+	});
+});
+
+/*
+ * Request parameters:
+ * userId - Id of the user for whom we need a prekey.
+ */
+router.post('/friend/prekey/', function(req, res) {
+	var userId = req.body.userId;
+	if (!userId) {
+		res.send({'status': 'error'})
+		return
+	}
+
+	user.getPreKey(userId, function(publicKey, keyIndex) {
+		var result = {
+			'status': 'ok'
+		};
+		if (publicKey && keyIndex) {
+			result['publicKey'] = publicKey;
+			result['keyIndex'] = keyIndex;
 		}
 		res.send(result);
 	});

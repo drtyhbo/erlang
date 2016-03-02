@@ -13,12 +13,22 @@ var userKeys = {
 	lastName: 'lastName'
 };
 
+const keyOfLastResort = 0xFFFF;
+
 function userKeyFromId(id) {
 	return 'u:{' + id + '}';
 }
 
 function phoneKeyFromPhoneNumber(phoneNumber) {
 	return 'p:{' + phoneNumber + '}';
+}
+
+function preKeysKeyFromId(id) {
+	return 'pk:{' + id + '}';
+}
+
+function preKeyIndicesKeyFromId(id) {
+	return 'pki:{' + id + '}';
 }
 
 function userIdFromPhoneNumber(phoneNumber) {
@@ -69,7 +79,7 @@ exports.create = function(phoneNumber, cb) {
 	});
 };
 
-exports.login = function(phoneNumber, code, key, cb) {
+exports.login = function(phoneNumber, code, preKeys, cb) {
 	var sharedId;
 	userIdFromPhoneNumber(phoneNumber).then(function(id) {
 		if (!id) {
@@ -90,13 +100,63 @@ exports.login = function(phoneNumber, code, key, cb) {
 		}
 
 		return redis
-			.hmsetAsync(userKeyFromId(sharedId), userKeys.session, values[0], userKeys.active, true, userKeys.key, key)
+			.hmsetAsync(userKeyFromId(sharedId), userKeys.session, values[0], userKeys.active, true)
 			.thenReturn(values);
 	}).then(function(values) {
-		console.log(values);
+		return updatePreKeys(sharedId, preKeys)
+			.thenReturn(values);
+	}).then(function(values) {
 		cb(null, sharedId, values[0], values[1], values[2]);
 	}, function(err) {
 		cb(err);
+	});
+};
+
+function updatePreKeys(userId, preKeys) {
+	var indices = preKeys['i'];
+	var publicKeys = preKeys['pk'];
+	if (indices.length != publicKeys.length) {
+		return Promise.reject("prekeys");
+	}
+
+	var keyValues = [];
+	for (var i = 0; i < indices.length; i++) {
+		keyValues.push(indices[i]);
+		keyValues.push(publicKeys[i]);
+	}
+
+	return redis.multi()
+		.hmset(preKeysKeyFromId(userId), keyValues)
+		.sadd(preKeyIndicesKeyFromId(userId), indices.filter(function(index) { return index != keyOfLastResort; }))
+		.exec().then(function(values) {
+			if (values.length == 2 && values[0][1] == 'OK') {
+				return Promise.resolve(true);
+			} else {
+				return Promise.reject("prekeys");
+			}
+		});
+};
+exports.updatePreKeys = updatePreKeys;
+
+exports.getPreKey = function(userId, cb) {
+	var sharedKeyIndex;
+	redis.spopAsync(preKeyIndicesKeyFromId(userId)).then(function(keyIndex) {
+		if (keyIndex === null) {
+			keyIndex = keyOfLastResort;
+		}
+		sharedKeyIndex = keyIndex;
+
+		var multi = redis
+			.multi()
+			.hget(preKeysKeyFromId(userId), keyIndex);		
+
+		if (keyIndex != keyOfLastResort) {
+			multi.hdel(preKeysKeyFromId(userId), keyIndex)
+		}
+
+		return multi.exec();
+	}).then(function(values) {
+		cb(values[0][1], parseInt(sharedKeyIndex, 10));
 	});
 };
 
@@ -121,25 +181,11 @@ exports.checkUsersWithPhoneNumbers = function(phoneNumbers, cb) {
 		promises.push(userIdFromPhoneNumber(phoneNumber));
 	}
 	Promise.all(promises).then(function(ids) {
-		sharedIds = ids;
-
-		var infoPromises = [];
-		for (var i = 0; i < ids.length; i++) {
-			var id = ids[i];
-			if (id) {
-				infoPromises.push(getUserInfo(ids[i], ['key']));
-			} else {
-				infoPromises.push(Promise.resolve([null]));
-			}
-		}
-		return Promise.all(infoPromises);
-	}).then(function(allInfo) {
 		var results = [];
-		for (var i = 0; i < allInfo.length; i++) {
-			if (sharedIds[i] && allInfo[i]) {
+		for (var i = 0; i < ids.length; i++) {
+			if (ids[i]) {
 				results.push({
-					'id': sharedIds[i],
-					'key': allInfo[i][0],
+					'id': ids[i],
 					'phone': phoneNumbers[i]
 				});
 			} else {

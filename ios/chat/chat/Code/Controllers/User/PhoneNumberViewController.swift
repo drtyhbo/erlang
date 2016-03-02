@@ -44,9 +44,6 @@ class PhoneNumberViewController: UIViewController {
         keyboardNotifications.addNotificationsForWillShow({
                 size in
                 self.keyboardWillShowWithSize(size)
-            }, willHide: {
-                size in
-                self.keyboardWillHideWithSize(size)
             });
 
         phoneNumberTextField.addTarget(self, action: "phoneNumberDidChange:", forControlEvents: .EditingChanged)
@@ -83,14 +80,7 @@ class PhoneNumberViewController: UIViewController {
     }
 
     private func keyboardWillShowWithSize(keyboardSize: CGSize) {
-        let overlap = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + phoneNumberContainer.bounds.size.height / 2)
-        if overlap < 0 {
-            phoneNumberContainerVerticalConstraint.constant = overlap
-        }
-    }
-
-    private func keyboardWillHideWithSize(keyboardSize: CGSize) {
-        phoneNumberContainerVerticalConstraint.constant = 0
+        phoneNumberContainerVerticalConstraint.constant = (view.bounds.size.height - keyboardSize.height) - (view.bounds.size.height / 2 + phoneNumberContainer.bounds.size.height / 2)
     }
 
     @objc private func phoneNumberDidChange(textField: UITextField) {
