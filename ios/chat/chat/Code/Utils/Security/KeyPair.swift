@@ -34,7 +34,7 @@ class KeyPair {
         return KeyPair(publicKey: PublicKey(data: publicKey), secretKey: SecretKey(data: secretKey))
     }
 
-    static func fromKeychainWithKey(key: String) -> KeyPair? {
+    static func fromKeychainWithKey(key: Int) -> KeyPair? {
         let keychain = Keychain()
         guard let base64PublicKey = keychain.stringForKey("pk:\(key)"), base64SecretKey = keychain.stringForKey("sk:\(key)"), publicKey = NSData.fromBase64(base64PublicKey), secretKey = NSData.fromBase64(base64SecretKey) else {
             return nil
@@ -43,7 +43,7 @@ class KeyPair {
         return KeyPair(publicKey: publicKey, secretKey: secretKey)
     }
 
-    func saveToKeychainWithKey(key: String) {
+    func saveToKeychainWithKey(key: Int) {
         let keychain = Keychain()
         keychain.setString(publicKey.base64, forKey: "pk:\(key)")
         keychain.setString(secretKey.base64, forKey: "sk:\(key)")

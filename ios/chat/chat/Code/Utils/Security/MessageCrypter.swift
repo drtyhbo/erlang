@@ -28,7 +28,6 @@ class MessageCrypter {
                     return
                 }
 
-                let conversation = Conversation.getOrCreateWithFriend(friend)
                 conversation.preKeyIndex = keyIndex
                 conversation.publicKey = publicKey
                 CoreData.save()
@@ -40,8 +39,11 @@ class MessageCrypter {
         }
     }
 
-    func decryptMessage(message: JSON, fromFriend friend: Friend) {
+    func decryptMessage(message: String, forFriend friend: Friend) -> JSON? {
+        let conversation = Conversation.getOrCreateWithFriend(friend)
+        CoreData.save()
 
+        return handleDecryption(message, conversation: conversation)
     }
 
     // TODO: Call this in a synchronous messaging queue to prevent this from being run more than
@@ -51,9 +53,9 @@ class MessageCrypter {
         if !conversation.isRatcheting {
             keyPair = KeyPair.keyPair()!
         } else {
-            keyPair = KeyPair.fromKeychainWithKey("\(conversation.friend.id)")!
+            keyPair = KeyPair.fromKeychainWithKey(conversation.friend.id)!
         }
-        conversation.isRatcheting = false
+        keyPair.saveToKeychainWithKey(conversation.friend.id)
 
         guard let sharedSecret = generateSharedSecretForConversation(conversation, withKeyPair: keyPair) else {
             callback(nil)
@@ -77,14 +79,57 @@ class MessageCrypter {
             "k": sodium.utils.bin2hex(keyPair.publicKey)!,
             "c": conversation.messageNumber,
             "m": sodium.utils.bin2hex(encryptedMessage)!])
-        if conversation.preKeyIndex < 0 {
+        if conversation.preKeyIndex >= 0 {
             json["pki"] = JSON(conversation.preKeyIndex)
         }
 
+        conversation.isRatcheting = true
         conversation.messageNumber++
         CoreData.save()
 
         callback(try! json.rawData().base64)
+    }
+
+    private func handleDecryption(message: String, conversation: Conversation) -> JSON? {
+        guard let messageData = NSData.fromBase64(message) else {
+            return nil
+        }
+
+        let sodium = Sodium()!
+        let json = JSON(data: messageData)
+        guard let otherPublicKeyHex = json["k"].string, otherPublicKey = sodium.utils.hex2bin(otherPublicKeyHex), messageNumber = json["c"].int, encryptedMessageHex = json["m"].string, encryptedMessage = sodium.utils.hex2bin(encryptedMessageHex) else {
+            return nil
+        }
+
+        conversation.publicKey = otherPublicKey
+        conversation.preKeyIndex = -1
+        conversation.isRatcheting = false
+        CoreData.save()
+
+        let keyPair: KeyPair
+        if let preKeyIndex = json["pki"].int {
+            guard let preKey = PreKeyCache.sharedCache.preKeyForIndex(preKeyIndex) else {
+                return nil
+            }
+            keyPair = preKey.keyPair
+        } else {
+            guard let keychainKeyPair = KeyPair.fromKeychainWithKey(conversation.friend.id) else {
+                return nil
+            }
+            keyPair = keychainKeyPair
+        }
+
+        guard let sharedSecret = generateSharedSecretForConversation(conversation, withKeyPair: keyPair) else {
+            return nil
+        }
+
+        let hash = Hash()
+        hash.update([sharedSecret, "message\(messageNumber)".utf8Data])
+        guard let messageKey = hash.final(), decryptedMessage: NSData = sodium.secretBox.open(encryptedMessage, secretKey: messageKey) else {
+            return nil
+        }
+
+        return JSON(data: decryptedMessage)
     }
 
     private func generateSharedSecretForConversation(conversation: Conversation, withKeyPair keyPair: KeyPair) -> SharedSecret? {

@@ -40,6 +40,17 @@ class PreKeyCache {
         return preKeys
     }
 
+    func preKeyForIndex(index: Int) -> PreKey? {
+        let sodium = Sodium()!
+        let keychain = Keychain()
+
+        guard let hexPublicKey = keychain.stringForKey("pk\(index)"), hexSecretKey = keychain.stringForKey("sk\(index)"), publicKey = sodium.utils.hex2bin(hexPublicKey), secretKey = sodium.utils.hex2bin(hexSecretKey) else {
+            return nil
+        }
+
+        return PreKey(keyPair: KeyPair(publicKey: publicKey, secretKey: secretKey), index: index)
+    }
+
     private func generateKeyPairForIndex(index: Int) -> PreKey? {
         if let preKey = preKeyForIndex(index) {
             return preKey
@@ -55,16 +66,5 @@ class PreKeyCache {
         keychain.setString(hexSecretKey, forKey: "sk\(index)")
 
         return PreKey(keyPair: keyPair, index: index)
-    }
-
-    private func preKeyForIndex(index: Int) -> PreKey? {
-        let sodium = Sodium()!
-        let keychain = Keychain()
-
-        guard let hexPublicKey = keychain.stringForKey("pk\(index)"), hexSecretKey = keychain.stringForKey("sk\(index)"), publicKey = sodium.utils.hex2bin(hexPublicKey), secretKey = sodium.utils.hex2bin(hexSecretKey) else {
-            return nil
-        }
-
-        return PreKey(keyPair: KeyPair(publicKey: publicKey, secretKey: secretKey), index: index)
     }
 }
