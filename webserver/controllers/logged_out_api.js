@@ -1,20 +1,20 @@
 var express = require('express'),
 	twilio = require('../utils/twilio'),
-	user = require('../models/user');
+	user = require('../models/user'),
+	User = user.User;
 
 var router = express.Router();
 
 router.post('/register/', function(req, res) {
 	var phoneNumber = req.body.phone;
-	if (!phoneNumber || phoneNumber.length != 11) {
-		res.send({ 'status': 'error' });
-		return;
-	}
-
-	user.create(phoneNumber, function(err, code) {
-		twilio.sendSMS(phoneNumber, code, function(err, message) {
+	User.create(phoneNumber).then(function(user) {
+		return user.fetch(User.fields.code);
+	}).then(function(values) {
+		twilio.sendSMS(phoneNumber, values[0], function(err, message) {
 			res.send({ 'status': 'ok' });
 		});
+	}, function(err) {
+		res.send({'status': 'error'});
 	});
 });
 
@@ -28,19 +28,22 @@ router.post('/confirm/', function(req, res) {
 		return;
 	}
 
-	user.login(phoneNumber, code, preKeys[0], function(err, id, sessionToken, firstName, lastName) {
-		if (err) {
-			res.send({ 'status': 'error' });
-			return;
-		}
-
+	var sharedUser;
+	User.login(phoneNumber, code).then(function(user) {
+		sharedUser = user;
+		return user.updatePreKeys(preKeys[0]);
+	}).then(function() {
+		return sharedUser.fetch(User.fields.firstName, User.fields.lastName, User.fields.session);
+	}).then(function(values){
 		res.send({
 			'status': 'ok',
-			'id': id,
-			'sessionToken': sessionToken,
-			'firstName': firstName,
-			'lastName': lastName
+			'id': sharedUser.id,
+			'firstName': values[0],
+			'lastName': values[1],
+			'sessionToken': values[2]
 		});
+	}, function(err) {
+		res.send({ 'status': 'error' });
 	});
 });
 

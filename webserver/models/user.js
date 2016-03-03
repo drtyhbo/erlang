@@ -2,12 +2,11 @@ var redis = require('./redis').redis,
 	utils = require('../utils/utils.js'),
 	Promise = require('bluebird').Promise;
 
-var User = function(id, code) {
-	this._id = id;
-	this._code = code || null;
+var User = function(id) {
+	this.id = id;
 };
 
-User.redisKeys = {
+User.fields = {
 	phone: 'phone',
 	code: 'code',
 	session: 'session',
@@ -17,6 +16,8 @@ User.redisKeys = {
 	firstName: 'firstName',
 	lastName: 'lastName'
 };
+
+User.keyOfLastResort = 0xFFFF;
 
 // Creates a new user. Returns a promise that resolves to the user.
 User.create = function(phoneNumber) {
@@ -36,27 +37,122 @@ User.create = function(phoneNumber) {
 	}).then(function(user) {
 		return Promise.resolve(user);
 	});
-}
+};
 
-User.prototype.getCode = function() {
-	if (this._code) {
-		return Promise.resolve(this._code);
-	} else {
-		return redis.hgetAsync(User._userKey(this._id), User.redisKeys.code);
+// Returns a session key for the user (assuming the codes match).
+User.login = function(phoneNumber, code) {
+	var self = this;
+
+	var sharedUser;
+	return this._getUserId(phoneNumber).then(function(id) {
+		if (!id) {
+			return Promise.reject();
+		}
+
+		sharedUser = new User(id);
+		return sharedUser.fetch(User.fields.code);
+	}).then(function(values) {
+		if (!code || values[0] != code) {
+			return Promise.reject();
+		}
+		return sharedUser.fetch(User.fields.session);
+	}).then(function(values) {
+		if (!values[0]) {
+			values[0] = utils.generateSessionToken();
+		}
+		return sharedUser
+			.update(User.fields.session, values[0], User.fields.active, true)
+			.thenReturn(sharedUser);
+	});
+};
+
+exports.login = function(phoneNumber, code, preKeys, cb) {
+	var sharedId;
+	userIdFromPhoneNumber(phoneNumber).then(function(id) {
+		if (!id) {
+			cb('unknown')
+		} else {
+			sharedId = id;
+			return redis.hgetAsync(userKeyFromId(id), userKeys.code);
+		}
+	}).then(function(retrievedCode) {
+		if (!code || retrievedCode != code) {
+			return Promise.reject('mismatch');
+		} else {
+			return redis.hmgetAsync(userKeyFromId(sharedId), userKeys.session, userKeys.firstName, userKeys.lastName);
+		}
+	}).then(function(values) {
+		if (!values[0]) {
+			values[0] = utils.generateSessionToken();
+		}
+		return redis
+			.hmsetAsync(userKeyFromId(sharedId), userKeys.session, values[0], userKeys.active, true)
+			.thenReturn(values);
+	}).then(function(values) {
+		return updatePreKeys(sharedId, preKeys)
+			.thenReturn(values);
+	}).then(function(values) {
+		cb(null, sharedId, values[0], values[1], values[2]);
+	}, function(err) {
+		cb(err);
+	});
+};
+
+User.prototype.fetch = function() {
+	return redis.hmgetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
+};
+
+User.prototype.update = function() {
+	return redis.hmsetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
+};
+
+User.prototype.updatePreKeys = function(preKeys) {
+	var indices = preKeys['i'];
+	var publicKeys = preKeys['pk'];
+
+	if (indices.length != publicKeys.length) {
+		return Promise.reject();
 	}
-}
+
+	var keyValues = [];
+	for (var i = 0; i < indices.length; i++) {
+		keyValues.push(indices[i]);
+		keyValues.push(publicKeys[i]);
+	}
+
+	return redis
+		.multi()
+		.hmset(User._preKeysKey(this.id), keyValues)
+		.sadd(User._preKeyIndicesKey(this.id), indices.filter(function(index) { return index != User.keyOfLastResort; }))
+		.exec()
+		.then(function(values) {
+			if (values.length == 2 && values[0][1] == 'OK') {
+				return Promise.resolve(true);
+			} else {
+				return Promise.reject();
+			}
+		});
+};
 
 User._userKey = function(id) {
 	return 'u:{' + id + '}';
-}
+};
 
 User._phoneKey = function(phoneNumber) {
 	return 'p:{' + phoneNumber + '}';
-}
+};
+
+User._preKeysKey = function(id) {
+	return 'pk:{' + id + '}';
+};
+
+User._preKeyIndicesKey = function(id) {
+	return 'pki:{' + id + '}';
+};
 
 User._getUserId = function(phoneNumber) {
 	return redis.getAsync(User._phoneKey(phoneNumber));
-}
+};
 
 User._create = function(phoneNumber) {
 	var code = Math.floor(Math.random() * 900000) + 100000;
@@ -69,10 +165,10 @@ User._create = function(phoneNumber) {
 
 User.prototype._generateCode = function() {
 	var self = this;
-	return redis.hgetAsync(User._userKey(this._id), User.redisKeys.code).then(function(code) {
+	return redis.hgetAsync(User._userKey(this.id), User.fields.code).then(function(code) {
 		if (!code) {
 			self._code = Math.floor(Math.random() * 900000) + 100000;;
-			return redis.hsetAsync(User._userKey(self._id), User.redisKeys.code, self._code).thenReturn(self._code);
+			return redis.hsetAsync(User._userKey(self.id), User.fields.code, self._code).thenReturn(self._code);
 		} else {
 			return Promise.resolve(code);
 		}
@@ -132,31 +228,6 @@ function createNewUser(phoneNumber) {
 		return redis.hmsetAsync(userKeyFromId(id), [userKeys.phone, phoneNumber]).thenReturn(id);
 	});
 }
-
-exports.create = function(phoneNumber, cb) {
-	var userId;
-	userIdFromPhoneNumber(phoneNumber).then(function(id) {
-		if (!id) {
-			return createNewUser(phoneNumber);
-		} else {
-			return Promise.resolve(id);
-		}
-	}).then(function(id) {
-		userId = id;
-		return redis.hgetAsync(userKeyFromId(id), userKeys.code);
-	}).then(function(code) {
-		if (!code) {
-			code = Math.floor(Math.random() * 900000) + 100000;
-			return redis.hsetAsync(userKeyFromId(userId), userKeys.code, code).thenReturn(code);
-		} else {
-			return Promise.resolve(code);
-		}
-	}).then(function(code) {
-		cb(null, code);
-	}, function(err) {
-		cb(err, null);
-	});
-};
 
 exports.login = function(phoneNumber, code, preKeys, cb) {
 	var sharedId;

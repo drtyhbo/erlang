@@ -5,14 +5,17 @@ var assert = require('assert'),
 	User = require('../models/user').User,
 	helpers = require('./test_helpers');
 
-var phoneNumber = '18315550835';
+var Constants = {
+	phoneNumber: '18315550835',
+	phoneNumberKey: 'p:{18315550835}'
+};
 
 describe('User', function() {
 	var server;
 
 	before(function (done) {
 		server = require('../app');
-		helpers.deleteUser(phoneNumber).then(function() {
+		helpers.deleteUser(Constants.phoneNumber).then(function() {
 			done();
 		});
 	});
@@ -35,13 +38,39 @@ describe('User', function() {
 		});
 	});
 
-	it('User - ok', function testSlash(done) {
-		User.create(phoneNumber).then(function(user) {
+	it('User - create ok', function testSlash(done) {
+		User.create(Constants.phoneNumber).then(function(user) {
 			assert.notEqual(user, null);
-			return user.getCode();
-		}).then(function(code) {
-			assert.equal(code >= 100000, true);
-			assert.equal(code <= 999999, true);
+			return user.fetch(User.fields.code);
+		}).then(function(values) {
+			assert.equal(values[0] >= 100000, true);
+			assert.equal(values[0] <= 999999, true);
+			done();
+		});
+	});
+
+	it('User - login no code', function testSlash(done) {
+		User.login(Constants.phoneNumber, '12345').then(function(user) {
+		}, function(err) {
+			done();
+		});
+	});
+
+	it('User - login no phone', function testSlash(done) {
+		User.login('12345', '12345').then(function(user) {
+		}, function(err) {
+			done();
+		});
+	});
+
+	it('User - login ok', function testSlash(done) {
+		redis.getAsync(Constants.phoneNumberKey).then(function(id) {
+			var user = new User(id);
+			return user.fetch(User.fields.code);
+		}).then(function(values) {
+			return User.login(Constants.phoneNumber, values[0]);
+		}).then(function(user) {
+			assert.notEqual(user, null);
 			done();
 		});
 	});
