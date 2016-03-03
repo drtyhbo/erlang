@@ -32,10 +32,6 @@ describe('logged out', function() {
 			done();
 		});
 	});
-
-	afterEach(function () {
-		server.close();
-	});
 	
 	it('/api/register/ - missing phone number', function testSlash(done) {
 		request(server)

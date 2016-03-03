@@ -2,6 +2,7 @@ var express = require('express'),
 	user = require('../models/user'),
 	User = user.User,
 	file = require('../models/file'),
+	File = file.File,
 	s3 = require('../utils/s3');
 
 var router = express.Router();
@@ -46,8 +47,8 @@ router.post('/friend/check/', function(req, res) {
 router.post('/friend/prekey/', function(req, res) {
 	var userId = req.body.userId;
 	if (!userId) {
-		res.send({ 'status': 'error' })
-		return
+		res.send({ 'status': 'error' });
+		return;
 	}
 
 	new User(userId).fetchPreKey().then(function(key) {
@@ -69,10 +70,15 @@ router.post('/friend/prekey/', function(req, res) {
  */
 router.post('/pns/register/', function(req, res) {
 	var token = req.body.token;
-	user.setDeviceToken(req.userId, token, function(err) {
-		res.send({
-			'status': err || 'ok'
-		});
+	if (!token) {
+		res.send({ 'status': 'error' })
+		return;
+	}
+
+	req.user.update(User.fields.iosPushToken, token).then(function() {
+		res.send({ 'status': 'ok' })
+	}, function() {
+		res.send({ 'status': 'error' });
 	});
 });
 
@@ -84,15 +90,18 @@ router.post('/pns/register/', function(req, res) {
  */
 router.post('/file/create/', function(req, res) {
 	var numIds = req.body.numIds || 1;
-	file.create(req.userId, req.body.friendId, numIds, function(err, fileId) {
-		var result = {
-			'status': err || 'ok'
-		};
-		if (fileId != undefined) {
-			result['fileId'] = fileId
-		}
+	if (!req.body.friendId) {
+		res.send({ 'status': 'error' });
+		return;
+	}
 
-		res.send(result);
+	File.create(req.user, new User(req.body.friendId), numIds).then(function(files) {
+		res.send({
+			'status': 'ok',
+			'fileIds': files.map(function(file) { return file.id }) 
+		});
+	}, function() {
+		res.send({ 'status': 'error' });
 	});
 });
 

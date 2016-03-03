@@ -11,20 +11,14 @@ var Constants = {
 };
 
 describe('User', function() {
-	var server;
 	var sharedUser;
 
 	before(function (done) {
-		server = require('../app');
 		helpers.deleteUser(Constants.phoneNumber).then(function() {
 			done();
 		});
 	});
 
-	afterEach(function () {
-		server.close();
-	});
-	
 	it('User - missing phone number', function testSlash(done) {
 		User.create().then(function() {
 		}, function() {

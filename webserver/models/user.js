@@ -5,6 +5,7 @@ var redis = require('./redis').redis,
 var User = function(id) {
 	this.id = id;
 };
+exports.User = User;
 
 User.fields = {
 	phone: 'phone',
@@ -136,6 +137,10 @@ User.prototype.confirmSession = function(sessionToken) {
 	});
 };
 
+User.prototype.exists = function() {
+	return redis.existsAsync(User._userKey(this.id));
+};
+
 // Has tests.
 User.prototype.fetch = function() {
 	return redis.hmgetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
@@ -232,8 +237,6 @@ User.prototype._generateCode = function() {
 User.prototype._update = function() {
 	return redis.hmsetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
 };
-
-exports.User = User;
 
 function doesUserWithIdExist(userId) {
 	return redis.existsAsync(userKeyFromId(userId)).then(function(response) {

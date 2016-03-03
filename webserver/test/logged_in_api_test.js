@@ -103,4 +103,82 @@ describe('logged in', function() {
 					}, done);
 			});
 	});
+
+	it('/api/user/friend/prekey/ - no token', function testSlash(done) {
+		makeRequest('/api/user/pns/register/', {
+				userId: sharedUser.id})
+			.expect(200, {
+				status: 'error'
+			}, done);
+	});
+
+
+	it('/api/user/friend/prekey/', function testSlash(done) {
+		makeRequest('/api/user/pns/register/', {
+				userId: sharedUser.id,
+				token: 'pnsToken'})
+			.expect(200, {
+				status: 'error'
+			})
+			.end(function(err, res) {
+				sharedUser.fetch(User.fields.iosPushToken).then(function(values) {
+					assert.equal(values[0], 'pnsToken');
+					done();
+				});
+			});
+	});
+
+	it('/api/user/file/create/ - no friendId', function testSlash(done) {
+		makeRequest('/api/user/file/create/', {
+				numFiles: 1})
+			.expect(200, {
+				status: 'error'
+			}, done);
+	});
+
+	it('/api/user/file/create/ - invalid friendId', function testSlash(done) {
+		makeRequest('/api/user/file/create/', {
+				numFiles: 1,
+				friendId: -1})
+			.expect(200, {
+				status: 'error'
+			}, done);
+	});
+
+	it('/api/user/file/create/', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/file/create/', {
+					numIds: 1,
+					friendId: friend.id})
+				.expect(function(res) {
+					if (res.body.fileIds.length != 1 || !res.body.fileIds[0]) {
+						return "invalid files";
+					}
+					res.body.fileIds = [12];
+				})
+				.expect(200, {
+					status: 'ok',
+					fileIds: [12]
+				}, done);
+			});
+	});
+
+	it('/api/user/file/create/ - multiple', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/file/create/', {
+					numIds: 2,
+					friendId: friend.id})
+				.expect(function(res) {
+					var fileIds = res.body.fileIds;
+					if (fileIds.length != 2 || !fileIds[0] || !fileIds[1]) {
+						return "invalid files";
+					}
+					res.body.fileIds = [12, 13];
+				})
+				.expect(200, {
+					status: 'ok',
+					fileIds: [12, 13]
+				}, done);
+			});
+	});
 });
