@@ -19,7 +19,28 @@ User.fields = {
 
 User.keyOfLastResort = 0xFFFF;
 
+User._userKey = function(id) {
+	return 'u:{' + id + '}';
+};
+
+User._phoneKey = function(phoneNumber) {
+	return 'p:{' + phoneNumber + '}';
+};
+
+User._preKeysKey = function(id) {
+	return 'pk:{' + id + '}';
+};
+
+User._preKeyIndicesKey = function(id) {
+	return 'pki:{' + id + '}';
+};
+
+User._getUserId = function(phoneNumber) {
+	return redis.getAsync(User._phoneKey(phoneNumber));
+};
+
 // Creates a new user. Returns a promise that resolves to the user.
+// Has tests.
 User.create = function(phoneNumber) {
 	if (!phoneNumber || phoneNumber.length != 11) {
 		return Promise.reject();
@@ -39,7 +60,20 @@ User.create = function(phoneNumber) {
 	});
 };
 
+User.prototype._generateCode = function() {
+	var self = this;
+	return redis.hgetAsync(User._userKey(this.id), User.fields.code).then(function(code) {
+		if (!code) {
+			self._code = Math.floor(Math.random() * 900000) + 100000;;
+			return redis.hsetAsync(User._userKey(self.id), User.fields.code, self._code).thenReturn(self._code);
+		} else {
+			return Promise.resolve(code);
+		}
+	});
+}
+
 // Returns a session key for the user (assuming the codes match).
+// Has tests.
 User.login = function(phoneNumber, code) {
 	var self = this;
 
@@ -61,51 +95,43 @@ User.login = function(phoneNumber, code) {
 			values[0] = utils.generateSessionToken();
 		}
 		return sharedUser
-			.update(User.fields.session, values[0], User.fields.active, true)
+			._update(User.fields.session, values[0], User.fields.active, true)
 			.thenReturn(sharedUser);
 	});
 };
 
-exports.login = function(phoneNumber, code, preKeys, cb) {
-	var sharedId;
-	userIdFromPhoneNumber(phoneNumber).then(function(id) {
-		if (!id) {
-			cb('unknown')
-		} else {
-			sharedId = id;
-			return redis.hgetAsync(userKeyFromId(id), userKeys.code);
-		}
-	}).then(function(retrievedCode) {
-		if (!code || retrievedCode != code) {
-			return Promise.reject('mismatch');
-		} else {
-			return redis.hmgetAsync(userKeyFromId(sharedId), userKeys.session, userKeys.firstName, userKeys.lastName);
-		}
-	}).then(function(values) {
-		if (!values[0]) {
-			values[0] = utils.generateSessionToken();
-		}
-		return redis
-			.hmsetAsync(userKeyFromId(sharedId), userKeys.session, values[0], userKeys.active, true)
-			.thenReturn(values);
-	}).then(function(values) {
-		return updatePreKeys(sharedId, preKeys)
-			.thenReturn(values);
-	}).then(function(values) {
-		cb(null, sharedId, values[0], values[1], values[2]);
-	}, function(err) {
-		cb(err);
+User._create = function(phoneNumber) {
+	var code = Math.floor(Math.random() * 900000) + 100000;
+	return redis.incrAsync('user_id').then(function(id) {
+		return redis.setAsync(User._phoneKey(phoneNumber), id).thenReturn(id);
+	}).then(function(id) {
+		return redis.hmsetAsync(User._userKey(id), [userKeys.phone, phoneNumber]).thenReturn(new User(id));
 	});
-};
+}
 
+// Has tests.
 User.prototype.fetch = function() {
 	return redis.hmgetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
 };
 
+// Has tests.
 User.prototype.update = function() {
+	var itemsToUpdate = Array.prototype.slice.call(arguments);
+	for (var i = itemsToUpdate.length - 2; i >= 0; i -= 2) {
+		var fieldName = itemsToUpdate[i];
+		if (fieldName != User.fields.firstName && fieldName != User.fields.lastName && fieldName != User.fields.iosPushToken) {
+			itemsToUpdate.splice(i, 2);
+		}
+	}
+	return this._update.apply(this, itemsToUpdate);
+};
+
+User.prototype._update = function() {
 	return redis.hmsetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
 };
 
+// Updates the user's pre-key cache with the provided pre-keys.
+// Has tests.
 User.prototype.updatePreKeys = function(preKeys) {
 	var indices = preKeys['i'];
 	var publicKeys = preKeys['pk'];
@@ -133,47 +159,6 @@ User.prototype.updatePreKeys = function(preKeys) {
 			}
 		});
 };
-
-User._userKey = function(id) {
-	return 'u:{' + id + '}';
-};
-
-User._phoneKey = function(phoneNumber) {
-	return 'p:{' + phoneNumber + '}';
-};
-
-User._preKeysKey = function(id) {
-	return 'pk:{' + id + '}';
-};
-
-User._preKeyIndicesKey = function(id) {
-	return 'pki:{' + id + '}';
-};
-
-User._getUserId = function(phoneNumber) {
-	return redis.getAsync(User._phoneKey(phoneNumber));
-};
-
-User._create = function(phoneNumber) {
-	var code = Math.floor(Math.random() * 900000) + 100000;
-	return redis.incrAsync('user_id').then(function(id) {
-		return redis.setAsync(User._phoneKey(phoneNumber), id).thenReturn(id);
-	}).then(function(id) {
-		return redis.hmsetAsync(User._userKey(id), [userKeys.phone, phoneNumber]).thenReturn(new User(id));
-	});
-}
-
-User.prototype._generateCode = function() {
-	var self = this;
-	return redis.hgetAsync(User._userKey(this.id), User.fields.code).then(function(code) {
-		if (!code) {
-			self._code = Math.floor(Math.random() * 900000) + 100000;;
-			return redis.hsetAsync(User._userKey(self.id), User.fields.code, self._code).thenReturn(self._code);
-		} else {
-			return Promise.resolve(code);
-		}
-	});
-}
 
 exports.User = User;
 

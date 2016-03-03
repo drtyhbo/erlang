@@ -74,4 +74,59 @@ describe('User', function() {
 			done();
 		});
 	});
+
+	it('User - update pre keys', function testSlash(done) {
+		var sharedUser;
+
+		function updatePreKeys(keys) {
+			assert.equal(keys.length, 2);
+			return sharedUser.updatePreKeys({
+				i: [0, 1],
+				pk: keys
+			});
+		}
+
+		function validatePreKeys(keys) {
+			assert.equal(keys.length, 2);
+			return redis.smembersAsync('pki:{' + sharedUser.id + '}').then(function(values) {
+				assert.equal(values[0], '0');
+				assert.equal(values[1], '1');
+				return redis.hgetallAsync('pk:{' + sharedUser.id + '}');
+			}).then(function(values) {
+				assert.equal(values['0'], keys[0]);
+				assert.equal(values['1'], keys[1]);
+				return Promise.resolve()
+			});
+		}
+
+		redis.getAsync(Constants.phoneNumberKey).then(function(id) {
+			sharedUser = new User(id);
+			return updatePreKeys(['abcd', 'efgh']);
+		}).then(function(ok) {
+			assert.equal(ok, true);
+			return validatePreKeys(['abcd', 'efgh']);
+		}).then(function() {
+			return updatePreKeys(['ijkl', 'mnop']);
+		}).then(function() {
+			return validatePreKeys(['ijkl', 'mnop']);
+		}).then(function() {
+			done();
+		});
+	});
+
+	it('User - fetch/update', function testSlash(done) {
+		var sharedUser;
+		redis.getAsync(Constants.phoneNumberKey).then(function(id) {
+			sharedUser = new User(id);
+			return sharedUser.update(User.fields.session, 'abcd', User.fields.firstName, 'Rob', User.fields.lastName, 'Lowe', User.fields.iosPushToken, 'jklm');
+		}).then(function() {
+			return sharedUser.fetch(User.fields.session, User.fields.firstName, User.fields.lastName, User.fields.iosPushToken);
+		}).then(function(values) {
+			assert.notEqual(values[0], 'abcd');
+			assert.equal(values[1], 'Rob');
+			assert.equal(values[2], 'Lowe');
+			assert.equal(values[3], 'jklm');
+			done();
+		});
+	});
 });
