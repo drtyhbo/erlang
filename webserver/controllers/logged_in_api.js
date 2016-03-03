@@ -1,5 +1,6 @@
 var express = require('express'),
 	user = require('../models/user'),
+	User = user.User,
 	file = require('../models/file'),
 	s3 = require('../utils/s3');
 
@@ -8,17 +9,13 @@ var router = express.Router();
 router.use(function(req, res, next) {
 	var id = req.body.id;
 	var sessionToken = req.body.session;
-	user.confirmSession(id, sessionToken, function(err, confirmed) {
-		if (confirmed) {
-			req.userId = id;
-			req.sessionToken = sessionToken;
 
-			next();
-		} else {
-			res.send({
-				'status': 'session'
-			});
-		}
+	new User(id).confirmSession(sessionToken).then(function(user) {
+		req.user = user;
+		req.sessionToken = sessionToken;
+		next();		
+	}, function(err) {
+		res.send({ 'status': 'session' });
 	});
 });
 
@@ -31,14 +28,14 @@ router.post('/friend/check/', function(req, res) {
 	if (!(phone instanceof Array)) {
 		phone = [phone];
 	}
-	user.checkUsersWithPhoneNumbers(phone, function(err, users) {
-		var result = {
-			'status': err || 'ok'
-		};
-		if (users) {
-			result['friends'] = users;
-		}
-		res.send(result);
+
+	User.checkPhoneNumbers(phone).then(function(users) {
+		res.send({
+			'status': 'ok',
+			'friends': users
+		});
+	}, function() {
+		return res.send({ 'status': 'error' });
 	});
 });
 
@@ -49,19 +46,18 @@ router.post('/friend/check/', function(req, res) {
 router.post('/friend/prekey/', function(req, res) {
 	var userId = req.body.userId;
 	if (!userId) {
-		res.send({'status': 'error'})
+		res.send({ 'status': 'error' })
 		return
 	}
 
-	user.getPreKey(userId, function(publicKey, keyIndex) {
-		var result = {
-			'status': 'ok'
-		};
-		if (publicKey && keyIndex) {
-			result['publicKey'] = publicKey;
-			result['keyIndex'] = keyIndex;
-		}
-		res.send(result);
+	new User(userId).fetchPreKey().then(function(key) {
+		res.send({
+			'status': 'ok',
+			'keyIndex': key.index,
+			'publicKey': key.key
+		});
+	}, function() {
+		return res.send({ 'status': 'error' });
 	});
 });
 

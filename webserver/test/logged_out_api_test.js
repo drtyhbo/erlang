@@ -1,9 +1,10 @@
 var assert = require('assert'),
 	request = require('supertest'),
 	redis = require('../models/redis').redis,
-	Promise = require('bluebird').Promise;
+	Promise = require('bluebird').Promise,
+	helpers = require('./test_helpers');
 
-var Constants = {
+const Constants = {
 	phoneNumber: '18315550835',
 	phoneNumberKey: 'p:{18315550835}'
 };
@@ -22,22 +23,12 @@ function getIdAndCodeForPhoneNumber(phoneNumber) {
 	});
 }
 
-describe('registration', function() {
+describe('logged out', function() {
 	var server;
 
 	before(function (done) {
 		server = require('../app');
-		redis.getAsync(Constants.phoneNumberKey).then(function(value) {
-			if (value) {
-				return redis
-					.multi()
-					.del(Constants.phoneNumberKey)
-					.del('u:{' + value + '}')
-					.exec();
-			} else {
-				return Promise.resolve();
-			}
-		}).then(function() {
+		helpers.deleteUser(Constants.phoneNumber).then(function() {
 			done();
 		});
 	});
@@ -185,18 +176,17 @@ describe('registration', function() {
 						pk: ['abcd', 'efgh']
 					}]
 				})
-
-			.end(function(err, res) {
-				redis.smembersAsync('pki:{' + id + '}').then(function(values) {
-					assert.equal(values[0], '0');
-					assert.equal(values[1], '1');
-					return redis.hgetallAsync('pk:{' + id + '}');
-				}).then(function(values) {
-					assert.equal(values['0'], 'abcd');
-					assert.equal(values['1'], 'efgh');
-					done();
+				.end(function(err, res) {
+					redis.smembersAsync('pki:{' + id + '}').then(function(values) {
+						assert.equal(values[0], '0');
+						assert.equal(values[1], '1');
+						return redis.hgetallAsync('pk:{' + id + '}');
+					}).then(function(values) {
+						assert.equal(values['0'], 'abcd');
+						assert.equal(values['1'], 'efgh');
+						done();
+					});
 				});
-			});
 		});
 	});
 });

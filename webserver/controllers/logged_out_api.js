@@ -1,7 +1,6 @@
 var express = require('express'),
 	twilio = require('../utils/twilio'),
-	user = require('../models/user'),
-	User = user.User;
+	User = require('../models/user').User;
 
 var router = express.Router();
 
