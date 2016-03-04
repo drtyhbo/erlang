@@ -274,5 +274,4 @@ describe('logged in', function() {
 				uploadUrl: 'https://s3-url'
 			}, done);
 	});
-
 });

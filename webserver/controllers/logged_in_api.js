@@ -1,8 +1,6 @@
 var express = require('express'),
-	user = require('../models/user'),
-	User = user.User,
-	file = require('../models/file'),
-	File = file.File,
+	User = require('../models/user').User,
+	File = require('../models/file').File,
 	s3 = require('../utils/s3');
 
 var router = express.Router();
