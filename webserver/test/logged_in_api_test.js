@@ -4,6 +4,7 @@ var assert = require('assert'),
 	Promise = require('bluebird').Promise,
 	User = require('../models/user').User,
 	File = require('../models/file').File,
+	Group = require('../models/group').Group,
 	helpers = require('./test_helpers');
 
 const Constants = {
@@ -273,5 +274,68 @@ describe('logged in', function() {
 				status: 'ok',
 				uploadUrl: 'https://s3-url'
 			}, done);
+	});
+
+	it('/api/user/group/create/ - no name', function testSlash(done) {
+		makeRequest('/api/user/group/create/')
+			.expect(200, {
+				status: 'error'
+			}, done);
+	});
+
+
+	it('/api/user/group/create/', function testSlash(done) {
+		makeRequest('/api/user/group/create/', {
+				name: 'testGroup'
+			})
+			.expect(function(res) {
+				assert.notEqual(res.body.groupId, null);
+				res.body.groupId = 5
+			})
+			.expect(200, {
+				status: 'ok',
+				groupId: 5
+			}, done);
+	});
+
+	it('/api/user/group/add/ - no access', function testSlash(done) {
+		Group.create('testGroup', sharedUser).then(function(newGroup) {
+			makeRequest('/api/user/group/add/')
+				.expect(200, {
+					status: 'error'
+				}, done);
+		})
+	});
+
+	it('/api/user/group/add/ - no access', function testSlash(done) {
+		var sharedNewUser;
+		User.create('18315551111').then(function(newUser) {
+			sharedNewUser = newUser;
+			return Group.create('testGroup', newUser);
+		}).then(function(newGroup) {
+			makeRequest('/api/user/group/add/', {
+					groupId: newGroup.id,
+					friendId: sharedNewUser.id
+				})
+				.expect(200, {
+					status: 'error'
+				}, done);
+		})
+	});
+
+	it('/api/user/group/add/', function testSlash(done) {
+		var sharedNewUser;
+		User.create('18315551111').then(function(newUser) {
+			sharedNewUser = newUser;
+			return Group.create('testGroup', sharedUser);
+		}).then(function(newGroup) {
+			makeRequest('/api/user/group/add/', {
+					groupId: newGroup.id,
+					friendId: sharedNewUser.id
+				})
+				.expect(200, {
+					status: 'ok'
+				}, done);
+		})
 	});
 });
