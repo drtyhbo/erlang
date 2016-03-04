@@ -1,6 +1,6 @@
 var express = require('express'),
-	user = require('../models/user'),
-	file = require('../models/file'),
+	User = require('../models/user').User,
+	File = require('../models/file').File,
 	s3 = require('../utils/s3');
 
 var router = express.Router();
@@ -8,17 +8,13 @@ var router = express.Router();
 router.use(function(req, res, next) {
 	var id = req.body.id;
 	var sessionToken = req.body.session;
-	user.confirmSession(id, sessionToken, function(err, confirmed) {
-		if (confirmed) {
-			req.userId = id;
-			req.sessionToken = sessionToken;
 
-			next();
-		} else {
-			res.send({
-				'status': 'session'
-			});
-		}
+	new User(id).confirmSession(sessionToken).then(function(user) {
+		req.user = user;
+		req.sessionToken = sessionToken;
+		next();		
+	}, function(err) {
+		res.send({ 'status': 'session' });
 	});
 });
 
@@ -31,14 +27,14 @@ router.post('/friend/check/', function(req, res) {
 	if (!(phone instanceof Array)) {
 		phone = [phone];
 	}
-	user.checkUsersWithPhoneNumbers(phone, function(err, users) {
-		var result = {
-			'status': err || 'ok'
-		};
-		if (users) {
-			result['friends'] = users;
-		}
-		res.send(result);
+
+	User.checkPhoneNumbers(phone).then(function(users) {
+		res.send({
+			'status': 'ok',
+			'friends': users
+		});
+	}, function() {
+		return res.send({ 'status': 'error' });
 	});
 });
 
@@ -49,19 +45,18 @@ router.post('/friend/check/', function(req, res) {
 router.post('/friend/prekey/', function(req, res) {
 	var userId = req.body.userId;
 	if (!userId) {
-		res.send({'status': 'error'})
-		return
+		res.send({ 'status': 'error' });
+		return;
 	}
 
-	user.getPreKey(userId, function(publicKey, keyIndex) {
-		var result = {
-			'status': 'ok'
-		};
-		if (publicKey && keyIndex) {
-			result['publicKey'] = publicKey;
-			result['keyIndex'] = keyIndex;
-		}
-		res.send(result);
+	new User(userId).fetchPreKey().then(function(key) {
+		res.send({
+			'status': 'ok',
+			'keyIndex': key.index,
+			'publicKey': key.key
+		});
+	}, function() {
+		return res.send({ 'status': 'error' });
 	});
 });
 
@@ -73,10 +68,15 @@ router.post('/friend/prekey/', function(req, res) {
  */
 router.post('/pns/register/', function(req, res) {
 	var token = req.body.token;
-	user.setDeviceToken(req.userId, token, function(err) {
-		res.send({
-			'status': err || 'ok'
-		});
+	if (!token) {
+		res.send({ 'status': 'error' })
+		return;
+	}
+
+	req.user.update(User.fields.iosPushToken, token).then(function() {
+		res.send({ 'status': 'ok' })
+	}, function() {
+		res.send({ 'status': 'error' });
 	});
 });
 
@@ -88,15 +88,18 @@ router.post('/pns/register/', function(req, res) {
  */
 router.post('/file/create/', function(req, res) {
 	var numIds = req.body.numIds || 1;
-	file.create(req.userId, req.body.friendId, numIds, function(err, fileId) {
-		var result = {
-			'status': err || 'ok'
-		};
-		if (fileId != undefined) {
-			result['fileId'] = fileId
-		}
+	if (!req.body.friendId) {
+		res.send({ 'status': 'error' });
+		return;
+	}
 
-		res.send(result);
+	File.create(req.user, new User(req.body.friendId), numIds).then(function(files) {
+		res.send({
+			'status': 'ok',
+			'fileIds': files.map(function(file) { return file.id }) 
+		});
+	}, function() {
+		res.send({ 'status': 'error' });
 	});
 });
 
@@ -107,15 +110,27 @@ router.post('/file/create/', function(req, res) {
  * fileId - The id of the file.
  */
 router.post('/file/get/', function(req, res) {
-	file.hasAccess(req.body.fileId, req.userId, function(err, isMember) {
+	var fileId = req.body.fileId;
+	var method = req.body.method;
+	var contentType = req.body.contentType;
+
+	if (!fileId || !method || !contentType) {
+		res.send({ 'status': 'error' });
+		return
+	}
+
+	var file = new File(fileId);
+	file.hasAccess(req.user).then(function(isMember) {
 		var result = {
-			'status': err || 'ok'
+			'status': 'ok'
 		};
 		if (isMember) {
-			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, req.body.method.toUpperCase(), req.body.contentType);
+			result['fileUrl'] = file.generateSignedUrl(fileId, method.toUpperCase(), contentType);
 		}
 
 		res.send(result);
+	}, function() {
+		res.send({ 'status': 'error' })
 	});
 });
 
@@ -126,7 +141,8 @@ router.post('/file/get/', function(req, res) {
  */
 router.post('/profilepic/', function(req, res) {
 	res.send({
-		'uploadUrl': s3.generateSignedUrl('PUT', req.userId, 'drtyhbo-chat-users', 'image/jpeg')
+		'status': 'ok',
+		'uploadUrl': s3.generateSignedUrl('PUT', req.user.id, 'drtyhbo-chat-users', 'image/jpeg')
 	});
 });
 
@@ -138,31 +154,18 @@ router.post('/profilepic/', function(req, res) {
  * lastName - The user's last name.
  */
 router.post('/info/update/', function(req, res) {
-	var firstName = req.body.firstName;
-	var lastName = req.body.lastName;
-	user.updateInfo(req.userId, firstName, lastName, function(err) {
-		res.send({
-			'status': err || 'ok'
-		});
-	});
-});
+	var firstName = req.body.firstName || '';
+	var lastName = req.body.lastName || '';
 
-/*
- * Request parameters:
- * userId - Current user id.
- * session - Current user session.
- * url - The id of the file.
- */
-router.post('/url/metadata/', function(req, res) {
-	file.hasAccess(req.body.fileId, req.userId, function(err, isMember) {
-		var result = {
-			'status': err || 'ok'
-		};
-		if (isMember) {
-			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, req.body.method.toUpperCase(), req.body.contentType);
-		}
+	if (!firstName) {
+		res.send({ 'status': 'error' });
+		return;
+	}
 
-		res.send(result);
+	req.user.update(User.fields.firstName, firstName, User.fields.lastName, lastName).then(function() {
+		res.send({ 'status': 'ok' })
+	}, function() {
+		res.send({ 'status': 'error' })
 	});
 });
 

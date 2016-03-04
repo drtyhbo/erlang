@@ -200,6 +200,10 @@ class ChatViewController: UIViewController {
     private func appendMessages(newMessages: [Message]) {
         messages = messages + newMessages
 
+        if unreadMessageCount > 0 {
+            unreadMessageCount += newMessages.count
+        }
+
         let previousRowCount = rows.count
         calculateRows()
 
@@ -283,7 +287,7 @@ class ChatViewController: UIViewController {
             case .Date(_):
                 return .FullNoPadding
             case .NewMessages:
-                return .NoPadding
+                return .FullNoPadding
             default:
                 break
         }
