@@ -3,6 +3,7 @@ var assert = require('assert'),
 	redis = require('../models/redis').redis,
 	Promise = require('bluebird').Promise,
 	User = require('../models/user').User,
+	File = require('../models/file').File,
 	helpers = require('./test_helpers');
 
 const Constants = {
@@ -181,4 +182,97 @@ describe('logged in', function() {
 				}, done);
 			});
 	});
+
+	it('/api/user/file/get/', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/file/get/')
+				.expect(200, {
+					status: 'error'
+				}, done);
+		});
+	});
+
+	it('/api/user/file/get/ - no method, no contentType', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			return File.create(sharedUser, friend, 1);
+		}).then(function(files) {
+			makeRequest('/api/user/file/get/', {
+					fileId: files[0].id
+				})
+				.expect(200, {
+					status: 'error'
+				}, done);
+		});
+	});
+
+	it('/api/user/file/get/ - no contentType', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			return File.create(sharedUser, friend, 1);
+		}).then(function(files) {
+			makeRequest('/api/user/file/get/', {
+					fileId: files[0].id,
+					method: 'post'
+				})
+				.expect(200, {
+					status: 'error'
+				}, done);
+		});
+	});
+
+	it('/api/user/file/get/', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			return File.create(sharedUser, friend, 1);
+		}).then(function(files) {
+			makeRequest('/api/user/file/get/', {
+					fileId: files[0].id,
+					method: 'post',
+					contentType: 'image/jpeg'
+				})
+				.expect(function(res) {
+					assert.notEqual(res.body.fileUrl, null);
+					res.body.fileUrl = 'https://s3-url'
+				})
+				.expect(200, {
+					status: 'ok',
+					fileUrl: 'https://s3-url'
+				}, done);
+		});
+	});
+
+	it('/api/user/info/update/', function testSlash(done) {
+		makeRequest('/api/user/info/update/', {
+				firstName: 'Andreas',
+				lastName: 'Binnewies'
+			})
+			.expect(200, {
+				status: 'ok'
+			})
+			.end(function(err, res) {
+				sharedUser.fetch(User.fields.firstName, User.fields.lastName).then(function(values) {
+					assert.equal(values[0], 'Andreas');
+					assert.equal(values[1], 'Binnewies');
+					done();
+				});
+			});
+	});
+
+	it('/api/user/info/update/ - no first name', function testSlash(done) {
+		makeRequest('/api/user/info/update/')
+			.expect(200, {
+				status: 'error'
+			}, done);
+	});
+
+	it('/api/user/profilepic/', function testSlash(done) {
+		makeRequest('/api/user/profilepic/')
+			.expect(function(res) {
+				assert.notEqual(res.body.uploadUrl, null);
+				res.body.uploadUrl = 'https://s3-url'
+			})
+			.expect(200, {
+				status: 'ok',
+				uploadUrl: 'https://s3-url'
+			}, done);
+	});
+
 });

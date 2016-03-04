@@ -43,14 +43,10 @@ File._userKey = function(userId) {
 	return 'u:' + userId;
 };
 
-exports.hasAccess = function(fileId, userId, cb) {
-	return redis.sismemberAsync(fileKeyFromId(fileId), userKeyFromId(userId)).then(function(isMember) {
-		cb(null, isMember);
-	}, function(err) {
-		cb('error');
-	})
+File.prototype.hasAccess = function(user) {
+	return redis.sismemberAsync(File._fileKey(this.id), File._userKey(user.id))
 };
 
-exports.generateSignedUrl = function(fileId, method, contentType) {
+File.prototype.generateSignedUrl = function(fileId, method, contentType) {
 	return s3.generateSignedUrl(method, 'files/' + fileId, 'drtyhbo-chat', contentType);
-}
+};

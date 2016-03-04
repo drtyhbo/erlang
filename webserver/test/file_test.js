@@ -49,8 +49,37 @@ describe('file', function() {
 		}).then(function(files) {
 			assert.equal(files.length, 2);
 			done();
-		}, function(err) {
-			console.log(err);
+		});
+	});
+
+	it('hasAccess', function testSlash(done) {
+		var sharedFriend;
+		var sharedFile;
+		User.create('18315551111').then(function(friend) {
+			sharedFriend = friend;
+			return File.create(sharedUser, sharedFriend, 1);
+		}).then(function(files) {
+			assert.equal(files.length, 1);
+			sharedFile = files[0];
+			return sharedFile.hasAccess(sharedUser);
+		}).then(function(hasAccess) {
+			assert.equal(hasAccess, true);
+			return sharedFile.hasAccess(sharedFriend);
+		}).then(function(hasAccess) {
+			assert.equal(hasAccess, true);
+			done();
+		});
+	});
+
+	it('hasAccess - no access', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			sharedFriend = friend;
+			return File.create(sharedUser, sharedFriend, 1);
+		}).then(function(files) {
+			assert.equal(files.length, 1);
+			return files[0].hasAccess(new User(0));
+		}).then(function(hasAccess) {
+			assert.equal(hasAccess, false);
 			done();
 		});
 	});

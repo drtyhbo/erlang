@@ -112,15 +112,27 @@ router.post('/file/create/', function(req, res) {
  * fileId - The id of the file.
  */
 router.post('/file/get/', function(req, res) {
-	file.hasAccess(req.body.fileId, req.userId, function(err, isMember) {
+	var fileId = req.body.fileId;
+	var method = req.body.method;
+	var contentType = req.body.contentType;
+
+	if (!fileId || !method || !contentType) {
+		res.send({ 'status': 'error' });
+		return
+	}
+
+	var file = new File(fileId);
+	file.hasAccess(req.user).then(function(isMember) {
 		var result = {
-			'status': err || 'ok'
+			'status': 'ok'
 		};
 		if (isMember) {
-			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, req.body.method.toUpperCase(), req.body.contentType);
+			result['fileUrl'] = file.generateSignedUrl(fileId, method.toUpperCase(), contentType);
 		}
 
 		res.send(result);
+	}, function() {
+		res.send({ 'status': 'error' })
 	});
 });
 
@@ -131,7 +143,8 @@ router.post('/file/get/', function(req, res) {
  */
 router.post('/profilepic/', function(req, res) {
 	res.send({
-		'uploadUrl': s3.generateSignedUrl('PUT', req.userId, 'drtyhbo-chat-users', 'image/jpeg')
+		'status': 'ok',
+		'uploadUrl': s3.generateSignedUrl('PUT', req.user.id, 'drtyhbo-chat-users', 'image/jpeg')
 	});
 });
 
@@ -143,31 +156,18 @@ router.post('/profilepic/', function(req, res) {
  * lastName - The user's last name.
  */
 router.post('/info/update/', function(req, res) {
-	var firstName = req.body.firstName;
-	var lastName = req.body.lastName;
-	user.updateInfo(req.userId, firstName, lastName, function(err) {
-		res.send({
-			'status': err || 'ok'
-		});
-	});
-});
+	var firstName = req.body.firstName || '';
+	var lastName = req.body.lastName || '';
 
-/*
- * Request parameters:
- * userId - Current user id.
- * session - Current user session.
- * url - The id of the file.
- */
-router.post('/url/metadata/', function(req, res) {
-	file.hasAccess(req.body.fileId, req.userId, function(err, isMember) {
-		var result = {
-			'status': err || 'ok'
-		};
-		if (isMember) {
-			result['fileUrl'] = file.generateSignedUrl(req.body.fileId, req.body.method.toUpperCase(), req.body.contentType);
-		}
+	if (!firstName) {
+		res.send({ 'status': 'error' });
+		return;
+	}
 
-		res.send(result);
+	req.user.update(User.fields.firstName, firstName, User.fields.lastName, lastName).then(function() {
+		res.send({ 'status': 'ok' })
+	}, function() {
+		res.send({ 'status': 'error' })
 	});
 });
 
