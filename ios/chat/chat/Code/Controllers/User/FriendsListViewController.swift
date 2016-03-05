@@ -21,6 +21,13 @@ class FriendsListViewController: UIViewController {
     weak var delegate: FriendsListViewControllerDelegate?
 
     private let friendCellReuseIdentifier = "FriendTableViewCell"
+    private let headerReuseIdentifier = "HeaderReuseIdentifier"
+
+    private let friendsSection = 0
+    private let groupChatsSection = 1
+
+    private let topHeaderHeight: CGFloat = 40
+    private let headerHeight: CGFloat = 60
 
     init() {
         super.init(nibName: "FriendsListViewController", bundle: nil)
@@ -33,10 +40,10 @@ class FriendsListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        friendsTable.registerNib(UINib(nibName: "FriendsListHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: headerReuseIdentifier)
         friendsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
 
-//        let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
-        let contacts = ContactsHelper().getAllContacts()
+        let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
         FriendManager.sharedManager.loadFriendsFromContacts(contacts) {
             self.friendsTable.reloadData()
         }
@@ -63,15 +70,29 @@ class FriendsListViewController: UIViewController {
 
 extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 2
+    }
+
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(headerReuseIdentifier) as! FriendsListHeader
+        header.headerType = section == friendsSection ? FriendsListHeaderType.Friends : FriendsListHeaderType.GroupChats
+        return header
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return FriendManager.sharedManager.friends.count
+        return section == friendsSection ? FriendManager.sharedManager.friends.count : 0
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return FriendTableViewCell.cellHeight
+        if indexPath.section == friendsSection {
+            return FriendTableViewCell.cellHeight
+        } else {
+            return 30
+        }
+    }
+
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section == 0 ? topHeaderHeight : headerHeight
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

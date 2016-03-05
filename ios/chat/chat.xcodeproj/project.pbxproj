@@ -12,6 +12,8 @@
 		900EC8FD1C72B04900AE5C73 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FC1C72B04900AE5C73 /* FileHelper.swift */; };
 		900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */; };
 		9018D0EB1C77645100027508 /* PendingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9018D0EA1C77645100027508 /* PendingMessage.swift */; };
+		9022FBFE1C8B396E00F88BC7 /* FriendsListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9022FBFD1C8B396E00F88BC7 /* FriendsListHeader.swift */; };
+		9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -82,6 +84,8 @@
 		900EC8FC1C72B04900AE5C73 /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatProfilePic.swift; sourceTree = "<group>"; };
 		9018D0EA1C77645100027508 /* PendingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PendingMessage.swift; sourceTree = "<group>"; };
+		9022FBFD1C8B396E00F88BC7 /* FriendsListHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsListHeader.swift; sourceTree = "<group>"; };
+		9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsListHeader.xib; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
@@ -278,6 +282,8 @@
 				90AFD5CC1C6090B800236D6B /* FriendTableViewCell.xib */,
 				90FC19DB1C7CC11D004E7EFF /* UserInfoViewController.swift */,
 				90FC19DD1C7CC12A004E7EFF /* UserInfoViewController.xib */,
+				9022FBFD1C8B396E00F88BC7 /* FriendsListHeader.swift */,
+				9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -472,6 +478,7 @@
 				90F1F7931C7F5F2B00A75914 /* us@3x.png in Resources */,
 				9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */,
 				90C0F4A11C78CE10007F58BD /* DayTableViewCell.xib in Resources */,
+				9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */,
 				90AFD5C71C608EDC00236D6B /* FriendsListViewController.xib in Resources */,
 				90C0F4B11C7A4118007F58BD /* ConversationStartTableViewCell.xib in Resources */,
 				90EBF8C11C474CA700A7AD51 /* ChatViewController.xib in Resources */,
@@ -561,6 +568,7 @@
 				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
 				9049634A1C7239790078C9DF /* UIImage.swift in Sources */,
 				90FC19DC1C7CC11D004E7EFF /* UserInfoViewController.swift in Sources */,
+				9022FBFE1C8B396E00F88BC7 /* FriendsListHeader.swift in Sources */,
 				90374E271C8496230008421F /* PreKeyCache.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
 				9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */,
