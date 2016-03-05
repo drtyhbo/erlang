@@ -9,20 +9,20 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="0BD-2K-SEZ" customClass="FriendTableViewCell" customModule="chat" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="48"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0BD-2K-SEZ" id="ZCW-41-x5d">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="47"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A9O-OU-FeN">
-                        <rect key="frame" x="8" y="8" width="48" height="48"/>
+                        <rect key="frame" x="8" y="8" width="32" height="32"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ProfilePic" translatesAutoresizingMaskIntoConstraints="NO" id="YFR-eT-Lbm" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ndE-0H-PBu">
-                                <rect key="frame" x="14" y="14" width="20" height="20"/>
+                                <rect key="frame" x="6" y="6" width="20" height="20"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p3A-YG-wTz">
                                         <rect key="frame" x="0.0" y="2" width="20" height="17"/>
@@ -44,17 +44,17 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="ndE-0H-PBu" firstAttribute="centerX" secondItem="A9O-OU-FeN" secondAttribute="centerX" id="BBF-jl-q7o"/>
-                            <constraint firstAttribute="width" constant="48" id="Blf-el-4rk"/>
+                            <constraint firstAttribute="width" constant="32" id="Blf-el-4rk"/>
                             <constraint firstItem="YFR-eT-Lbm" firstAttribute="top" secondItem="A9O-OU-FeN" secondAttribute="top" id="CGq-Is-rRd"/>
                             <constraint firstAttribute="bottom" secondItem="YFR-eT-Lbm" secondAttribute="bottom" id="Iu4-Qm-LnU"/>
                             <constraint firstItem="YFR-eT-Lbm" firstAttribute="leading" secondItem="A9O-OU-FeN" secondAttribute="leading" id="PES-6O-byo"/>
                             <constraint firstAttribute="trailing" secondItem="YFR-eT-Lbm" secondAttribute="trailing" id="TAf-VV-8Xz"/>
-                            <constraint firstAttribute="height" constant="48" id="TUD-0c-m8s"/>
+                            <constraint firstAttribute="height" constant="32" id="TUD-0c-m8s"/>
                             <constraint firstItem="ndE-0H-PBu" firstAttribute="centerY" secondItem="A9O-OU-FeN" secondAttribute="centerY" id="cq7-QH-bMj"/>
                         </constraints>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ait-L7-hda">
-                        <rect key="frame" x="64" y="21" width="248" height="22"/>
+                        <rect key="frame" x="48" y="13" width="264" height="22"/>
                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                         <color key="textColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -91,6 +91,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="ProfilePic" width="48" height="48"/>
+        <image name="ProfilePic" width="84" height="84"/>
     </resources>
 </document>

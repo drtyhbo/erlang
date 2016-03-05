@@ -10,24 +10,32 @@ import Foundation
 import UIKit
 
 enum FriendsListHeaderType {
-    case Friends
-    case GroupChats
+    case Chats
+    case Topics
+}
+
+protocol FriendsListHeaderDelegate: class {
+    func friendsListHeaderDidTapAdd(friendsListHeader: FriendsListHeader)
 }
 
 class FriendsListHeader: UITableViewHeaderFooterView {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var addButton: UIButton!
 
-    var headerType: FriendsListHeaderType = .Friends {
+    weak var delegate: FriendsListHeaderDelegate?
+
+    var headerType: FriendsListHeaderType = .Chats {
         didSet {
             switch (headerType) {
-                case .Friends:
-                    label.text = "FRIENDS"
-                    addButton.hidden = true
-                case .GroupChats:
-                    label.text = "GROUP CHATS"
-                    addButton.hidden = false
+                case .Chats:
+                    label.text = "CHATS"
+                case .Topics:
+                    label.text = "TOPICS"
             }
         }
+    }
+
+    @IBAction func didTapAdd() {
+        delegate?.friendsListHeaderDidTapAdd(self)
     }
 }

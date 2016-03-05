@@ -16,7 +16,7 @@ class FriendTableViewCell: UITableViewCell {
     @IBOutlet weak var badge: UIView!
     @IBOutlet weak var unreadMessageCountLabel: UILabel!
 
-    static let cellHeight: CGFloat = 64
+    static let cellHeight: CGFloat = 48
 
     var friend: Friend? {
         didSet {
