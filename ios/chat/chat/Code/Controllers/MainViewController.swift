@@ -41,9 +41,9 @@ class MainViewController: UIViewController {
         slideViewController.bouncing = true
         slideViewController.gestureSupport = .Drag
 
-        let friendsListViewController = FriendsListViewController()
-        friendsListViewController.delegate = self
-        slideViewController.leftMenuViewController = friendsListViewController
+        let chatListViewController = ChatListViewController()
+        chatListViewController.delegate = self
+        slideViewController.leftMenuViewController = chatListViewController
 
         let chatViewController = ChatViewController()
         slideViewController.contentViewController = chatViewController
@@ -105,13 +105,15 @@ class MainViewController: UIViewController {
     }
 }
 
-extension MainViewController: FriendsListViewControllerDelegate {
-    func friendsListViewController(friendsListViewController: FriendsListViewController, didSelectFriend friend: Friend) {
-        NSUserDefaults.standardUserDefaults().setInteger(friend.id, forKey: currentFriendKey)
+extension MainViewController: ChatListViewControllerDelegate {
+    func chatListViewController(chatListViewController: ChatListViewController, didSelectChat chat: Chat) {
+        let participants = chat.participants.allObjects as! [Friend]
+
+        NSUserDefaults.standardUserDefaults().setInteger(participants[0].id, forKey: currentFriendKey)
         NSUserDefaults.standardUserDefaults().synchronize()
 
         let chatViewController = slideViewController.contentViewController as! ChatViewController
-        chatViewController.friend = friend
+        chatViewController.friend = participants[0]
 
         slideViewController.hideMenu(true)
     }
