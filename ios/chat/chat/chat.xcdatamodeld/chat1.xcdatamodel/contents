@@ -17,8 +17,12 @@
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="friend" inverseEntity="Conversation" syncable="YES"/>
+        <relationship name="groupChats" toMany="YES" deletionRule="Nullify" destinationEntity="GroupChat" inverseName="members" inverseEntity="GroupChat" syncable="YES"/>
         <relationship name="receivedMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="to" inverseEntity="Message" syncable="YES"/>
         <relationship name="sentMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="from" inverseEntity="Message" syncable="YES"/>
+    </entity>
+    <entity name="GroupChat" representedClassName="GroupChat" syncable="YES">
+        <relationship name="members" toMany="YES" deletionRule="Nullify" destinationEntity="Friend" inverseName="groupChats" inverseEntity="Friend" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="date" attributeType="Date" indexed="YES" syncable="YES"/>
@@ -34,7 +38,8 @@
     <elements>
         <element name="Conversation" positionX="-54" positionY="54" width="128" height="120"/>
         <element name="File" positionX="-36" positionY="72" width="128" height="105"/>
-        <element name="Friend" positionX="-54" positionY="9" width="128" height="120"/>
+        <element name="Friend" positionX="-54" positionY="9" width="128" height="135"/>
+        <element name="GroupChat" positionX="-54" positionY="63" width="128" height="60"/>
         <element name="Message" positionX="-63" positionY="-18" width="128" height="120"/>
         <element name="PendingMessage" positionX="-54" positionY="54" width="128" height="75"/>
     </elements>

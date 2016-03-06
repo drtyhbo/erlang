@@ -16,6 +16,8 @@
 		9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */; };
 		90253D711C8B49DA00892DB2 /* TopicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D6F1C8B49DA00892DB2 /* TopicTableViewCell.swift */; };
 		90253D721C8B49DA00892DB2 /* TopicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */; };
+		90253D741C8BF48900892DB2 /* GroupChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D731C8BF48900892DB2 /* GroupChat.swift */; };
+		90253D7C1C8BF92400892DB2 /* GroupChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D7B1C8BF92400892DB2 /* GroupChatTests.swift */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -57,6 +59,8 @@
 		90AFD5D11C61102C00236D6B /* FriendManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5D01C61102C00236D6B /* FriendManager.swift */; };
 		90AFD5D31C6110B900236D6B /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5D21C6110B900236D6B /* MessageManager.swift */; };
 		90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5D41C61118E00236D6B /* ChatMessages.swift */; };
+		90C0D30A1C8BFE3A006BF1EA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
+		90C0D30B1C8C012A006BF1EA /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FA1C72A9B800AE5C73 /* CoreData.swift */; };
 		90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */; };
 		90C0F4A11C78CE10007F58BD /* DayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */; };
 		90C0F4A31C79621B007F58BD /* MoviePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F4A21C79621B007F58BD /* MoviePlayer.swift */; };
@@ -81,6 +85,16 @@
 		90FC19DE1C7CC12A004E7EFF /* UserInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90FC19DD1C7CC12A004E7EFF /* UserInfoViewController.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		90253D7E1C8BF92400892DB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 90EBF8791C47458F00A7AD51 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 90EBF8801C47458F00A7AD51;
+			remoteInfo = chat;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		900EC8FA1C72A9B800AE5C73 /* CoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		900EC8FC1C72B04900AE5C73 /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
@@ -90,6 +104,10 @@
 		9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsListHeader.xib; sourceTree = "<group>"; };
 		90253D6F1C8B49DA00892DB2 /* TopicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicTableViewCell.swift; sourceTree = "<group>"; };
 		90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicTableViewCell.xib; sourceTree = "<group>"; };
+		90253D731C8BF48900892DB2 /* GroupChat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChat.swift; sourceTree = "<group>"; };
+		90253D791C8BF92400892DB2 /* chatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = chatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		90253D7B1C8BF92400892DB2 /* GroupChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatTests.swift; sourceTree = "<group>"; };
+		90253D7D1C8BF92400892DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
@@ -165,6 +183,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		90253D761C8BF92400892DB2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90EBF87E1C47458F00A7AD51 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -192,6 +217,15 @@
 				C5EA02263D659AD024FD7039 /* Pods-chat.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		90253D7A1C8BF92400892DB2 /* chatTests */ = {
+			isa = PBXGroup;
+			children = (
+				90253D7B1C8BF92400892DB2 /* GroupChatTests.swift */,
+				90253D7D1C8BF92400892DB2 /* Info.plist */,
+			);
+			path = chatTests;
 			sourceTree = "<group>";
 		};
 		9031FFD01C6240B700BCC456 /* Utils */ = {
@@ -298,6 +332,7 @@
 			isa = PBXGroup;
 			children = (
 				90EBF8831C47459000A7AD51 /* chat */,
+				90253D7A1C8BF92400892DB2 /* chatTests */,
 				90EBF8821C47458F00A7AD51 /* Products */,
 				426CE136D9E86C46A2DD6DE9 /* Pods */,
 				03C4881D7477C6DD7CC79989 /* Frameworks */,
@@ -308,6 +343,7 @@
 			isa = PBXGroup;
 			children = (
 				90EBF8811C47458F00A7AD51 /* chat.app */,
+				90253D791C8BF92400892DB2 /* chatTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -348,6 +384,7 @@
 				900EC8FC1C72B04900AE5C73 /* FileHelper.swift */,
 				90AFD5C81C608F2E00236D6B /* Friend.swift */,
 				90AFD5D01C61102C00236D6B /* FriendManager.swift */,
+				90253D731C8BF48900892DB2 /* GroupChat.swift */,
 				90EBF8AA1C474A0000A7AD51 /* Message.swift */,
 				90AFD5D21C6110B900236D6B /* MessageManager.swift */,
 				9049633C1C70DE9D0078C9DF /* MessageSender.swift */,
@@ -411,6 +448,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		90253D781C8BF92400892DB2 /* chatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 90253D801C8BF92400892DB2 /* Build configuration list for PBXNativeTarget "chatTests" */;
+			buildPhases = (
+				90253D751C8BF92400892DB2 /* Sources */,
+				90253D761C8BF92400892DB2 /* Frameworks */,
+				90253D771C8BF92400892DB2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				90253D7F1C8BF92400892DB2 /* PBXTargetDependency */,
+			);
+			name = chatTests;
+			productName = chatTests;
+			productReference = 90253D791C8BF92400892DB2 /* chatTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		90EBF8801C47458F00A7AD51 /* chat */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 90EBF8931C47459000A7AD51 /* Build configuration list for PBXNativeTarget "chat" */;
@@ -441,6 +496,10 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = drtyhbo;
 				TargetAttributes = {
+					90253D781C8BF92400892DB2 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 90EBF8801C47458F00A7AD51;
+					};
 					90EBF8801C47458F00A7AD51 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = S4Y2T39EMH;
@@ -469,11 +528,19 @@
 			projectRoot = "";
 			targets = (
 				90EBF8801C47458F00A7AD51 /* chat */,
+				90253D781C8BF92400892DB2 /* chatTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		90253D771C8BF92400892DB2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90EBF87F1C47458F00A7AD51 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -549,6 +616,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		90253D751C8BF92400892DB2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90253D7C1C8BF92400892DB2 /* GroupChatTests.swift in Sources */,
+				90C0D30A1C8BFE3A006BF1EA /* Constants.swift in Sources */,
+				90C0D30B1C8C012A006BF1EA /* CoreData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90EBF87D1C47458F00A7AD51 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -568,6 +645,7 @@
 				90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */,
 				90C0F4AD1C7A2AC3007F58BD /* UIColor.swift in Sources */,
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
+				90253D741C8BF48900892DB2 /* GroupChat.swift in Sources */,
 				90374E2B1C8496990008421F /* NSData.swift in Sources */,
 				90F1F78E1C7F52B200A75914 /* KeyboardNotifications.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
@@ -611,7 +689,41 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		90253D7F1C8BF92400892DB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 90EBF8801C47458F00A7AD51 /* chat */;
+			targetProxy = 90253D7E1C8BF92400892DB2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		90253D811C8BF92400892DB2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = chatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.chatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/chat.app/chat";
+			};
+			name = Debug;
+		};
+		90253D821C8BF92400892DB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = chatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.chatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/chat.app/chat";
+			};
+			name = Release;
+		};
 		90EBF8911C47459000A7AD51 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -740,6 +852,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		90253D801C8BF92400892DB2 /* Build configuration list for PBXNativeTarget "chatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90253D811C8BF92400892DB2 /* Debug */,
+				90253D821C8BF92400892DB2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		90EBF87C1C47458F00A7AD51 /* Build configuration list for PBXProject "chat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
