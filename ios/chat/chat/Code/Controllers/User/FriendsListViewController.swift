@@ -31,6 +31,7 @@ class FriendsListViewController: UIViewController {
     private let headerHeight: CGFloat = 50
 
     private var topics: [String] = []
+    private var chats: [Chat] = []
 
     init() {
         super.init(nibName: "FriendsListViewController", bundle: nil)
@@ -47,10 +48,17 @@ class FriendsListViewController: UIViewController {
         friendsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
         friendsTable.registerNib(UINib(nibName: "TopicTableViewCell", bundle: nil), forCellReuseIdentifier: topicCellReuseIdentifier)
 
+        friendsTable.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
+
         let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
         FriendManager.sharedManager.loadFriendsFromContacts(contacts) {
-            self.friendsTable.reloadData()
+            self.loadChats()
         }
+    }
+
+    private func loadChats() {
+        chats = Chat.findAll()
+        friendsTable.reloadData()
     }
 
     private func requestContactsAccess(completionHandler: Bool->Void) {
@@ -79,13 +87,13 @@ extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(headerReuseIdentifier) as! FriendsListHeader
+        header.delegate = self
         header.headerType = section == chatsSection ? FriendsListHeaderType.Chats : FriendsListHeaderType.Topics
-        header.delegate = section == chatsSection ? nil : self
         return header
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == chatsSection ? FriendManager.sharedManager.friends.count : topics.count
+        return section == chatsSection ? chats.count : topics.count
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -99,7 +107,7 @@ extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == chatsSection {
             let cell = tableView.dequeueReusableCellWithIdentifier(friendCellReuseIdentifier, forIndexPath: indexPath) as! FriendTableViewCell
-            cell.friend = FriendManager.sharedManager.friends[indexPath.row]
+            cell.chat = chats[indexPath.row]
             return cell
         } else {
             let cell = tableView.dequeueReusableCellWithIdentifier(topicCellReuseIdentifier, forIndexPath: indexPath) as! TopicTableViewCell
@@ -111,10 +119,14 @@ extension FriendsListViewController: UITableViewDataSource, UITableViewDelegate 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         delegate?.friendsListViewController(self, didSelectFriend: FriendManager.sharedManager.friends[indexPath.row])
     }
-}
 
-extension FriendsListViewController: FriendsListHeaderDelegate {
-    func friendsListHeaderDidTapAdd(friendsListHeader: FriendsListHeader) {
+    private func createNewChat() {
+        let friendSelectorViewController = FriendSelectorViewController()
+        friendSelectorViewController.delegate = self
+        presentViewController(UINavigationController(rootViewController: friendSelectorViewController), animated: true, completion: nil)
+    }
+
+    private func createNewTopic() {
         let alertController = UIAlertController(title: "New Topic", message: "Enter a name for your topic.", preferredStyle: .Alert)
         alertController.addTextFieldWithConfigurationHandler { textField in
             textField.placeholder = "Topic name"
@@ -139,5 +151,26 @@ extension FriendsListViewController: FriendsListHeaderDelegate {
         alertController.addAction(cancelAction)
 
         presentViewController(alertController, animated: true, completion: nil)
+    }
+}
+
+extension FriendsListViewController: FriendsListHeaderDelegate {
+    func friendsListHeaderDidTapAdd(friendsListHeader: FriendsListHeader) {
+        if friendsListHeader.headerType == .Chats {
+            createNewChat()
+        } else if friendsListHeader.headerType == .Topics {
+            createNewTopic()
+        }
+    }
+}
+
+extension FriendsListViewController: FriendSelectorViewControllerDelegate {
+    func friendSelectorViewController(friendSelectorViewController: FriendSelectorViewController, didSelectFriends friends: [Friend]) {
+        friendSelectorViewController.dismissViewControllerAnimated(true, completion: nil)
+
+        Chat.createWithParticipants(friends)
+        CoreData.save()
+
+        loadChats()
     }
 }

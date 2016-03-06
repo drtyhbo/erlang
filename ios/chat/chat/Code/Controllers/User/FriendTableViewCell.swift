@@ -18,7 +18,7 @@ class FriendTableViewCell: UITableViewCell {
 
     static let cellHeight: CGFloat = 48
 
-    var friend: Friend? {
+    var chat: Chat? {
         didSet {
             configureCell()
         }
@@ -36,17 +36,19 @@ class FriendTableViewCell: UITableViewCell {
     }
 
     private func configureCell() {
-        guard let friend = friend else {
+        guard let chat = chat else {
             return
         }
 
+        let participants = chat.participants.allObjects as! [Friend]
+
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessagesBadgeUpdated:", name: MessageManager.FriendUnreadMessageCountUpdated, object: friend)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessagesBadgeUpdated:", name: MessageManager.FriendUnreadMessageCountUpdated, object: participants[0])
 
-        name.text = friend.name
-        updateBadgeWithCount(MessageManager.sharedManager.unreadMessageCountForFriend(friend))
+        name.text = participants[0].name
+        updateBadgeWithCount(MessageManager.sharedManager.unreadMessageCountForFriend(participants[0]))
 
-        profilePic.sd_setImageWithURL(friend.profilePicUrl, placeholderImage: UIImage(named: "ProfilePic"))
+        profilePic.sd_setImageWithURL(participants[0].profilePicUrl, placeholderImage: UIImage(named: "ProfilePic"))
     }
 
     private func updateBadgeWithCount(unreadMessageCount: Int) {

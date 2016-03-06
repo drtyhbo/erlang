@@ -1,5 +1,5 @@
 //
-//  GroupChatTests.swift
+//  ChatTests.swift
 //  chatTests
 //
 //  Created by Andreas Binnewies on 3/5/16.
@@ -7,17 +7,16 @@
 //
 
 import XCTest
-import MagicalRecord
 
 @testable import chat
 
-class GroupChatTests: XCTestCase {
+class ChatTests: XCTestCase {
     private var friends: [Friend] = []
 
     override func setUp() {
         super.setUp()
 
-        GroupChat.MR_truncateAll()
+        Chat.MR_truncateAll()
 
         for i in 0..<3 {
             var friend: Friend? = Friend.findWithId(i)
@@ -27,17 +26,17 @@ class GroupChatTests: XCTestCase {
             friends.append(friend!)
         }
 
-        GroupChat.createWithMembers(friends)
+        Chat.createWithParticipants(friends)
         CoreData.save()
     }
     
     func testFindOneFriend() {
-        let groupChat = GroupChat.findWithFriends([friends[0]])
+        let groupChat = Chat.findWithFriends([friends[0]])
         assert(groupChat == nil)
     }
 
     func testFindAllFriends() {
-        let groupChat = GroupChat.findWithFriends(friends)
+        let groupChat = Chat.findWithFriends(friends)
         assert(groupChat != nil)
     }
 }

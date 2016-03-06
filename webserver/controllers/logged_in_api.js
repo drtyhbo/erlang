@@ -155,8 +155,8 @@ router.post('/profilepic/', function(req, res) {
  * lastName - The user's last name.
  */
 router.post('/info/update/', function(req, res) {
-	var firstName = req.body.firstName || '';
-	var lastName = req.body.lastName || '';
+	var firstName = (req.body.firstName || '').trim();
+	var lastName = (req.body.lastName || '').trim();
 
 	if (!firstName) {
 		sendError(res);

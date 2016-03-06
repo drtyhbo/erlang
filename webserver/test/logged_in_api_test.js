@@ -257,6 +257,23 @@ describe('logged in', function() {
 			});
 	});
 
+	it('/api/user/info/update/ - Removes whitespace', function testSlash(done) {
+		makeRequest('/api/user/info/update/', {
+				firstName: '    Andreas    ',
+				lastName: '    Binnewies    '
+			})
+			.expect(200, {
+				status: 'ok'
+			})
+			.end(function(err, res) {
+				sharedUser.fetch(User.fields.firstName, User.fields.lastName).then(function(values) {
+					assert.equal(values[0], 'Andreas');
+					assert.equal(values[1], 'Binnewies');
+					done();
+				});
+			});
+	});
+
 	it('/api/user/info/update/ - no first name', function testSlash(done) {
 		makeRequest('/api/user/info/update/')
 			.expect(200, {

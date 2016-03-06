@@ -16,8 +16,8 @@
 		9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */; };
 		90253D711C8B49DA00892DB2 /* TopicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D6F1C8B49DA00892DB2 /* TopicTableViewCell.swift */; };
 		90253D721C8B49DA00892DB2 /* TopicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */; };
-		90253D741C8BF48900892DB2 /* GroupChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D731C8BF48900892DB2 /* GroupChat.swift */; };
-		90253D7C1C8BF92400892DB2 /* GroupChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D7B1C8BF92400892DB2 /* GroupChatTests.swift */; };
+		90253D741C8BF48900892DB2 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D731C8BF48900892DB2 /* Chat.swift */; };
+		90253D7C1C8BF92400892DB2 /* ChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D7B1C8BF92400892DB2 /* ChatTests.swift */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -61,6 +61,12 @@
 		90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5D41C61118E00236D6B /* ChatMessages.swift */; };
 		90C0D30A1C8BFE3A006BF1EA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		90C0D30B1C8C012A006BF1EA /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC8FA1C72A9B800AE5C73 /* CoreData.swift */; };
+		90C0D3101C8C4B1A006BF1EA /* FriendSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0D30F1C8C4B1A006BF1EA /* FriendSelectorViewController.swift */; };
+		90C0D3121C8C4B28006BF1EA /* FriendSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90C0D3111C8C4B28006BF1EA /* FriendSelectorViewController.xib */; };
+		90C0D3141C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0D3131C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift */; };
+		90C0D3161C8C4D16006BF1EA /* FriendSelectorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90C0D3151C8C4D16006BF1EA /* FriendSelectorTableViewCell.xib */; };
+		90C0D3181C8C8897006BF1EA /* CheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0D3171C8C8897006BF1EA /* CheckMark.swift */; };
+		90C0D31A1C8C92F7006BF1EA /* TintedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0D3191C8C92F7006BF1EA /* TintedImage.swift */; };
 		90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */; };
 		90C0F4A11C78CE10007F58BD /* DayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */; };
 		90C0F4A31C79621B007F58BD /* MoviePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F4A21C79621B007F58BD /* MoviePlayer.swift */; };
@@ -104,9 +110,9 @@
 		9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsListHeader.xib; sourceTree = "<group>"; };
 		90253D6F1C8B49DA00892DB2 /* TopicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicTableViewCell.swift; sourceTree = "<group>"; };
 		90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicTableViewCell.xib; sourceTree = "<group>"; };
-		90253D731C8BF48900892DB2 /* GroupChat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChat.swift; sourceTree = "<group>"; };
+		90253D731C8BF48900892DB2 /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		90253D791C8BF92400892DB2 /* chatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = chatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		90253D7B1C8BF92400892DB2 /* GroupChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatTests.swift; sourceTree = "<group>"; };
+		90253D7B1C8BF92400892DB2 /* ChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTests.swift; sourceTree = "<group>"; };
 		90253D7D1C8BF92400892DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -153,6 +159,12 @@
 		90AFD5D01C61102C00236D6B /* FriendManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendManager.swift; sourceTree = "<group>"; };
 		90AFD5D21C6110B900236D6B /* MessageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
 		90AFD5D41C61118E00236D6B /* ChatMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessages.swift; sourceTree = "<group>"; };
+		90C0D30F1C8C4B1A006BF1EA /* FriendSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendSelectorViewController.swift; sourceTree = "<group>"; };
+		90C0D3111C8C4B28006BF1EA /* FriendSelectorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendSelectorViewController.xib; sourceTree = "<group>"; };
+		90C0D3131C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendSelectorTableViewCell.swift; sourceTree = "<group>"; };
+		90C0D3151C8C4D16006BF1EA /* FriendSelectorTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendSelectorTableViewCell.xib; sourceTree = "<group>"; };
+		90C0D3171C8C8897006BF1EA /* CheckMark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckMark.swift; sourceTree = "<group>"; };
+		90C0D3191C8C92F7006BF1EA /* TintedImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TintedImage.swift; sourceTree = "<group>"; };
 		90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayTableViewCell.swift; sourceTree = "<group>"; };
 		90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DayTableViewCell.xib; sourceTree = "<group>"; };
 		90C0F4A21C79621B007F58BD /* MoviePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviePlayer.swift; sourceTree = "<group>"; };
@@ -222,7 +234,7 @@
 		90253D7A1C8BF92400892DB2 /* chatTests */ = {
 			isa = PBXGroup;
 			children = (
-				90253D7B1C8BF92400892DB2 /* GroupChatTests.swift */,
+				90253D7B1C8BF92400892DB2 /* ChatTests.swift */,
 				90253D7D1C8BF92400892DB2 /* Info.plist */,
 			);
 			path = chatTests;
@@ -246,6 +258,7 @@
 			children = (
 				9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */,
 				9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */,
+				90C0D3191C8C92F7006BF1EA /* TintedImage.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -324,6 +337,11 @@
 				90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */,
 				90FC19DB1C7CC11D004E7EFF /* UserInfoViewController.swift */,
 				90FC19DD1C7CC12A004E7EFF /* UserInfoViewController.xib */,
+				90C0D30F1C8C4B1A006BF1EA /* FriendSelectorViewController.swift */,
+				90C0D3111C8C4B28006BF1EA /* FriendSelectorViewController.xib */,
+				90C0D3131C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift */,
+				90C0D3151C8C4D16006BF1EA /* FriendSelectorTableViewCell.xib */,
+				90C0D3171C8C8897006BF1EA /* CheckMark.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -384,7 +402,7 @@
 				900EC8FC1C72B04900AE5C73 /* FileHelper.swift */,
 				90AFD5C81C608F2E00236D6B /* Friend.swift */,
 				90AFD5D01C61102C00236D6B /* FriendManager.swift */,
-				90253D731C8BF48900892DB2 /* GroupChat.swift */,
+				90253D731C8BF48900892DB2 /* Chat.swift */,
 				90EBF8AA1C474A0000A7AD51 /* Message.swift */,
 				90AFD5D21C6110B900236D6B /* MessageManager.swift */,
 				9049633C1C70DE9D0078C9DF /* MessageSender.swift */,
@@ -557,10 +575,12 @@
 				90C0F4B11C7A4118007F58BD /* ConversationStartTableViewCell.xib in Resources */,
 				90EBF8C11C474CA700A7AD51 /* ChatViewController.xib in Resources */,
 				90AFD5B91C5D281800236D6B /* ConfirmCodeViewController.xib in Resources */,
+				90C0D3161C8C4D16006BF1EA /* FriendSelectorTableViewCell.xib in Resources */,
 				904963451C722CE30078C9DF /* MediaRowTableViewCell.xib in Resources */,
 				90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */,
 				90FC19DE1C7CC12A004E7EFF /* UserInfoViewController.xib in Resources */,
 				90AFD5CD1C6090B800236D6B /* FriendTableViewCell.xib in Resources */,
+				90C0D3121C8C4B28006BF1EA /* FriendSelectorViewController.xib in Resources */,
 				90AFD5B31C5D204100236D6B /* PhoneNumberViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -620,7 +640,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90253D7C1C8BF92400892DB2 /* GroupChatTests.swift in Sources */,
+				90253D7C1C8BF92400892DB2 /* ChatTests.swift in Sources */,
 				90C0D30A1C8BFE3A006BF1EA /* Constants.swift in Sources */,
 				90C0D30B1C8C012A006BF1EA /* CoreData.swift in Sources */,
 			);
@@ -639,13 +659,16 @@
 				9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */,
 				90AFD5B51C5D234400236D6B /* APIManager.swift in Sources */,
 				90AFD5C51C608EB200236D6B /* FriendsListViewController.swift in Sources */,
+				90C0D31A1C8C92F7006BF1EA /* TintedImage.swift in Sources */,
 				9031FFD41C6671B800BCC456 /* Constants.swift in Sources */,
 				90EBF8BE1C474CA700A7AD51 /* ChatRowTableViewCell.swift in Sources */,
 				90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */,
+				90C0D3181C8C8897006BF1EA /* CheckMark.swift in Sources */,
 				90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */,
 				90C0F4AD1C7A2AC3007F58BD /* UIColor.swift in Sources */,
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
-				90253D741C8BF48900892DB2 /* GroupChat.swift in Sources */,
+				90253D741C8BF48900892DB2 /* Chat.swift in Sources */,
+				90C0D3141C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift in Sources */,
 				90374E2B1C8496990008421F /* NSData.swift in Sources */,
 				90F1F78E1C7F52B200A75914 /* KeyboardNotifications.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
@@ -680,6 +703,7 @@
 				90AFD5C91C608F2E00236D6B /* Friend.swift in Sources */,
 				90C0F4AF1C7A410C007F58BD /* ConversationStartTableViewCell.swift in Sources */,
 				90AFD5D31C6110B900236D6B /* MessageManager.swift in Sources */,
+				90C0D3101C8C4B1A006BF1EA /* FriendSelectorViewController.swift in Sources */,
 				90AFD5D11C61102C00236D6B /* FriendManager.swift in Sources */,
 				90EBF8AD1C474A0E00A7AD51 /* User.swift in Sources */,
 				90374E231C8495FE0008421F /* PDKeychainBindings.m in Sources */,
