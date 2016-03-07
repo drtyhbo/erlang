@@ -12,7 +12,26 @@ import MagicalRecord
 
 @objc(Chat)
 class Chat: NSManagedObject {
+    typealias ChatId = NSURL
+
     @NSManaged var participants: NSSet
+
+    override var hashValue: Int {
+        return id.hashValue
+    }
+
+    var id: ChatId {
+        return objectID.URIRepresentation()
+    }
+
+    var participantsArray: [Friend] {
+        return participants.allObjects as? [Friend] ?? []
+    }
+
+    var name: String {
+        let sortedParticipants = participantsArray.sort({ $0.name < $1.name })
+        return sortedParticipants.map({ $0.name }).joinWithSeparator(", ")
+    }
 
     static func createWithParticipants(participants: [Friend]) -> Chat {
         if let chat = findWithFriends(participants) {
@@ -38,8 +57,19 @@ class Chat: NSManagedObject {
     }
 
     static func findAll() -> [Chat] {
-        print (Chat.MR_findAll())
         return Chat.MR_findAll() as! [Chat]
+    }
+
+    static func findWithId(id: ChatId) -> Chat? {
+        let context = NSManagedObjectContext.MR_defaultContext()
+        if let objectId = context.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(id) {
+            do {
+                return try context.existingObjectWithID(objectId) as? Chat
+            } catch {
+            }
+        }
+
+        return nil
     }
 
     func containsPartipants(friends: [Friend]) -> Bool {
@@ -54,4 +84,8 @@ class Chat: NSManagedObject {
         }
         return true
     }
+}
+
+func ==(lhs: Chat, rhs: Chat) -> Bool {
+    return lhs.id == rhs.id
 }

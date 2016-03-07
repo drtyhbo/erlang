@@ -11,12 +11,12 @@ import UIKit
 
 class FriendTableViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var profilePic: ChatProfilePic!
+    @IBOutlet weak var nameLeadingConstraint: NSLayoutConstraint!
 
     @IBOutlet weak var badge: UIView!
     @IBOutlet weak var unreadMessageCountLabel: UILabel!
 
-    static let cellHeight: CGFloat = 48
+    static let cellHeight: CGFloat = 40
 
     var chat: Chat? {
         didSet {
@@ -40,20 +40,18 @@ class FriendTableViewCell: UITableViewCell {
             return
         }
 
-        let participants = chat.participants.allObjects as! [Friend]
-
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessagesBadgeUpdated:", name: MessageManager.FriendUnreadMessageCountUpdated, object: participants[0])
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessagesBadgeUpdated:", name: MessageManager.UnreadMessageCountUpdated, object: chat)
 
-        name.text = participants[0].name
-        updateBadgeWithCount(MessageManager.sharedManager.unreadMessageCountForFriend(participants[0]))
-
-        profilePic.sd_setImageWithURL(participants[0].profilePicUrl, placeholderImage: UIImage(named: "ProfilePic"))
+        name.text = chat.name
+        updateBadgeWithCount(MessageManager.sharedManager.unreadMessageCountForChat(chat))
     }
 
     private func updateBadgeWithCount(unreadMessageCount: Int) {
         badge.hidden = unreadMessageCount == 0
         unreadMessageCountLabel.text = String(unreadMessageCount)
+        badge.layoutIfNeeded()
+        nameLeadingConstraint.constant = unreadMessageCount == 0 ? 10 : (badge.bounds.size.width + 20)
     }
 
     @objc private func unreadMessagesBadgeUpdated(notification: NSNotification) {

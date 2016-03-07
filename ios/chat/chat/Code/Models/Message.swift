@@ -29,8 +29,8 @@ class Message: NSManagedObject {
         let id: Int
     }
 
+    @NSManaged private(set) var chat: Chat
     @NSManaged private(set) var from: Friend?
-    @NSManaged private(set) var to: Friend?
     @NSManaged private(set) var date: NSDate
     @NSManaged private(set) var message: String
 
@@ -95,34 +95,34 @@ class Message: NSManagedObject {
 
     private(set) var json = JSON([:])
 
-    static func createFromCurrentUserTo(to: Friend?, messageJson: JSON) -> Message {
-        return createWithFrom(nil, to: to, date: NSDate(), messageJson: messageJson)
+    static func createFromCurrentUserToChat(chat: Chat, messageJson: JSON) -> Message {
+        return createWithFrom(nil, chat: chat, date: NSDate(), messageJson: messageJson)
     }
 
-    static func createWithFrom(from: Friend?, to: Friend?, date: NSDate, messageJson: JSON) -> Message {
+    static func createWithFrom(from: Friend?, chat: Chat, date: NSDate, messageJson: JSON) -> Message {
         let message = Message.MR_createEntity()!
         message.from = from
-        message.to = to
+        message.chat = chat
         message.date = date
         message.message = messageJson.rawString()!
         message.json = messageJson
         return message
     }
 
-    static func findForFriend(friend: Friend, beforeDate: NSDate?, fetchLimit: Int) -> [Message] {
-        let predicate = NSPredicate(format: "(from == %@ || to == %@) && date < %@", friend, friend, beforeDate ?? NSDate())
+    static func findForChat(chat: Chat, beforeDate: NSDate?, fetchLimit: Int) -> [Message] {
+        let predicate = NSPredicate(format: "chat == %@ && date < %@", chat, beforeDate ?? NSDate())
         let fetchRequest = Message.MR_requestAllSortedBy("date", ascending: false, withPredicate: predicate)
         fetchRequest.fetchLimit = fetchLimit
         return (Message.MR_executeFetchRequest(fetchRequest) as? [Message] ?? []).reverse()
     }
 
-    static func createWithText(text: String, to: Friend) -> Message {
+    static func createWithText(text: String, chat: Chat) -> Message {
         let messageJson = JSON([
             "m": text])
-        return createFromCurrentUserTo(to, messageJson: messageJson)
+        return createFromCurrentUserToChat(chat, messageJson: messageJson)
     }
 
-    static func createWithImageFile(imageFile: File, thumbnailFile: File, to: Friend) -> Message? {
+    static func createWithImageFile(imageFile: File, thumbnailFile: File, chat: Chat) -> Message? {
         guard let image = imageFile.image, thumbnail = thumbnailFile.image else {
             return nil
         }
@@ -136,10 +136,10 @@ class Message: NSManagedObject {
                 "tw": thumbnail.size.width,
                 "th": thumbnail.size.height
             ]])
-        return createFromCurrentUserTo(to, messageJson: messageJson)
+        return createFromCurrentUserToChat(chat, messageJson: messageJson)
     }
 
-    static func createWithMovieFile(movieFile: File, thumbnailFile: File, to: Friend) -> Message? {
+    static func createWithMovieFile(movieFile: File, thumbnailFile: File, chat: Chat) -> Message? {
         guard let thumbnail = thumbnailFile.image else {
             return nil
         }
@@ -151,7 +151,7 @@ class Message: NSManagedObject {
                 "tw": thumbnail.size.width,
                 "th": thumbnail.size.height
             ]])
-        return createFromCurrentUserTo(to, messageJson: messageJson)
+        return createFromCurrentUserToChat(chat, messageJson: messageJson)
     }
 
     override func awakeFromFetch() {

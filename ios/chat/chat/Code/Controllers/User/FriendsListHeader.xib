@@ -12,8 +12,8 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FRIENDS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yg-eE-UCy">
-                    <rect key="frame" x="10" y="7" width="57" height="17"/>
-                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="14"/>
+                    <rect key="frame" x="10" y="9" width="50" height="15"/>
+                    <fontDescription key="fontDescription" type="system" weight="ultraLight" pointSize="12"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>

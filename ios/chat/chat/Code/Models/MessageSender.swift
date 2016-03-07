@@ -69,13 +69,13 @@ class MessageSender {
 
         let outgoingMessage = outgoingMessages.first!
         if let secretKey = outgoingMessage.secretKey where outgoingMessage.files.count > 0 {
-            uploadFile(outgoingMessage.files.first!, toUser: outgoingMessage.message.to!, withSecretKey: secretKey)
+            uploadFile(outgoingMessage.files.first!, withSecretKey: secretKey)
         } else {
             sendOutgoingMessage(outgoingMessage)
         }
     }
 
-    private func uploadFile(file: File, toUser to: Friend, withSecretKey secretKey: MessageCrypter.SharedSecret) {
+    private func uploadFile(file: File, withSecretKey secretKey: MessageCrypter.SharedSecret) {
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
@@ -110,7 +110,7 @@ class MessageSender {
     private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
         let message = outgoingMessage.message
         let messageJson = outgoingMessage.secretKey != nil ? message.wrapJsonWithKey(outgoingMessage.secretKey!) : message.json
-        ChatClient.sharedClient.sendMessageWithJson(messageJson, to: message.to!, messageId: outgoingMessage.messageId)
+        ChatClient.sharedClient.sendMessageWithJson(messageJson, to: message.chat.participantsArray[0], messageId: outgoingMessage.messageId)
     }
 
     @objc private func messageDidSend(notification: NSNotification) {

@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 class MainViewController: UIViewController {
-    private let currentFriendKey = "CurrentFriend"
+    private let currentChatKey = "CurrentChat"
     private let slideViewController: APLSlideMenuViewController
 
     private var reconnectView: ReconnectView!
@@ -55,9 +55,8 @@ class MainViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
-        let friendId = NSUserDefaults.standardUserDefaults().integerForKey(currentFriendKey)
-        if let friend = Friend.findWithId(friendId) {
-            (slideViewController.contentViewController as! ChatViewController).friend = friend
+        if let chatId = NSUserDefaults.standardUserDefaults().URLForKey(currentChatKey), chat = Chat.findWithId(chatId) {
+            (slideViewController.contentViewController as! ChatViewController).chat = chat
         } else {
             slideViewController.showLeftMenu(true)
         }
@@ -107,13 +106,11 @@ class MainViewController: UIViewController {
 
 extension MainViewController: ChatListViewControllerDelegate {
     func chatListViewController(chatListViewController: ChatListViewController, didSelectChat chat: Chat) {
-        let participants = chat.participants.allObjects as! [Friend]
-
-        NSUserDefaults.standardUserDefaults().setInteger(participants[0].id, forKey: currentFriendKey)
+        NSUserDefaults.standardUserDefaults().setURL(chat.id, forKey: currentChatKey)
         NSUserDefaults.standardUserDefaults().synchronize()
 
         let chatViewController = slideViewController.contentViewController as! ChatViewController
-        chatViewController.friend = participants[0]
+        chatViewController.chat = chat
 
         slideViewController.hideMenu(true)
     }

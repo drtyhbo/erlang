@@ -28,19 +28,20 @@ class MessageManager {
     static let sharedManager = MessageManager()
 
     static let NewMessagesNotification = "NewMessages"
-    static let FriendUnreadMessageCountUpdated = "FriendUnreadMessageCountUpdated"
-    static let FriendUnreadMessageCountReset = "FriendUnreadMessageCountReset"
+    static let NewChatNotification = "NewChat"
+    static let UnreadMessageCountUpdated = "UnreadMessageCountUpdated"
+    static let UnreadMessageCountReset = "UnreadMessageCountReset"
     static let TotalUnreadMessageCountUpdated = "TotalUnreadMessageCountUpdated"
 
     var unreadMessageCount: Int {
         var unreadMessageCount = 0
-        for (_, count) in unreadMessageCountForFriend {
+        for (_, count) in unreadMessageCountForChat {
             unreadMessageCount += count
         }
         return unreadMessageCount
     }
 
-    private var unreadMessageCountForFriend: [Friend:Int] = [:]
+    private var unreadMessageCountForChat: [Chat:Int] = [:]
 
     private var messageSender = MessageSender()
 
@@ -48,22 +49,22 @@ class MessageManager {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessages:", name: ChatClient.ChatClientReceivedMessagesNotification, object: nil)
     }
 
-    func sendMessageWithText(text: String, to: Friend, callback: Message?->Void) {
-        let message = Message.createWithText(text, to: to)
+    func sendMessageWithText(text: String, toChat chat: Chat, callback: Message?->Void) {
+        let message = Message.createWithText(text, chat: chat)
         messageSender.sendMessage(message)
         CoreData.save()
 
         callback(message)
     }
 
-    func sendMessageWithImage(image: UIImage, to: Friend, callback: Message?->Void) {
-        APIManager.sharedManager.createFileForFriend(to, numFiles: 2) {
+    func sendMessageWithImage(image: UIImage, toChat chat: Chat, callback: Message?->Void) {
+        APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
             fileId in
             var message: Message?
             if let fileId = fileId {
                 let imageFile = File.createWithId(fileId, data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
                 let thumbnailFile = File.createWithId(fileId + 1, data: UIImageJPEGRepresentation(image.resizeToPercentage(0.25), 0.2)!, contentType: "image/jpeg")
-                message = Message.createWithImageFile(imageFile, thumbnailFile: thumbnailFile, to: to)
+                message = Message.createWithImageFile(imageFile, thumbnailFile: thumbnailFile, chat: chat)
                 if message != nil {
                     self.messageSender.sendMessage(message!, files: [imageFile, thumbnailFile])
                 }
@@ -73,8 +74,8 @@ class MessageManager {
         }
     }
 
-    func sendMessageWithMediaUrl(mediaUrl: NSURL, to: Friend, callback: Message?->Void) {
-        APIManager.sharedManager.createFileForFriend(to, numFiles: 2) {
+    func sendMessageWithMediaUrl(mediaUrl: NSURL, toChat chat: Chat, callback: Message?->Void) {
+        APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
             fileId in
             guard let fileId = fileId else {
                 callback(nil)
@@ -92,7 +93,7 @@ class MessageManager {
                 let movieFile = File.createWithId(fileId, data: movieData, contentType: "video/mp4")
                 let thumbnailFile = File.createWithId(fileId + 1, data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
 
-                let message = Message.createWithMovieFile(movieFile, thumbnailFile: thumbnailFile, to: to)
+                let message = Message.createWithMovieFile(movieFile, thumbnailFile: thumbnailFile, chat: chat)
                 if message != nil {
                     self.messageSender.sendMessage(message!, files: [movieFile, thumbnailFile])
                 }
@@ -103,33 +104,33 @@ class MessageManager {
         }
     }
 
-    func getMessagesForFriend(friend: Friend, beforeDate: NSDate? = nil, fetchLimit: Int = 15) -> [Message] {
-        return Message.findForFriend(friend, beforeDate: beforeDate, fetchLimit: fetchLimit)
+    func getMessagesForChat(chat: Chat, beforeDate: NSDate? = nil, fetchLimit: Int = 15) -> [Message] {
+        return Message.findForChat(chat, beforeDate: beforeDate, fetchLimit: fetchLimit)
     }
 
-    func unreadMessageCountForFriend(friend: Friend) -> Int {
-        return unreadMessageCountForFriend[friend] ?? 0
+    func unreadMessageCountForChat(chat: Chat) -> Int {
+        return unreadMessageCountForChat[chat] ?? 0
     }
 
-    func markMessagesForFriendAsRead(friend: Friend) {
-        unreadMessageCountForFriend[friend] = 0
-        sendUnreadMessagesCountUpdatedNotificationForFriend(friend, withUnreadMessageCount: 0)
+    func markMessagesForChatAsRead(chat: Chat) {
+        unreadMessageCountForChat[chat] = 0
+        sendUnreadMessagesCountUpdatedNotificationForChat(chat, withUnreadMessageCount: 0)
     }
 
-    private func addMessages(messages: [Message], forFriend friend: Friend) {
-        unreadMessageCountForFriend[friend] = (unreadMessageCountForFriend[friend] ?? 0) + messages.count
-        sendUnreadMessagesCountUpdatedNotificationForFriend(friend, withUnreadMessageCount: unreadMessageCountForFriend[friend]!)
-        sendNewMessagesNotificationForFriend(friend, withMessages: messages)
+    private func addMessages(messages: [Message], forChat chat: Chat) {
+        unreadMessageCountForChat[chat] = (unreadMessageCountForChat[chat] ?? 0) + messages.count
+        sendUnreadMessagesCountUpdatedNotificationForChat(chat, withUnreadMessageCount: unreadMessageCountForChat[chat]!)
+        sendNewMessagesNotificationForChat(chat, withMessages: messages)
     }
 
-    private func sendUnreadMessagesCountUpdatedNotificationForFriend(friend: Friend, withUnreadMessageCount unreadMessageCount: Int) {
-        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.FriendUnreadMessageCountUpdated, object: friend, userInfo: ["unreadMessageCount": unreadMessageCount])
+    private func sendUnreadMessagesCountUpdatedNotificationForChat(chat: Chat, withUnreadMessageCount unreadMessageCount: Int) {
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.UnreadMessageCountUpdated, object: chat, userInfo: ["unreadMessageCount": unreadMessageCount])
 
         var totalUnreadMessageCount = 0
-        for (_, count) in unreadMessageCountForFriend {
+        for (_, count) in unreadMessageCountForChat {
             totalUnreadMessageCount += count
         }
-        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.TotalUnreadMessageCountUpdated, object: friend, userInfo: ["unreadMessageCount": totalUnreadMessageCount])
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.TotalUnreadMessageCountUpdated, object: nil, userInfo: ["unreadMessageCount": totalUnreadMessageCount])
     }
 
     private func imageFromMediaUrl(mediaUrl: NSURL, completion: UIImage?->Void) {
@@ -150,8 +151,8 @@ class MessageManager {
         }
     }
 
-    private func sendNewMessagesNotificationForFriend(friend: Friend, withMessages messages: [Message]) {
-        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewMessagesNotification, object: friend, userInfo: ["messages": NewMessagesNotificationWrapper(messages: messages)])
+    private func sendNewMessagesNotificationForChat(chat: Chat, withMessages messages: [Message]) {
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewMessagesNotification, object: chat, userInfo: ["messages": NewMessagesNotificationWrapper(messages: messages)])
     }
 
     @objc private func didReceiveMessages(notification: NSNotification) {
@@ -159,21 +160,29 @@ class MessageManager {
             return
         }
 
-        var messagesForFriends: [Friend:[Message]] = [:]
+        var messagesByChats: [Chat:[Message]] = [:]
         for receivedMessage in receivedMessages {
             if let friend = FriendManager.sharedManager.getFriendById(receivedMessage.fromId) {
-                if messagesForFriends[friend] == nil {
-                    messagesForFriends[friend] = []
+                var chat = Chat.findWithFriends([friend])
+                if chat == nil {
+                    chat = Chat.createWithParticipants([friend])
+                    CoreData.save()
+
+                    NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewChatNotification, object: friend, userInfo: ["chat": chat!])
                 }
 
-                messagesForFriends[friend]!.append(Message.createWithFrom(friend, to: nil, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson))
+                if messagesByChats[chat!] == nil {
+                    messagesByChats[chat!] = []
+                }
+
+                messagesByChats[chat!]!.append(Message.createWithFrom(friend, chat: chat!, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson))
             }
         }
 
         CoreData.save()
 
-        for (friend, messages) in messagesForFriends {
-            addMessages(messages, forFriend: friend)
+        for (chat, messages) in messagesByChats {
+            addMessages(messages, forChat: chat)
         }
     }
 }

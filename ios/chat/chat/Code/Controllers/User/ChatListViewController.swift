@@ -48,6 +48,8 @@ class ChatListViewController: UIViewController {
         chatsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
         chatsTable.registerNib(UINib(nibName: "TopicTableViewCell", bundle: nil), forCellReuseIdentifier: topicCellReuseIdentifier)
 
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadChats", name: MessageManager.NewChatNotification, object: nil)
+
         chatsTable.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
 
         let contacts = ContactsHelper().getAllContacts().filter({ $0.phoneNumber.fullNumber != User.phoneNumber })
@@ -56,8 +58,12 @@ class ChatListViewController: UIViewController {
         }
     }
 
-    private func loadChats() {
-        chats = Chat.findAll()
+    @objc private func loadChats() {
+        chats = Chat.findAll().sort({
+            let count1 = $0.participantsArray.count
+            let count2 = $1.participantsArray.count
+            return count1 < count2 || count1 == count2 && $0.name < $1.name
+        })
         chatsTable.reloadData()
     }
 
@@ -82,7 +88,7 @@ class ChatListViewController: UIViewController {
 
 extension ChatListViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
 
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -168,8 +174,9 @@ extension ChatListViewController: FriendSelectorViewControllerDelegate {
     func friendSelectorViewController(friendSelectorViewController: FriendSelectorViewController, didSelectFriends friends: [Friend]) {
         friendSelectorViewController.dismissViewControllerAnimated(true, completion: nil)
 
-        Chat.createWithParticipants(friends)
+        let chat = Chat.createWithParticipants(friends)
         CoreData.save()
+        delegate?.chatListViewController(self, didSelectChat: chat)
 
         loadChats()
     }
