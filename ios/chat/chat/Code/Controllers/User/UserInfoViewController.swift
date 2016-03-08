@@ -72,6 +72,9 @@ class UserInfoViewController: UIViewController {
                 return
             }
 
+            User.firstName = self.firstName.text
+            User.lastName = self.lastName.text
+
             if let profilePicImage = self.profilePicImage {
                 self.uploadProfilePicImage(profilePicImage)
             } else {
@@ -89,8 +92,6 @@ class UserInfoViewController: UIViewController {
                 return
             }
 
-            User.firstName = self.firstName.text
-            User.lastName = self.lastName.text
             User.profilePic = profilePicImage
             self.showMainViewController()
         }

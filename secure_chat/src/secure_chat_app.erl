@@ -25,6 +25,8 @@ connect_nodes() ->
 	[net_kernel:connect_node(Node) || Node <- Nodes, Node /= node()].
 
 setup_mnesia() ->
+	mnesia:stop(),
+	mnesia:create_schema([node()]),
 	mnesia:start(),
     mnesia:change_config(extra_db_nodes, [node() | nodes()]),
 	Result = mnesia:create_table(message, [

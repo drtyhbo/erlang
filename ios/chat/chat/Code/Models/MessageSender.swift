@@ -20,7 +20,7 @@ class MessageSender {
         private(set) var bytesSent: Int
         private(set) var totalBytes: Int
 
-        private let secretKey: NSData?
+        private let secretKey: NSData
 
         init(message: Message, messageId: Int, files: [File]) {
             self.message = message
@@ -28,7 +28,7 @@ class MessageSender {
             self.files = files
             bytesSent = 0
             totalBytes = files.reduce(0, combine: {$0 + $1.data.length})
-            secretKey = files.count > 0 ? MessageCrypter.sharedCrypter.sharedSecret() : nil
+            secretKey = MessageCrypter.sharedCrypter.sharedSecret()
         }
 
         func finishFileAtIndex(fileIndex: Int) {
@@ -52,9 +52,9 @@ class MessageSender {
     }
 
     private func maybeSendNextOutgoingMessage() {
-        if isSending {
+/*        if isSending {
             return
-        }
+        }*/
 
         sendNextOutgoingMessage()
     }
@@ -68,8 +68,8 @@ class MessageSender {
         isSending = true
 
         let outgoingMessage = outgoingMessages.first!
-        if let secretKey = outgoingMessage.secretKey where outgoingMessage.files.count > 0 {
-            uploadFile(outgoingMessage.files.first!, withSecretKey: secretKey)
+        if outgoingMessage.files.count > 0 {
+            uploadFile(outgoingMessage.files.first!, withSecretKey: outgoingMessage.secretKey)
         } else {
             sendOutgoingMessage(outgoingMessage)
         }
@@ -109,8 +109,10 @@ class MessageSender {
 
     private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
         let message = outgoingMessage.message
-        let messageJson = outgoingMessage.secretKey != nil ? message.wrapJsonWithKey(outgoingMessage.secretKey!) : message.json
-        ChatClient.sharedClient.sendMessageWithJson(messageJson, to: message.chat.participantsArray[0], messageId: outgoingMessage.messageId)
+
+        if let encryptedJson = MessageCrypter.sharedCrypter.encryptData(try! message.json.rawData(), withSharedSecret: outgoingMessage.secretKey) {
+            ChatClient.sharedClient.sendMessageWithData(encryptedJson, toChat: message.chat, messageId: outgoingMessage.messageId, secretKey: outgoingMessage.secretKey)
+        }
     }
 
     @objc private func messageDidSend(notification: NSNotification) {

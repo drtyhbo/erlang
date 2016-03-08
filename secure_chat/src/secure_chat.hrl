@@ -1,1 +1,1 @@
--record(message, {to, routing_info, from, from_pid, ts, client_id, msg}).
+-record(message, {to, from, from_pid, ts, msg}).

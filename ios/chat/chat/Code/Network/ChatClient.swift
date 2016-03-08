@@ -46,20 +46,46 @@ class ChatClient {
         }
     }
 
-    func sendMessageWithJson(json: JSON, to: Friend, messageId: Int) {
-        MessageCrypter.sharedCrypter.encryptMessage(json, forFriend: to) { encryptedMessage in
-            guard let encryptedMessage = encryptedMessage else {
+    func sendMessageWithData(data: NSData, toChat chat: Chat, messageId: Int, secretKey: NSData) {
+        let dispatchGroup = dispatch_group_create()
+
+        var recipients:[[String:AnyObject]] = []
+        for participant in chat.participantsArray {
+            dispatch_group_enter(dispatchGroup)
+            createRecipientPayloadForFriend(participant, secretKey: secretKey) { payloadJson in
+                guard let payloadJson = payloadJson else {
+                    dispatch_group_leave(dispatchGroup)
+                    return
+                }
+
+                recipients.append(payloadJson)
+                dispatch_group_leave(dispatchGroup)
+            }
+        }
+
+        dispatch_group_notify(dispatchGroup, dispatch_get_main_queue()) {
+            let messageToSendJson = JSON([
+                "t": "m",
+                "r": recipients,
+                "i": messageId,
+                "m": data.base64
+            ])
+
+            print (messageToSendJson.rawString() ?? "")
+            self.connection.sendJson(messageToSendJson)
+        }
+    }
+
+    private func createRecipientPayloadForFriend(friend: Friend, secretKey: NSData, callback: [String:AnyObject]?->Void) {
+        MessageCrypter.sharedCrypter.encryptData(secretKey, forFriend: friend) { secretKeyMessage in
+            guard let secretKeyMessage = secretKeyMessage else {
+                callback(nil)
                 return
             }
 
-            let messageToSendJson = JSON([
-                "t": "m",
-                "r": String(to.id),
-                "i": messageId,
-                "m": encryptedMessage
-            ])
-
-            self.connection.sendJson(messageToSendJson)
+            callback([
+                "r": friend.id,
+                "k": secretKeyMessage])
         }
     }
 
@@ -68,7 +94,7 @@ class ChatClient {
         if let sessionToken = User.sessionToken {
             let connectJson = JSON([
                 "t": "c",
-                "u": "\(User.userId)",
+                "u": User.userId,
                 "s": sessionToken,
             ])
             connection.sendJson(connectJson)
@@ -98,10 +124,19 @@ class ChatClient {
         }
     }
 
+    // TODO: Clean up this code
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            if let fromId = Int(messageJson["f"].string!), friend = Friend.findWithId(fromId), timestamp = messageJson["d"].int, encryptedMessage = messageJson["m"].string, decryptedMessageJson = MessageCrypter.sharedCrypter.decryptMessage(encryptedMessage, forFriend: friend) {
-                self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: decryptedMessageJson))
+            let messageContainer = messageJson["m"]
+            if let fromId = messageJson["f"].int,
+                friend = Friend.findWithId(fromId),
+                timestamp = messageJson["d"].int,
+                encryptedKeyPayload = messageContainer["k"].object as? [String:AnyObject],
+                decryptedKey = MessageCrypter.sharedCrypter.decryptMessage(encryptedKeyPayload, forFriend: friend),
+                encryptedMessageBase64 = messageContainer["m"].string,
+                encryptedMessageData = NSData.fromBase64(encryptedMessageBase64),
+                decryptedMessage = MessageCrypter.sharedCrypter.decryptData(encryptedMessageData, withSharedSecret: decryptedKey) {
+                self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON(data: decryptedMessage)))
             }
         }
 
