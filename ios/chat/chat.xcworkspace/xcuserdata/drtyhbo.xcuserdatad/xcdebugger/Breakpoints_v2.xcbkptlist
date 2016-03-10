@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "chat/Code/Network/ChatClient.swift"
-            timestampString = "479112278.444601"
+            filePath = "chat/Code/Models/MessageManager.swift"
+            timestampString = "479317650.012948"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "handleMessagesJson(_:)"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "processNextReceivedMessage()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

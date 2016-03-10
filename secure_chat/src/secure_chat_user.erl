@@ -251,10 +251,14 @@ lists_to_json([]) ->
 	[];
 lists_to_json({struct, Array}) when is_list(Array) ->
 	{struct, lists_to_json(Array)};
-lists_to_json({Key, [{struct, Array}]}) when is_list(Array) ->
-	{Key, [{struct, lists_to_json(Array)}]};
 lists_to_json({Key, Array}) when is_list(Array) ->
-	{Key, {struct, lists_to_json(Array)}};
+	[H|T] = Array,
+	case(H) of
+		{struct, _} ->
+			{Key, lists_to_json(Array)};
+		_ ->
+			{Key, {struct, lists_to_json(Array)}}
+	end;
 lists_to_json(Array) when is_list(Array) ->
     F = fun (O, Acc) ->
                 [lists_to_json(O) | Acc]

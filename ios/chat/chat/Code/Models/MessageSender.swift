@@ -109,10 +109,7 @@ class MessageSender {
 
     private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
         let message = outgoingMessage.message
-
-        if let encryptedJson = MessageCrypter.sharedCrypter.encryptData(try! message.json.rawData(), withSharedSecret: outgoingMessage.secretKey) {
-            ChatClient.sharedClient.sendMessageWithData(encryptedJson, toChat: message.chat, messageId: outgoingMessage.messageId, secretKey: outgoingMessage.secretKey)
-        }
+        ChatClient.sharedClient.sendMessageWithData(try! message.json.rawData(), toChat: message.chat, messageId: outgoingMessage.messageId, secretKey: outgoingMessage.secretKey)
     }
 
     @objc private func messageDidSend(notification: NSNotification) {

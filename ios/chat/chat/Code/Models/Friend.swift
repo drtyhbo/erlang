@@ -23,6 +23,11 @@ class Friend: NSManagedObject {
     }
 
     static func createWithId(id: Int, name: String) -> Friend {
+        if let friend = findWithId(id) {
+            friend.name = name
+            return friend
+        }
+
         let friend = Friend.MR_createEntity()!
         friend.id = id
         friend.name = name

@@ -281,6 +281,33 @@ describe('logged in', function() {
 			}, done);
 	});
 
+	it('/api/user/info/get/', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/info/get/', {
+					userIds: [friend.id, sharedUser.id]
+				})
+				.expect(200, {
+					names: [
+						null, {
+							firstName: 'Andreas',
+							lastName: 'Binnewies'
+						}
+					],
+					status: 'ok'
+				}, done);
+		});
+	});
+
+	it('/api/user/info/get/ - no ids', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/info/get/')
+				.expect(200, {
+					names: [],
+					status: 'ok'
+				}, done);
+		});
+	});
+
 	it('/api/user/profilepic/', function testSlash(done) {
 		makeRequest('/api/user/profilepic/')
 			.expect(function(res) {

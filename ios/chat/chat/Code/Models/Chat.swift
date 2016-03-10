@@ -28,6 +28,12 @@ class Chat: NSManagedObject {
         return participants.allObjects as? [Friend] ?? []
     }
 
+    var participantIds: [Int] {
+        var participantIds = participantsArray.map({ $0.id })
+        participantIds.append(User.userId)
+        return participantIds
+    }
+
     var name: String {
         let sortedParticipants = participantsArray.sort({ $0.name < $1.name })
         return sortedParticipants.map({ $0.name }).joinWithSeparator(", ")

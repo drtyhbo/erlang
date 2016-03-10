@@ -47,6 +47,10 @@ class ChatClient {
     }
 
     func sendMessageWithData(data: NSData, toChat chat: Chat, messageId: Int, secretKey: NSData) {
+        guard let encryptedMessage = MessageCrypter.sharedCrypter.encryptData(data, withSharedSecret: secretKey) else {
+            return
+        }
+
         let dispatchGroup = dispatch_group_create()
 
         var recipients:[[String:AnyObject]] = []
@@ -68,10 +72,9 @@ class ChatClient {
                 "t": "m",
                 "r": recipients,
                 "i": messageId,
-                "m": data.base64
+                "m": encryptedMessage.base64
             ])
 
-            print (messageToSendJson.rawString() ?? "")
             self.connection.sendJson(messageToSendJson)
         }
     }
@@ -127,17 +130,27 @@ class ChatClient {
     // TODO: Clean up this code
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
+            guard let fromId = messageJson["f"].int else {
+                continue
+            }
+
+            var friend: Friend! = Friend.findWithId(fromId)
+            if friend == nil {
+                friend = Friend.createWithId(fromId, name: "")
+                CoreData.save()
+            }
+
             let messageContainer = messageJson["m"]
-            if let fromId = messageJson["f"].int,
-                friend = Friend.findWithId(fromId),
-                timestamp = messageJson["d"].int,
+            guard let timestamp = messageJson["d"].int,
                 encryptedKeyPayload = messageContainer["k"].object as? [String:AnyObject],
                 decryptedKey = MessageCrypter.sharedCrypter.decryptMessage(encryptedKeyPayload, forFriend: friend),
                 encryptedMessageBase64 = messageContainer["m"].string,
                 encryptedMessageData = NSData.fromBase64(encryptedMessageBase64),
-                decryptedMessage = MessageCrypter.sharedCrypter.decryptData(encryptedMessageData, withSharedSecret: decryptedKey) {
-                self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON(data: decryptedMessage)))
+                decryptedMessage = MessageCrypter.sharedCrypter.decryptData(encryptedMessageData, withSharedSecret: decryptedKey) else {
+                continue
             }
+
+            self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON(data: decryptedMessage)))
         }
 
         self.receivedMessagesTimer?.invalidate()

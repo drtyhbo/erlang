@@ -45,6 +45,9 @@ class MessageManager {
 
     private var messageSender = MessageSender()
 
+    private var receivedMessages: [ReceivedMessage] = []
+    private var processingReceivedMessages = false
+
     func setup() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessages:", name: ChatClient.ChatClientReceivedMessagesNotification, object: nil)
     }
@@ -117,6 +120,10 @@ class MessageManager {
         sendUnreadMessagesCountUpdatedNotificationForChat(chat, withUnreadMessageCount: 0)
     }
 
+    private func addMessage(message: Message) {
+        addMessages([message], forChat: message.chat)
+    }
+
     private func addMessages(messages: [Message], forChat chat: Chat) {
         unreadMessageCountForChat[chat] = (unreadMessageCountForChat[chat] ?? 0) + messages.count
         sendUnreadMessagesCountUpdatedNotificationForChat(chat, withUnreadMessageCount: unreadMessageCountForChat[chat]!)
@@ -151,6 +158,81 @@ class MessageManager {
         }
     }
 
+    private func maybeProcessReceivedMessages() {
+        if processingReceivedMessages {
+            return
+        }
+        processingReceivedMessages = true
+
+        processNextReceivedMessage()
+    }
+
+    private func processNextReceivedMessage() {
+        if receivedMessages.isEmpty {
+            processingReceivedMessages = false
+            return
+        }
+
+        let nextMessage = receivedMessages.removeAtIndex(0)
+        guard let participantIdsJson = nextMessage.messageJson["p"].array else {
+            return
+        }
+
+        var participants: [Friend] = []
+        var unknownIds: [Int] = []
+        for participantIdJson in participantIdsJson {
+            guard let participantId = participantIdJson.int else {
+                continue
+            }
+
+            if participantId == User.userId {
+                continue
+            } else if let friend = FriendManager.sharedManager.getFriendById(participantId) where !friend.name.isEmpty {
+                participants.append(friend)
+            } else {
+                unknownIds.append(participantId)
+            }
+        }
+
+        if unknownIds.count > 0 {
+            APIManager.sharedManager.getInfoForUsersWithIds(unknownIds) { names in
+                guard let names = names else {
+                    self.processNextReceivedMessage()
+                    return
+                }
+
+                for i in 0..<names.count {
+                    participants.append(Friend.createWithId(unknownIds[i], name: names[i]))
+                }
+                CoreData.save()
+
+                self.processReceivedMessage(nextMessage, withParticipants: participants)
+            }
+        } else {
+            processReceivedMessage(nextMessage, withParticipants: participants)
+        }
+    }
+
+    private func processReceivedMessage(receivedMessage: ReceivedMessage, withParticipants participants: [Friend]) {
+        guard let friend = FriendManager.sharedManager.getFriendById(receivedMessage.fromId) else {
+            maybeProcessReceivedMessages()
+            return
+        }
+
+        var chat = Chat.findWithFriends(participants)
+        if chat == nil {
+            chat = Chat.createWithParticipants(participants)
+            CoreData.save()
+
+            NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewChatNotification, object: nil, userInfo: ["chat": chat!])
+        }
+
+        let message = Message.createWithFrom(friend, chat: chat!, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson)
+        CoreData.save()
+
+        addMessage(message)
+    }
+
     private func sendNewMessagesNotificationForChat(chat: Chat, withMessages messages: [Message]) {
         NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewMessagesNotification, object: chat, userInfo: ["messages": NewMessagesNotificationWrapper(messages: messages)])
     }
@@ -160,29 +242,7 @@ class MessageManager {
             return
         }
 
-        var messagesByChats: [Chat:[Message]] = [:]
-        for receivedMessage in receivedMessages {
-            if let friend = FriendManager.sharedManager.getFriendById(receivedMessage.fromId) {
-                var chat = Chat.findWithFriends([friend])
-                if chat == nil {
-                    chat = Chat.createWithParticipants([friend])
-                    CoreData.save()
-
-                    NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewChatNotification, object: friend, userInfo: ["chat": chat!])
-                }
-
-                if messagesByChats[chat!] == nil {
-                    messagesByChats[chat!] = []
-                }
-
-                messagesByChats[chat!]!.append(Message.createWithFrom(friend, chat: chat!, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson))
-            }
-        }
-
-        CoreData.save()
-
-        for (chat, messages) in messagesByChats {
-            addMessages(messages, forChat: chat)
-        }
+        self.receivedMessages += receivedMessages
+        maybeProcessReceivedMessages()
     }
 }

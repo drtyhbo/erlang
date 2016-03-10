@@ -172,6 +172,49 @@ router.post('/info/update/', function(req, res) {
 
 /*
  * Request parameters:
+ * userIds - The ids of the users.
+ */
+router.post('/info/get/', function(req, res) {
+	var userIds = (req.body.userIds || []);
+	
+	if (!userIds) {
+		sendError(res);
+		return;
+	}
+
+	var users = userIds.map(function(id) { return new User(id); });
+	var promises = [];
+	for (var i = 0, user; user = users[i]; i++) {
+		promises.push(user.fetch(User.fields.firstName, User.fields.lastName));
+	}
+
+	Promise.all(promises).then(function(info) {
+		var names = [];
+		for (var i = 0, name; name = info[i]; i++) {
+			if (name[0] && name[1]) {
+				names.push({
+					firstName: name[0],
+					lastName: name[1]
+				});
+			} else {
+				names.push(null);
+			}
+		}
+		sendSuccess(res, {
+			names: names
+		});
+	});
+
+
+/*	req.user.update(User.fields.firstName, firstName, User.fields.lastName, lastName).then(function() {
+		sendSuccess(res);
+	}, function() {
+		sendError(res);
+	});*/
+});
+
+/*
+ * Request parameters:
  * name - The name of the group.
  */
 router.post('/group/create/', function(req, res) {

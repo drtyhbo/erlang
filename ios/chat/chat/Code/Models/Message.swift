@@ -118,7 +118,9 @@ class Message: NSManagedObject {
 
     static func createWithText(text: String, chat: Chat) -> Message {
         let messageJson = JSON([
-            "m": text])
+            "p": chat.participantIds,
+            "m": text
+        ])
         return createFromCurrentUserToChat(chat, messageJson: messageJson)
     }
 
@@ -128,6 +130,7 @@ class Message: NSManagedObject {
         }
 
         let messageJson = JSON([
+            "p": chat.participantIds,
             "i": [
                 "i": imageFile.id,
                 "w": image.size.width,
@@ -145,6 +148,7 @@ class Message: NSManagedObject {
         }
 
         let messageJson = JSON([
+            "p": chat.participantIds,
             "v": [
                 "v": movieFile.id,
                 "ti": thumbnailFile.id,

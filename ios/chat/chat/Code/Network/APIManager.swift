@@ -107,6 +107,28 @@ class APIManager: NSObject {
         }
     }
 
+    func getInfoForUsersWithIds(userIds: [Int], callback: [String]?->Void) {
+        sendUserRequestToUrl("info/get/", parameters: [
+            "userIds": userIds
+        ]) { json in
+            guard let nameResults = json?["names"].array else {
+                callback(nil)
+                return
+            }
+
+            var names: [String] = []
+            for nameResult in nameResults {
+                guard let firstName = nameResult["firstName"].string, lastName = nameResult["lastName"].string else {
+                    callback(nil)
+                    return
+                }
+                names.append("\(firstName) \(lastName)")
+            }
+
+            callback(names)
+        }
+    }
+
     func createFileForFriend(friend: Friend, numFiles: Int, callback: Int?->Void) {
         sendUserRequestToUrl("file/create/", parameters: [
             "friendId": friend.id,
