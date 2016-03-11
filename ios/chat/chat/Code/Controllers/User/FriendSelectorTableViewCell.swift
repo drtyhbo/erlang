@@ -43,7 +43,7 @@ class FriendSelectorTableViewCell: UITableViewCell {
     }
 
     private func configureCell() {
-        name.text = friend?.name ?? ""
+        name.text = friend?.fullName ?? ""
         profilePic.sd_setImageWithURL(friend?.profilePicUrl)
     }
 

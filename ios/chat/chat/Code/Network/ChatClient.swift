@@ -136,7 +136,7 @@ class ChatClient {
 
             var friend: Friend! = Friend.findWithId(fromId)
             if friend == nil {
-                friend = Friend.createWithId(fromId, name: "")
+                friend = Friend.createWithId(fromId, firstName: "", lastName: "")
                 CoreData.save()
             }
 

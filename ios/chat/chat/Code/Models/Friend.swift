@@ -12,7 +12,12 @@ import Foundation
 @objc(Friend)
 class Friend: NSManagedObject {
     @NSManaged var id: Int
-    @NSManaged var name: String
+    @NSManaged var firstName: String
+    @NSManaged var lastName: String?
+
+    var fullName: String {
+        return lastName != nil ? "\(firstName) \(lastName!)" : firstName
+    }
 
     var profilePicUrl: NSURL {
         return Constants.profilePicBaseUrl.URLByAppendingPathComponent("\(id)")
@@ -22,15 +27,17 @@ class Friend: NSManagedObject {
         return id
     }
 
-    static func createWithId(id: Int, name: String) -> Friend {
+    static func createWithId(id: Int, firstName: String, lastName: String?) -> Friend {
         if let friend = findWithId(id) {
-            friend.name = name
+            friend.firstName = firstName
+            friend.lastName = lastName
             return friend
         }
 
         let friend = Friend.MR_createEntity()!
         friend.id = id
-        friend.name = name
+        friend.firstName = firstName
+        friend.lastName = lastName
         return friend
     }
 
@@ -39,7 +46,7 @@ class Friend: NSManagedObject {
     }
 
     static func findAll() -> [Friend] {
-        return Friend.MR_findAllSortedBy("name", ascending: true) as? [Friend] ?? []
+        return Friend.MR_findAllSortedBy("firstName", ascending: true) as? [Friend] ?? []
     }
 }
 

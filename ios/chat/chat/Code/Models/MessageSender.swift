@@ -52,9 +52,9 @@ class MessageSender {
     }
 
     private func maybeSendNextOutgoingMessage() {
-/*        if isSending {
+        if isSending {
             return
-        }*/
+        }
 
         sendNextOutgoingMessage()
     }

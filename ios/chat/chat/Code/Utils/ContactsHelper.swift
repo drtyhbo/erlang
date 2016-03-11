@@ -13,6 +13,15 @@ class Contact {
     let name: String
     let phoneNumber: PhoneNumber
 
+    var firstName: String {
+        return name.componentsSeparatedByString(" ")[0]
+    }
+
+    var lastName: String? {
+        let names = name.componentsSeparatedByString(" ")
+        return names.count > 1 ? names.last : nil
+    }
+
     init(name: String, phoneNumber: String) {
         self.name = name
         self.phoneNumber = PhoneNumber(phoneNumber: phoneNumber)

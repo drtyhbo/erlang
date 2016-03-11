@@ -18,8 +18,9 @@
         <attribute name="localPath" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Friend" representedClassName="Friend" syncable="YES">
+        <attribute name="firstName" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="chats" toMany="YES" deletionRule="Nullify" destinationEntity="Chat" inverseName="participants" inverseEntity="Chat" syncable="YES"/>
         <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="friend" inverseEntity="Conversation" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="from" inverseEntity="Message" syncable="YES"/>
@@ -36,10 +37,10 @@
         <relationship name="message" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="pendingMessage" inverseEntity="Message" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Chat" positionX="-54" positionY="63" width="128" height="75"/>
         <element name="Conversation" positionX="-54" positionY="54" width="128" height="120"/>
         <element name="File" positionX="-36" positionY="72" width="128" height="105"/>
-        <element name="Friend" positionX="-54" positionY="9" width="128" height="120"/>
-        <element name="Chat" positionX="-54" positionY="63" width="128" height="75"/>
+        <element name="Friend" positionX="-54" positionY="9" width="128" height="135"/>
         <element name="Message" positionX="-63" positionY="-18" width="128" height="120"/>
         <element name="PendingMessage" positionX="-54" positionY="54" width="128" height="75"/>
     </elements>

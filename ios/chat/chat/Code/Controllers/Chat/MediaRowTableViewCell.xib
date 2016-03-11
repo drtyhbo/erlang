@@ -9,10 +9,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="129" id="hxu-jq-sDa" customClass="MediaRowTableViewCell" customModule="chat" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="401" height="137"/>
+            <rect key="frame" x="0.0" y="0.0" width="401" height="131"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hxu-jq-sDa" id="gi5-jm-Km4">
-                <rect key="frame" x="0.0" y="0.0" width="401" height="136"/>
+                <rect key="frame" x="0.0" y="0.0" width="401" height="130"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t1K-Mv-Rlq">
@@ -43,7 +43,7 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YeY-aE-iCO">
-                        <rect key="frame" x="64" y="41" width="128" height="95"/>
+                        <rect key="frame" x="64" y="35" width="128" height="95"/>
                         <subviews>
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RFL-lt-6l6">
                                 <rect key="frame" x="0.0" y="0.0" width="128" height="95"/>
@@ -76,8 +76,8 @@
                             <constraint firstItem="Gfm-Qz-Jbr" firstAttribute="centerX" secondItem="YeY-aE-iCO" secondAttribute="centerX" id="xWQ-c9-sEH"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8e7-Bc-5eS">
-                        <rect key="frame" x="64" y="37" width="0.0" height="4"/>
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8e7-Bc-5eS">
+                        <rect key="frame" x="64" y="29" width="0.0" height="4"/>
                         <color key="backgroundColor" red="0.66274509800000003" green="0.28235294119999998" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" id="EAQ-BU-vgw"/>
@@ -97,7 +97,7 @@
                     <constraint firstAttribute="bottom" secondItem="YeY-aE-iCO" secondAttribute="bottom" id="Deq-VC-5O6"/>
                     <constraint firstItem="u9C-sS-3er" firstAttribute="top" secondItem="gi5-jm-Km4" secondAttribute="top" constant="16" id="MS8-Xk-kM0"/>
                     <constraint firstItem="t1K-Mv-Rlq" firstAttribute="top" secondItem="u9C-sS-3er" secondAttribute="top" id="W7M-6n-nwa"/>
-                    <constraint firstItem="YeY-aE-iCO" firstAttribute="top" secondItem="t1K-Mv-Rlq" secondAttribute="bottom" constant="8" id="aU6-gG-R8t"/>
+                    <constraint firstItem="YeY-aE-iCO" firstAttribute="top" secondItem="t1K-Mv-Rlq" secondAttribute="bottom" constant="2" id="aU6-gG-R8t"/>
                     <constraint firstItem="8e7-Bc-5eS" firstAttribute="top" secondItem="gi5-jm-Km4" secondAttribute="top" constant="20" symbolic="YES" id="fUV-Db-edM"/>
                     <constraint firstItem="8e7-Bc-5eS" firstAttribute="leading" secondItem="YeY-aE-iCO" secondAttribute="leading" id="gUT-OI-1qT"/>
                     <constraint firstItem="t1K-Mv-Rlq" firstAttribute="leading" secondItem="u9C-sS-3er" secondAttribute="trailing" constant="8" id="h6q-DP-qbO"/>
@@ -120,6 +120,7 @@
                 <outlet property="percentUploadedView" destination="8e7-Bc-5eS" id="Sgx-Ku-H5A"/>
                 <outlet property="percentUploadedWidthConstraint" destination="EAQ-BU-vgw" id="beq-pK-Opb"/>
                 <outlet property="playIcon" destination="w7w-kd-L2x" id="aWC-0t-pAl"/>
+                <outlet property="topConstraint" destination="aU6-gG-R8t" id="d3c-wL-yo4"/>
                 <outlet property="userImage" destination="u9C-sS-3er" id="L7w-cR-5q3"/>
                 <outlet property="userImageHeightConstraint" destination="rgq-D4-Wn1" id="li6-BQ-Bbk"/>
                 <outlet property="userImageTopConstraint" destination="MS8-Xk-kM0" id="WUx-Om-R49"/>
@@ -131,6 +132,6 @@
     </objects>
     <resources>
         <image name="Play" width="60" height="60"/>
-        <image name="ProfilePic" width="48" height="48"/>
+        <image name="ProfilePic" width="84" height="84"/>
     </resources>
 </document>

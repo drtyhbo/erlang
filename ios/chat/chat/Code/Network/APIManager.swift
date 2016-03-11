@@ -107,7 +107,7 @@ class APIManager: NSObject {
         }
     }
 
-    func getInfoForUsersWithIds(userIds: [Int], callback: [String]?->Void) {
+    func getInfoForUsersWithIds(userIds: [Int], callback: [(firstName: String, lastName: String)]?->Void) {
         sendUserRequestToUrl("info/get/", parameters: [
             "userIds": userIds
         ]) { json in
@@ -116,26 +116,34 @@ class APIManager: NSObject {
                 return
             }
 
-            var names: [String] = []
+            var names: [(firstName: String, lastName: String)] = []
             for nameResult in nameResults {
                 guard let firstName = nameResult["firstName"].string, lastName = nameResult["lastName"].string else {
                     callback(nil)
                     return
                 }
-                names.append("\(firstName) \(lastName)")
+                names.append((firstName: firstName, lastName: lastName))
             }
 
             callback(names)
         }
     }
 
-    func createFileForFriend(friend: Friend, numFiles: Int, callback: Int?->Void) {
+    func createFileForFriend(friend: Friend, numFiles: Int, callback: [Int]?->Void) {
         sendUserRequestToUrl("file/create/", parameters: [
             "friendId": friend.id,
             "numIds": numFiles]) {
             json in
-            if let json = json, fileId = json["fileId"].int {
-                callback(fileId)
+            if let json = json, fileIdsJson = json["fileIds"].array {
+                var fileIds: [Int] = []
+                for fileIdJson in fileIdsJson {
+                    guard let fileId = fileIdJson.int else {
+                        callback(nil)
+                        return
+                    }
+                    fileIds.append(fileId)
+                }
+                callback(fileIds)
             } else {
                 callback(nil)
             }

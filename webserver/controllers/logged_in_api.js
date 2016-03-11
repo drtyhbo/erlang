@@ -94,8 +94,8 @@ router.post('/pns/register/', function(req, res) {
  * friendId - The friend whom should have access.
  */
 router.post('/file/create/', function(req, res) {
-	var numIds = req.body.numIds || 1;
-	if (!req.body.friendId) {
+	var numIds = parseInt(req.body.numIds, 10);
+	if (!numIds || numIds < 0 || !req.body.friendId) {
 		sendError(res);
 		return;
 	}
@@ -204,13 +204,6 @@ router.post('/info/get/', function(req, res) {
 			names: names
 		});
 	});
-
-
-/*	req.user.update(User.fields.firstName, firstName, User.fields.lastName, lastName).then(function() {
-		sendSuccess(res);
-	}, function() {
-		sendError(res);
-	});*/
 });
 
 /*

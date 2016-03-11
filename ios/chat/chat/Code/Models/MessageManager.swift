@@ -62,16 +62,20 @@ class MessageManager {
 
     func sendMessageWithImage(image: UIImage, toChat chat: Chat, callback: Message?->Void) {
         APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
-            fileId in
-            var message: Message?
-            if let fileId = fileId {
-                let imageFile = File.createWithId(fileId, data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
-                let thumbnailFile = File.createWithId(fileId + 1, data: UIImageJPEGRepresentation(image.resizeToPercentage(0.25), 0.2)!, contentType: "image/jpeg")
-                message = Message.createWithImageFile(imageFile, thumbnailFile: thumbnailFile, chat: chat)
-                if message != nil {
-                    self.messageSender.sendMessage(message!, files: [imageFile, thumbnailFile])
-                }
-                CoreData.save()
+            fileIds in
+            guard let fileIds = fileIds where fileIds.count == 2 else {
+                callback(nil)
+                return
+            }
+
+            let imageFile = File.createWithId(fileIds[0], data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
+            let thumbnailFile = File.createWithId(fileIds[1], data: UIImageJPEGRepresentation(image.resizeToPercentage(min(1.0, image.size.width / 640)), 0.5)!, contentType: "image/jpeg")
+
+            let message = Message.createWithImageFile(imageFile, thumbnailFile: thumbnailFile, chat: chat)
+            CoreData.save()
+
+            if message != nil {
+                self.messageSender.sendMessage(message!, files: [imageFile, thumbnailFile])
             }
             callback(message)
         }
@@ -79,8 +83,8 @@ class MessageManager {
 
     func sendMessageWithMediaUrl(mediaUrl: NSURL, toChat chat: Chat, callback: Message?->Void) {
         APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
-            fileId in
-            guard let fileId = fileId else {
+            fileIds in
+            guard let fileIds = fileIds where fileIds.count == 2 else {
                 callback(nil)
                 return
             }
@@ -93,15 +97,15 @@ class MessageManager {
                     return
                 }
 
-                let movieFile = File.createWithId(fileId, data: movieData, contentType: "video/mp4")
-                let thumbnailFile = File.createWithId(fileId + 1, data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
+                let movieFile = File.createWithId(fileIds[0], data: movieData, contentType: "video/mp4")
+                let thumbnailFile = File.createWithId(fileIds[1], data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
 
                 let message = Message.createWithMovieFile(movieFile, thumbnailFile: thumbnailFile, chat: chat)
+                CoreData.save()
+
                 if message != nil {
                     self.messageSender.sendMessage(message!, files: [movieFile, thumbnailFile])
                 }
-                CoreData.save()
-
                 callback(message)
             }
         }
@@ -187,7 +191,7 @@ class MessageManager {
 
             if participantId == User.userId {
                 continue
-            } else if let friend = FriendManager.sharedManager.getFriendById(participantId) where !friend.name.isEmpty {
+            } else if let friend = FriendManager.sharedManager.getFriendById(participantId) where !friend.firstName.isEmpty {
                 participants.append(friend)
             } else {
                 unknownIds.append(participantId)
@@ -202,20 +206,21 @@ class MessageManager {
                 }
 
                 for i in 0..<names.count {
-                    participants.append(Friend.createWithId(unknownIds[i], name: names[i]))
+                    participants.append(Friend.createWithId(unknownIds[i], firstName: names[i].firstName, lastName: names[i].lastName))
                 }
                 CoreData.save()
 
                 self.processReceivedMessage(nextMessage, withParticipants: participants)
+                self.processNextReceivedMessage()
             }
         } else {
             processReceivedMessage(nextMessage, withParticipants: participants)
+            processNextReceivedMessage()
         }
     }
 
     private func processReceivedMessage(receivedMessage: ReceivedMessage, withParticipants participants: [Friend]) {
         guard let friend = FriendManager.sharedManager.getFriendById(receivedMessage.fromId) else {
-            maybeProcessReceivedMessages()
             return
         }
 

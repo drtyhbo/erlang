@@ -87,12 +87,12 @@ class FriendSelectorViewController: UIViewController {
 
     private func updateNextContainer() {
         nextContainerHeightConstraint.constant = selectedFriends.count > 0 ? 55 : 0
-        nextLabel.text = selectedFriends.map({ $0.name }).joinWithSeparator(", ")
+        nextLabel.text = selectedFriends.map({ $0.firstName }).joinWithSeparator(", ")
     }
 
     @objc private func searchQueryDidChange(textField: UITextField) {
         let searchQuery = (textField.text ?? "").uppercaseString
-        filteredFriends = searchQuery.isEmpty ? nil : friends.filter({ $0.name.uppercaseString.containsString(searchQuery) })
+        filteredFriends = searchQuery.isEmpty ? nil : friends.filter({ $0.fullName.uppercaseString.containsString(searchQuery) })
         tableView.reloadData()
     }
 

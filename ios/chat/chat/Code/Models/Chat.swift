@@ -35,8 +35,8 @@ class Chat: NSManagedObject {
     }
 
     var name: String {
-        let sortedParticipants = participantsArray.sort({ $0.name < $1.name })
-        return sortedParticipants.map({ $0.name }).joinWithSeparator(", ")
+        let sortedParticipants = participantsArray.sort({ $0.fullName < $1.fullName })
+        return sortedParticipants.map({ $0.firstName }).joinWithSeparator(", ")
     }
 
     static func createWithParticipants(participants: [Friend]) -> Chat {

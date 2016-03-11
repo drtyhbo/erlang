@@ -27,7 +27,7 @@ class MessageTableViewCell: UITableViewCell {
 
     var message: Message! {
         didSet {
-            userName.text = message.from?.name ?? "Me"
+            userName.text = message.from?.firstName ?? "Me"
 
             let timeFormatter = NSDateFormatter()
             timeFormatter.dateFormat = "H:mm"

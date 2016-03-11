@@ -39,12 +39,8 @@ class FriendManager {
             for i in 0..<friendsData.count {
                 let friendData = friendsData[i]
 
-                if let name = contactsByPhoneNumber[friendData.phoneNumber]?.name {
-                    if let friend = Friend.findWithId(friendData.id) {
-                        friend.name = name
-                    } else {
-                        Friend.createWithId(friendData.id, name: name)
-                    }
+                if let contact = contactsByPhoneNumber[friendData.phoneNumber] {
+                    Friend.createWithId(friendData.id, firstName: contact.firstName, lastName: contact.lastName)
                 }
             }
 

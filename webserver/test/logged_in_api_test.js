@@ -184,6 +184,47 @@ describe('logged in', function() {
 			});
 	});
 
+	it('/api/user/file/create/ - multiple string', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/file/create/', {
+					numIds: '2',
+					friendId: friend.id})
+				.expect(function(res) {
+					var fileIds = res.body.fileIds;
+					if (fileIds.length != 2 || !fileIds[0] || !fileIds[1]) {
+						return "invalid files";
+					}
+					res.body.fileIds = [12, 13];
+				})
+				.expect(200, {
+					status: 'ok',
+					fileIds: [12, 13]
+				}, done);
+			});
+	});
+
+	it('/api/user/file/create/ - gobbly gook', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/file/create/', {
+					numIds: 'abcdefg',
+					friendId: friend.id})
+				.expect(200, {
+					status: 'error'
+				}, done);
+			});
+	});
+
+	it('/api/user/file/create/ - gobbly gook', function testSlash(done) {
+		User.create('18315551111').then(function(friend) {
+			makeRequest('/api/user/file/create/', {
+					numIds: '-1',
+					friendId: friend.id})
+				.expect(200, {
+					status: 'error'
+				}, done);
+			});
+	});
+
 	it('/api/user/file/get/', function testSlash(done) {
 		User.create('18315551111').then(function(friend) {
 			makeRequest('/api/user/file/get/')

@@ -281,6 +281,8 @@ class ChatViewController: UIViewController {
             return .Full
         }
 
+        var previousRowIsMedia = false
+
         switch(rows[indexPath.row - 1]) {
             case .ConversationStart:
                 return .FullNoPadding
@@ -288,15 +290,18 @@ class ChatViewController: UIViewController {
                 return .FullNoPadding
             case .NewMessages:
                 return .FullNoPadding
-            default:
-                break
+            case .Message(let object, _):
+                let message = object as! Message
+                previousRowIsMedia = message.thumbnailInfo != nil
         }
 
         let row = rows[indexPath.row]
         switch(row) {
             case .Message(let object, let messageIndex):
                 let message = object as! Message
-                if let previousMessage: Message = messageIndex > 0 ? messages[messageIndex - 1] : nil {
+                if message.thumbnailInfo != nil && previousRowIsMedia {
+                    return .NoPadding
+                } else if let previousMessage: Message = messageIndex > 0 ? messages[messageIndex - 1] : nil {
                     return (messageIndex == 0 || abs(messageIndex - messages.count) % fetchLimit == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from) ? .Full : .PaddingOnly
                 } else {
                     return messageIndex == 0 ? .Full : .PaddingOnly
