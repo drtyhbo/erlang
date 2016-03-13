@@ -27,7 +27,7 @@ class MessageTableViewCell: UITableViewCell {
 
     var message: Message! {
         didSet {
-            userName.text = message.from?.name ?? "Me"
+            userName.text = message.from?.firstName ?? "Me"
 
             let timeFormatter = NSDateFormatter()
             timeFormatter.dateFormat = "H:mm"
@@ -62,7 +62,7 @@ class MessageTableViewCell: UITableViewCell {
     }
 
     private static let paddingTopMax: CGFloat = 24
-    private static let paddingTopMin: CGFloat = 8
+    private static let paddingTopMin: CGFloat = 2
     private static let userImageHeight: CGFloat = 48
 
     class func estimatedHeightForMessage(message: Message, headerType: HeaderType) -> CGFloat {

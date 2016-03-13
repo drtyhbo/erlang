@@ -19,10 +19,7 @@
 -record(user_state,
 		{socket,
 		user_id,
-		first_name,
-		local_id}).
--record(routing_info, {local_id}).
-
+		first_name}).
 
 %% ==== Defines ====
 
@@ -58,17 +55,15 @@ receive_msg(Pid, Msg) ->
 	gen_fsm:send_event(Pid, {receive_msg, Msg}).
 
 % Called to indicate the specified message has been delivered.
-msg_is_delivered(Msg) ->
-	gen_fsm:send_event(Msg#message.from_pid, {msg_is_delivered, Msg}).
+msg_is_delivered(ClientId) ->
+	gen_fsm:send_event(self(), {msg_is_delivered, ClientId}).
 
 
 %% === gen_fsm ===
 
 
 init([Socket]) ->
-	UserState = #user_state{
-			socket = Socket,
-			local_id = 0},
+	UserState = #user_state{socket = Socket},
 	{ok, logged_out, UserState}.
 
 
@@ -124,8 +119,8 @@ logged_in({receive_msg, Msg}, State) ->
 	secure_chat_msg_store:delete_offline_msg(Msg),
 	receive_msgs(State#user_state.socket, [Msg]),
 	{next_state, logged_in, State};
-logged_in({msg_is_delivered, Msg}, State) ->
-	send_json(State#user_state.socket, ?OUT_MSG_IS_DELIVERED(Msg#message.client_id)),
+logged_in({msg_is_delivered, ClientId}, State) ->
+	send_json(State#user_state.socket, ?OUT_MSG_IS_DELIVERED(ClientId)),
 	{next_state, logged_in, State};
 logged_in(Event, State) ->
 	io:format("Received unknown logged_in event ~p~n", [Event]),
@@ -183,29 +178,43 @@ handle_connect_json(Json, State) ->
 	 end.
 
 
-handle_msg_json(Json, State) ->
-	To = proplists:get_value(<<"r">>, Json),
-	ClientId = proplists:get_value(<<"i">>, Json),
-	Msg = proplists:get_value(<<"m">>, Json),
-	LocalId = State#user_state.local_id,
+recipients_to_msgs(From, Recipients, Msg) ->
+	recipients_to_msgs(From, Recipients, Msg, []).
+recipients_to_msgs(_, [], _, Acc) ->
+	Acc;
+recipients_to_msgs(From, [H|T], Msg, Acc) ->
+	MsgPayload = [{<<"m">>, Msg}|H],
 	NewMsg = #message{
-		to=To,
-		routing_info=#routing_info{local_id=LocalId},
-		from=State#user_state.user_id,
+		to=proplists:get_value(<<"r">>, H),
+		from=From,
 		from_pid=self(),
 		ts=secure_chat_utils:timestamp(),
-		client_id=ClientId,
-		msg=Msg},
-	store_offline_msg(NewMsg),
-	msg_is_delivered(NewMsg),
+		msg=proplists:delete(<<"r">>, MsgPayload)},
+	recipients_to_msgs(From, T, Msg, [NewMsg|Acc]).
+
+
+dispatch_msgs(_, []) ->
+	ok;
+dispatch_msgs(SenderName, [H|T]) ->
+	To = H#message.to,
+	store_offline_msg(H),
 	case syn:find_by_key(To) of
 	Pid when is_pid(Pid) ->
-		secure_chat_user:receive_msg(Pid, NewMsg);
+		secure_chat_user:receive_msg(Pid, H);
 	_ ->
 		ok
 	end,
-	secure_chat_pns:send_notification(To, State#user_state.first_name ++ " has sent you a message"),
-	State#user_state{local_id=LocalId + 1}.
+	secure_chat_pns:send_notification(To, SenderName ++ " has sent you a message"),
+	dispatch_msgs(SenderName, T).
+
+
+handle_msg_json(Json, State) ->
+	Recipients = proplists:get_value(<<"r">>, Json),
+	Msg = proplists:get_value(<<"m">>, Json),
+	Msgs = recipients_to_msgs(State#user_state.user_id, Recipients, Msg),
+	dispatch_msgs(State#user_state.first_name, Msgs),
+	msg_is_delivered(proplists:get_value(<<"i">>, Json)),
+	State.
 
 
 handle_acknowledgement_json(Json, State) ->
@@ -238,6 +247,26 @@ receive_offline_msgs(Socket, Msgs) ->
 	send_json(Socket, ?OUT_OFFLINE_MSGS_JSON(JsonList)).
 
 
+lists_to_json([]) ->
+	[];
+lists_to_json({struct, Array}) when is_list(Array) ->
+	{struct, lists_to_json(Array)};
+lists_to_json({Key, Array}) when is_list(Array) ->
+	[H|T] = Array,
+	case(H) of
+		{struct, _} ->
+			{Key, lists_to_json(Array)};
+		_ ->
+			{Key, {struct, lists_to_json(Array)}}
+	end;
+lists_to_json(Array) when is_list(Array) ->
+    F = fun (O, Acc) ->
+                [lists_to_json(O) | Acc]
+        end,
+    lists:reverse(lists:foldl(F, [], Array));
+lists_to_json(Value) ->
+	Value.
+
 generate_msgs_json([], JsonList) ->
 	JsonList;
 generate_msgs_json([H|T], JsonList) ->
@@ -245,4 +274,4 @@ generate_msgs_json([H|T], JsonList) ->
 
 
 send_json(Socket, Json) ->
-	gen_tcp:send(Socket, mochijson2:encode(Json) ++ "\n").
+	gen_tcp:send(Socket, mochijson2:encode(lists_to_json(Json)) ++ "\n").

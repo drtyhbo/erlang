@@ -22,7 +22,6 @@ User.keyOfLastResort = 0xFFFF;
 
 // Checks whether the provided numbers correspond to users and returns an array of the
 // phoneNumber/id combinations.
-// Has tests.
 User.checkPhoneNumbers = function(phoneNumbers) {
 	var sharedIds;
 
@@ -48,7 +47,6 @@ User.checkPhoneNumbers = function(phoneNumbers) {
 };
 
 // Creates a new user. Returns a promise that resolves to the user.
-// Has tests.
 User.create = function(phoneNumber) {
 	if (!phoneNumber || phoneNumber.length != 11) {
 		return Promise.reject();
@@ -69,7 +67,6 @@ User.create = function(phoneNumber) {
 };
 
 // Returns a session key for the user (assuming the codes match).
-// Has tests.
 User.login = function(phoneNumber, code) {
 	var self = this;
 
@@ -97,7 +94,8 @@ User.login = function(phoneNumber, code) {
 };
 
 User._create = function(phoneNumber) {
-	var code = Math.floor(Math.random() * 900000) + 100000;
+	//var code = Math.round(Math.random() * 899999) + 100000;
+	var code = 111111;
 	return redis.incrAsync('user_id').then(function(id) {
 		return redis.setAsync(User._phoneKey(phoneNumber), id).thenReturn(id);
 	}).then(function(id) {
@@ -125,7 +123,6 @@ User._userKey = function(id) {
 	return 'u:{' + id + '}';
 };
 
-// Has tests.
 User.prototype.confirmSession = function(sessionToken) {
 	if (!sessionToken) {
 		return Promise.reject();
@@ -141,14 +138,12 @@ User.prototype.exists = function() {
 	return redis.existsAsync(User._userKey(this.id));
 };
 
-// Has tests.
 User.prototype.fetch = function() {
 	return redis.hmgetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
 };
 
 // Returns the next preKey, or the key of last resort if none are available. Returns a rejection
 // promise if no keys can be found.
-// Has tests.
 User.prototype.fetchPreKey = function() {
 	var self = this;
 
@@ -180,7 +175,6 @@ User.prototype.fetchPreKey = function() {
 	});
 };
 
-// Has tests.
 User.prototype.update = function() {
 	var itemsToUpdate = Array.prototype.slice.call(arguments);
 	for (var i = itemsToUpdate.length - 2; i >= 0; i -= 2) {
@@ -193,7 +187,6 @@ User.prototype.update = function() {
 };
 
 // Updates the user's pre-key cache with the provided pre-keys.
-// Has tests.
 User.prototype.updatePreKeys = function(preKeys) {
 	var indices = preKeys['i'];
 	var publicKeys = preKeys['pk'];
@@ -232,39 +225,8 @@ User.prototype._generateCode = function() {
 			return Promise.resolve(code);
 		}
 	});
-}
+};
 
 User.prototype._update = function() {
 	return redis.hmsetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
-};
-
-function doesUserWithIdExist(userId) {
-	return redis.existsAsync(userKeyFromId(userId)).then(function(response) {
-		return response != 0 ? Promise.resolve() : Promise.reject('id');
-	});
-}
-
-function getUserInfo(userId, info) {
-	return redis.hmgetAsync(userKeyFromId(userId), info);
-}
-
-exports.setDeviceToken = function(userId, token, cb) {
-	redis.hsetAsync(userKeyFromId(userId), userKeys.iosPushToken, token).then(function() {
-		cb();
-	}, function(err) {
-		cb(err);
-	});
-};
-
-exports.updateInfo = function(userId, firstName, lastName, cb) {
-	if (!firstName) {
-		cb('firstName required');
-		return;
-	}
-
-	redis.hmsetAsync(userKeyFromId(userId), userKeys.firstName, firstName, userKeys.lastName || '', lastName).then(function() {
-		cb();
-	}, function(err) {
-		cb(err);
-	});
 };

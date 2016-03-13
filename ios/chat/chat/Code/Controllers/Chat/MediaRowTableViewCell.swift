@@ -19,6 +19,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
     @IBOutlet weak var percentUploadedView: UIView!
     @IBOutlet weak var percentUploadedWidthConstraint: NSLayoutConstraint!
 
+    @IBOutlet weak var topConstraint: NSLayoutConstraint!
     @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
 
@@ -40,23 +41,31 @@ class MediaRowTableViewCell: MessageTableViewCell {
         }
     }
 
-    private static let paddingBetweenHeaderAndContent: CGFloat = 8
+    override var headerType: HeaderType {
+        didSet {
+            topConstraint.constant = MediaRowTableViewCell.paddingForHeaderType(headerType)
+        }
+    }
 
-    private let thumbnailPadding: CGFloat = 80
+    private static let thumbnailPadding: CGFloat = 64
 
     override class func estimatedHeightForMessage(message: Message, headerType: HeaderType) -> CGFloat {
         guard let thumbnailInfo = message.thumbnailInfo else {
             return super.estimatedHeightForMessage(message, headerType: headerType)
         }
 
-        return super.estimatedHeightForMessage(message, headerType: headerType) + dimensionsForThumbnailWithInfo(thumbnailInfo).height + MediaRowTableViewCell.paddingBetweenHeaderAndContent
+        return super.estimatedHeightForMessage(message, headerType: headerType) + dimensionsForThumbnailWithInfo(thumbnailInfo).height + paddingForHeaderType(headerType)
+    }
+
+    private static func paddingForHeaderType(headerType: HeaderType) -> CGFloat {
+        return headerType == .NoPadding ? 0 : 8
     }
 
     private static func dimensionsForThumbnailWithInfo(thumbnailInfo: Message.ThumbnailInfo) -> (width: CGFloat, height: CGFloat) {
         let screenSize = UIScreen.mainScreen().bounds.size
         var imageSize = CGSize(width: thumbnailInfo.width, height: thumbnailInfo.height)
-        if thumbnailInfo.width + 60 > Int(screenSize.width) {
-            let newWidth = screenSize.width - 60
+        if CGFloat(thumbnailInfo.width) + thumbnailPadding > screenSize.width {
+            let newWidth = screenSize.width - thumbnailPadding
             imageSize = CGSize(width: newWidth, height: imageSize.height / imageSize.width * newWidth)
         }
 
@@ -90,8 +99,8 @@ class MediaRowTableViewCell: MessageTableViewCell {
 
         let screenSize = UIScreen.mainScreen().bounds.size
         var imageSize = CGSize(width: thumbnailInfo.width, height: thumbnailInfo.height)
-        if CGFloat(thumbnailInfo.width) + thumbnailPadding > screenSize.width {
-            let newWidth = screenSize.width - thumbnailPadding
+        if CGFloat(thumbnailInfo.width) + MediaRowTableViewCell.thumbnailPadding > screenSize.width {
+            let newWidth = screenSize.width - MediaRowTableViewCell.thumbnailPadding
             imageSize = CGSize(width: newWidth, height: imageSize.height / imageSize.width * newWidth)
         }
 

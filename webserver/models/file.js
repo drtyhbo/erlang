@@ -26,6 +26,9 @@ File.create = function(user, friend, numIds) {
 			promises.push(redis.saddAsync(File._fileKey(firstFileId + i), File._userKey(user.id), File._userKey(friend.id)));
 		}
 		
+		console.log(firstFileId);
+		console.log(firstFileId + numIds);
+
 		var files = [];
 		for (var fileId = firstFileId; fileId < firstFileId + numIds; fileId++) {
 			files.push(new File(fileId));

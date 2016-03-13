@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
+    <entity name="Chat" representedClassName="Chat" syncable="YES">
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="chat" inverseEntity="Message" syncable="YES"/>
+        <relationship name="participants" toMany="YES" deletionRule="Nullify" destinationEntity="Friend" inverseName="chats" inverseEntity="Friend" syncable="YES"/>
+    </entity>
     <entity name="Conversation" representedClassName="Conversation" syncable="YES">
         <attribute name="isRatcheting" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="messageNumber" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -14,28 +18,31 @@
         <attribute name="localPath" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Friend" representedClassName="Friend" syncable="YES">
+        <attribute name="firstName" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="chats" toMany="YES" deletionRule="Nullify" destinationEntity="Chat" inverseName="participants" inverseEntity="Chat" syncable="YES"/>
         <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="friend" inverseEntity="Conversation" syncable="YES"/>
-        <relationship name="receivedMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="to" inverseEntity="Message" syncable="YES"/>
-        <relationship name="sentMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="from" inverseEntity="Message" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="from" inverseEntity="Message" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="date" attributeType="Date" indexed="YES" syncable="YES"/>
         <attribute name="message" attributeType="Transformable" syncable="YES"/>
-        <relationship name="from" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="sentMessages" inverseEntity="Friend" syncable="YES"/>
+        <attribute name="secretKey" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="chat" maxCount="1" deletionRule="Nullify" destinationEntity="Chat" inverseName="messages" inverseEntity="Chat" syncable="YES"/>
+        <relationship name="from" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="messages" inverseEntity="Friend" syncable="YES"/>
         <relationship name="pendingMessage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PendingMessage" inverseName="message" inverseEntity="PendingMessage" syncable="YES"/>
-        <relationship name="to" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="receivedMessages" inverseEntity="Friend" syncable="YES"/>
     </entity>
     <entity name="PendingMessage" representedClassName="PendingMessage" syncable="YES">
         <attribute name="date" attributeType="Date" syncable="YES"/>
         <relationship name="message" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="pendingMessage" inverseEntity="Message" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Chat" positionX="-54" positionY="63" width="128" height="75"/>
         <element name="Conversation" positionX="-54" positionY="54" width="128" height="120"/>
         <element name="File" positionX="-36" positionY="72" width="128" height="105"/>
-        <element name="Friend" positionX="-54" positionY="9" width="128" height="120"/>
-        <element name="Message" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="Friend" positionX="-54" positionY="9" width="128" height="135"/>
+        <element name="Message" positionX="-63" positionY="-18" width="128" height="135"/>
         <element name="PendingMessage" positionX="-54" positionY="54" width="128" height="75"/>
     </elements>
 </model>

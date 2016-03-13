@@ -1,0 +1,70 @@
+== Message payloads ==
+
+All message payloads are encrypted using ratcheting.
+
+Regular message:
+
+{
+	"m": message contents
+}
+
+Image message:
+
+{
+	"i": {
+		"i": image file id,
+		"w": image width,
+		"h": image height,
+		"ti": thumbnail file id,
+		"tw": thumbnail width,
+		"th": thumbnail height
+	},
+	"k": Encryption key
+}
+
+Video message:
+
+{
+	"v": {
+		"v": video file id,
+		"ti": thumbnail file id,
+		"tw": thumbnail width,
+		"th": thumbnail height
+	},
+	"k": Encryption key
+}
+
+All messages are wrapped using the following JSON before being sent to the backend.
+
+{
+	"t": "m",
+	"r": recipient id (as a String),
+	"i": The id of this message,
+	"m": {
+		"k": The public key of this user,
+		"c": The message number in this conversation,
+		"m": The encrypted message
+	}
+}
+
+To support group chats, how about sending something like this:
+
+{
+	"t": "m",
+	"i": The id of this message,
+	"r": [{
+			"r": recipient id,
+			"k": the public key of this user,
+			"c": the message number in this conversation,
+			"k": The key used to encrypt the message which has been encrypted using the ratcheting protocol
+		}],
+	"m": The message encrypted using the key sent to each user
+}
+
+Inside the actual message we'd include a field such as:
+
+{
+	"g": [user ids]	
+}
+
+Which includes the ids of all users in this group chat.

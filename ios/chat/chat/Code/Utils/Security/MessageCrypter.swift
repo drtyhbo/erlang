@@ -18,7 +18,9 @@ class MessageCrypter {
     private let SharedRootKeyBytes = Int(crypto_scalarmult_bytes())
 
     func sharedSecret() -> SharedSecret {
-        return Sodium()!.randomBytes.buf(32)!
+        let hash = Hash()
+        hash.update(Sodium()!.randomBytes.buf(32)!)
+        return hash.final()!
     }
 
     func encryptData(data: NSData, withSharedSecret sharedSecret: SharedSecret) -> NSData? {
@@ -29,7 +31,7 @@ class MessageCrypter {
         return Sodium()!.secretBox.open(data, secretKey: sharedSecret)
     }
 
-    func encryptMessage(message: JSON, forFriend friend: Friend, callback: String?->Void) {
+    func encryptData(unencryptedData: NSData, forFriend friend: Friend, callback: [String:AnyObject]?->Void) {
         let conversation = Conversation.getOrCreateWithFriend(friend)
         CoreData.save()
 
@@ -44,14 +46,14 @@ class MessageCrypter {
                 conversation.publicKey = publicKey
                 CoreData.save()
 
-                self.handleEncryption(message, conversation: conversation, callback: callback)
+                self.handleEncryption(unencryptedData, conversation: conversation, callback: callback)
             }
         } else {
-            handleEncryption(message, conversation: conversation, callback: callback)
+            handleEncryption(unencryptedData, conversation: conversation, callback: callback)
         }
     }
 
-    func decryptMessage(message: String, forFriend friend: Friend) -> JSON? {
+    func decryptMessage(message: [String:AnyObject], forFriend friend: Friend) -> NSData? {
         let conversation = Conversation.getOrCreateWithFriend(friend)
         CoreData.save()
 
@@ -60,7 +62,7 @@ class MessageCrypter {
 
     // TODO: Call this in a synchronous messaging queue to prevent this from being run more than
     // once at a time.
-    private func handleEncryption(message: JSON, conversation: Conversation, callback: String?->Void) {
+    private func handleEncryption(unencryptedData: NSData, conversation: Conversation, callback: [String:AnyObject]?->Void) {
         var keyPair: KeyPair
         if !conversation.isRatcheting {
             keyPair = KeyPair.keyPair()!
@@ -81,34 +83,29 @@ class MessageCrypter {
             return
         }
 
-        guard let encryptedMessage = encryptData(try! message.rawData(), withSharedSecret: messageKey) else {
+        guard let encryptedMessage = encryptData(unencryptedData, withSharedSecret: messageKey) else {
             callback(nil)
             return
         }
 
-        var json = JSON([
-            "k": keyPair.publicKey.base64,
+        var json: [String:AnyObject] = [
+            "pk": keyPair.publicKey.base64,
             "c": conversation.messageNumber,
-            "m": encryptedMessage.base64])
+            "m": encryptedMessage.base64]
         if conversation.preKeyIndex >= 0 {
-            json["pki"] = JSON(conversation.preKeyIndex)
+            json["pki"] = conversation.preKeyIndex
         }
 
         conversation.isRatcheting = true
         conversation.messageNumber++
         CoreData.save()
 
-        callback(try! json.rawData().base64)
+        callback(json)
     }
 
-    private func handleDecryption(message: String, conversation: Conversation) -> JSON? {
-        guard let messageData = NSData.fromBase64(message) else {
-            return nil
-        }
-
+    private func handleDecryption(json: [String:AnyObject], conversation: Conversation) -> NSData? {
         let sodium = Sodium()!
-        let json = JSON(data: messageData)
-        guard let otherPublicKeyBase64 = json["k"].string, otherPublicKey = NSData.fromBase64(otherPublicKeyBase64), messageNumber = json["c"].int, encryptedMessageBase64 = json["m"].string, encryptedMessage = NSData.fromBase64(encryptedMessageBase64) else {
+        guard let otherPublicKeyBase64 = json["pk"] as? String, otherPublicKey = NSData.fromBase64(otherPublicKeyBase64), messageNumber = json["c"] as? Int, encryptedMessageBase64 = json["m"] as? String, encryptedMessage = NSData.fromBase64(encryptedMessageBase64) else {
             return nil
         }
 
@@ -118,7 +115,7 @@ class MessageCrypter {
         CoreData.save()
 
         let keyPair: KeyPair
-        if let preKeyIndex = json["pki"].int {
+        if let preKeyIndex = json["pki"] as? Int {
             guard let preKey = PreKeyCache.sharedCache.preKeyForIndex(preKeyIndex) else {
                 return nil
             }
@@ -140,7 +137,7 @@ class MessageCrypter {
             return nil
         }
 
-        return JSON(data: decryptedMessage)
+        return decryptedMessage
     }
 
     private func generateSharedSecretForConversation(conversation: Conversation, withKeyPair keyPair: KeyPair) -> SharedSecret? {

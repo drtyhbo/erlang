@@ -17,7 +17,7 @@ class ConversationStartTableViewCell: UITableViewCell {
     var friend: Friend? {
         didSet {
             if let friend = friend {
-                label.text = "This is the start of your chat history with \(friend.name)"
+                label.text = "This is the start of your chat history with \(friend.fullName)"
             }
         }
     }

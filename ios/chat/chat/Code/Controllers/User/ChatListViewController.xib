@@ -5,9 +5,9 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FriendsListViewController" customModule="chat" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatListViewController" customModule="chat" customModuleProvider="target">
             <connections>
-                <outlet property="friendsTable" destination="YaS-dx-vLu" id="6lm-fc-p8Q"/>
+                <outlet property="chatsTable" destination="YaS-dx-vLu" id="THF-gq-6ci"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Jw5-aP-fXx"/>
             </connections>
         </placeholder>

@@ -13,9 +13,19 @@ import MagicalRecord
 class FriendManager {
     static let sharedManager = FriendManager()
 
-    private(set) lazy var friends: [Friend] = {
+    var friends: [Friend] {
         return Friend.findAll()
-    }();
+    }
+
+    func getFriendById(id: Int) -> Friend? {
+        for friend in friends {
+            if friend.id == id {
+                return friend
+            }
+        }
+
+        return nil
+    }
 
     func loadFriendsFromContacts(contacts: [Contact], completion: Void->Void) {
         var contactsByPhoneNumber: [String: Contact] = [:]
@@ -29,13 +39,8 @@ class FriendManager {
             for i in 0..<friendsData.count {
                 let friendData = friendsData[i]
 
-                if let name = contactsByPhoneNumber[friendData.phoneNumber]?.name {
-                    if let friend = Friend.findWithId(friendData.id) {
-                        friend.name = name
-                    } else {
-                        let friend = Friend.createWithId(friendData.id, name: name)
-                        self.friends.append(friend)
-                    }
+                if let contact = contactsByPhoneNumber[friendData.phoneNumber] {
+                    Friend.createWithId(friendData.id, firstName: contact.firstName, lastName: contact.lastName)
                 }
             }
 
@@ -43,15 +48,5 @@ class FriendManager {
 
             completion()
         }
-    }
-
-    func getFriendById(id: Int) -> Friend? {
-        for friend in friends {
-            if friend.id == id {
-                return friend
-            }
-        }
-
-        return nil
     }
 }

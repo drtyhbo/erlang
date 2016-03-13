@@ -20,7 +20,7 @@ class MessageSender {
         private(set) var bytesSent: Int
         private(set) var totalBytes: Int
 
-        private let secretKey: NSData?
+        private let secretKey: NSData
 
         init(message: Message, messageId: Int, files: [File]) {
             self.message = message
@@ -28,7 +28,7 @@ class MessageSender {
             self.files = files
             bytesSent = 0
             totalBytes = files.reduce(0, combine: {$0 + $1.data.length})
-            secretKey = files.count > 0 ? MessageCrypter.sharedCrypter.sharedSecret() : nil
+            secretKey = MessageCrypter.sharedCrypter.sharedSecret()
         }
 
         func finishFileAtIndex(fileIndex: Int) {
@@ -68,14 +68,14 @@ class MessageSender {
         isSending = true
 
         let outgoingMessage = outgoingMessages.first!
-        if let secretKey = outgoingMessage.secretKey where outgoingMessage.files.count > 0 {
-            uploadFile(outgoingMessage.files.first!, toUser: outgoingMessage.message.to!, withSecretKey: secretKey)
+        if outgoingMessage.files.count > 0 {
+            uploadFile(outgoingMessage.files.first!, withSecretKey: outgoingMessage.secretKey)
         } else {
             sendOutgoingMessage(outgoingMessage)
         }
     }
 
-    private func uploadFile(file: File, toUser to: Friend, withSecretKey secretKey: MessageCrypter.SharedSecret) {
+    private func uploadFile(file: File, withSecretKey secretKey: MessageCrypter.SharedSecret) {
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
@@ -109,8 +109,7 @@ class MessageSender {
 
     private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
         let message = outgoingMessage.message
-        let messageJson = outgoingMessage.secretKey != nil ? message.wrapJsonWithKey(outgoingMessage.secretKey!) : message.json
-        ChatClient.sharedClient.sendMessageWithJson(messageJson, to: message.to!, messageId: outgoingMessage.messageId)
+        ChatClient.sharedClient.sendMessageWithData(try! message.json.rawData(), toChat: message.chat, messageId: outgoingMessage.messageId, secretKey: outgoingMessage.secretKey)
     }
 
     @objc private func messageDidSend(notification: NSNotification) {

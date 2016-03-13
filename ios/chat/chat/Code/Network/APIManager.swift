@@ -107,13 +107,43 @@ class APIManager: NSObject {
         }
     }
 
-    func createFileForFriend(friend: Friend, numFiles: Int, callback: Int?->Void) {
+    func getInfoForUsersWithIds(userIds: [Int], callback: [(firstName: String, lastName: String)]?->Void) {
+        sendUserRequestToUrl("info/get/", parameters: [
+            "userIds": userIds
+        ]) { json in
+            guard let nameResults = json?["names"].array else {
+                callback(nil)
+                return
+            }
+
+            var names: [(firstName: String, lastName: String)] = []
+            for nameResult in nameResults {
+                guard let firstName = nameResult["firstName"].string, lastName = nameResult["lastName"].string else {
+                    callback(nil)
+                    return
+                }
+                names.append((firstName: firstName, lastName: lastName))
+            }
+
+            callback(names)
+        }
+    }
+
+    func createFileForFriend(friend: Friend, numFiles: Int, callback: [Int]?->Void) {
         sendUserRequestToUrl("file/create/", parameters: [
             "friendId": friend.id,
             "numIds": numFiles]) {
             json in
-            if let json = json, fileId = json["fileId"].int {
-                callback(fileId)
+            if let json = json, fileIdsJson = json["fileIds"].array {
+                var fileIds: [Int] = []
+                for fileIdJson in fileIdsJson {
+                    guard let fileId = fileIdJson.int else {
+                        callback(nil)
+                        return
+                    }
+                    fileIds.append(fileId)
+                }
+                callback(fileIds)
             } else {
                 callback(nil)
             }
@@ -130,6 +160,7 @@ class APIManager: NSObject {
             "method": method,
             "contentType": contentType]) {
             json in
+            print (json?.rawString())
             if let json = json, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
                 callback(fileUrl)
             } else {

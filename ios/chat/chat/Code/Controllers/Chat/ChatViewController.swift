@@ -32,21 +32,21 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var unreadMessagesContainer: UIView!
     @IBOutlet weak var unreadMessagesCount: UILabel!
 
-    var friend: Friend? {
+    var chat: Chat? {
         didSet {
-            if let friend = friend {
-                friendNameLabel.text = friend.name
+            if let chat = chat {
+                friendNameLabel.text = chat.name
 
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: MessageManager.NewMessagesNotification, object: oldValue)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessagesNotification:", name: MessageManager.NewMessagesNotification, object: friend)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessagesNotification:", name: MessageManager.NewMessagesNotification, object: chat)
 
                 isAtTop = false
                 rows = []
                 messages = []
-                unreadMessageCount = MessageManager.sharedManager.unreadMessageCountForFriend(friend)
+                unreadMessageCount = MessageManager.sharedManager.unreadMessageCountForChat(chat)
 
                 loadMessages()
-                MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
+                MessageManager.sharedManager.markMessagesForChatAsRead(chat)
             }
         }
     }
@@ -113,7 +113,7 @@ class ChatViewController: UIViewController {
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: friend)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: chat?.participantsArray[0])
 
 
         registerForNotifications()
@@ -152,8 +152,8 @@ class ChatViewController: UIViewController {
     private func sendMessageWithText(text: String) {
         resetNewMessageView()
 
-        if let friend = friend {
-            MessageManager.sharedManager.sendMessageWithText(text, to: friend) {
+        if let chat = chat {
+            MessageManager.sharedManager.sendMessageWithText(text, toChat: chat) {
                 message in
                 if let message = message {
                     self.appendMessage(message)
@@ -165,8 +165,8 @@ class ChatViewController: UIViewController {
     private func sendMessageWithImage(image: UIImage) {
         resetNewMessageView()
 
-        if let friend = friend {
-            MessageManager.sharedManager.sendMessageWithImage(image, to: friend) {
+        if let chat = chat {
+            MessageManager.sharedManager.sendMessageWithImage(image, toChat: chat) {
                 message in
                 if let message = message {
                     self.appendMessage(message)
@@ -178,8 +178,8 @@ class ChatViewController: UIViewController {
     private func sendMessageWithMediaUrl(mediaUrl: NSURL) {
         resetNewMessageView()
 
-        if let friend = friend {
-            MessageManager.sharedManager.sendMessageWithMediaUrl(mediaUrl, to: friend) {
+        if let chat = chat {
+            MessageManager.sharedManager.sendMessageWithMediaUrl(mediaUrl, toChat: chat) {
                 message in
                 if let message = message {
                     self.appendMessage(message)
@@ -221,12 +221,12 @@ class ChatViewController: UIViewController {
     }
 
     private func loadMessages() {
-        guard let friend = friend else {
+        guard let chat = chat else {
             return
         }
 
         let isFirstBatch = messages.count == 0
-        let newMessages = MessageManager.sharedManager.getMessagesForFriend(friend, beforeDate: messages.count == 0 ? nil : messages[0].date, fetchLimit: fetchLimit)
+        let newMessages = MessageManager.sharedManager.getMessagesForChat(chat, beforeDate: messages.count == 0 ? nil : messages[0].date, fetchLimit: fetchLimit)
         isAtTop = newMessages.count < fetchLimit
         messages = newMessages + messages
 
@@ -281,6 +281,8 @@ class ChatViewController: UIViewController {
             return .Full
         }
 
+        var previousRowIsMedia = false
+
         switch(rows[indexPath.row - 1]) {
             case .ConversationStart:
                 return .FullNoPadding
@@ -288,15 +290,18 @@ class ChatViewController: UIViewController {
                 return .FullNoPadding
             case .NewMessages:
                 return .FullNoPadding
-            default:
-                break
+            case .Message(let object, _):
+                let message = object as! Message
+                previousRowIsMedia = message.thumbnailInfo != nil
         }
 
         let row = rows[indexPath.row]
         switch(row) {
             case .Message(let object, let messageIndex):
                 let message = object as! Message
-                if let previousMessage: Message = messageIndex > 0 ? messages[messageIndex - 1] : nil {
+                if message.thumbnailInfo != nil && previousRowIsMedia {
+                    return .NoPadding
+                } else if let previousMessage: Message = messageIndex > 0 ? messages[messageIndex - 1] : nil {
                     return (messageIndex == 0 || abs(messageIndex - messages.count) % fetchLimit == 0 || message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from) ? .Full : .PaddingOnly
                 } else {
                     return messageIndex == 0 ? .Full : .PaddingOnly
@@ -326,8 +331,8 @@ class ChatViewController: UIViewController {
 
     @objc private func didReceiveMessagesNotification(notification: NSNotification) {
         if let messages = (notification.userInfo?["messages"] as? MessageManager.NewMessagesNotificationWrapper)?.messages {
-            if let friend = friend {
-                MessageManager.sharedManager.markMessagesForFriendAsRead(friend)
+            if let chat = chat {
+                MessageManager.sharedManager.markMessagesForChatAsRead(chat)
             }
 
             appendMessages(messages)
@@ -381,7 +386,7 @@ extension ChatViewController: UITableViewDataSource {
         switch(row) {
         case .ConversationStart:
             let cell = tableView.dequeueReusableCellWithIdentifier(conversationStartCellReuseIdentifier, forIndexPath: indexPath) as! ConversationStartTableViewCell
-            cell.friend = friend!
+            cell.friend = chat?.participantsArray[0]
             return cell
         case .Message(let object, _):
             let message = object as! Message
