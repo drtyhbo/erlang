@@ -117,9 +117,9 @@ router.post('/file/create/', function(req, res) {
 router.post('/file/get/', function(req, res) {
 	var fileId = req.body.fileId;
 	var method = req.body.method;
-	var contentType = req.body.contentType;
+	var contentType = req.body.contentType || '';
 
-	if (!fileId || !method || !contentType) {
+	if (!fileId || !method) {
 		sendError(res);
 		return
 	}

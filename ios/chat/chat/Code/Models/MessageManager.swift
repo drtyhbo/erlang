@@ -232,7 +232,7 @@ class MessageManager {
             NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.NewChatNotification, object: nil, userInfo: ["chat": chat!])
         }
 
-        let message = Message.createWithFrom(friend, chat: chat!, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), messageJson: receivedMessage.messageJson)
+        let message = Message.createWithFrom(friend, chat: chat!, date: NSDate(timeIntervalSince1970: NSTimeInterval(receivedMessage.timestamp)), secretKey: receivedMessage.secretKey, messageJson: receivedMessage.messageJson)
         CoreData.save()
 
         addMessage(message)

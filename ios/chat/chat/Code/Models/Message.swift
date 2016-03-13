@@ -33,6 +33,7 @@ class Message: NSManagedObject {
     @NSManaged private(set) var from: Friend?
     @NSManaged private(set) var date: NSDate
     @NSManaged private(set) var message: String
+    @NSManaged private(set) var secretKey: NSData?
 
     var localId: String {
         return objectID.URIRepresentation().lastPathComponent ?? ""
@@ -86,24 +87,18 @@ class Message: NSManagedObject {
         return json["m"].string
     }
 
-    var secretKey: NSData? {
-        guard let keyString = json["k"].string else {
-            return nil
-        }
-        return NSData.fromBase64(keyString)
-    }
-
     private(set) var json = JSON([:])
 
     static func createFromCurrentUserToChat(chat: Chat, messageJson: JSON) -> Message {
-        return createWithFrom(nil, chat: chat, date: NSDate(), messageJson: messageJson)
+        return createWithFrom(nil, chat: chat, date: NSDate(), secretKey: nil, messageJson: messageJson)
     }
 
-    static func createWithFrom(from: Friend?, chat: Chat, date: NSDate, messageJson: JSON) -> Message {
+    static func createWithFrom(from: Friend?, chat: Chat, date: NSDate, secretKey: NSData?, messageJson: JSON) -> Message {
         let message = Message.MR_createEntity()!
         message.from = from
         message.chat = chat
         message.date = date
+        message.secretKey = secretKey
         message.message = messageJson.rawString()!
         message.json = messageJson
         return message

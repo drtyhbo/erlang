@@ -94,7 +94,8 @@ User.login = function(phoneNumber, code) {
 };
 
 User._create = function(phoneNumber) {
-	var code = Math.floor(Math.random() * 900000) + 100000;
+	//var code = Math.round(Math.random() * 899999) + 100000;
+	var code = 111111;
 	return redis.incrAsync('user_id').then(function(id) {
 		return redis.setAsync(User._phoneKey(phoneNumber), id).thenReturn(id);
 	}).then(function(id) {

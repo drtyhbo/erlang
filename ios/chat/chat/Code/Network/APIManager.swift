@@ -160,6 +160,7 @@ class APIManager: NSObject {
             "method": method,
             "contentType": contentType]) {
             json in
+            print (json?.rawString())
             if let json = json, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
                 callback(fileUrl)
             } else {

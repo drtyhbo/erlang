@@ -150,7 +150,7 @@ class ChatClient {
                 continue
             }
 
-            self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, messageJson: JSON(data: decryptedMessage)))
+            self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, secretKey: decryptedKey, messageJson: JSON(data: decryptedMessage)))
         }
 
         self.receivedMessagesTimer?.invalidate()

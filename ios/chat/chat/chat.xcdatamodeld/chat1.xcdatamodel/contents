@@ -28,6 +28,7 @@
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="date" attributeType="Date" indexed="YES" syncable="YES"/>
         <attribute name="message" attributeType="Transformable" syncable="YES"/>
+        <attribute name="secretKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="chat" maxCount="1" deletionRule="Nullify" destinationEntity="Chat" inverseName="messages" inverseEntity="Chat" syncable="YES"/>
         <relationship name="from" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Friend" inverseName="messages" inverseEntity="Friend" syncable="YES"/>
         <relationship name="pendingMessage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PendingMessage" inverseName="message" inverseEntity="PendingMessage" syncable="YES"/>
@@ -41,7 +42,7 @@
         <element name="Conversation" positionX="-54" positionY="54" width="128" height="120"/>
         <element name="File" positionX="-36" positionY="72" width="128" height="105"/>
         <element name="Friend" positionX="-54" positionY="9" width="128" height="135"/>
-        <element name="Message" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="Message" positionX="-63" positionY="-18" width="128" height="135"/>
         <element name="PendingMessage" positionX="-54" positionY="54" width="128" height="75"/>
     </elements>
 </model>
