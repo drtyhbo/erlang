@@ -26,9 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let rootViewController: UIViewController
         if User.userId == 0 || User.firstName == nil {
-            let navigationController = UINavigationController(rootViewController: User.userId == 0 ? PhoneNumberViewController() : UserInfoViewController())
-            navigationController.navigationBar.translucent = false
-            rootViewController = navigationController
+            rootViewController = ThemedNavigationController(rootViewController: User.userId == 0 ? PhoneNumberViewController() : UserInfoViewController())
         } else {
             rootViewController = MainViewController()
         }

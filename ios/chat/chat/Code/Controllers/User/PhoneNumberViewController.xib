@@ -24,11 +24,10 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter your phone number." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VF0-xs-S4i">
                             <rect key="frame" x="175" y="108" width="250" height="21"/>
                             <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="VF0-xs-S4i" firstAttribute="centerX" secondItem="4RX-AI-P9o" secondAttribute="centerX" id="H6O-Uk-gQe"/>
                         <constraint firstItem="VF0-xs-S4i" firstAttribute="centerY" secondItem="4RX-AI-P9o" secondAttribute="centerY" id="lCl-f7-2rF"/>
@@ -40,9 +39,9 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sfe-V4-q1i">
                             <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="McU-al-qrX">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="McU-al-qrX" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
-                                    <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.9882352941176471" green="0.89411764705882346" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="G4e-UT-745"/>
                                     </constraints>
@@ -57,12 +56,12 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="United States of America" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SF8-s0-JRR">
                                     <rect key="frame" x="52" y="1" width="191" height="62"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEY-O3-XI8">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEY-O3-XI8" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="63" width="600" height="1"/>
-                                    <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.9882352941176471" green="0.89411764705882346" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="LK3-4b-j04"/>
                                     </constraints>
@@ -99,12 +98,12 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CyR-Fp-C0g">
                                             <rect key="frame" x="0.0" y="0.0" width="54" height="64"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZvS-62-ofM">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZvS-62-ofM" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
                                             <rect key="frame" x="53" y="0.0" width="1" height="64"/>
-                                            <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="backgroundColor" red="0.9882352941176471" green="0.89411764705882346" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="1" id="cD0-Bi-Igy"/>
                                                 <constraint firstAttribute="height" constant="1" id="eYM-Dx-da8"/>
@@ -116,7 +115,6 @@
                                             </variation>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstItem="ZvS-62-ofM" firstAttribute="top" secondItem="367-oa-D7q" secondAttribute="top" id="7GY-mU-4Af"/>
                                         <constraint firstAttribute="trailing" secondItem="CyR-Fp-C0g" secondAttribute="trailing" id="EYq-IK-6xw"/>
@@ -133,9 +131,9 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 </textField>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jcw-R6-mtQ">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jcw-R6-mtQ" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="63" width="600" height="1"/>
-                                    <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.9882352941176471" green="0.89411764705882346" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="Nhd-Iy-hWH"/>
                                     </constraints>
@@ -157,7 +155,6 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Sfe-V4-q1i" firstAttribute="top" secondItem="bhn-7W-FME" secondAttribute="top" id="1ZZ-aX-Usl"/>
                         <constraint firstAttribute="trailing" secondItem="xxn-0j-R39" secondAttribute="trailing" id="473-h3-CXP"/>
@@ -170,7 +167,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="0.97254901960784312" blue="0.98431372549019602" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="bhn-7W-FME" firstAttribute="top" secondItem="4RX-AI-P9o" secondAttribute="bottom" id="7uK-Sp-hbN"/>
                 <constraint firstItem="bhn-7W-FME" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="HQG-aX-wXJ"/>

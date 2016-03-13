@@ -20,12 +20,14 @@ class ChatViewController: UIViewController {
         case NewMessages
     }
 
+    @IBOutlet weak var topBar: UIView!
     @IBOutlet weak var friendNameLabel: UILabel!
 
     @IBOutlet weak var tableView: UITableView!
 
     @IBOutlet weak var newMessageContainerBottomConstraint: NSLayoutConstraint!
 
+    @IBOutlet weak var newMessageContainer: UIView!
     @IBOutlet weak var newMessageView: UITextView!
     @IBOutlet weak var newMessageViewHeightConstraint: NSLayoutConstraint!
 
@@ -84,6 +86,11 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        topBar.backgroundColor = UIColor.currentTheme.lightBackgroundColor
+        newMessageContainer.backgroundColor = UIColor.currentTheme.lightBackgroundColor
+        newMessageView.layer.borderColor = UIColor.currentTheme.borderColor.CGColor
+        newMessageView.layer.borderWidth = 1
+
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -114,7 +121,6 @@ class ChatViewController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: chat?.participantsArray[0])
-
 
         registerForNotifications()
     }

@@ -27,11 +27,15 @@ class FriendTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         badge.layer.cornerRadius = badge.bounds.size.height / 2
+
+        let selectedView = UIView()
+        selectedView.backgroundColor = UIColor.currentTheme.buttonColor
+        selectedBackgroundView = selectedView
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        name.textColor = selected ? UIColor(0x1F2124) : UIColor.whiteColor()
+        name.textColor = selected ? UIColor.whiteColor() : UIColor.blackColor()
         name.font = selected ? UIFont.boldSystemFontOfSize(name.font.pointSize) : UIFont.systemFontOfSize(name.font.pointSize)
     }
 

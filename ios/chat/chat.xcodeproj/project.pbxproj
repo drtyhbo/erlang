@@ -37,6 +37,12 @@
 		90374E331C85E8220008421F /* MessageCrypter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E321C85E8220008421F /* MessageCrypter.swift */; };
 		90374E351C85EE520008421F /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E341C85EE520008421F /* Hash.swift */; };
 		90374E371C85F2260008421F /* libsodium-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90374E361C85F2260008421F /* libsodium-ios.a */; };
+		90407A531C95CC4A00666587 /* ThemedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A521C95CC4A00666587 /* ThemedButton.swift */; };
+		90407A551C95D3A000666587 /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A541C95D3A000666587 /* ColorTheme.swift */; };
+		90407A571C95D51400666587 /* ThemedBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A561C95D51400666587 /* ThemedBorder.swift */; };
+		90407A591C95DD1900666587 /* AlwaysTemplateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */; };
+		90407A5B1C95DFCD00666587 /* ThemedNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A5A1C95DFCD00666587 /* ThemedNavigationController.swift */; };
+		90407A5F1C95E98700666587 /* ThemedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A5E1C95E98700666587 /* ThemedImageView.swift */; };
 		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
@@ -137,6 +143,12 @@
 		90374E321C85E8220008421F /* MessageCrypter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCrypter.swift; sourceTree = "<group>"; };
 		90374E341C85EE520008421F /* Hash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hash.swift; sourceTree = "<group>"; };
 		90374E361C85F2260008421F /* libsodium-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsodium-ios.a"; path = "Pods/Sodium/Sodium/libsodium-ios.a"; sourceTree = SOURCE_ROOT; };
+		90407A521C95CC4A00666587 /* ThemedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedButton.swift; sourceTree = "<group>"; };
+		90407A541C95D3A000666587 /* ColorTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
+		90407A561C95D51400666587 /* ThemedBorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedBorder.swift; sourceTree = "<group>"; };
+		90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlwaysTemplateButton.swift; sourceTree = "<group>"; };
+		90407A5A1C95DFCD00666587 /* ThemedNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedNavigationController.swift; sourceTree = "<group>"; };
+		90407A5E1C95E98700666587 /* ThemedImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedImageView.swift; sourceTree = "<group>"; };
 		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
@@ -248,6 +260,7 @@
 				9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */,
 				90F1F78D1C7F52B200A75914 /* KeyboardNotifications.swift */,
 				90FC19D91C7CB8BC004E7EFF /* PhoneNumberFormatter.swift */,
+				90407A541C95D3A000666587 /* ColorTheme.swift */,
 			);
 			name = Utils;
 			path = chat/Code/Utils;
@@ -259,6 +272,10 @@
 				9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */,
 				9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */,
 				90C0D3191C8C92F7006BF1EA /* TintedImage.swift */,
+				90407A521C95CC4A00666587 /* ThemedButton.swift */,
+				90407A561C95D51400666587 /* ThemedBorder.swift */,
+				90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */,
+				90407A5E1C95E98700666587 /* ThemedImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -428,6 +445,7 @@
 				90B1B0FB1C480A4A004369F2 /* User */,
 				90EBF8B81C474CA700A7AD51 /* Chat */,
 				90AFD5CE1C6091F100236D6B /* MainViewController.swift */,
+				90407A5A1C95DFCD00666587 /* ThemedNavigationController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -655,6 +673,7 @@
 				90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */,
 				90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */,
 				90374E351C85EE520008421F /* Hash.swift in Sources */,
+				90407A5F1C95E98700666587 /* ThemedImageView.swift in Sources */,
 				90C0F4AA1C7A1F95007F58BD /* NewMessagesTableViewCell.swift in Sources */,
 				9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */,
 				90AFD5B51C5D234400236D6B /* APIManager.swift in Sources */,
@@ -671,6 +690,9 @@
 				90C0D3141C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift in Sources */,
 				90374E2B1C8496990008421F /* NSData.swift in Sources */,
 				90F1F78E1C7F52B200A75914 /* KeyboardNotifications.swift in Sources */,
+				90407A5B1C95DFCD00666587 /* ThemedNavigationController.swift in Sources */,
+				90407A551C95D3A000666587 /* ColorTheme.swift in Sources */,
+				90407A591C95DD1900666587 /* AlwaysTemplateButton.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
 				900EC8FB1C72A9B800AE5C73 /* CoreData.swift in Sources */,
 				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
@@ -696,6 +718,7 @@
 				90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */,
 				90EBF8AB1C474A0000A7AD51 /* Message.swift in Sources */,
 				90374E311C85E6F80008421F /* Conversation.swift in Sources */,
+				90407A531C95CC4A00666587 /* ThemedButton.swift in Sources */,
 				90EBF8C01C474CA700A7AD51 /* ChatViewController.swift in Sources */,
 				90374E331C85E8220008421F /* MessageCrypter.swift in Sources */,
 				90253D711C8B49DA00892DB2 /* TopicTableViewCell.swift in Sources */,
@@ -704,6 +727,7 @@
 				90C0F4AF1C7A410C007F58BD /* ConversationStartTableViewCell.swift in Sources */,
 				90AFD5D31C6110B900236D6B /* MessageManager.swift in Sources */,
 				90C0D3101C8C4B1A006BF1EA /* FriendSelectorViewController.swift in Sources */,
+				90407A571C95D51400666587 /* ThemedBorder.swift in Sources */,
 				90AFD5D11C61102C00236D6B /* FriendManager.swift in Sources */,
 				90EBF8AD1C474A0E00A7AD51 /* User.swift in Sources */,
 				90374E231C8495FE0008421F /* PDKeychainBindings.m in Sources */,

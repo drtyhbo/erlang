@@ -38,7 +38,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="6Vl-VD-XTN"/>
                             <constraint firstItem="Kmo-eR-fpe" firstAttribute="centerY" secondItem="CRu-CS-OFM" secondAttribute="centerY" id="9rC-5Z-eUG"/>
@@ -78,6 +78,7 @@ Maybe hit the gym at 5pm?</string>
                     </mask>
                 </variation>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="dateLabel" destination="Kmo-eR-fpe" id="h5a-Hq-akE"/>
                 <outlet property="headerHeightConstraint" destination="6Vl-VD-XTN" id="bEC-hh-z2R"/>
@@ -91,6 +92,6 @@ Maybe hit the gym at 5pm?</string>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="ProfilePic" width="48" height="48"/>
+        <image name="ProfilePic" width="84" height="84"/>
     </resources>
 </document>

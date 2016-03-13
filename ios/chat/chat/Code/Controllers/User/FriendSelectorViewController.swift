@@ -17,10 +17,10 @@ class FriendSelectorViewController: UIViewController {
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
 
+    @IBOutlet weak var nextContainer: UIView!
     @IBOutlet weak var nextContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var nextContainerBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var nextLabel: UILabel!
-    @IBOutlet weak var nextButton: UIButton!
 
     weak var delegate: FriendSelectorViewControllerDelegate?
 
@@ -52,13 +52,14 @@ class FriendSelectorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        nextContainer.backgroundColor = UIColor.currentTheme.lightBackgroundColor
+        tableView.separatorColor = UIColor.currentTheme.borderColor
+
         tableView.registerNib(UINib(nibName: "FriendSelectorTableViewCell", bundle: nil), forCellReuseIdentifier: friendSelectorCellReuseIdentifier)
 
         navigationItem.title = "New Chat"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Close")!, style: .Plain, target: self, action: "didTapClose")
-        navigationItem.rightBarButtonItem?.tintColor = UIColor(0x1F2124)
-
-        nextButton.setImage(UIImage(named: "Next")!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+        navigationItem.rightBarButtonItem?.tintColor = UIColor.currentTheme.buttonColor
 
         keyboardNotifications.addNotificationsForWillShow({
                 size in

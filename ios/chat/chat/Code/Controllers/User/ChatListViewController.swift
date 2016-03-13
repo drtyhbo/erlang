@@ -44,6 +44,8 @@ class ChatListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = UIColor.currentTheme.lightBackgroundColor
+
         chatsTable.registerNib(UINib(nibName: "FriendsListHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: headerReuseIdentifier)
         chatsTable.registerNib(UINib(nibName: "FriendTableViewCell", bundle: nil), forCellReuseIdentifier: friendCellReuseIdentifier)
         chatsTable.registerNib(UINib(nibName: "TopicTableViewCell", bundle: nil), forCellReuseIdentifier: topicCellReuseIdentifier)
@@ -129,7 +131,9 @@ extension ChatListViewController: UITableViewDataSource, UITableViewDelegate {
     private func createNewChat() {
         let friendSelectorViewController = FriendSelectorViewController()
         friendSelectorViewController.delegate = self
-        presentViewController(UINavigationController(rootViewController: friendSelectorViewController), animated: true, completion: nil)
+
+        let navigationController = ThemedNavigationController(rootViewController: friendSelectorViewController)
+        presentViewController(navigationController, animated: true, completion: nil)
     }
 
     private func createNewTopic() {

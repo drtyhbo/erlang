@@ -31,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="eTL-Qo-fsC" firstAttribute="leading" secondItem="t1K-Mv-Rlq" secondAttribute="leading" id="55L-HY-e2M"/>
                             <constraint firstItem="5nc-KB-uzt" firstAttribute="centerY" secondItem="eTL-Qo-fsC" secondAttribute="centerY" id="OBn-PL-ba6"/>
@@ -110,6 +110,7 @@
                     </mask>
                 </variation>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="dateLabel" destination="5nc-KB-uzt" id="2yd-KG-GNq"/>
                 <outlet property="headerHeightConstraint" destination="Z3a-vo-WNj" id="htW-Vu-55w"/>
