@@ -26,11 +26,11 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last step we promise 😀  First name is required, everything else is optional." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhP-Oi-dee">
                             <rect key="frame" x="20" y="89" width="560" height="61"/>
                             <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="mhP-Oi-dee" firstAttribute="centerX" secondItem="LPz-dY-r22" secondAttribute="centerX" id="8Ck-1B-KRl"/>
                         <constraint firstItem="mhP-Oi-dee" firstAttribute="centerY" secondItem="LPz-dY-r22" secondAttribute="centerY" id="Fwq-fE-vVZ"/>
@@ -46,14 +46,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hcm-jg-sjY">
                     <rect key="frame" x="0.0" y="238" width="600" height="125"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="62u-KC-qqa" userLabel="Bottom Border">
-                            <rect key="frame" x="0.0" y="124" width="600" height="1"/>
-                            <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="1" id="92v-lL-NR4"/>
-                            </constraints>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cHn-X3-nga" userLabel="Top Border">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cHn-X3-nga" userLabel="Top Border" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
                             <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -63,7 +56,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJH-8J-lJ6">
                             <rect key="frame" x="0.0" y="0.0" width="125" height="124"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3hL-6w-QSC" userLabel="Right Border">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3hL-6w-QSC" userLabel="Right Border" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
                                     <rect key="frame" x="124" y="0.0" width="1" height="124"/>
                                     <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
@@ -84,6 +77,7 @@
                                     </constraints>
                                 </imageView>
                             </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="Sny-7T-Kgo" firstAttribute="leading" secondItem="LJH-8J-lJ6" secondAttribute="leading" constant="20" id="2gW-l4-T7a"/>
                                 <constraint firstAttribute="width" constant="68" id="Hlg-vI-sF2"/>
@@ -109,13 +103,6 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l8p-ti-J89" userLabel="First Name Container">
                             <rect key="frame" x="125" y="1" width="475" height="62"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X6v-GI-sgH" userLabel="Top Border">
-                                    <rect key="frame" x="0.0" y="61" width="475" height="1"/>
-                                    <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="pSb-rG-DDz"/>
-                                    </constraints>
-                                </view>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First Name" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="Ujj-yv-ND1">
                                     <rect key="frame" x="10" y="19" width="455" height="24"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -124,7 +111,15 @@
                                         <outlet property="delegate" destination="-1" id="lbJ-WB-esP"/>
                                     </connections>
                                 </textField>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X6v-GI-sgH" userLabel="Bottom Border" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="61" width="475" height="1"/>
+                                    <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="pSb-rG-DDz"/>
+                                    </constraints>
+                                </view>
                             </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="X6v-GI-sgH" firstAttribute="leading" secondItem="l8p-ti-J89" secondAttribute="leading" id="Cgr-wy-76z"/>
                                 <constraint firstAttribute="height" constant="64" id="GOS-FV-psf"/>
@@ -156,6 +151,7 @@
                                     </connections>
                                 </textField>
                             </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="128" id="3D3-Yh-oMm"/>
                                 <constraint firstItem="xkA-yX-wAY" firstAttribute="centerY" secondItem="faB-LO-0pR" secondAttribute="centerY" id="6Bi-gr-vbL"/>
@@ -171,6 +167,13 @@
                                     <exclude reference="9u4-6D-spR"/>
                                 </mask>
                             </variation>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="62u-KC-qqa" userLabel="Bottom Border" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="124" width="600" height="1"/>
+                            <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="92v-lL-NR4"/>
+                            </constraints>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

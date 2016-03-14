@@ -41,7 +41,7 @@ class PhoneNumberViewController: UIViewController {
         setupNextButton()
 
         navigationItem.title = "Phone Number"
-        navigationItem.backBarButtonItem = createThemedBarButtonItemWithTitle("Back", target: nil, action: nil)
+        navigationItem.backBarButtonItem = ThemedBarButtonItem(title: "Back", style: .Plain, target: nil, action: nil)
 
         keyboardNotifications.addNotificationsForWillShow({
                 size in
@@ -69,15 +69,15 @@ class PhoneNumberViewController: UIViewController {
         }
     }
 
-    private func createThemedBarButtonItemWithTitle(title: String, target: AnyObject?, action: Selector) -> UIBarButtonItem {
+/*    private func createThemedBarButtonItemWithTitle(title: String, target: AnyObject?, action: Selector) -> UIBarButtonItem {
         let button = UIBarButtonItem(title: title, style: .Plain, target: target, action: action)
-        button.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.currentTheme.darkButtonColor], forState: .Normal)
-        button.tintColor = UIColor.currentTheme.darkButtonColor
+        button.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.currentTheme.buttonColor], forState: .Normal)
+        button.tintColor = UIColor.currentTheme.buttonColor
         return button
-    }
+    }*/
 
     private func setupNextButton() {
-        let nextButton = createThemedBarButtonItemWithTitle("Next", target: self, action: "confirmPhoneNumber")
+        let nextButton = ThemedBarButtonItem(title: "Next", style: .Plain, target: self, action: "confirmPhoneNumber")
         nextButton.enabled = (phoneNumberTextField.text ?? "").characters.count == 10
         navigationItem.rightBarButtonItem = nextButton
     }

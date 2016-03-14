@@ -13,8 +13,10 @@ class ThemedNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationBar.translucent = false
+        navigationBar.tintColor = UIColor.currentTheme.buttonColor
         navigationBar.barTintColor = UIColor.currentTheme.lightBackgroundColor
         navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
         navigationBar.shadowImage = UIImage.imageWithColor(UIColor.currentTheme.borderColor)
+        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.currentTheme.buttonColor]
     }
 }

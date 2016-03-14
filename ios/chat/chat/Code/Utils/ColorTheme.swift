@@ -14,13 +14,11 @@ class ColorTheme {
     let darkBackgroundColor: UIColor
     let borderColor: UIColor
     let buttonColor: UIColor
-    let darkButtonColor: UIColor
 
-    init(lightBackgroundColor: UIColor, darkBackgroundColor: UIColor, borderColor: UIColor, buttonColor: UIColor, darkButtonColor: UIColor) {
+    init(lightBackgroundColor: UIColor, darkBackgroundColor: UIColor, borderColor: UIColor, buttonColor: UIColor) {
         self.lightBackgroundColor = lightBackgroundColor
         self.darkBackgroundColor = darkBackgroundColor
         self.borderColor = borderColor
         self.buttonColor = buttonColor
-        self.darkButtonColor = darkButtonColor
     }
 }

@@ -90,6 +90,7 @@ class ChatViewController: UIViewController {
         newMessageContainer.backgroundColor = UIColor.currentTheme.lightBackgroundColor
         newMessageView.layer.borderColor = UIColor.currentTheme.borderColor.CGColor
         newMessageView.layer.borderWidth = 1
+        newMessageView.layer.cornerRadius = 8
 
         tableView.dataSource = self
         tableView.delegate = self

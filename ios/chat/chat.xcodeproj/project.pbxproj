@@ -43,6 +43,8 @@
 		90407A591C95DD1900666587 /* AlwaysTemplateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */; };
 		90407A5B1C95DFCD00666587 /* ThemedNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A5A1C95DFCD00666587 /* ThemedNavigationController.swift */; };
 		90407A5F1C95E98700666587 /* ThemedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A5E1C95E98700666587 /* ThemedImageView.swift */; };
+		90407A611C967C7100666587 /* ThemedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A601C967C7100666587 /* ThemedLabel.swift */; };
+		90407A631C967E9100666587 /* ThemedBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A621C967E9100666587 /* ThemedBarButtonItem.swift */; };
 		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
@@ -149,6 +151,8 @@
 		90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlwaysTemplateButton.swift; sourceTree = "<group>"; };
 		90407A5A1C95DFCD00666587 /* ThemedNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedNavigationController.swift; sourceTree = "<group>"; };
 		90407A5E1C95E98700666587 /* ThemedImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedImageView.swift; sourceTree = "<group>"; };
+		90407A601C967C7100666587 /* ThemedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedLabel.swift; sourceTree = "<group>"; };
+		90407A621C967E9100666587 /* ThemedBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedBarButtonItem.swift; sourceTree = "<group>"; };
 		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
@@ -276,6 +280,8 @@
 				90407A561C95D51400666587 /* ThemedBorder.swift */,
 				90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */,
 				90407A5E1C95E98700666587 /* ThemedImageView.swift */,
+				90407A601C967C7100666587 /* ThemedLabel.swift */,
+				90407A621C967E9100666587 /* ThemedBarButtonItem.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -690,6 +696,7 @@
 				90C0D3141C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift in Sources */,
 				90374E2B1C8496990008421F /* NSData.swift in Sources */,
 				90F1F78E1C7F52B200A75914 /* KeyboardNotifications.swift in Sources */,
+				90407A611C967C7100666587 /* ThemedLabel.swift in Sources */,
 				90407A5B1C95DFCD00666587 /* ThemedNavigationController.swift in Sources */,
 				90407A551C95D3A000666587 /* ColorTheme.swift in Sources */,
 				90407A591C95DD1900666587 /* AlwaysTemplateButton.swift in Sources */,
@@ -698,6 +705,7 @@
 				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
 				9049634A1C7239790078C9DF /* UIImage.swift in Sources */,
 				90FC19DC1C7CC11D004E7EFF /* UserInfoViewController.swift in Sources */,
+				90407A631C967E9100666587 /* ThemedBarButtonItem.swift in Sources */,
 				9022FBFE1C8B396E00F88BC7 /* FriendsListHeader.swift in Sources */,
 				90374E271C8496230008421F /* PreKeyCache.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,

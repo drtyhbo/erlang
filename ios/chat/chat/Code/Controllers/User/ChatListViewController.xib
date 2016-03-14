@@ -25,7 +25,7 @@
                     </connections>
                 </tableView>
             </subviews>
-            <color key="backgroundColor" red="0.88235294117647056" green="0.96470588235294119" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.92549019607843142" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0ea-Z2-IYM"/>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6NK-Rq-uxc"/>
