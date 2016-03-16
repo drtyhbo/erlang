@@ -63,6 +63,10 @@ class UserInfoViewController: UIViewController {
     }
 
     @objc private func saveInfo() {
+        if (firstName.text ?? "").isEmpty {
+            return
+        }
+
         isSaving = true
         setupActivityIndicator()
 

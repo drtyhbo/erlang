@@ -57,10 +57,6 @@
                             <exclude reference="5LW-q8-wqF"/>
                         </mask>
                     </variation>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="MGn-PG-uq7"/>
-                        <outlet property="delegate" destination="-1" id="a6Z-PN-3gd"/>
-                    </connections>
                 </collectionView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hcm-jg-sjY">
                     <rect key="frame" x="0.0" y="238" width="600" height="125"/>

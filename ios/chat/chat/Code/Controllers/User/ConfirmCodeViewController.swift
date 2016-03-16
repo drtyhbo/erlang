@@ -90,9 +90,7 @@ class ConfirmCodeViewController: UIViewController {
                 User.firstName = firstName
                 User.lastName = lastName
 
-                self.navigationController?.pushViewController(UserInfoViewController(), animated: true)
-
-//                self.navigationController?.pushViewController(firstName?.isEmpty == false ? MainViewController() : UserInfoViewController(), animated: true)
+                self.navigationController?.pushViewController(firstName?.isEmpty == false ? MainViewController() : UserInfoViewController(), animated: true)
             }
         }
     }
