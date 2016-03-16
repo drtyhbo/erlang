@@ -8,7 +8,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FriendSelectorViewController" customModule="chat" customModuleProvider="target">
             <connections>
-                <outlet property="nextButton" destination="tka-zF-ec2" id="WQg-Ii-KAy"/>
+                <outlet property="nextContainer" destination="4XN-fa-xvt" id="R9T-Vw-ZrX"/>
                 <outlet property="nextContainerBottomConstraint" destination="OTx-9o-Lh6" id="Xbz-SG-FCl"/>
                 <outlet property="nextContainerHeightConstraint" destination="s17-Vf-S7M" id="LSs-3B-AjE"/>
                 <outlet property="nextLabel" destination="kdz-XS-tSF" id="wng-fO-3AU"/>
@@ -18,7 +18,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ThemedView" customModule="chat" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -33,14 +33,7 @@
                                 <outlet property="delegate" destination="-1" id="rNQ-72-faR"/>
                             </connections>
                         </textField>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbA-iV-h66">
-                            <rect key="frame" x="0.0" y="49" width="600" height="1"/>
-                            <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="1" id="Snh-SU-DtX"/>
-                            </constraints>
-                        </view>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Search" translatesAutoresizingMaskIntoConstraints="NO" id="SGF-ZH-wyT" customClass="TintedImage" customModule="chat" customModuleProvider="target">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Search" translatesAutoresizingMaskIntoConstraints="NO" id="SGF-ZH-wyT" customClass="ThemedImageView" customModule="chat" customModuleProvider="target">
                             <rect key="frame" x="10" y="17" width="16" height="16"/>
                             <color key="tintColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -48,6 +41,13 @@
                                 <constraint firstAttribute="height" constant="16" id="U1T-NS-Q1e"/>
                             </constraints>
                         </imageView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbA-iV-h66" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="49" width="600" height="1"/>
+                            <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="Snh-SU-DtX"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -69,7 +69,7 @@
                         </mask>
                     </variation>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5qJ-Gl-HJA">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5qJ-Gl-HJA" customClass="ThemedTableView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="50" width="600" height="550"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
@@ -77,9 +77,16 @@
                         <outlet property="delegate" destination="-1" id="K2C-aO-gQE"/>
                     </connections>
                 </tableView>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4XN-fa-xvt">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4XN-fa-xvt" customClass="ThemedView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="600" width="600" height="0.0"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xje-fw-V2v" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="mMR-da-oB2"/>
+                            </constraints>
+                        </view>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nKm-WN-7yl">
                             <rect key="frame" x="0.0" y="0.0" width="600" height="0.0"/>
                             <subviews>
@@ -89,7 +96,6 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Andreas Binnewies, Renaud, Michele Bolstad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdz-XS-tSF">
                                             <rect key="frame" x="10" y="0.0" width="343" height="0.0"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -110,23 +116,26 @@
                                 <constraint firstItem="bur-mA-ZaZ" firstAttribute="top" secondItem="nKm-WN-7yl" secondAttribute="top" id="rir-26-91x"/>
                             </constraints>
                         </scrollView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tka-zF-ec2">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tka-zF-ec2" customClass="ThemedButton" customModule="chat" customModuleProvider="target">
                             <rect key="frame" x="600" y="0.0" width="0.0" height="0.0"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="tka-zF-ec2" secondAttribute="height" multiplier="1:1" id="H5d-Yy-eXq"/>
                             </constraints>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <state key="normal" image="Next"/>
                             <connections>
                                 <action selector="didTapNext" destination="-1" eventType="touchUpInside" id="YXU-1H-Xpu"/>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.53333333333333333" green="0.054901960784313725" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="tka-zF-ec2" firstAttribute="leading" secondItem="nKm-WN-7yl" secondAttribute="trailing" id="7A9-iq-mrE"/>
                         <constraint firstAttribute="trailing" secondItem="tka-zF-ec2" secondAttribute="trailing" id="Hxx-Mg-TQG"/>
+                        <constraint firstAttribute="trailing" secondItem="xje-fw-V2v" secondAttribute="trailing" id="MlG-mc-Xha"/>
                         <constraint firstItem="nKm-WN-7yl" firstAttribute="leading" secondItem="4XN-fa-xvt" secondAttribute="leading" id="Nek-Ze-iXj"/>
+                        <constraint firstItem="xje-fw-V2v" firstAttribute="leading" secondItem="4XN-fa-xvt" secondAttribute="leading" id="OJl-IJ-WrR"/>
+                        <constraint firstItem="xje-fw-V2v" firstAttribute="top" secondItem="4XN-fa-xvt" secondAttribute="top" id="WgB-bY-SVJ"/>
                         <constraint firstAttribute="bottom" secondItem="nKm-WN-7yl" secondAttribute="bottom" id="Zw2-3F-z1k"/>
                         <constraint firstItem="nKm-WN-7yl" firstAttribute="top" secondItem="4XN-fa-xvt" secondAttribute="top" id="iLg-lH-dAA"/>
                         <constraint firstAttribute="bottom" secondItem="tka-zF-ec2" secondAttribute="bottom" id="igJ-R1-dnh"/>

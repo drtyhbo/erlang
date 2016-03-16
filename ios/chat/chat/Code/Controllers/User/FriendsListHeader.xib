@@ -14,15 +14,15 @@
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FRIENDS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yg-eE-UCy">
                     <rect key="frame" x="10" y="9" width="50" height="15"/>
                     <fontDescription key="fontDescription" type="system" weight="ultraLight" pointSize="12"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dxw-YS-vXB">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dxw-YS-vXB" customClass="ThemedButton" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="560" y="0.0" width="30" height="30"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="30" id="03j-bG-6E7"/>
                         <constraint firstAttribute="height" constant="30" id="7YB-6j-9eq"/>
                     </constraints>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" image="Add"/>
                     <connections>
                         <action selector="didTapAdd" destination="-2" eventType="touchUpInside" id="Oux-Ad-qnV"/>

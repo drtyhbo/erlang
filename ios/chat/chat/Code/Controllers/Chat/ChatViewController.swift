@@ -20,12 +20,14 @@ class ChatViewController: UIViewController {
         case NewMessages
     }
 
+    @IBOutlet weak var topBar: UIView!
     @IBOutlet weak var friendNameLabel: UILabel!
 
     @IBOutlet weak var tableView: UITableView!
 
     @IBOutlet weak var newMessageContainerBottomConstraint: NSLayoutConstraint!
 
+    @IBOutlet weak var newMessageContainer: UIView!
     @IBOutlet weak var newMessageView: UITextView!
     @IBOutlet weak var newMessageViewHeightConstraint: NSLayoutConstraint!
 
@@ -59,6 +61,7 @@ class ChatViewController: UIViewController {
 
     private let fetchLimit = 30
     private let keyboardNotifications = KeyboardNotifications()
+    private let themeListener = ThemeListener()
 
     private var isAtTop = false
     private var rows: [RowType] = []
@@ -83,6 +86,11 @@ class ChatViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        updateTheme(ColorTheme.currentTheme)
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -111,10 +119,8 @@ class ChatViewController: UIViewController {
 
         navigationItem.title = "Chat"
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: chat?.participantsArray[0])
-
 
         registerForNotifications()
     }
@@ -126,10 +132,6 @@ class ChatViewController: UIViewController {
             self.tableView.layoutIfNeeded()
             completion()
         }
-    }
-
-    @objc private func appDidBecomeActive() {
-
     }
 
     @objc private func appDidEnterBackground() {
@@ -327,6 +329,12 @@ class ChatViewController: UIViewController {
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
+    }
+
+    private func updateTheme(theme: ColorTheme) {
+        newMessageView.layer.borderColor = theme.borderColor.CGColor
+        newMessageView.layer.borderWidth = 1
+        newMessageView.layer.cornerRadius = 8
     }
 
     @objc private func didReceiveMessagesNotification(notification: NSNotification) {

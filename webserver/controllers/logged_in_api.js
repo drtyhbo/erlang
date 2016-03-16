@@ -158,16 +158,23 @@ router.post('/info/update/', function(req, res) {
 	var firstName = (req.body.firstName || '').trim();
 	var lastName = (req.body.lastName || '').trim();
 
-	if (!firstName) {
-		sendError(res);
-		return;
+	var fieldsToUpdate = [];
+	if (firstName) {
+		fieldsToUpdate = fieldsToUpdate.concat([User.fields.firstName, firstName]);
+	}
+	if (lastName) {
+		fieldsToUpdate = fieldsToUpdate.concat([User.fields.lastName, lastName]);
 	}
 
-	req.user.update(User.fields.firstName, firstName, User.fields.lastName, lastName).then(function() {
+	if (!fieldsToUpdate.length) {
 		sendSuccess(res);
-	}, function() {
-		sendError(res);
-	});
+	} else {
+		req.user.update(fieldsToUpdate).then(function() {
+			sendSuccess(res);
+		}, function() {
+			sendError(res);
+		});
+	}
 });
 
 /*

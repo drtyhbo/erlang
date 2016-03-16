@@ -217,7 +217,7 @@ describe('logged in', function() {
 	it('/api/user/file/create/ - gobbly gook', function testSlash(done) {
 		User.create('18315551111').then(function(friend) {
 			makeRequest('/api/user/file/create/', {
-					numIds: '-1',
+					numIds: '-1	',
 					friendId: friend.id})
 				.expect(200, {
 					status: 'error'
@@ -255,8 +255,13 @@ describe('logged in', function() {
 					fileId: files[0].id,
 					method: 'post'
 				})
+				.expect(function(res) {
+					assert.notEqual(res.body.fileUrl, null);
+					res.body.fileUrl = 'https://s3-url'
+				})
 				.expect(200, {
-					status: 'error'
+					status: 'ok',
+					fileUrl: 'https://s3-url'
 				}, done);
 		});
 	});
@@ -300,26 +305,49 @@ describe('logged in', function() {
 
 	it('/api/user/info/update/ - Removes whitespace', function testSlash(done) {
 		makeRequest('/api/user/info/update/', {
-				firstName: '    Andreas    ',
-				lastName: '    Binnewies    '
+				firstName: '    Andreas2    ',
+				lastName: '    Binnewies2    '
 			})
 			.expect(200, {
 				status: 'ok'
 			})
 			.end(function(err, res) {
 				sharedUser.fetch(User.fields.firstName, User.fields.lastName).then(function(values) {
-					assert.equal(values[0], 'Andreas');
-					assert.equal(values[1], 'Binnewies');
+					assert.equal(values[0], 'Andreas2');
+					assert.equal(values[1], 'Binnewies2');
 					done();
 				});
 			});
 	});
 
-	it('/api/user/info/update/ - no first name', function testSlash(done) {
-		makeRequest('/api/user/info/update/')
+	it('/api/user/info/update/ - first name only', function testSlash(done) {
+		makeRequest('/api/user/info/update/', {
+				firstName: 'Andreas3',
+			})
 			.expect(200, {
-				status: 'error'
-			}, done);
+				status: 'ok'
+			})
+			.end(function(err, res) {
+				sharedUser.fetch(User.fields.firstName).then(function(values) {
+					assert.equal(values[0], 'Andreas3');
+					done();
+				});
+			});
+	});
+
+	it('/api/user/info/update/ - last name only', function testSlash(done) {
+		makeRequest('/api/user/info/update/', {
+				lastName: 'Binnewies3',
+			})
+			.expect(200, {
+				status: 'ok'
+			})
+			.end(function(err, res) {
+				sharedUser.fetch(User.fields.lastName).then(function(values) {
+					assert.equal(values[0], 'Binnewies3');
+					done();
+				});
+			});
 	});
 
 	it('/api/user/info/get/', function testSlash(done) {
@@ -330,8 +358,8 @@ describe('logged in', function() {
 				.expect(200, {
 					names: [
 						null, {
-							firstName: 'Andreas',
-							lastName: 'Binnewies'
+							firstName: 'Andreas3',
+							lastName: 'Binnewies3'
 						}
 					],
 					status: 'ok'

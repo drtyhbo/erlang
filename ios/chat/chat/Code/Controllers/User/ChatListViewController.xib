@@ -12,32 +12,46 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ThemedView" customModule="chat" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YaS-dx-vLu">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                    <color key="backgroundColor" red="0.12156862745098039" green="0.12941176470588234" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="548"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="ojx-Ko-kf7"/>
                         <outlet property="delegate" destination="-1" id="6KW-wS-wqW"/>
                     </connections>
                 </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zUc-PR-4ZJ" customClass="ThemedButton" customModule="chat" customModuleProvider="target">
+                    <rect key="frame" x="10" y="558" width="32" height="32"/>
+                    <state key="normal" image="Settings"/>
+                    <connections>
+                        <action selector="didTapSettings" destination="-1" eventType="touchUpInside" id="U4E-BL-Wm3"/>
+                    </connections>
+                </button>
             </subviews>
-            <color key="backgroundColor" red="0.12156862745098039" green="0.12941176470588234" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.92549019607843142" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0ea-Z2-IYM"/>
+                <constraint firstItem="zUc-PR-4ZJ" firstAttribute="top" secondItem="YaS-dx-vLu" secondAttribute="bottom" constant="10" id="63F-a8-Lw5"/>
                 <constraint firstItem="YaS-dx-vLu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6NK-Rq-uxc"/>
+                <constraint firstAttribute="bottom" secondItem="zUc-PR-4ZJ" secondAttribute="bottom" constant="10" id="8sp-cq-1b7"/>
                 <constraint firstAttribute="trailing" secondItem="YaS-dx-vLu" secondAttribute="trailing" id="Tym-qB-EJi"/>
-                <constraint firstAttribute="bottom" secondItem="YaS-dx-vLu" secondAttribute="bottom" id="inW-kA-ogL"/>
+                <constraint firstItem="zUc-PR-4ZJ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="Z0N-Bq-ghU"/>
+                <constraint firstAttribute="bottom" secondItem="YaS-dx-vLu" secondAttribute="bottom" constant="52" id="inW-kA-ogL"/>
                 <constraint firstAttribute="bottom" secondItem="YaS-dx-vLu" secondAttribute="bottom" id="jP9-E6-Zwe"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="inW-kA-ogL"/>
                     <exclude reference="jP9-E6-Zwe"/>
                 </mask>
             </variation>
         </view>
     </objects>
+    <resources>
+        <image name="Settings" width="32" height="32"/>
+    </resources>
 </document>

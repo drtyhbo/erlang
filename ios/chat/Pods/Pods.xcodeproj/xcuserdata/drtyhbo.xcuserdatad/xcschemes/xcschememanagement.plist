@@ -54,15 +54,20 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>UICollectionViewRightAlignedLayout.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>17384CE06357ADBBD59E80B155D273CF</key>
+		<key>2C33121F34BEF4C7EB39AFC1895D4902</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>389D55E28559877F2A9770D7608732BE</key>
+		<key>516B32DE93A55138CEF6FF44C6EC9EF1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -72,12 +77,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>6908624BD0DC5A0E724C33F2269337AD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6AA97881FFF5FD7DEAF8AE4089A0BADB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>6FD6B09D584D5FC3F78728109982F251</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9296846F223208AD4B33A91FE547D9CC</key>
+		<key>81DAD75F3525FFD489743A93C8DC63A6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8ED83477EA08C4CA55326CD2FCDC1162</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -87,22 +107,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B73B0A1D4486EF675D384E35F5AA4493</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>B9A04D3C9B208813656510FDA8ADAE02</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DD3005A5051A33ED43E05A872C39F8AA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F8C9A8AD8C9B5871C02A41AE13DF91A8</key>
+		<key>CDF65A225C6E41204267AD1825987728</key>
 		<dict>
 			<key>primary</key>
 			<true/>

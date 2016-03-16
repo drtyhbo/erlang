@@ -127,6 +127,22 @@ describe('User', function() {
 		});
 	});
 
+	it('User - fetch/update array', function testSlash(done) {
+		sharedUser.update(
+				[User.fields.session, 'abcd2',
+				User.fields.firstName, 'Rob2',
+				User.fields.lastName, 'Lowe2',
+				User.fields.iosPushToken, 'jklm2']).then(function() {
+			return sharedUser.fetch(User.fields.session, User.fields.firstName, User.fields.lastName, User.fields.iosPushToken);
+		}).then(function(values) {
+			assert.notEqual(values[0], 'abcd2');
+			assert.equal(values[1], 'Rob2');
+			assert.equal(values[2], 'Lowe2');
+			assert.equal(values[3], 'jklm2');
+			done();
+		});
+	});
+
 	it('User - confirmSession', function testSlash(done) {
 		sharedUser.fetch(User.fields.session).then(function(values) {
 			return sharedUser.confirmSession(values[0]);

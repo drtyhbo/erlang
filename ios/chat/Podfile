@@ -13,6 +13,7 @@ pod 'SDWebImage'
 pod 'Sodium'
 pod 'SwiftyJSON'
 pod 'TWTToast'
+pod 'UICollectionViewRightAlignedLayout'
 end
 
 post_install do |installer|

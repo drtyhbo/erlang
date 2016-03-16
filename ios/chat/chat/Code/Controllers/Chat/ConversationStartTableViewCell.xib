@@ -28,6 +28,7 @@
                     <constraint firstAttribute="trailingMargin" secondItem="Kva-zM-26U" secondAttribute="trailing" constant="20" id="YAM-9Z-uf2"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="label" destination="Kva-zM-26U" id="xVk-wb-9Ca"/>
             </connections>

@@ -19,6 +19,7 @@ class ConfirmCodeViewController: UIViewController {
     private let phoneNumber: PhoneNumber!
 
     private var isConfirming = false
+    private var preKeys: [PreKey] = []
 
     init(phoneNumber: PhoneNumber) {
         self.phoneNumber = phoneNumber
@@ -31,6 +32,8 @@ class ConfirmCodeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        view.backgroundColor = UIColor.currentTheme.lightBackgroundColor
 
         navigationItem.title = PhoneNumberFormatter().formatPhoneNumber(phoneNumber.phoneNumber)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .Plain, target: nil, action: nil)
@@ -50,6 +53,10 @@ class ConfirmCodeViewController: UIViewController {
         super.viewWillAppear(animated)
 
         setupNextButton()
+
+        dispatch_async(dispatch_get_main_queue()) {
+            self.preKeys = PreKeyCache.sharedCache.generateInitialCache()
+        }
     }
 
     private func setupNextButton() {
@@ -70,8 +77,6 @@ class ConfirmCodeViewController: UIViewController {
     @objc private func confirmCode() {
         setupActivityIndicator()
         isConfirming = true
-
-        let preKeys = PreKeyCache.sharedCache.generateInitialCache()
 
         APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", preKeys: preKeys) {
             userIdString, sessionToken, firstName, lastName, error in

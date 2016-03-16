@@ -61,6 +61,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-chat/Sodium.framework'
   install_framework 'Pods-chat/SwiftyJSON.framework'
   install_framework 'Pods-chat/TWTToast.framework'
+  install_framework 'Pods-chat/UICollectionViewRightAlignedLayout.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-chat/APLSlideMenu.framework'
@@ -72,4 +73,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-chat/Sodium.framework'
   install_framework 'Pods-chat/SwiftyJSON.framework'
   install_framework 'Pods-chat/TWTToast.framework'
+  install_framework 'Pods-chat/UICollectionViewRightAlignedLayout.framework'
 fi

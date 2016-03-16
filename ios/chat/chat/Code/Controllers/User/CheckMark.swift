@@ -13,7 +13,7 @@ class CheckMark: UIImageView {
     var isChecked: Bool = false {
         didSet {
             alpha = isChecked ? 1 : 0.5
-            image = isChecked ? UIImage(named: "Check")! : nil
+            image = isChecked ? UIImage(named: "Check")!.imageWithRenderingMode(.AlwaysTemplate) : nil
         }
     }
 

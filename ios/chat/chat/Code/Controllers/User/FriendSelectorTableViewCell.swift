@@ -40,6 +40,7 @@ class FriendSelectorTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTap"))
+        checkMark.tintColor = UIColor.currentTheme.buttonColor
     }
 
     private func configureCell() {

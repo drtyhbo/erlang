@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "840D9DD6E39EDBB9FFEFD5A9"
+               BlueprintIdentifier = "1B2DA0E5080CC3DE227B1FA7"
                BuildableName = "APLSlideMenu.framework"
                BlueprintName = "APLSlideMenu"
                ReferencedContainer = "container:Pods.xcodeproj">

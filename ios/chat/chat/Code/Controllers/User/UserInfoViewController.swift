@@ -13,10 +13,12 @@ class UserInfoViewController: UIViewController {
     @IBOutlet weak var profilePic: ChatProfilePic!
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
+    @IBOutlet weak var themeCollectionView: UICollectionView!
     @IBOutlet weak var userInfoContainer: UIView!
     @IBOutlet weak var userInfoContainerVerticalConstraint: NSLayoutConstraint!
 
     private let keyboardNotifications = KeyboardNotifications()
+    private let themeCellReuseIdentifier = "ThemeCollectionViewCell"
 
     private var isSaving = false
     private var profilePicImage: UIImage?
@@ -61,6 +63,10 @@ class UserInfoViewController: UIViewController {
     }
 
     @objc private func saveInfo() {
+        if (firstName.text ?? "").isEmpty {
+            return
+        }
+
         isSaving = true
         setupActivityIndicator()
 
