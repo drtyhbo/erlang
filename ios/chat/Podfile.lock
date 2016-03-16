@@ -76,6 +76,7 @@ PODS:
   - TWTToast/UIKit/TextStyle (0.17)
   - TWTToast/UIKit/ViewControllerCompletion (0.17)
   - TWTToast/UIKit/ViewControllerTransitions (0.17)
+  - UICollectionViewRightAlignedLayout (0.0.3)
 
 DEPENDENCIES:
   - Alamofire
@@ -86,6 +87,7 @@ DEPENDENCIES:
   - Sodium
   - SwiftyJSON
   - TWTToast
+  - UICollectionViewRightAlignedLayout
 
 SPEC CHECKSUMS:
   Alamofire: 5f730ba29fd113b7ddd71c1e65d0c630acf5d7b0
@@ -97,5 +99,6 @@ SPEC CHECKSUMS:
   Sodium: fa459e59912d3e6d44f3d9030fafc12c4079148d
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
   TWTToast: 6d47c48b5cdbfcfa6108b81d11e0e6b8e370e6d0
+  UICollectionViewRightAlignedLayout: 823eef8c567eba4a44c21bc2ffcb0d0d5f361e2d
 
 COCOAPODS: 0.38.2

@@ -45,6 +45,9 @@
 		90407A5F1C95E98700666587 /* ThemedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A5E1C95E98700666587 /* ThemedImageView.swift */; };
 		90407A611C967C7100666587 /* ThemedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A601C967C7100666587 /* ThemedLabel.swift */; };
 		90407A631C967E9100666587 /* ThemedBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A621C967E9100666587 /* ThemedBarButtonItem.swift */; };
+		90407A651C985B7F00666587 /* ThemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A641C985B7F00666587 /* ThemeCollectionViewCell.swift */; };
+		90407A671C985B8B00666587 /* ThemeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90407A661C985B8B00666587 /* ThemeCollectionViewCell.xib */; };
+		90407A691C986C4600666587 /* ThemedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A681C986C4600666587 /* ThemedView.swift */; };
 		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
@@ -153,6 +156,9 @@
 		90407A5E1C95E98700666587 /* ThemedImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedImageView.swift; sourceTree = "<group>"; };
 		90407A601C967C7100666587 /* ThemedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedLabel.swift; sourceTree = "<group>"; };
 		90407A621C967E9100666587 /* ThemedBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedBarButtonItem.swift; sourceTree = "<group>"; };
+		90407A641C985B7F00666587 /* ThemeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeCollectionViewCell.swift; sourceTree = "<group>"; };
+		90407A661C985B8B00666587 /* ThemeCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThemeCollectionViewCell.xib; sourceTree = "<group>"; };
+		90407A681C986C4600666587 /* ThemedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedView.swift; sourceTree = "<group>"; };
 		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
@@ -259,12 +265,12 @@
 		9031FFD01C6240B700BCC456 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				90374E1A1C8495FE0008421F /* Security */,
+				90407A541C95D3A000666587 /* ColorTheme.swift */,
 				9031FFD31C6671B800BCC456 /* Constants.swift */,
 				9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */,
 				90F1F78D1C7F52B200A75914 /* KeyboardNotifications.swift */,
 				90FC19D91C7CB8BC004E7EFF /* PhoneNumberFormatter.swift */,
-				90407A541C95D3A000666587 /* ColorTheme.swift */,
+				90374E1A1C8495FE0008421F /* Security */,
 			);
 			name = Utils;
 			path = chat/Code/Utils;
@@ -273,15 +279,16 @@
 		9031FFD71C68EF7B00BCC456 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */,
 				9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */,
 				9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */,
-				90C0D3191C8C92F7006BF1EA /* TintedImage.swift */,
-				90407A521C95CC4A00666587 /* ThemedButton.swift */,
+				90407A621C967E9100666587 /* ThemedBarButtonItem.swift */,
 				90407A561C95D51400666587 /* ThemedBorder.swift */,
-				90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */,
+				90407A521C95CC4A00666587 /* ThemedButton.swift */,
 				90407A5E1C95E98700666587 /* ThemedImageView.swift */,
 				90407A601C967C7100666587 /* ThemedLabel.swift */,
-				90407A621C967E9100666587 /* ThemedBarButtonItem.swift */,
+				90407A681C986C4600666587 /* ThemedView.swift */,
+				90C0D3191C8C92F7006BF1EA /* TintedImage.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -346,25 +353,27 @@
 		90B1B0FB1C480A4A004369F2 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				90AFD5B61C5D280900236D6B /* ConfirmCodeViewController.swift */,
-				90AFD5B81C5D281800236D6B /* ConfirmCodeViewController.xib */,
-				9022FBFD1C8B396E00F88BC7 /* FriendsListHeader.swift */,
-				9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */,
 				90AFD5C41C608EB200236D6B /* ChatListViewController.swift */,
 				90AFD5C61C608EDC00236D6B /* ChatListViewController.xib */,
-				90AFD5CA1C6090AE00236D6B /* FriendTableViewCell.swift */,
-				90AFD5CC1C6090B800236D6B /* FriendTableViewCell.xib */,
-				90253D6F1C8B49DA00892DB2 /* TopicTableViewCell.swift */,
-				90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */,
-				90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */,
-				90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */,
-				90FC19DB1C7CC11D004E7EFF /* UserInfoViewController.swift */,
-				90FC19DD1C7CC12A004E7EFF /* UserInfoViewController.xib */,
-				90C0D30F1C8C4B1A006BF1EA /* FriendSelectorViewController.swift */,
-				90C0D3111C8C4B28006BF1EA /* FriendSelectorViewController.xib */,
+				90C0D3171C8C8897006BF1EA /* CheckMark.swift */,
+				90AFD5B61C5D280900236D6B /* ConfirmCodeViewController.swift */,
+				90AFD5B81C5D281800236D6B /* ConfirmCodeViewController.xib */,
 				90C0D3131C8C4D0B006BF1EA /* FriendSelectorTableViewCell.swift */,
 				90C0D3151C8C4D16006BF1EA /* FriendSelectorTableViewCell.xib */,
-				90C0D3171C8C8897006BF1EA /* CheckMark.swift */,
+				90C0D30F1C8C4B1A006BF1EA /* FriendSelectorViewController.swift */,
+				90C0D3111C8C4B28006BF1EA /* FriendSelectorViewController.xib */,
+				9022FBFD1C8B396E00F88BC7 /* FriendsListHeader.swift */,
+				9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */,
+				90AFD5CA1C6090AE00236D6B /* FriendTableViewCell.swift */,
+				90AFD5CC1C6090B800236D6B /* FriendTableViewCell.xib */,
+				90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */,
+				90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */,
+				90407A641C985B7F00666587 /* ThemeCollectionViewCell.swift */,
+				90407A661C985B8B00666587 /* ThemeCollectionViewCell.xib */,
+				90253D6F1C8B49DA00892DB2 /* TopicTableViewCell.swift */,
+				90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */,
+				90FC19DB1C7CC11D004E7EFF /* UserInfoViewController.swift */,
+				90FC19DD1C7CC12A004E7EFF /* UserInfoViewController.xib */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -589,6 +598,7 @@
 			files = (
 				90F1F7921C7F5F2B00A75914 /* us@2x.png in Resources */,
 				90C0F4AB1C7A1F95007F58BD /* NewMessagesTableViewCell.xib in Resources */,
+				90407A671C985B8B00666587 /* ThemeCollectionViewCell.xib in Resources */,
 				90253D721C8B49DA00892DB2 /* TopicTableViewCell.xib in Resources */,
 				90EBF8BF1C474CA700A7AD51 /* ChatRowTableViewCell.xib in Resources */,
 				90F1F7931C7F5F2B00A75914 /* us@3x.png in Resources */,
@@ -711,6 +721,7 @@
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
 				9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */,
 				900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */,
+				90407A691C986C4600666587 /* ThemedView.swift in Sources */,
 				9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */,
 				90374E251C8495FE0008421F /* SecurityHelper.swift in Sources */,
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
@@ -719,6 +730,7 @@
 				90374E2F1C8496C40008421F /* String.swift in Sources */,
 				9031FFE51C6E2BC100BCC456 /* File.swift in Sources */,
 				90374E241C8495FE0008421F /* PDKeychainBindingsController.m in Sources */,
+				90407A651C985B7F00666587 /* ThemeCollectionViewCell.swift in Sources */,
 				90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */,
 				904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */,
 				90C0F4A31C79621B007F58BD /* MoviePlayer.swift in Sources */,

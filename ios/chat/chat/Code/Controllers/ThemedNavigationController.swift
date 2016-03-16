@@ -10,8 +10,18 @@ import Foundation
 import UIKit
 
 class ThemedNavigationController: UINavigationController {
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateTheme", name: ColorTheme.ThemeChangedNotification, object: nil)
+        updateTheme()
+    }
+
+    @objc private func updateTheme() {
         navigationBar.translucent = false
         navigationBar.tintColor = UIColor.currentTheme.buttonColor
         navigationBar.barTintColor = UIColor.currentTheme.lightBackgroundColor

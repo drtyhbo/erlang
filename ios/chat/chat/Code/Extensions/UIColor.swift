@@ -11,7 +11,7 @@ import UIKit
 
 extension UIColor {
     static var currentTheme: ColorTheme {
-        return Constants.themes[0]
+        return ColorTheme.currentTheme
     }
 
     convenience init(_ hex: Int) {

@@ -13,10 +13,12 @@ class UserInfoViewController: UIViewController {
     @IBOutlet weak var profilePic: ChatProfilePic!
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
+    @IBOutlet weak var themeCollectionView: UICollectionView!
     @IBOutlet weak var userInfoContainer: UIView!
     @IBOutlet weak var userInfoContainerVerticalConstraint: NSLayoutConstraint!
 
     private let keyboardNotifications = KeyboardNotifications()
+    private let themeCellReuseIdentifier = "ThemeCollectionViewCell"
 
     private var isSaving = false
     private var profilePicImage: UIImage?
@@ -33,9 +35,9 @@ class UserInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.currentTheme.lightBackgroundColor
-
         setupNextButton()
+
+        themeCollectionView.registerNib(UINib(nibName: "ThemeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: themeCellReuseIdentifier)
 
         keyboardNotifications.addNotificationsForWillShow({
                 size in
@@ -142,5 +144,29 @@ extension UserInfoViewController: UIImagePickerControllerDelegate, UINavigationC
 
         dismissViewControllerAnimated(true, completion: nil)
         self.imagePickerController = nil
+    }
+}
+
+extension UserInfoViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return Constants.themes.count
+    }
+
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(themeCellReuseIdentifier, forIndexPath: indexPath) as! ThemeCollectionViewCell
+        cell.themeColor = Constants.themes[indexPath.row].buttonColor
+        return cell
+    }
+
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        ColorTheme.currentThemeType = ColorTheme.ThemeType(rawValue: indexPath.row)!
+    }
+
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        return CGSize(width: 40, height: 40)
+    }
+
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return 0
     }
 }

@@ -21,6 +21,6 @@ class Constants {
     static let themes: [ColorTheme] = [
         ColorTheme(lightBackgroundColor: UIColor(0xFFF8FB), darkBackgroundColor: UIColor(0x30021C), borderColor: UIColor(0xFCE4EC), buttonColor: UIColor(0xF06292)),
         ColorTheme(lightBackgroundColor: UIColor(0xEFF0F9), darkBackgroundColor: UIColor(0x0C0C31), borderColor: UIColor(0xC5CAE9), buttonColor: UIColor(0x7986CB)),
-        ColorTheme(lightBackgroundColor: UIColor(0xECF2F2), darkBackgroundColor: UIColor(0x004D40), borderColor: UIColor(0xE0F2F1), buttonColor: UIColor(0x009688)),
-        ColorTheme(lightBackgroundColor: UIColor(0xEFEFEF), darkBackgroundColor: UIColor(0x000000), borderColor: UIColor(0xEEEEEE), buttonColor: UIColor(0x555555))]
+        ColorTheme(lightBackgroundColor: UIColor(0xECF2F2), darkBackgroundColor: UIColor(0x004D40), borderColor: UIColor(0xB2DFDB), buttonColor: UIColor(0x009688)),
+        ColorTheme(lightBackgroundColor: UIColor(0xFAFAFA), darkBackgroundColor: UIColor(0x000000), borderColor: UIColor(0xEEEEEE), buttonColor: UIColor(0x555555))]
 }
