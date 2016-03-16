@@ -74,9 +74,13 @@
                                 <rect key="frame" x="85" y="1" width="537" height="42"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First Name" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="S5B-5l-goT">
-                                        <rect key="frame" x="10" y="10" width="517" height="21"/>
+                                        <rect key="frame" x="10" y="10" width="487" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                        <connections>
+                                            <action selector="firstNameChanged" destination="kAy-Fk-BCY" eventType="editingDidEnd" id="2ju-ou-Pxv"/>
+                                            <outlet property="delegate" destination="kAy-Fk-BCY" id="pfT-Jx-oHh"/>
+                                        </connections>
                                     </textField>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="47K-LY-rUU" userLabel="Bottom Border" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="41" width="537" height="1"/>
@@ -85,15 +89,21 @@
                                             <constraint firstAttribute="height" constant="1" id="5Nb-JI-bO7"/>
                                         </constraints>
                                     </view>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="LML-zp-cDV">
+                                        <rect key="frame" x="507" y="11" width="20" height="20"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="47K-LY-rUU" secondAttribute="bottom" id="4G2-Lx-6R4"/>
                                     <constraint firstItem="S5B-5l-goT" firstAttribute="leading" secondItem="nS4-zP-STT" secondAttribute="leading" constant="10" id="9z6-Zc-zPz"/>
+                                    <constraint firstItem="LML-zp-cDV" firstAttribute="leading" secondItem="S5B-5l-goT" secondAttribute="trailing" constant="10" id="HgC-Lx-nZ3"/>
                                     <constraint firstAttribute="height" constant="64" id="NFz-xd-1XR"/>
                                     <constraint firstAttribute="trailing" secondItem="47K-LY-rUU" secondAttribute="trailing" id="P96-sZ-8oH"/>
                                     <constraint firstAttribute="height" constant="64" id="Qx9-kn-iGW"/>
-                                    <constraint firstAttribute="trailing" secondItem="S5B-5l-goT" secondAttribute="trailing" constant="10" id="gfa-rN-IRc"/>
+                                    <constraint firstAttribute="trailing" secondItem="S5B-5l-goT" secondAttribute="trailing" constant="50" id="gfa-rN-IRc"/>
                                     <constraint firstItem="47K-LY-rUU" firstAttribute="leading" secondItem="nS4-zP-STT" secondAttribute="leading" id="hLO-72-krh"/>
+                                    <constraint firstAttribute="trailing" secondItem="LML-zp-cDV" secondAttribute="trailing" constant="10" id="kIe-11-zCM"/>
+                                    <constraint firstItem="LML-zp-cDV" firstAttribute="centerY" secondItem="nS4-zP-STT" secondAttribute="centerY" id="m93-ZR-TBq"/>
                                     <constraint firstAttribute="width" constant="128" id="wRu-FK-0xc"/>
                                     <constraint firstItem="S5B-5l-goT" firstAttribute="centerY" secondItem="nS4-zP-STT" secondAttribute="centerY" id="wgc-yI-s0F"/>
                                 </constraints>
@@ -102,6 +112,7 @@
                                         <exclude reference="NFz-xd-1XR"/>
                                         <exclude reference="Qx9-kn-iGW"/>
                                         <exclude reference="wRu-FK-0xc"/>
+                                        <exclude reference="gfa-rN-IRc"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -109,14 +120,24 @@
                                 <rect key="frame" x="85" y="43" width="537" height="41"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last Name" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="pdm-JP-uK5">
-                                        <rect key="frame" x="10" y="10" width="517" height="21"/>
+                                        <rect key="frame" x="10" y="10" width="487" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
+                                        <connections>
+                                            <action selector="lastNameChanged" destination="kAy-Fk-BCY" eventType="editingDidEnd" id="1hz-mN-FWb"/>
+                                            <outlet property="delegate" destination="kAy-Fk-BCY" id="mBe-Ba-4x0"/>
+                                        </connections>
                                     </textField>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="o3u-Xa-XEe">
+                                        <rect key="frame" x="507" y="11" width="20" height="20"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="pdm-JP-uK5" firstAttribute="centerY" secondItem="fMb-s9-n7L" secondAttribute="centerY" id="2Yw-EC-zqw"/>
                                     <constraint firstAttribute="width" constant="128" id="LA0-Q9-lGp"/>
+                                    <constraint firstItem="o3u-Xa-XEe" firstAttribute="centerY" secondItem="fMb-s9-n7L" secondAttribute="centerY" id="RBh-bN-kYw"/>
+                                    <constraint firstItem="o3u-Xa-XEe" firstAttribute="leading" secondItem="pdm-JP-uK5" secondAttribute="trailing" constant="10" id="VuW-au-wC2"/>
+                                    <constraint firstAttribute="trailing" secondItem="o3u-Xa-XEe" secondAttribute="trailing" constant="10" id="W4A-hg-5nm"/>
                                     <constraint firstItem="pdm-JP-uK5" firstAttribute="leading" secondItem="fMb-s9-n7L" secondAttribute="leading" constant="10" id="dcH-Nc-P0C"/>
                                     <constraint firstAttribute="height" constant="64" id="nti-oj-LRM"/>
                                     <constraint firstAttribute="height" constant="64" id="xwg-Zd-ptt"/>
@@ -127,6 +148,7 @@
                                         <exclude reference="LA0-Q9-lGp"/>
                                         <exclude reference="nti-oj-LRM"/>
                                         <exclude reference="xwg-Zd-ptt"/>
+                                        <exclude reference="yco-Zh-KvO"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -174,7 +196,9 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="firstName" destination="S5B-5l-goT" id="Exs-lW-AeM"/>
+                <outlet property="firstNameActivityIndicator" destination="LML-zp-cDV" id="KkB-IR-d77"/>
                 <outlet property="lastName" destination="pdm-JP-uK5" id="HKv-Xr-7Bg"/>
+                <outlet property="lastNameActivityIndicator" destination="o3u-Xa-XEe" id="m6d-f9-XOV"/>
                 <outlet property="profilePicImage" destination="3hA-AF-m3d" id="0NG-Uf-8SV"/>
             </connections>
             <point key="canvasLocation" x="355" y="283"/>

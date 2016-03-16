@@ -97,11 +97,16 @@ class APIManager: NSObject {
         }
     }
 
-    func updateInfoWithFirstName(firstName: String, lastName: String, callback: Bool->Void) {
-        sendUserRequestToUrl("info/update/", parameters: [
-            "firstName": firstName,
-            "lastName": lastName
-        ]) {
+    func updateInfoWithFirstName(firstName: String?, lastName: String?, callback: Bool->Void) {
+        var parameters: [String:AnyObject] = [:]
+        if let firstName = firstName {
+            parameters["firstName"] = firstName
+        }
+        if let lastName = lastName {
+            parameters["lastName"] = lastName
+        }
+
+        sendUserRequestToUrl("info/update/", parameters: parameters) {
             json in
             callback(json != nil && json!["status"].string == "ok")
         }
@@ -160,7 +165,6 @@ class APIManager: NSObject {
             "method": method,
             "contentType": contentType]) {
             json in
-            print (json?.rawString())
             if let json = json, fileUrlString = json["fileUrl"].string, fileUrl = NSURL(string: fileUrlString) {
                 callback(fileUrl)
             } else {

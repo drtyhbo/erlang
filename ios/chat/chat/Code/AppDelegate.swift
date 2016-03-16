@@ -49,7 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         APIManager.sharedManager.registerDeviceToken(tokenString) {
             success in
-            print (success)
         }
     }
 

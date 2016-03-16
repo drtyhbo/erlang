@@ -176,13 +176,19 @@ User.prototype.fetchPreKey = function() {
 };
 
 User.prototype.update = function() {
-	var itemsToUpdate = Array.prototype.slice.call(arguments);
+	if (arguments[0] instanceof Array) {
+		var itemsToUpdate = arguments[0];
+	} else {
+		var itemsToUpdate = Array.prototype.slice.call(arguments);
+	}
+	
 	for (var i = itemsToUpdate.length - 2; i >= 0; i -= 2) {
 		var fieldName = itemsToUpdate[i];
 		if (fieldName != User.fields.firstName && fieldName != User.fields.lastName && fieldName != User.fields.iosPushToken) {
 			itemsToUpdate.splice(i, 2);
 		}
 	}
+	
 	return this._update.apply(this, itemsToUpdate);
 };
 

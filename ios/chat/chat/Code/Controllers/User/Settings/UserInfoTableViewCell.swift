@@ -15,8 +15,12 @@ protocol UserInfoTableViewCellDelegate: class {
 
 class UserInfoTableViewCell: UITableViewCell {
     @IBOutlet weak var profilePicImage: ChatProfilePic!
+
     @IBOutlet weak var firstName: UITextField!
+    @IBOutlet weak var firstNameActivityIndicator: UIActivityIndicatorView!
+
     @IBOutlet weak var lastName: UITextField!
+    @IBOutlet weak var lastNameActivityIndicator: UIActivityIndicatorView!
 
     static let cellHeight: CGFloat = 85
 
@@ -24,6 +28,7 @@ class UserInfoTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        selectionStyle = .None
         configureCell()
     }
 
@@ -42,5 +47,50 @@ class UserInfoTableViewCell: UITableViewCell {
 
     @objc private func didTapProfilePic() {
         delegate?.userInfoTableViewCellShouldUpdateProfilePic(self)
+    }
+
+    @IBAction func firstNameChanged() {
+        let firstNameText = firstName.text ?? ""
+        if firstNameText.isEmpty {
+            firstName.text = User.firstName ?? ""
+            return
+        }
+
+        firstNameActivityIndicator.startAnimating()
+        firstNameActivityIndicator.hidden = false
+        APIManager.sharedManager.updateInfoWithFirstName(firstNameText, lastName: nil) { success in
+            self.firstNameActivityIndicator.stopAnimating()
+            if success {
+                User.firstName = firstNameText
+            }
+        }
+    }
+
+    @IBAction func lastNameChanged() {
+        let lastNameText = lastName.text ?? ""
+        if lastNameText.isEmpty {
+            lastName.text = User.lastName ?? ""
+            return
+        }
+
+        lastNameActivityIndicator.startAnimating()
+        lastNameActivityIndicator.hidden = false
+        APIManager.sharedManager.updateInfoWithFirstName(nil, lastName: lastNameText) { success in
+            self.lastNameActivityIndicator.stopAnimating()
+            if success {
+                User.lastName = lastNameText
+            }
+        }
+    }
+}
+
+extension UserInfoTableViewCell: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == firstName {
+            lastName.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return false
     }
 }

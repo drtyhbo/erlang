@@ -11,4 +11,9 @@ import UIKit
 
 class ThemePickerTableViewCell: UITableViewCell {
     static let cellHeight: CGFloat = 60
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectionStyle = .None
+    }
 }
