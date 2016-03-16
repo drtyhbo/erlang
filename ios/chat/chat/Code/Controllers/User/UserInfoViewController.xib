@@ -44,7 +44,7 @@
                         </mask>
                     </variation>
                 </view>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="5E0-Ha-Nj0">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="5E0-Ha-Nj0" customClass="ThemePicker" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="10" y="193" width="580" height="45"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>

@@ -52,8 +52,7 @@ class FriendSelectorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        nextContainer.backgroundColor = UIColor.currentTheme.lightBackgroundColor
-        tableView.separatorColor = UIColor.currentTheme.borderColor
+        tableView.backgroundColor = UIColor.whiteColor()
 
         tableView.registerNib(UINib(nibName: "FriendSelectorTableViewCell", bundle: nil), forCellReuseIdentifier: friendSelectorCellReuseIdentifier)
 

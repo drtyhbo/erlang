@@ -12,6 +12,12 @@ import UIKit
 class ThemeCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var themeColorBlock: UIView!
 
+    override var selected: Bool {
+        didSet {
+            themeColorBlock.alpha = selected ? 1 : 0.25
+        }
+    }
+
     var themeColor: UIColor = UIColor.clearColor() {
         didSet {
             themeColorBlock.backgroundColor = themeColor

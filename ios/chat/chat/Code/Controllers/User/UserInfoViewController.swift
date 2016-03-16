@@ -37,8 +37,6 @@ class UserInfoViewController: UIViewController {
 
         setupNextButton()
 
-        themeCollectionView.registerNib(UINib(nibName: "ThemeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: themeCellReuseIdentifier)
-
         keyboardNotifications.addNotificationsForWillShow({
                 size in
                 self.keyboardWillShowWithSize(size)
@@ -144,29 +142,5 @@ extension UserInfoViewController: UIImagePickerControllerDelegate, UINavigationC
 
         dismissViewControllerAnimated(true, completion: nil)
         self.imagePickerController = nil
-    }
-}
-
-extension UserInfoViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Constants.themes.count
-    }
-
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(themeCellReuseIdentifier, forIndexPath: indexPath) as! ThemeCollectionViewCell
-        cell.themeColor = Constants.themes[indexPath.row].buttonColor
-        return cell
-    }
-
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        ColorTheme.currentThemeType = ColorTheme.ThemeType(rawValue: indexPath.row)!
-    }
-
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: 40, height: 40)
-    }
-
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-        return 0
     }
 }

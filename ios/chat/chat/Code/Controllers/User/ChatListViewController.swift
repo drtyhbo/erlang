@@ -162,6 +162,10 @@ extension ChatListViewController: UITableViewDataSource, UITableViewDelegate {
 
         presentViewController(alertController, animated: true, completion: nil)
     }
+
+    @IBAction func didTapSettings() {
+        presentViewController(ThemedNavigationController(rootViewController: SettingsViewController()), animated: true, completion: nil)
+    }
 }
 
 extension ChatListViewController: FriendsListHeaderDelegate {
