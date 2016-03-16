@@ -55,7 +55,8 @@
 		90407A9D1C98F92A00666587 /* ThemedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A931C98F92A00666587 /* ThemedLabel.swift */; };
 		90407A9E1C98F92A00666587 /* ThemedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A941C98F92A00666587 /* ThemedTableView.swift */; };
 		90407A9F1C98F92A00666587 /* ThemedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A951C98F92A00666587 /* ThemedView.swift */; };
-		90407AA01C98F92A00666587 /* ThemePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407A961C98F92A00666587 /* ThemePicker.swift */; };
+		90407AA41C99A64700666587 /* ThemePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407AA31C99A64700666587 /* ThemePicker.swift */; };
+		90407AA81C99A79800666587 /* ThemeListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90407AA71C99A79800666587 /* ThemeListener.swift */; };
 		9049633B1C6F9D750078C9DF /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633A1C6F9D750078C9DF /* PhoneNumber.swift */; };
 		9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9049633C1C70DE9D0078C9DF /* MessageSender.swift */; };
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
@@ -174,7 +175,8 @@
 		90407A931C98F92A00666587 /* ThemedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedLabel.swift; sourceTree = "<group>"; };
 		90407A941C98F92A00666587 /* ThemedTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedTableView.swift; sourceTree = "<group>"; };
 		90407A951C98F92A00666587 /* ThemedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemedView.swift; sourceTree = "<group>"; };
-		90407A961C98F92A00666587 /* ThemePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemePicker.swift; sourceTree = "<group>"; };
+		90407AA31C99A64700666587 /* ThemePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemePicker.swift; sourceTree = "<group>"; };
+		90407AA71C99A79800666587 /* ThemeListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeListener.swift; sourceTree = "<group>"; };
 		9049633A1C6F9D750078C9DF /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		9049633C1C70DE9D0078C9DF /* MessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSender.swift; sourceTree = "<group>"; };
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 		90407A8C1C98F92A00666587 /* Themes */ = {
 			isa = PBXGroup;
 			children = (
+				90407AA31C99A64700666587 /* ThemePicker.swift */,
 				90407A8D1C98F92A00666587 /* ThemeCollectionViewCell.swift */,
 				90407A8E1C98F92A00666587 /* ThemeCollectionViewCell.xib */,
 				90407A8F1C98F92A00666587 /* ThemedBarButtonItem.swift */,
@@ -362,7 +365,7 @@
 				90407A931C98F92A00666587 /* ThemedLabel.swift */,
 				90407A941C98F92A00666587 /* ThemedTableView.swift */,
 				90407A951C98F92A00666587 /* ThemedView.swift */,
-				90407A961C98F92A00666587 /* ThemePicker.swift */,
+				90407AA71C99A79800666587 /* ThemeListener.swift */,
 			);
 			path = Themes;
 			sourceTree = "<group>";
@@ -764,7 +767,7 @@
 				9022FBFE1C8B396E00F88BC7 /* FriendsListHeader.swift in Sources */,
 				90374E271C8496230008421F /* PreKeyCache.swift in Sources */,
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
-				90407AA01C98F92A00666587 /* ThemePicker.swift in Sources */,
+				90407AA41C99A64700666587 /* ThemePicker.swift in Sources */,
 				90407A9D1C98F92A00666587 /* ThemedLabel.swift in Sources */,
 				90407A9B1C98F92A00666587 /* ThemedButton.swift in Sources */,
 				9049633D1C70DE9D0078C9DF /* MessageSender.swift in Sources */,
@@ -786,6 +789,7 @@
 				90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */,
 				90EBF8AB1C474A0000A7AD51 /* Message.swift in Sources */,
 				90374E311C85E6F80008421F /* Conversation.swift in Sources */,
+				90407AA81C99A79800666587 /* ThemeListener.swift in Sources */,
 				90EBF8C01C474CA700A7AD51 /* ChatViewController.swift in Sources */,
 				90374E331C85E8220008421F /* MessageCrypter.swift in Sources */,
 				90253D711C8B49DA00892DB2 /* TopicTableViewCell.swift in Sources */,

@@ -10,20 +10,21 @@ import Foundation
 import UIKit
 
 class ThemedButton: UIButton {
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
+    private let themeListener = ThemeListener()
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
         setImage(imageForState(.Normal)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateTheme", name: ColorTheme.ThemeChangedNotification, object: nil)
-        updateTheme()
+        updateTheme(ColorTheme.currentTheme)
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
     }
 
-    @objc private func updateTheme() {
-        let buttonColor = UIColor.currentTheme.buttonColor
+    private func updateTheme(theme: ColorTheme) {
+        let buttonColor = theme.buttonColor
         tintColor = buttonColor
         setTitleColor(buttonColor, forState: .Normal)
     }

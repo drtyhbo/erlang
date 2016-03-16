@@ -14,7 +14,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="45t-TN-txh" customClass="ThemePicker" customModule="chat" customModuleProvider="target">
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="45t-TN-txh" customClass="ThemePicker" customModule="chat" customModuleProvider="target">
                         <rect key="frame" x="71" y="2" width="244" height="40"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -23,8 +23,8 @@
                         <collectionViewLayout key="collectionViewLayout" id="FMF-pC-EXt" customClass="UICollectionViewRightAlignedLayout"/>
                     </collectionView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Theme" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ujp-bw-3fr">
-                        <rect key="frame" x="10" y="11" width="56" height="21"/>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                        <rect key="frame" x="10" y="11" width="54" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>

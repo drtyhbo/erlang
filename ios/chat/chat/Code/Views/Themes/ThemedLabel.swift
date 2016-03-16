@@ -10,8 +10,19 @@ import Foundation
 import UIKit
 
 class ThemedLabel: UILabel {
+    private let themeListener = ThemeListener()
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        textColor = UIColor.currentTheme.buttonColor
+
+        updateTheme(ColorTheme.currentTheme)
+
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
+    }
+
+    private func updateTheme(theme: ColorTheme) {
+        textColor = theme.buttonColor
     }
 }

@@ -24,7 +24,7 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dbw-Tz-uqC">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dbw-Tz-uqC" customClass="ThemedView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="45"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IvW-aD-nsE" customClass="ThemedLabel" customModule="chat" customModuleProvider="target">
@@ -112,7 +112,7 @@
                     <rect key="frame" x="0.0" y="45" width="600" height="503"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </tableView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oGz-1j-zN4">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oGz-1j-zN4" customClass="ThemedView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="548" width="600" height="52"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L8u-zo-jEO" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">

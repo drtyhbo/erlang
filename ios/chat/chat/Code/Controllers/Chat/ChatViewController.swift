@@ -61,6 +61,7 @@ class ChatViewController: UIViewController {
 
     private let fetchLimit = 30
     private let keyboardNotifications = KeyboardNotifications()
+    private let themeListener = ThemeListener()
 
     private var isAtTop = false
     private var rows: [RowType] = []
@@ -86,11 +87,10 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        topBar.backgroundColor = UIColor.currentTheme.lightBackgroundColor
-        newMessageContainer.backgroundColor = UIColor.currentTheme.lightBackgroundColor
-        newMessageView.layer.borderColor = UIColor.currentTheme.borderColor.CGColor
-        newMessageView.layer.borderWidth = 1
-        newMessageView.layer.cornerRadius = 8
+        updateTheme(ColorTheme.currentTheme)
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -119,7 +119,6 @@ class ChatViewController: UIViewController {
 
         navigationItem.title = "Chat"
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: chat?.participantsArray[0])
 
@@ -133,10 +132,6 @@ class ChatViewController: UIViewController {
             self.tableView.layoutIfNeeded()
             completion()
         }
-    }
-
-    @objc private func appDidBecomeActive() {
-
     }
 
     @objc private func appDidEnterBackground() {
@@ -334,6 +329,12 @@ class ChatViewController: UIViewController {
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
+    }
+
+    private func updateTheme(theme: ColorTheme) {
+        newMessageView.layer.borderColor = theme.borderColor.CGColor
+        newMessageView.layer.borderWidth = 1
+        newMessageView.layer.cornerRadius = 8
     }
 
     @objc private func didReceiveMessagesNotification(notification: NSNotification) {

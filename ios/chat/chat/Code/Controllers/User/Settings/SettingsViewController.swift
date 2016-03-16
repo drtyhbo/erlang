@@ -27,13 +27,13 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
 
         navigationItem.title = "Settings"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: "save")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Close")!, style: .Plain, target: self, action: "didTapClose")
 
         tableView.registerNib(UINib(nibName: "UserInfoTableViewCell", bundle: nil), forCellReuseIdentifier: userInfoCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "ThemePickerTableViewCell", bundle: nil), forCellReuseIdentifier: themePickerCellReuseIdentifier)
     }
 
-    @objc private func save() {
+    @objc private func didTapClose() {
         dismissViewControllerAnimated(true, completion: nil)
     }
 }

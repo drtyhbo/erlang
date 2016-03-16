@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class ThemedBarButtonItem: UIBarButtonItem {
+    private let themeListener = ThemeListener()
+
     init(title: String?, style: UIBarButtonItemStyle, target: AnyObject?, action: Selector) {
         super.init()
         self.title = title
@@ -17,17 +19,23 @@ class ThemedBarButtonItem: UIBarButtonItem {
         self.target = target
         self.action = action
 
-        applyTheme()
+        updateTheme(ColorTheme.currentTheme)
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        applyTheme()
+        updateTheme(ColorTheme.currentTheme)
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
     }
 
-    private func applyTheme() {
-        setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.currentTheme.buttonColor], forState: .Normal)
-        tintColor = UIColor.currentTheme.buttonColor
+    private func updateTheme(theme: ColorTheme) {
+        setTitleTextAttributes([NSForegroundColorAttributeName: theme.buttonColor], forState: .Normal)
+        tintColor = theme.buttonColor
     }
 }

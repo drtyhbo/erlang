@@ -10,19 +10,20 @@ import Foundation
 import UIKit
 
 class ThemedImageView: UIImageView {
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
+    private let themeListener = ThemeListener()
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateTheme", name: ColorTheme.ThemeChangedNotification, object: nil)
-        updateTheme()
+        updateTheme(ColorTheme.currentTheme)
+
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
     }
 
-    @objc private func updateTheme() {
+    private func updateTheme(theme: ColorTheme) {
         image = image?.imageWithRenderingMode(.AlwaysTemplate)
-        tintColor = UIColor.currentTheme.buttonColor
+        tintColor = theme.buttonColor
     }
 }

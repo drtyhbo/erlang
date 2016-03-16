@@ -18,6 +18,8 @@ class FriendTableViewCell: UITableViewCell {
 
     static let cellHeight: CGFloat = 40
 
+    private let themeListener = ThemeListener()
+
     var chat: Chat? {
         didSet {
             configureCell()
@@ -29,8 +31,12 @@ class FriendTableViewCell: UITableViewCell {
         badge.layer.cornerRadius = badge.bounds.size.height / 2
 
         let selectedView = UIView()
-        selectedView.backgroundColor = UIColor.currentTheme.buttonColor
         selectedBackgroundView = selectedView
+
+        updateTheme(ColorTheme.currentTheme)
+        themeListener.themeChangeListener = { [weak self] theme in
+            self?.updateTheme(theme)
+        }
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -56,6 +62,10 @@ class FriendTableViewCell: UITableViewCell {
         unreadMessageCountLabel.text = String(unreadMessageCount)
         badge.layoutIfNeeded()
         nameLeadingConstraint.constant = unreadMessageCount == 0 ? 10 : (badge.bounds.size.width + 20)
+    }
+
+    private func updateTheme(theme: ColorTheme) {
+        selectedBackgroundView?.backgroundColor = theme.buttonColor
     }
 
     @objc private func unreadMessagesBadgeUpdated(notification: NSNotification) {
