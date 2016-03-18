@@ -5,9 +5,6 @@ COPY rebar.* run.sh /usr/src/app/
 COPY src/ /usr/src/app/src/
 COPY config/ /usr/src/app/config/
 
-RUN mkdir -p /etc/certs
-COPY certs/* /etc/certs/
-
 RUN cd /usr/src/app \
     && rebar3 release
 

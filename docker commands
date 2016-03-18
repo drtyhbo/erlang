@@ -8,7 +8,7 @@ docker pull abinnewies/chat-webserver && docker stop web1 && docker rm web1 && d
 docker run -it --link redis1:redis1 --rm redis sh -c 'exec redis-cli -h "$REDIS1_PORT_6379_TCP_ADDR" -p "$REDIS1_PORT_6379_TCP_PORT"'
 
 
-docker pull abinnewies/chat-server && docker stop chat1 && docker rm chat1 && docker run -p 49165:49165 --name chat1 --link redis1:redis1 -h chat1 -v /var/data/mnesia:/var/data/mnesia -d abinnewies/chat-server /usr/src/app/run.sh chat1
+docker pull abinnewies/chat-server && docker stop chat1 && docker rm chat1 && docker run -p 49165:49165 --name chat1 --link redis1:redis1 -h chat1 -v /var/data/mnesia:/var/data/mnesia -v /etc/certs:/etc/certs -d abinnewies/chat-server /usr/src/app/run.sh chat1
 
 chat2:
 docker pull abinnewies/chat-webserver && docker stop chat-webserver && docker rm chat-webserver && docker run -p 80:8080 --name chat-webserver -d abinnewies/chat-webserver

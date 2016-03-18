@@ -20,14 +20,21 @@ start_link(Port) ->
 	end.
 
 init([Port]) ->
-	{ok, Socket} = gen_tcp:listen(Port, [binary, {active, true}, {reuseaddr, true}]),
+	{ok, Socket} = ssl:listen(Port, [
+		{certfile, "/etc/certs/ssl-cert.pem"},
+		{keyfile, "/etc/certs/ssl-privkey.pem"},
+		{mode, binary},
+		{active, true},
+		{reuseaddr, true}]),
 	{ok, #server{listen_socket=Socket}}.
 
 handle_cast(accept, State) ->
-	case gen_tcp:accept(State#server.listen_socket) of
+	io:format("here~n"),
+	case ssl:transport_accept(State#server.listen_socket) of
 		{ok, Socket} ->
 			{ok, NewPid} = secure_chat_user:start(Socket),
-			gen_tcp:controlling_process(Socket, NewPid),
+			ssl:controlling_process(Socket, NewPid),
+			ssl:ssl_accept(Socket),
 			gen_server:cast(self(), accept),
 			{noreply, State};
 		_ ->
@@ -42,7 +49,7 @@ handle_info(_Info, State) ->
 
 terminate(_, State) ->
 	lager:info("Terminating chat server."),
-	gen_tcp:close(State#server.listen_socket).
+	ssl:close(State#server.listen_socket).
 
 code_change(_, State, _) ->
 	{ok, State}.

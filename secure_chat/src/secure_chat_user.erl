@@ -24,7 +24,7 @@
 %% ==== Defines ====
 
 
--define(RECEIVE_SOCK_MSG(Msg), {tcp, _Port, Msg}).
+-define(RECEIVE_SOCK_MSG(Msg), {ssl, _Port, Msg}).
 -define(SOCK_CLOSED(), {tcp_closed, _Port}).
 
 % Incoming JSON
@@ -72,8 +72,10 @@ handle_info(?RECEIVE_SOCK_MSG(Msg), FSMState, State) ->
 	NewState = handle_json(FSMState, FlatJson, State),
 	{next_state, FSMState, NewState};
 handle_info(?SOCK_CLOSED(), _FSMState, State) ->
+	io:format("closed~n"),
 	{stop, disconnect, State};
-handle_info(_, FSMState, State) ->
+handle_info(Msg, FSMState, State) ->
+	io:format("~p~n", [Msg]),
 	{next_state, FSMState, State}.
 
 
@@ -90,7 +92,7 @@ code_change(_, FSMState, State, _) ->
 
 
 terminate(_Reason, _StateName, State) ->
-	gen_tcp:close(State#user_state.socket),
+	ssl:close(State#user_state.socket),
 	ok.
 
 
@@ -252,7 +254,7 @@ lists_to_json([]) ->
 lists_to_json({struct, Array}) when is_list(Array) ->
 	{struct, lists_to_json(Array)};
 lists_to_json({Key, Array}) when is_list(Array) ->
-	[H|T] = Array,
+	[H|_] = Array,
 	case(H) of
 		{struct, _} ->
 			{Key, lists_to_json(Array)};
@@ -274,4 +276,4 @@ generate_msgs_json([H|T], JsonList) ->
 
 
 send_json(Socket, Json) ->
-	gen_tcp:send(Socket, mochijson2:encode(lists_to_json(Json)) ++ "\n").
+	ssl:send(Socket, mochijson2:encode(lists_to_json(Json)) ++ "\n").
