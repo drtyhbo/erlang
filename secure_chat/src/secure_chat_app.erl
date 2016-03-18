@@ -9,6 +9,7 @@ start(_StartType, _StartArgs) ->
 	lager:start(),
 	apns:start(),
 	eredis_cluster:start(),
+	ssl:start(),
 
 	ok = setup_mnesia(),
 

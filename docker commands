@@ -3,16 +3,13 @@ setup:
 docker stop redis1 && docker rm redis1 && docker run --name redis1 -d=true -v /var/data/redis:/data redis redis-server --appendonly yes
 
 chat1:
-docker pull abinnewies/chat-webserver && docker stop web1 && docker rm web1 && docker run -p 80:8080 --name web1 --link redis1:redis1 -d abinnewies/chat-webserver
-
 docker run -it --link redis1:redis1 --rm redis sh -c 'exec redis-cli -h "$REDIS1_PORT_6379_TCP_ADDR" -p "$REDIS1_PORT_6379_TCP_PORT"'
 
+docker pull abinnewies/chat-webserver && docker stop web1 && docker rm web1 && docker run --name web1 --link redis1:redis1 -p 8080:8080 -d abinnewies/chat-webserver
 
-docker pull abinnewies/chat-server && docker stop chat1 && docker rm chat1 && docker run -p 49165:49165 --name chat1 --link redis1:redis1 -h chat1 -v /var/data/mnesia:/var/data/mnesia -d abinnewies/chat-server /usr/src/app/run.sh chat1
+docker pull abinnewies/chat-server && docker stop chat1 && docker rm chat1 && docker run -p 49165:49165 --name chat1 --link redis1:redis1 -h chat1 -v /var/data/mnesia:/var/data/mnesia -v /etc/certs:/etc/certs -d abinnewies/chat-server /usr/src/app/run.sh chat1
 
-chat2:
-docker pull abinnewies/chat-webserver && docker stop chat-webserver && docker rm chat-webserver && docker run -p 80:8080 --name chat-webserver -d abinnewies/chat-webserver
+docker pull nginx && docker stop nginx1 && docker rm nginx1 && docker run --name nginx1 -p 80:80 -p 443:443 --link web1:web1 -v /etc/certs:/etc/certs  -v /var/log/nginx:/var/log/nginx -v /etc/nginx/nginx.conf:/etc/nginx/nginx.conf -d nginx
 
-docker pull abinnewies/chat-server && docker stop chat-server && docker rm chat-server && docker run -p 4369:4369 -p 9001-9005:9001-9005 -p 49165:49165 --name chat-server -h chat2.drtyhbo.com -v /var/data/mnesia:/var/data/mnesia -d abinnewies/chat-server /usr/src/app/run.sh chat2
-
+redis cli:
 docker stop redis-cli && docker rm redis-cli && docker run -it --name redis-cli --link redis1:redis1 --rm redis sh -c 'exec redis-cli -h "$REDIS1_PORT_6379_TCP_ADDR" -p "$REDIS1_PORT_6379_TCP_PORT"'

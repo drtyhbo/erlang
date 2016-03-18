@@ -1,3 +1,4 @@
+-ssl msgdebug=true
 -noshell
 -kernel inet_dist_listen_min 9001 inet_dist_listen_max 9005
 -setcookie HKLRUPLTOFMCAEYYRWLB

@@ -98,6 +98,13 @@ extension ChatConnection: AsyncSocketDelegate {
     @objc func onSocket(sock: AsyncSocket!, didConnectToHost host: String!, port: UInt16) {
         isConnecting = false
 
+        let options: [String: AnyObject] = [
+            kCFStreamSSLValidatesCertificateChain as String: false
+        ]
+        sock.startTLS(options)
+    }
+
+    @objc func onSocketDidSecure(sock: AsyncSocket!) {
         delegate?.chatConnectionOnConnect(self)
         sendQueuedJson()
         readData()
