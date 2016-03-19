@@ -9,6 +9,4 @@
 #ifndef chat_bridging_header_h
 #define chat_bridging_header_h
 
-#import "Utils/Security/PDKeychainBindings/PDKeychainBindings.h"
-
 #endif /* chat_bridging_header_h */

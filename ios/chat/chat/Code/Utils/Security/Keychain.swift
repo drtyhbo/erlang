@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PDKeychainBindingsController
 
 class Keychain {
     private let keychainBindings: PDKeychainBindings

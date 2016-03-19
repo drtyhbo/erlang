@@ -25,8 +25,6 @@
 		9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */; };
 		9031FFE51C6E2BC100BCC456 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFE41C6E2BC100BCC456 /* File.swift */; };
 		90374E221C8495FE0008421F /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E1B1C8495FE0008421F /* Keychain.swift */; };
-		90374E231C8495FE0008421F /* PDKeychainBindings.m in Sources */ = {isa = PBXBuildFile; fileRef = 90374E1E1C8495FE0008421F /* PDKeychainBindings.m */; };
-		90374E241C8495FE0008421F /* PDKeychainBindingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90374E201C8495FE0008421F /* PDKeychainBindingsController.m */; };
 		90374E251C8495FE0008421F /* SecurityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E211C8495FE0008421F /* SecurityHelper.swift */; };
 		90374E271C8496230008421F /* PreKeyCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E261C8496230008421F /* PreKeyCache.swift */; };
 		90374E291C84967F0008421F /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E281C84967F0008421F /* KeyPair.swift */; };
@@ -62,6 +60,7 @@
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
 		904963451C722CE30078C9DF /* MediaRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 904963441C722CE30078C9DF /* MediaRowTableViewCell.xib */; };
 		9049634A1C7239790078C9DF /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963491C7239790078C9DF /* UIImage.swift */; };
+		9091F8B81C9CDD5200E878C2 /* PDKeychainBindingsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */; };
 		90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */; };
 		90AFD5AD1C5CE43C00236D6B /* ChatConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5AC1C5CE43C00236D6B /* ChatConnection.swift */; };
 		90AFD5AF1C5CEC0000236D6B /* ChatClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5AE1C5CEC0000236D6B /* ChatClient.swift */; };
@@ -143,10 +142,6 @@
 		9031FFE41C6E2BC100BCC456 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		90374E191C8494F00008421F /* chat-bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "chat-bridging-header.h"; sourceTree = "<group>"; };
 		90374E1B1C8495FE0008421F /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
-		90374E1D1C8495FE0008421F /* PDKeychainBindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDKeychainBindings.h; sourceTree = "<group>"; };
-		90374E1E1C8495FE0008421F /* PDKeychainBindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDKeychainBindings.m; sourceTree = "<group>"; };
-		90374E1F1C8495FE0008421F /* PDKeychainBindingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDKeychainBindingsController.h; sourceTree = "<group>"; };
-		90374E201C8495FE0008421F /* PDKeychainBindingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDKeychainBindingsController.m; sourceTree = "<group>"; };
 		90374E211C8495FE0008421F /* SecurityHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityHelper.swift; sourceTree = "<group>"; };
 		90374E261C8496230008421F /* PreKeyCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreKeyCache.swift; sourceTree = "<group>"; };
 		90374E281C84967F0008421F /* KeyPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPair.swift; sourceTree = "<group>"; };
@@ -182,6 +177,7 @@
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
 		904963441C722CE30078C9DF /* MediaRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaRowTableViewCell.xib; sourceTree = "<group>"; };
 		904963491C7239790078C9DF /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImage.swift; path = Extensions/UIImage.swift; sourceTree = "<group>"; };
+		9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDKeychainBindingsController.framework; path = "Pods/../build/Debug-iphoneos/PDKeychainBindingsController.framework"; sourceTree = "<group>"; };
 		90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		90AFD5AC1C5CE43C00236D6B /* ChatConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatConnection.swift; sourceTree = "<group>"; };
 		90AFD5AE1C5CEC0000236D6B /* ChatClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatClient.swift; sourceTree = "<group>"; };
@@ -246,6 +242,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9091F8B81C9CDD5200E878C2 /* PDKeychainBindingsController.framework in Frameworks */,
 				90374E371C85F2260008421F /* libsodium-ios.a in Frameworks */,
 				4895AA0B7AE4B2174643D2F7 /* Pods_chat.framework in Frameworks */,
 			);
@@ -257,6 +254,7 @@
 		03C4881D7477C6DD7CC79989 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */,
 				F57DF795FECAD58982D83601 /* Pods_chat.framework */,
 			);
 			name = Frameworks;
@@ -311,24 +309,12 @@
 			children = (
 				90374E1B1C8495FE0008421F /* Keychain.swift */,
 				90374E281C84967F0008421F /* KeyPair.swift */,
-				90374E1C1C8495FE0008421F /* PDKeychainBindings */,
 				90374E261C8496230008421F /* PreKeyCache.swift */,
 				90374E211C8495FE0008421F /* SecurityHelper.swift */,
 				90374E321C85E8220008421F /* MessageCrypter.swift */,
 				90374E341C85EE520008421F /* Hash.swift */,
 			);
 			path = Security;
-			sourceTree = "<group>";
-		};
-		90374E1C1C8495FE0008421F /* PDKeychainBindings */ = {
-			isa = PBXGroup;
-			children = (
-				90374E1D1C8495FE0008421F /* PDKeychainBindings.h */,
-				90374E1E1C8495FE0008421F /* PDKeychainBindings.m */,
-				90374E1F1C8495FE0008421F /* PDKeychainBindingsController.h */,
-				90374E201C8495FE0008421F /* PDKeychainBindingsController.m */,
-			);
-			path = PDKeychainBindings;
 			sourceTree = "<group>";
 		};
 		90374E381C85F23F0008421F /* Frameworks */ = {
@@ -780,7 +766,6 @@
 				90374E291C84967F0008421F /* KeyPair.swift in Sources */,
 				90374E2F1C8496C40008421F /* String.swift in Sources */,
 				9031FFE51C6E2BC100BCC456 /* File.swift in Sources */,
-				90374E241C8495FE0008421F /* PDKeychainBindingsController.m in Sources */,
 				90AFD5D51C61118E00236D6B /* ChatMessages.swift in Sources */,
 				904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */,
 				90C0F4A31C79621B007F58BD /* MoviePlayer.swift in Sources */,
@@ -802,7 +787,6 @@
 				90AFD5D11C61102C00236D6B /* FriendManager.swift in Sources */,
 				90407A9E1C98F92A00666587 /* ThemedTableView.swift in Sources */,
 				90EBF8AD1C474A0E00A7AD51 /* User.swift in Sources */,
-				90374E231C8495FE0008421F /* PDKeychainBindings.m in Sources */,
 				90374E221C8495FE0008421F /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -935,6 +919,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = chat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -956,6 +944,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = chat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

@@ -9,6 +9,7 @@ pod 'Alamofire'
 pod "APLSlideMenu"
 pod 'CocoaAsyncSocket'
 pod 'MagicalRecord'
+pod 'PDKeychainBindingsController'
 pod 'SDWebImage'
 pod 'Sodium'
 pod 'SwiftyJSON'
