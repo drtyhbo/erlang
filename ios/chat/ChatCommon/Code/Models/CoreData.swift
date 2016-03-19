@@ -14,4 +14,9 @@ public class CoreData {
     public static func save() {
         NSManagedObjectContext.MR_defaultContext().MR_saveToPersistentStoreAndWait()
     }
+
+    public static func setup() {
+        let storeUrl = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.drtyhbo.Chat")
+        MagicalRecord.setupCoreDataStackWithAutoMigratingSqliteStoreAtURL(storeUrl!.URLByAppendingPathComponent("db.sqlite"))
+    }
 }

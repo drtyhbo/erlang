@@ -107,8 +107,9 @@ class MainViewController: UIViewController {
 
 extension MainViewController: ChatListViewControllerDelegate {
     func chatListViewController(chatListViewController: ChatListViewController, didSelectChat chat: Chat) {
-        NSUserDefaults.standardUserDefaults().setURL(chat.id, forKey: currentChatKey)
-        NSUserDefaults.standardUserDefaults().synchronize()
+        let userDefaults = NSUserDefaults.sharedUserDefaults()
+        userDefaults.setURL(chat.id, forKey: currentChatKey)
+        userDefaults.synchronize()
 
         let chatViewController = slideViewController.contentViewController as! ChatViewController
         chatViewController.chat = chat

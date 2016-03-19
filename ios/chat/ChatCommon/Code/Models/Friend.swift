@@ -45,7 +45,7 @@ public class Friend: NSManagedObject {
         return Friend.MR_findFirstByAttribute("id", withValue: id)
     }
 
-    static func findAll() -> [Friend] {
+    public static func findAll() -> [Friend] {
         return Friend.MR_findAllSortedBy("firstName", ascending: true) as? [Friend] ?? []
     }
 }

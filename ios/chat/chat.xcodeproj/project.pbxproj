@@ -18,7 +18,6 @@
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
 		9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */; };
-		9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */; };
 		90374E2B1C8496990008421F /* NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2A1C8496990008421F /* NSData.swift */; };
 		90374E2D1C8496B60008421F /* NSMutableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2C1C8496B60008421F /* NSMutableData.swift */; };
 		90374E2F1C8496C40008421F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90374E2E1C8496C40008421F /* String.swift */; };
@@ -81,6 +80,14 @@
 		9091F9191C9CE34600E878C2 /* PreKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9181C9CE34600E878C2 /* PreKey.swift */; };
 		9091F91C1C9CEAA700E878C2 /* ChatCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9091F8BE1C9CDE5900E878C2 /* ChatCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9091F9211C9CEC9F00E878C2 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9201C9CEC9F00E878C2 /* FileHelper.swift */; };
+		9091F92A1C9D20D400E878C2 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9291C9D20D400E878C2 /* ShareViewController.swift */; };
+		9091F92D1C9D20D400E878C2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9091F92B1C9D20D400E878C2 /* MainInterface.storyboard */; };
+		9091F9311C9D20D400E878C2 /* Chat.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9091F9271C9D20D400E878C2 /* Chat.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9091F9371C9D215900E878C2 /* ChatCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9091F8BE1C9CDE5900E878C2 /* ChatCommon.framework */; };
+		9091F93B1C9D227B00E878C2 /* Pods_chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9091F93A1C9D227B00E878C2 /* Pods_chat.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9091F93F1C9D24E800E878C2 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9091F93C1C9D24E800E878C2 /* chat.xcdatamodeld */; };
+		9091F9431C9D262A00E878C2 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9401C9D262A00E878C2 /* chat.xcdatamodeld */; };
+		9091F9451C9D2D2600E878C2 /* NSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */; };
 		90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */; };
 		90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */; };
 		90AFD5B31C5D204100236D6B /* PhoneNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */; };
@@ -135,6 +142,13 @@
 			remoteGlobalIDString = 9091F8BD1C9CDE5900E878C2;
 			remoteInfo = ChatCommon;
 		};
+		9091F92F1C9D20D400E878C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 90EBF8791C47458F00A7AD51 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9091F9261C9D20D400E878C2;
+			remoteInfo = ShareExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -147,6 +161,17 @@
 				9091F91C1C9CEAA700E878C2 /* ChatCommon.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9091F9351C9D20D400E878C2 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9091F9311C9D20D400E878C2 /* Chat.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -164,8 +189,6 @@
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
 		9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReconnectView.xib; sourceTree = "<group>"; };
-		9031FFDD1C6B78D600BCC456 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
-		9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
 		90374E191C8494F00008421F /* chat-bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "chat-bridging-header.h"; sourceTree = "<group>"; };
 		90374E2A1C8496990008421F /* NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSData.swift; path = Extensions/NSData.swift; sourceTree = "<group>"; };
 		90374E2C1C8496B60008421F /* NSMutableData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSMutableData.swift; path = Extensions/NSMutableData.swift; sourceTree = "<group>"; };
@@ -232,6 +255,19 @@
 		9091F9161C9CE1CA00E878C2 /* libsodium-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsodium-ios.a"; path = "Pods/Sodium/Sodium/libsodium-ios.a"; sourceTree = SOURCE_ROOT; };
 		9091F9181C9CE34600E878C2 /* PreKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreKey.swift; sourceTree = "<group>"; };
 		9091F9201C9CEC9F00E878C2 /* FileHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
+		9091F9221C9D209300E878C2 /* chat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = chat.entitlements; sourceTree = "<group>"; };
+		9091F9271C9D20D400E878C2 /* Chat.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Chat.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9091F9291C9D20D400E878C2 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		9091F92C1C9D20D400E878C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		9091F92E1C9D20D400E878C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9091F9361C9D20DC00E878C2 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ShareExtension.entitlements; sourceTree = "<group>"; };
+		9091F9381C9D216800E878C2 /* Pods_chat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_chat.framework; path = "Pods/../build/Debug-iphoneos/Pods_chat.framework"; sourceTree = "<group>"; };
+		9091F93A1C9D227B00E878C2 /* Pods_chat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_chat.framework; path = "Pods/../build/Debug-iphoneos/Pods_chat.framework"; sourceTree = "<group>"; };
+		9091F93D1C9D24E800E878C2 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
+		9091F93E1C9D24E800E878C2 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
+		9091F9411C9D262A00E878C2 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
+		9091F9421C9D262A00E878C2 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
+		9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
 		90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
 		90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhoneNumberViewController.xib; sourceTree = "<group>"; };
@@ -291,6 +327,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9091F9241C9D20D400E878C2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9091F93B1C9D227B00E878C2 /* Pods_chat.framework in Frameworks */,
+				9091F9371C9D215900E878C2 /* ChatCommon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90EBF87E1C47458F00A7AD51 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -306,6 +351,8 @@
 		03C4881D7477C6DD7CC79989 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9091F93A1C9D227B00E878C2 /* Pods_chat.framework */,
+				9091F9381C9D216800E878C2 /* Pods_chat.framework */,
 				9091F9141C9CE1A600E878C2 /* Sodium.framework */,
 				9091F9111C9CE12800E878C2 /* Pods_chat.framework */,
 				9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */,
@@ -404,6 +451,7 @@
 		9091F8BF1C9CDE5900E878C2 /* ChatCommon */ = {
 			isa = PBXGroup;
 			children = (
+				9091F93C1C9D24E800E878C2 /* chat.xcdatamodeld */,
 				9091F8C01C9CDE5900E878C2 /* ChatCommon.h */,
 				9091F8CB1C9CDE9500E878C2 /* Code */,
 				9091F9131C9CE17D00E878C2 /* Frameworks */,
@@ -486,6 +534,7 @@
 				9091F9061C9CE0C600E878C2 /* NSMutableData.swift */,
 				9091F9071C9CE0C600E878C2 /* String.swift */,
 				9091F9091C9CE0C600E878C2 /* UIImage.swift */,
+				9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -496,6 +545,18 @@
 				9091F9161C9CE1CA00E878C2 /* libsodium-ios.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9091F9281C9D20D400E878C2 /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				9091F9401C9D262A00E878C2 /* chat.xcdatamodeld */,
+				9091F9361C9D20DC00E878C2 /* ShareExtension.entitlements */,
+				9091F9291C9D20D400E878C2 /* ShareViewController.swift */,
+				9091F92B1C9D20D400E878C2 /* MainInterface.storyboard */,
+				9091F92E1C9D20D400E878C2 /* Info.plist */,
+			);
+			path = ShareExtension;
 			sourceTree = "<group>";
 		};
 		90B1B0FB1C480A4A004369F2 /* User */ = {
@@ -531,6 +592,7 @@
 				90EBF8831C47459000A7AD51 /* chat */,
 				90253D7A1C8BF92400892DB2 /* chatTests */,
 				9091F8BF1C9CDE5900E878C2 /* ChatCommon */,
+				9091F9281C9D20D400E878C2 /* ShareExtension */,
 				90EBF8821C47458F00A7AD51 /* Products */,
 				426CE136D9E86C46A2DD6DE9 /* Pods */,
 				03C4881D7477C6DD7CC79989 /* Frameworks */,
@@ -543,6 +605,7 @@
 				90EBF8811C47458F00A7AD51 /* chat.app */,
 				90253D791C8BF92400892DB2 /* chatTests.xctest */,
 				9091F8BE1C9CDE5900E878C2 /* ChatCommon.framework */,
+				9091F9271C9D20D400E878C2 /* Chat.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -550,6 +613,7 @@
 		90EBF8831C47459000A7AD51 /* chat */ = {
 			isa = PBXGroup;
 			children = (
+				9091F9221C9D209300E878C2 /* chat.entitlements */,
 				90EBF88B1C47459000A7AD51 /* Assets.xcassets */,
 				90EBF89C1C47497500A7AD51 /* Code */,
 				90EBF8901C47459000A7AD51 /* Info.plist */,
@@ -575,7 +639,6 @@
 			isa = PBXGroup;
 			children = (
 				90F1F78F1C7F5F2B00A75914 /* Flags */,
-				9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -672,6 +735,23 @@
 			productReference = 9091F8BE1C9CDE5900E878C2 /* ChatCommon.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		9091F9261C9D20D400E878C2 /* ShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9091F9321C9D20D400E878C2 /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildPhases = (
+				9091F9231C9D20D400E878C2 /* Sources */,
+				9091F9241C9D20D400E878C2 /* Frameworks */,
+				9091F9251C9D20D400E878C2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShareExtension;
+			productName = ShareExtension;
+			productReference = 9091F9271C9D20D400E878C2 /* Chat.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		90EBF8801C47458F00A7AD51 /* chat */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 90EBF8931C47459000A7AD51 /* Build configuration list for PBXNativeTarget "chat" */;
@@ -683,11 +763,13 @@
 				673EB0D06030FA77D5514775 /* Embed Pods Frameworks */,
 				910B41AE13D28F7134B0F6B7 /* Copy Pods Resources */,
 				9091F91F1C9CEAA700E878C2 /* Embed Frameworks */,
+				9091F9351C9D20D400E878C2 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				9091F91E1C9CEAA700E878C2 /* PBXTargetDependency */,
+				9091F9301C9D20D400E878C2 /* PBXTargetDependency */,
 			);
 			name = chat;
 			productName = chat;
@@ -712,11 +794,29 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = S4Y2T39EMH;
 					};
+					9091F9261C9D20D400E878C2 = {
+						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = S4Y2T39EMH;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
 					90EBF8801C47458F00A7AD51 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = S4Y2T39EMH;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 							com.apple.Push = {
@@ -742,6 +842,7 @@
 				90EBF8801C47458F00A7AD51 /* chat */,
 				90253D781C8BF92400892DB2 /* chatTests */,
 				9091F8BD1C9CDE5900E878C2 /* ChatCommon */,
+				9091F9261C9D20D400E878C2 /* ShareExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -758,6 +859,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9091F9251C9D20D400E878C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9091F92D1C9D20D400E878C2 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -864,6 +973,7 @@
 				9091F8F21C9CE02A00E878C2 /* ChatConnection.swift in Sources */,
 				9091F8DB1C9CDE9500E878C2 /* Conversation.swift in Sources */,
 				9091F8FF1C9CE09200E878C2 /* Keychain.swift in Sources */,
+				9091F93F1C9D24E800E878C2 /* chat.xcdatamodeld in Sources */,
 				9091F8E41C9CDE9500E878C2 /* PendingMessage.swift in Sources */,
 				9091F8E31C9CDE9500E878C2 /* MessageSender.swift in Sources */,
 				9091F8E81C9CDEEA00E878C2 /* SentMessage.swift in Sources */,
@@ -880,12 +990,22 @@
 				9091F8DC1C9CDE9500E878C2 /* CoreData.swift in Sources */,
 				9091F9191C9CE34600E878C2 /* PreKey.swift in Sources */,
 				9091F9001C9CE09200E878C2 /* KeyPair.swift in Sources */,
+				9091F9451C9D2D2600E878C2 /* NSUserDefaults.swift in Sources */,
 				9091F8DF1C9CDE9500E878C2 /* Friend.swift in Sources */,
 				9091F8F61C9CE04F00E878C2 /* Constants.swift in Sources */,
 				9091F90B1C9CE0C600E878C2 /* NSMutableData.swift in Sources */,
 				9091F8E11C9CDE9500E878C2 /* Message.swift in Sources */,
 				9091F8DA1C9CDE9500E878C2 /* Chat.swift in Sources */,
 				9091F8E51C9CDE9500E878C2 /* PhoneNumber.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9091F9231C9D20D400E878C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9091F92A1C9D20D400E878C2 /* ShareViewController.swift in Sources */,
+				9091F9431C9D262A00E878C2 /* chat.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -915,7 +1035,6 @@
 				90407A551C95D3A000666587 /* ColorTheme.swift in Sources */,
 				90407A591C95DD1900666587 /* AlwaysTemplateButton.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
-				9031FFDE1C6B78D600BCC456 /* chat.xcdatamodeld in Sources */,
 				9049634A1C7239790078C9DF /* UIImage.swift in Sources */,
 				90407A761C98EE1400666587 /* UserInfoTableViewCell.swift in Sources */,
 				90407A991C98F92A00666587 /* ThemedBarButtonItem.swift in Sources */,
@@ -959,7 +1078,23 @@
 			target = 9091F8BD1C9CDE5900E878C2 /* ChatCommon */;
 			targetProxy = 9091F91D1C9CEAA700E878C2 /* PBXContainerItemProxy */;
 		};
+		9091F9301C9D20D400E878C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9091F9261C9D20D400E878C2 /* ShareExtension */;
+			targetProxy = 9091F92F1C9D20D400E878C2 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		9091F92B1C9D20D400E878C2 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9091F92C1C9D20D400E878C2 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		90253D811C8BF92400892DB2 /* Debug */ = {
@@ -991,6 +1126,7 @@
 		9091F8C81C9CDE5900E878C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1021,6 +1157,7 @@
 		9091F8C91C9CDE5900E878C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1045,6 +1182,46 @@
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		9091F9331C9D20D400E878C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat.ShareExtension;
+				PRODUCT_NAME = Chat;
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9091F9341C9D20D400E878C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.drtyhbo.Chat.ShareExtension;
+				PRODUCT_NAME = Chat;
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -1136,6 +1313,7 @@
 			baseConfigurationReference = A1A7B9FD93747705788EBCD9 /* Pods-chat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = chat/chat.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -1162,6 +1340,7 @@
 			baseConfigurationReference = C5EA02263D659AD024FD7039 /* Pods-chat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = chat/chat.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -1203,6 +1382,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 		};
+		9091F9321C9D20D400E878C2 /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9091F9331C9D20D400E878C2 /* Debug */,
+				9091F9341C9D20D400E878C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		90EBF87C1C47458F00A7AD51 /* Build configuration list for PBXProject "chat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1224,15 +1411,26 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		9031FFDC1C6B78D600BCC456 /* chat.xcdatamodeld */ = {
+		9091F93C1C9D24E800E878C2 /* chat.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */,
-				9031FFDD1C6B78D600BCC456 /* chat.xcdatamodel */,
+				9091F93D1C9D24E800E878C2 /* chat.xcdatamodel */,
+				9091F93E1C9D24E800E878C2 /* chat1.xcdatamodel */,
 			);
-			currentVersion = 9031FFDF1C6B793400BCC456 /* chat1.xcdatamodel */;
+			currentVersion = 9091F93E1C9D24E800E878C2 /* chat1.xcdatamodel */;
+			path = chat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		9091F9401C9D262A00E878C2 /* chat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9091F9411C9D262A00E878C2 /* chat.xcdatamodel */,
+				9091F9421C9D262A00E878C2 /* chat1.xcdatamodel */,
+			);
+			currentVersion = 9091F9421C9D262A00E878C2 /* chat1.xcdatamodel */;
 			name = chat.xcdatamodeld;
-			path = ../chat.xcdatamodeld;
+			path = ../ChatCommon/chat.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

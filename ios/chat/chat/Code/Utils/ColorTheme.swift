@@ -25,11 +25,12 @@ class ColorTheme {
 
     static var currentThemeType: ThemeType {
         get {
-            return ThemeType(rawValue: NSUserDefaults.standardUserDefaults().integerForKey(currentThemeIndexKey))!
+            return ThemeType(rawValue: NSUserDefaults.sharedUserDefaults().integerForKey(currentThemeIndexKey))!
         }
         set {
-            NSUserDefaults.standardUserDefaults().setInteger(newValue.rawValue, forKey: currentThemeIndexKey)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            let userDefaults = NSUserDefaults.sharedUserDefaults()
+            userDefaults.setInteger(newValue.rawValue, forKey: currentThemeIndexKey)
+            userDefaults.synchronize()
 
             NSNotificationCenter.defaultCenter().postNotificationName(ColorTheme.ThemeChangedNotification, object: nil, userInfo: nil)
         }

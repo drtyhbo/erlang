@@ -12,51 +12,56 @@ import UIKit
 public class User {
     public static var phoneNumber: String? {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(phoneNumberKey)
+            return NSUserDefaults.sharedUserDefaults().stringForKey(phoneNumberKey)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: phoneNumberKey)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            let userDefaults = NSUserDefaults.sharedUserDefaults()
+            userDefaults.setObject(newValue, forKey: phoneNumberKey)
+            userDefaults.synchronize()
         }
     }
 
     public static var userId: Int {
         get {
-            return NSUserDefaults.standardUserDefaults().integerForKey(userIdKey)
+            return NSUserDefaults.sharedUserDefaults().integerForKey(userIdKey)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: userIdKey)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            let userDefaults = NSUserDefaults.sharedUserDefaults()
+            userDefaults.setInteger(newValue, forKey: userIdKey)
+            userDefaults.synchronize()
         }
     }
 
     public static var sessionToken: String? {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(sessionTokenKey)
+            return NSUserDefaults.sharedUserDefaults().stringForKey(sessionTokenKey)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: sessionTokenKey)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            let userDefaults = NSUserDefaults.sharedUserDefaults()
+            userDefaults.setObject(newValue, forKey: sessionTokenKey)
+            userDefaults.synchronize()
         }
     }
 
     public static var firstName: String? {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(firstNameKey)
+            return NSUserDefaults.sharedUserDefaults().stringForKey(firstNameKey)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: firstNameKey)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            let userDefaults = NSUserDefaults.sharedUserDefaults()
+            userDefaults.setObject(newValue, forKey: firstNameKey)
+            userDefaults.synchronize()
         }
     }
 
     public static var lastName: String? {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(lastNameKey)
+            return NSUserDefaults.sharedUserDefaults().stringForKey(lastNameKey)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: lastNameKey)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            let userDefaults = NSUserDefaults.sharedUserDefaults()
+            userDefaults.setObject(newValue, forKey: lastNameKey)
+            userDefaults.synchronize()
         }
     }
 
