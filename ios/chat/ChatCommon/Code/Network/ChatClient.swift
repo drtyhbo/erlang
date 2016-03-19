@@ -9,19 +9,19 @@
 import Foundation
 import SwiftyJSON
 
-class ChatClient {
+public class ChatClient {
     enum State {
         case Disconnected
         case Connected
     }
 
-    static let sharedClient = ChatClient()
+    public static let sharedClient = ChatClient()
 
     static let ChatClientReceivedMessagesNotification = "ChatClientReceivedMessages"
     static let ChatClientMessageDidSend = "ChatClientMessageDidSend"
-    static let ChatClientConnectingNotification = "ChatClientConnecting"
-    static let ChatClientDidConnectNotification = "ChatClientDidConnect"
-    static let ChatClientDidDisconnectNotification = "ChatClientDidDisconnect"
+    public static let ChatClientConnectingNotification = "ChatClientConnecting"
+    public static let ChatClientDidConnectNotification = "ChatClientDidConnect"
+    public static let ChatClientDidDisconnectNotification = "ChatClientDidDisconnect"
 
     private(set) var state: State = .Disconnected
 
@@ -40,7 +40,7 @@ class ChatClient {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
 
-    func maybeConnect() {
+    public func maybeConnect() {
         if !connection.isConnected {
             connect()
         }

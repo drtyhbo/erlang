@@ -10,8 +10,8 @@ import CoreData
 import Foundation
 import MagicalRecord
 
-class CoreData {
-    static func save() {
+public class CoreData {
+    public static func save() {
         NSManagedObjectContext.MR_defaultContext().MR_saveToPersistentStoreAndWait()
     }
 }

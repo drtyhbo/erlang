@@ -9,9 +9,9 @@
 import Foundation
 import SwiftyJSON
 
-class MessageSender {
-    static let SendingProgressNotification = "MessageSenderSendingProgressNotification"
-    static let SendingCompleteNotification = "MessageSenderSendingCompleteNotification"
+public class MessageSender {
+    public static let SendingProgressNotification = "MessageSenderSendingProgressNotification"
+    public static let SendingCompleteNotification = "MessageSenderSendingCompleteNotification"
 
     private class OutgoingMessage {
         let message: Message

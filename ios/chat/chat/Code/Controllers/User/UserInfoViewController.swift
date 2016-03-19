@@ -6,6 +6,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import ChatCommon
 import Foundation
 import UIKit
 

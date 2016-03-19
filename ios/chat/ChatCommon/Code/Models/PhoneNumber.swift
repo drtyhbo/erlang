@@ -8,15 +8,15 @@
 
 import Foundation
 
-class PhoneNumber {
-    var fullNumber: String {
+public class PhoneNumber {
+    public var fullNumber: String {
         return "\(countryCode)\(phoneNumber)"
     }
 
     private(set) var countryCode: String
-    private(set) var phoneNumber: String
+    public var phoneNumber: String
 
-    init(phoneNumber: String) {
+    public init(phoneNumber: String) {
         countryCode = "1"
         self.phoneNumber = phoneNumber
     }

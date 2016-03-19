@@ -10,8 +10,8 @@ import Alamofire
 import Foundation
 import SwiftyJSON
 
-class APIManager: NSObject {
-    class Error {
+public class APIManager: NSObject {
+    public class Error {
         let error: String
 
         init(_ error: String) {
@@ -19,12 +19,12 @@ class APIManager: NSObject {
         }
     }
 
-    static let sharedManager = APIManager()
+    public static let sharedManager = APIManager()
 
     let domain = Constants.host
     let webPort = Constants.webPort == "80" ? "" : ":\(Constants.webPort)"
 
-    func registerPhoneNumber(phoneNumber: PhoneNumber, callback: Bool->Void) {
+    public func registerPhoneNumber(phoneNumber: PhoneNumber, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
             "phone": phoneNumber.fullNumber
         ]) {
@@ -33,7 +33,7 @@ class APIManager: NSObject {
         }
     }
 
-    func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, preKeys: [PreKey], callback: (String?, String?, String?, String?, Error?)->Void) {
+    public func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, preKeys: [PreKey], callback: (String?, String?, String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
             "phone": phoneNumber.fullNumber,
             "code": code,
@@ -87,7 +87,7 @@ class APIManager: NSObject {
         }
     }
 
-    func registerDeviceToken(deviceToken: String, callback: Bool->Void) {
+    public func registerDeviceToken(deviceToken: String, callback: Bool->Void) {
         sendUserRequestToUrl("pns/register/", parameters: [
             "token": deviceToken,
             "type": "ios"
@@ -97,7 +97,7 @@ class APIManager: NSObject {
         }
     }
 
-    func updateInfoWithFirstName(firstName: String?, lastName: String?, callback: Bool->Void) {
+    public func updateInfoWithFirstName(firstName: String?, lastName: String?, callback: Bool->Void) {
         var parameters: [String:AnyObject] = [:]
         if let firstName = firstName {
             parameters["firstName"] = firstName
@@ -155,7 +155,7 @@ class APIManager: NSObject {
         }
     }
 
-    func getUrlForFileWithId(fileId: Int, callback: NSURL?->Void) {
+    public func getUrlForFileWithId(fileId: Int, callback: NSURL?->Void) {
         getUrlForFileWithId(fileId, method: "GET", contentType: "", callback: callback)
     }
 
@@ -198,7 +198,7 @@ class APIManager: NSObject {
             }
     }
 
-    func downloadFileWithUrl(url: NSURL, callback: (NSData?, String?)->Void) {
+    public func downloadFileWithUrl(url: NSURL, callback: (NSData?, String?)->Void) {
         let destinationUrl = temporaryFileUrl()
         let destination: (NSURL, NSHTTPURLResponse)->NSURL = {
             temporaryUrl, response in
@@ -226,7 +226,7 @@ class APIManager: NSObject {
         }
     }
 
-    func uploadProfilePic(profilePic: UIImage, callback: Bool->Void) {
+    public func uploadProfilePic(profilePic: UIImage, callback: Bool->Void) {
         let localUrl = temporaryFileUrl()
 
         guard let data = UIImageJPEGRepresentation(profilePic, 0.8) else {

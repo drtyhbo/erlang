@@ -6,10 +6,11 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import ChatCommon
 import Foundation
 
-class FileHelper {
-    static func getFileWithId(id: Int, secretKey: NSData?, completion: File?->Void) {
+public class FileHelper {
+    public static func getFileWithId(id: Int, secretKey: NSData?, completion: File?->Void) {
         if let file = File.findWithId(id) {
             completion(file)
             return
@@ -41,7 +42,7 @@ class FileHelper {
         }
     }
 
-    static func saveFileToTemporaryLocation(file: File) -> NSURL {
+    public static func saveFileToTemporaryLocation(file: File) -> NSURL {
         if let localPath = file.localPath {
             if NSFileManager.defaultManager().fileExistsAtPath(localPath) {
                 return NSURL(fileURLWithPath: localPath)

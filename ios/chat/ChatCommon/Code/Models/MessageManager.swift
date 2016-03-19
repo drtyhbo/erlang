@@ -12,26 +12,26 @@ import Foundation
 import MagicalRecord
 import SwiftyJSON
 
-class MessageManager {
+public class MessageManager {
     // This is a bit annoying... I couldn't figure out how to cast between AnyObject and Message
     // since the latter is @objc wrapped. Therefore Message objects are wrapped in
     // NewMessageNotificationWrapper objects when passed through the userInfo attribute of
     // notifications.
-    class NewMessagesNotificationWrapper {
-        let messages: [Message]
+    public class NewMessagesNotificationWrapper {
+        public let messages: [Message]
 
         init(messages: [Message]) {
             self.messages = messages
         }
     }
 
-    static let sharedManager = MessageManager()
+    public static let sharedManager = MessageManager()
 
-    static let NewMessagesNotification = "NewMessages"
-    static let NewChatNotification = "NewChat"
-    static let UnreadMessageCountUpdated = "UnreadMessageCountUpdated"
+    public static let NewMessagesNotification = "NewMessages"
+    public static let NewChatNotification = "NewChat"
+    public static let UnreadMessageCountUpdated = "UnreadMessageCountUpdated"
     static let UnreadMessageCountReset = "UnreadMessageCountReset"
-    static let TotalUnreadMessageCountUpdated = "TotalUnreadMessageCountUpdated"
+    public static let TotalUnreadMessageCountUpdated = "TotalUnreadMessageCountUpdated"
 
     var unreadMessageCount: Int {
         var unreadMessageCount = 0
@@ -48,11 +48,11 @@ class MessageManager {
     private var receivedMessages: [ReceivedMessage] = []
     private var processingReceivedMessages = false
 
-    func setup() {
+    public func setup() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessages:", name: ChatClient.ChatClientReceivedMessagesNotification, object: nil)
     }
 
-    func sendMessageWithText(text: String, toChat chat: Chat, callback: Message?->Void) {
+    public func sendMessageWithText(text: String, toChat chat: Chat, callback: Message?->Void) {
         let message = Message.createWithText(text, chat: chat)
         messageSender.sendMessage(message)
         CoreData.save()
@@ -60,7 +60,7 @@ class MessageManager {
         callback(message)
     }
 
-    func sendMessageWithImage(image: UIImage, toChat chat: Chat, callback: Message?->Void) {
+    public func sendMessageWithImage(image: UIImage, toChat chat: Chat, callback: Message?->Void) {
         APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
             fileIds in
             guard let fileIds = fileIds where fileIds.count == 2 else {
@@ -81,7 +81,7 @@ class MessageManager {
         }
     }
 
-    func sendMessageWithMediaUrl(mediaUrl: NSURL, toChat chat: Chat, callback: Message?->Void) {
+    public func sendMessageWithMediaUrl(mediaUrl: NSURL, toChat chat: Chat, callback: Message?->Void) {
         APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
             fileIds in
             guard let fileIds = fileIds where fileIds.count == 2 else {
@@ -111,15 +111,15 @@ class MessageManager {
         }
     }
 
-    func getMessagesForChat(chat: Chat, beforeDate: NSDate? = nil, fetchLimit: Int = 15) -> [Message] {
+    public func getMessagesForChat(chat: Chat, beforeDate: NSDate? = nil, fetchLimit: Int = 15) -> [Message] {
         return Message.findForChat(chat, beforeDate: beforeDate, fetchLimit: fetchLimit)
     }
 
-    func unreadMessageCountForChat(chat: Chat) -> Int {
+    public func unreadMessageCountForChat(chat: Chat) -> Int {
         return unreadMessageCountForChat[chat] ?? 0
     }
 
-    func markMessagesForChatAsRead(chat: Chat) {
+    public func markMessagesForChatAsRead(chat: Chat) {
         unreadMessageCountForChat[chat] = 0
         sendUnreadMessagesCountUpdatedNotificationForChat(chat, withUnreadMessageCount: 0)
     }

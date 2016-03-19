@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-class User {
-    static var phoneNumber: String? {
+public class User {
+    public static var phoneNumber: String? {
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(phoneNumberKey)
         }
@@ -20,7 +20,7 @@ class User {
         }
     }
 
-    static var userId: Int {
+    public static var userId: Int {
         get {
             return NSUserDefaults.standardUserDefaults().integerForKey(userIdKey)
         }
@@ -30,7 +30,7 @@ class User {
         }
     }
 
-    static var sessionToken: String? {
+    public static var sessionToken: String? {
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(sessionTokenKey)
         }
@@ -40,7 +40,7 @@ class User {
         }
     }
 
-    static var firstName: String? {
+    public static var firstName: String? {
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(firstNameKey)
         }
@@ -50,7 +50,7 @@ class User {
         }
     }
 
-    static var lastName: String? {
+    public static var lastName: String? {
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(lastNameKey)
         }
@@ -60,7 +60,7 @@ class User {
         }
     }
 
-    static var profilePic: UIImage? {
+    public static var profilePic: UIImage? {
         get {
             return UIImage(contentsOfFile: profilePicUrl.path!)
         }

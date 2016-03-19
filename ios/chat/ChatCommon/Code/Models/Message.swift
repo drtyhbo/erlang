@@ -12,34 +12,34 @@ import MagicalRecord
 import SwiftyJSON
 
 @objc(Message)
-class Message: NSManagedObject {
-    enum Type {
+public class Message: NSManagedObject {
+    public enum Type {
         case Text
         case Image
         case Movie
     }
 
-    struct ThumbnailInfo {
-        let id: Int
-        let width: Int
-        let height: Int
+    public struct ThumbnailInfo {
+        public let id: Int
+        public let width: Int
+        public let height: Int
     }
 
-    struct MovieInfo {
-        let id: Int
+    public struct MovieInfo {
+        public let id: Int
     }
 
     @NSManaged private(set) var chat: Chat
-    @NSManaged private(set) var from: Friend?
-    @NSManaged private(set) var date: NSDate
+    @NSManaged public var from: Friend?
+    @NSManaged public var date: NSDate
     @NSManaged private(set) var message: String
-    @NSManaged private(set) var secretKey: NSData?
+    @NSManaged public var secretKey: NSData?
 
-    var localId: String {
+    public var localId: String {
         return objectID.URIRepresentation().lastPathComponent ?? ""
     }
 
-    var type: Type {
+    public var type: Type {
         if json["i"].null == nil {
             return .Image
         } else if json["v"].null == nil {
@@ -49,7 +49,7 @@ class Message: NSManagedObject {
         }
     }
 
-    var thumbnailInfo: ThumbnailInfo? {
+    public var thumbnailInfo: ThumbnailInfo? {
         let thumbnailJson: JSON
         switch(type) {
             case .Image:
@@ -67,7 +67,7 @@ class Message: NSManagedObject {
         return ThumbnailInfo(id: thumbnailId, width: thumbnailWidth, height: thumbnailHeight)
     }
 
-    var movieInfo: MovieInfo? {
+    public var movieInfo: MovieInfo? {
         let movieJson: JSON
         switch(type) {
             case .Movie:
@@ -83,7 +83,7 @@ class Message: NSManagedObject {
         return MovieInfo(id: movieId)
     }
 
-    var text: String? {
+    public var text: String? {
         return json["m"].string
     }
 
@@ -153,7 +153,7 @@ class Message: NSManagedObject {
         return createFromCurrentUserToChat(chat, messageJson: messageJson)
     }
 
-    override func awakeFromFetch() {
+    public override func awakeFromFetch() {
         json = JSON.parse(message)
     }
 

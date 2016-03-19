@@ -10,7 +10,7 @@ import CoreData
 import Foundation
 
 @objc(PendingMessage)
-class PendingMessage: NSManagedObject {
+public class PendingMessage: NSManagedObject {
     @NSManaged var date: NSDate
     @NSManaged var message: Message
 
@@ -20,7 +20,7 @@ class PendingMessage: NSManagedObject {
         pendingMessage.message = message
     }
 
-    static func isMessagePending(message: Message) -> Bool {
+    public static func isMessagePending(message: Message) -> Bool {
         return PendingMessage.MR_findFirstByAttribute("message", withValue: message) != nil
     }
 

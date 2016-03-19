@@ -10,10 +10,10 @@ import Foundation
 import Sodium
 import SwiftyJSON
 
-class MessageCrypter {
-    static let sharedCrypter = MessageCrypter();
+public class MessageCrypter {
+    public static let sharedCrypter = MessageCrypter();
 
-    typealias SharedSecret = NSData
+    public typealias SharedSecret = NSData
 
     private let SharedRootKeyBytes = Int(crypto_scalarmult_bytes())
 
@@ -27,7 +27,7 @@ class MessageCrypter {
         return Sodium()!.secretBox.seal(data, secretKey: sharedSecret)
     }
 
-    func decryptData(data: NSData, withSharedSecret sharedSecret: SharedSecret) -> NSData? {
+    public func decryptData(data: NSData, withSharedSecret sharedSecret: SharedSecret) -> NSData? {
         return Sodium()!.secretBox.open(data, secretKey: sharedSecret)
     }
 

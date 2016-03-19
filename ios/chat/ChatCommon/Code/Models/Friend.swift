@@ -10,20 +10,20 @@ import CoreData
 import Foundation
 
 @objc(Friend)
-class Friend: NSManagedObject {
+public class Friend: NSManagedObject {
     @NSManaged var id: Int
-    @NSManaged var firstName: String
+    @NSManaged public var firstName: String
     @NSManaged var lastName: String?
 
-    var fullName: String {
+    public var fullName: String {
         return lastName != nil ? "\(firstName) \(lastName!)" : firstName
     }
 
-    var profilePicUrl: NSURL {
+    public var profilePicUrl: NSURL {
         return Constants.profilePicBaseUrl.URLByAppendingPathComponent("\(id)")
     }
 
-    override var hashValue: Int {
+    public override var hashValue: Int {
         return id
     }
 

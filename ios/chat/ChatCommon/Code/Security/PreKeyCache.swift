@@ -9,24 +9,14 @@
 import Foundation
 import Sodium
 
-class PreKey {
-    let keyPair: KeyPair
-    let index: Int
-
-    init (keyPair: KeyPair, index: Int) {
-        self.keyPair = keyPair
-        self.index = index
-    }
-}
-
-class PreKeyCache {
-    static let sharedCache = PreKeyCache()
+public class PreKeyCache {
+    public static let sharedCache = PreKeyCache()
 
     private let initialPreKeyCount = 100
     private let indexOfLastResort = 0xFFFF
     private let hasGeneratedPreKeysKey = "GeneratedPreKeys"
 
-    func generateInitialCache() -> [PreKey] {
+    public func generateInitialCache() -> [PreKey] {
         var preKeys: [PreKey] = []
         for i in 0..<initialPreKeyCount {
             if let preKey = generateKeyPairForIndex(i) {

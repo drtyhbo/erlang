@@ -10,10 +10,10 @@ import CoreData
 import Foundation
 import MagicalRecord
 
-class FriendManager {
-    static let sharedManager = FriendManager()
+public class FriendManager {
+    public static let sharedManager = FriendManager()
 
-    var friends: [Friend] {
+    public var friends: [Friend] {
         return Friend.findAll()
     }
 
@@ -27,7 +27,7 @@ class FriendManager {
         return nil
     }
 
-    func loadFriendsFromContacts(contacts: [Contact], completion: Void->Void) {
+    public func loadFriendsFromContacts(contacts: [Contact], completion: Void->Void) {
         var contactsByPhoneNumber: [String: Contact] = [:]
         for contact in contacts {
             contactsByPhoneNumber[contact.phoneNumber.fullNumber] = contact

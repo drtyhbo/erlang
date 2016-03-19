@@ -11,20 +11,20 @@ import Foundation
 import MagicalRecord
 
 @objc(Chat)
-class Chat: NSManagedObject {
-    typealias ChatId = NSURL
+public class Chat: NSManagedObject {
+    public typealias ChatId = NSURL
 
     @NSManaged var participants: NSSet
 
-    override var hashValue: Int {
+    public override var hashValue: Int {
         return id.hashValue
     }
 
-    var id: ChatId {
+    public var id: ChatId {
         return objectID.URIRepresentation()
     }
 
-    var participantsArray: [Friend] {
+    public var participantsArray: [Friend] {
         return participants.allObjects as? [Friend] ?? []
     }
 
@@ -34,12 +34,12 @@ class Chat: NSManagedObject {
         return participantIds
     }
 
-    var name: String {
+    public var name: String {
         let sortedParticipants = participantsArray.sort({ $0.fullName < $1.fullName })
         return sortedParticipants.map({ $0.firstName }).joinWithSeparator(", ")
     }
 
-    static func createWithParticipants(participants: [Friend]) -> Chat {
+    public static func createWithParticipants(participants: [Friend]) -> Chat {
         if let chat = findWithFriends(participants) {
             return chat
         }
@@ -62,11 +62,11 @@ class Chat: NSManagedObject {
         return nil
     }
 
-    static func findAll() -> [Chat] {
+    public static func findAll() -> [Chat] {
         return Chat.MR_findAll() as! [Chat]
     }
 
-    static func findWithId(id: ChatId) -> Chat? {
+    public static func findWithId(id: ChatId) -> Chat? {
         let context = NSManagedObjectContext.MR_defaultContext()
         if let objectId = context.persistentStoreCoordinator?.managedObjectIDForURIRepresentation(id) {
             do {

@@ -1,8 +1,8 @@
 //
-//  ChatMessages.swift
+//  ReceivedJson.swift
 //  chat
 //
-//  Created by Andreas Binnewies on 2/2/16.
+//  Created by Andreas Binnewies on 3/18/16.
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
@@ -20,17 +20,5 @@ class ReceivedMessage {
         self.timestamp = timestamp
         self.secretKey = secretKey
         self.messageJson = messageJson
-    }
-}
-
-class SentMessage {
-    let toId: Int
-    let timestamp: Int
-    let message: JSON
-
-    init(toId: Int, timestamp: Int, message: JSON) {
-        self.toId = toId
-        self.timestamp = timestamp
-        self.message = message
     }
 }
