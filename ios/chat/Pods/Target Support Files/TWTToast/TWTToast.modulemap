@@ -1,6 +1,0 @@
-framework module TWTToast {
-  umbrella header "TWTToast-umbrella.h"
-
-  export *
-  module * { export * }
-}
