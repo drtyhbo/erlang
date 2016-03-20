@@ -10,6 +10,17 @@ import Foundation
 import UIKit
 
 class ThemedView: UIView {
+    enum ColorType {
+        case Light
+        case Dark
+    }
+
+    var colorType: ColorType = .Light {
+        didSet {
+            updateTheme(ColorTheme.currentTheme)
+        }
+    }
+
     private let themeListener = ThemeListener()
 
     override func awakeFromNib() {
@@ -23,6 +34,6 @@ class ThemedView: UIView {
     }
 
     private func updateTheme(theme: ColorTheme) {
-        backgroundColor = theme.lightBackgroundColor
+        backgroundColor = colorType == .Light ? theme.lightBackgroundColor : theme.buttonColor
     }
 }

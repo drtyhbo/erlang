@@ -1,1 +1,0 @@
-../../../UICollectionViewRightAlignedLayout/UICollectionViewRightAlignedLayout/UICollectionViewRightAlignedLayout.h

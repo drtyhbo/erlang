@@ -6,27 +6,9 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import ChatCommon
 import Contacts
 import Foundation
-
-class Contact {
-    let name: String
-    let phoneNumber: PhoneNumber
-
-    var firstName: String {
-        return name.componentsSeparatedByString(" ")[0]
-    }
-
-    var lastName: String? {
-        let names = name.componentsSeparatedByString(" ")
-        return names.count > 1 ? names.last : nil
-    }
-
-    init(name: String, phoneNumber: String) {
-        self.name = name
-        self.phoneNumber = PhoneNumber(phoneNumber: phoneNumber)
-    }
-}
 
 class ContactsHelper {
     func getAllContacts() -> [Contact] {

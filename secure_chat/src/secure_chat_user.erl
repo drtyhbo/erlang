@@ -25,7 +25,7 @@
 
 
 -define(RECEIVE_SOCK_MSG(Msg), {ssl, _Port, Msg}).
--define(SOCK_CLOSED(), {tcp_closed, _Port}).
+-define(SOCK_CLOSED(), {ssl_closed, _Port}).
 
 % Incoming JSON
 -define(IN_CONNECT_JSON(UserId, SessionToken), [{<<"s">>, SessionToken}, {<<"c">>, UserId}]).
@@ -72,10 +72,8 @@ handle_info(?RECEIVE_SOCK_MSG(Msg), FSMState, State) ->
 	NewState = handle_json(FSMState, FlatJson, State),
 	{next_state, FSMState, NewState};
 handle_info(?SOCK_CLOSED(), _FSMState, State) ->
-	io:format("closed~n"),
 	{stop, disconnect, State};
 handle_info(Msg, FSMState, State) ->
-	io:format("~p~n", [Msg]),
 	{next_state, FSMState, State}.
 
 

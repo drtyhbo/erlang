@@ -6,6 +6,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import ChatCommon
 import MagicalRecord
 import UIKit
 
@@ -16,13 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var fetchCompletionHandler: (Void->Void)?
     private var fetchTimer: NSTimer?
 
+    private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         NSUserDefaults.standardUserDefaults().setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
-        MagicalRecord.setupAutoMigratingCoreDataStack()
+        CoreData.setup()
 
         MessageManager.sharedManager.setup()
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveNewMessagesNotification:", name: MessageManager.NewMessagesNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSending:", name: MessageManager.FinishedSendingAllMessagesNotification, object: nil)
 
         let rootViewController: UIViewController
         if User.userId == 0 || User.firstName == nil {
@@ -68,6 +73,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        MessageManager.sharedManager.maybeSendMessages()
+    }
+
+    func applicationDidEnterBackground(application: UIApplication) {
+        if MessageManager.sharedManager.isSending {
+            backgroundTaskIdentifier = application.beginBackgroundTaskWithExpirationHandler(nil)
+        }
     }
 
     @objc private func fetchTimerDidFire() {
@@ -76,5 +88,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     @objc private func didReceiveNewMessagesNotification(notification: NSNotification) {
         fetchCompletionHandler?()
+    }
+
+    @objc private func didFinishSending(notification: NSNotification) {
+        guard let backgroundTaskIdentifier = backgroundTaskIdentifier else {
+            return
+        }
+
+        self.backgroundTaskIdentifier = nil
+        UIApplication.sharedApplication().endBackgroundTask(backgroundTaskIdentifier)
     }
 }

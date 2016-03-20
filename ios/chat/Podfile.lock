@@ -8,6 +8,7 @@ PODS:
   - Mantle (1.4.1):
     - Mantle/extobjc (= 1.4.1)
   - Mantle/extobjc (1.4.1)
+  - PDKeychainBindingsController (0.0.1)
   - SDWebImage (3.7.4):
     - SDWebImage/Core (= 3.7.4)
   - SDWebImage/Core (3.7.4)
@@ -83,6 +84,7 @@ DEPENDENCIES:
   - APLSlideMenu
   - CocoaAsyncSocket
   - MagicalRecord
+  - PDKeychainBindingsController
   - SDWebImage
   - Sodium
   - SwiftyJSON
@@ -95,6 +97,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   Mantle: 3219c0181d918508689af61c77891b12dbb28215
+  PDKeychainBindingsController: fa8cb3cf99f2ea9240d61066ed0549f34e2cec3c
   SDWebImage: 247edd7dd80dd6124197b0d6a17846fe9d1df968
   Sodium: fa459e59912d3e6d44f3d9030fafc12c4079148d
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a

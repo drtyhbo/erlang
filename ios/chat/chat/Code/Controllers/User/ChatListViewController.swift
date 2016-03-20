@@ -7,6 +7,7 @@
 //  Copyright © 2016 drtyhbo. All rights reserved.
 //
 
+import ChatCommon
 import Contacts
 import Foundation
 import UIKit

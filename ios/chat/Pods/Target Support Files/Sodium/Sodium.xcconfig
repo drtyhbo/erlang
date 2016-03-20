@@ -1,2 +1,0 @@
-SODIUM_LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/Sodium/Sodium"
-SODIUM_OTHER_LDFLAGS = -l"sodium-ios"

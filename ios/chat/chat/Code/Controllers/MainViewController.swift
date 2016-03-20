@@ -7,6 +7,7 @@
 //
 
 import APLSlideMenu
+import ChatCommon
 import Foundation
 import UIKit
 
