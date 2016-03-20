@@ -49,7 +49,15 @@
                                 <rect key="frame" x="0.0" y="0.0" width="128" height="95"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.93725490196078431" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Play" translatesAutoresizingMaskIntoConstraints="NO" id="w7w-kd-L2x">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FgJ-st-Plg" customClass="ProgressView" customModule="chat" customModuleProvider="target">
+                                <rect key="frame" x="29" y="13" width="70" height="70"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="0hC-wi-vK4"/>
+                                    <constraint firstAttribute="height" constant="70" id="6ru-C9-CtK"/>
+                                </constraints>
+                            </view>
+                            <imageView hidden="YES" userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Play" translatesAutoresizingMaskIntoConstraints="NO" id="w7w-kd-L2x">
                                 <rect key="frame" x="34" y="18" width="60" height="60"/>
                             </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zqU-Gl-qnd" customClass="MoviePlayer" customModule="chat" customModuleProvider="target">
@@ -68,6 +76,8 @@
                             <constraint firstAttribute="trailing" secondItem="RFL-lt-6l6" secondAttribute="trailing" id="Fd7-sw-aBN"/>
                             <constraint firstAttribute="bottom" secondItem="zqU-Gl-qnd" secondAttribute="bottom" id="Hcl-OH-tQj"/>
                             <constraint firstAttribute="bottom" secondItem="RFL-lt-6l6" secondAttribute="bottom" id="HeZ-Sx-2M2"/>
+                            <constraint firstItem="FgJ-st-Plg" firstAttribute="centerY" secondItem="YeY-aE-iCO" secondAttribute="centerY" id="QI5-Y8-EGf"/>
+                            <constraint firstItem="FgJ-st-Plg" firstAttribute="centerX" secondItem="YeY-aE-iCO" secondAttribute="centerX" id="QSa-K5-FnB"/>
                             <constraint firstAttribute="trailing" secondItem="zqU-Gl-qnd" secondAttribute="trailing" id="Zo6-Uk-ew2"/>
                             <constraint firstAttribute="height" constant="95" id="agU-tW-1th"/>
                             <constraint firstItem="w7w-kd-L2x" firstAttribute="centerX" secondItem="YeY-aE-iCO" secondAttribute="centerX" id="fd2-0O-f43"/>
@@ -76,8 +86,8 @@
                             <constraint firstItem="Gfm-Qz-Jbr" firstAttribute="centerX" secondItem="YeY-aE-iCO" secondAttribute="centerX" id="xWQ-c9-sEH"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8e7-Bc-5eS">
-                        <rect key="frame" x="64" y="29" width="0.0" height="4"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8e7-Bc-5eS">
+                        <rect key="frame" x="64" y="31" width="0.0" height="4"/>
                         <color key="backgroundColor" red="0.66274509800000003" green="0.28235294119999998" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" id="EAQ-BU-vgw"/>
@@ -118,9 +128,8 @@
                 <outlet property="loadingIndicator" destination="Gfm-Qz-Jbr" id="AGi-Vo-jCT"/>
                 <outlet property="messageImageView" destination="RFL-lt-6l6" id="spY-CZ-Ykg"/>
                 <outlet property="moviePlayer" destination="zqU-Gl-qnd" id="4pV-cK-RoK"/>
-                <outlet property="percentUploadedView" destination="8e7-Bc-5eS" id="Sgx-Ku-H5A"/>
-                <outlet property="percentUploadedWidthConstraint" destination="EAQ-BU-vgw" id="beq-pK-Opb"/>
                 <outlet property="playIcon" destination="w7w-kd-L2x" id="aWC-0t-pAl"/>
+                <outlet property="progressView" destination="FgJ-st-Plg" id="xJv-7D-JXV"/>
                 <outlet property="topConstraint" destination="aU6-gG-R8t" id="d3c-wL-yo4"/>
                 <outlet property="userImage" destination="u9C-sS-3er" id="L7w-cR-5q3"/>
                 <outlet property="userImageHeightConstraint" destination="rgq-D4-Wn1" id="li6-BQ-Bbk"/>

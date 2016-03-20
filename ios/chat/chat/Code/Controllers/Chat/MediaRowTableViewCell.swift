@@ -17,8 +17,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
     @IBOutlet weak var moviePlayer: MoviePlayer!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
 
-    @IBOutlet weak var percentUploadedView: UIView!
-    @IBOutlet weak var percentUploadedWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var progressView: ProgressView!
 
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     @IBOutlet weak var widthConstraint: NSLayoutConstraint!
@@ -37,8 +36,9 @@ class MediaRowTableViewCell: MessageTableViewCell {
             updateThumbnail()
 
             messageImageView.alpha = isPending ? 0.5 : 1
-            percentUploadedView.hidden = !isPending
-            percentUploadedWidthConstraint.constant = 0
+
+            progressView.hidden = !isPending
+            progressView.progress = 0
         }
     }
 
@@ -96,7 +96,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
             return
         }
 
-        playIcon.hidden = message.type != .Movie
+        playIcon.hidden = message.type != .Movie || message.isPending
 
         let screenSize = UIScreen.mainScreen().bounds.size
         var imageSize = CGSize(width: thumbnailInfo.width, height: thumbnailInfo.height)
@@ -140,7 +140,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
             return
         }
 
-        percentUploadedWidthConstraint.constant = CGFloat(percentComplete) * messageImageView.bounds.size.width
+        progressView.progress = percentComplete
     }
 
     @objc private func didFinishSendingNotification(notification: NSNotification) {
@@ -149,10 +149,15 @@ class MediaRowTableViewCell: MessageTableViewCell {
         }
 
         messageImageView.alpha = 1
-        percentUploadedView.hidden = true
+        progressView.hidden = true
+        updateThumbnail()
     }
 
     @objc private func didTapImage() {
+        if message.isPending {
+            return
+        }
+
         if let movieInfo = message.movieInfo {
             playIcon.hidden = true
 

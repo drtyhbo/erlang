@@ -44,6 +44,8 @@
 		904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */; };
 		904963451C722CE30078C9DF /* MediaRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 904963441C722CE30078C9DF /* MediaRowTableViewCell.xib */; };
 		9049634A1C7239790078C9DF /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963491C7239790078C9DF /* UIImage.swift */; };
+		906D06121C9F48CA0014EFB5 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06111C9F48CA0014EFB5 /* ProgressView.swift */; };
+		906D06141C9F49670014EFB5 /* ProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 906D06131C9F49670014EFB5 /* ProgressView.xib */; };
 		9091F8B81C9CDD5200E878C2 /* PDKeychainBindingsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */; };
 		9091F8C11C9CDE5900E878C2 /* ChatCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 9091F8C01C9CDE5900E878C2 /* ChatCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9091F8DA1C9CDE9500E878C2 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F8CD1C9CDE9500E878C2 /* Chat.swift */; };
@@ -217,6 +219,8 @@
 		904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaRowTableViewCell.swift; sourceTree = "<group>"; };
 		904963441C722CE30078C9DF /* MediaRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaRowTableViewCell.xib; sourceTree = "<group>"; };
 		904963491C7239790078C9DF /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImage.swift; path = Extensions/UIImage.swift; sourceTree = "<group>"; };
+		906D06111C9F48CA0014EFB5 /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressView.swift; path = chat/Code/Views/ProgressView.swift; sourceTree = SOURCE_ROOT; };
+		906D06131C9F49670014EFB5 /* ProgressView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProgressView.xib; sourceTree = "<group>"; };
 		9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDKeychainBindingsController.framework; path = "Pods/../build/Debug-iphoneos/PDKeychainBindingsController.framework"; sourceTree = "<group>"; };
 		9091F8BE1C9CDE5900E878C2 /* ChatCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9091F8C01C9CDE5900E878C2 /* ChatCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatCommon.h; sourceTree = "<group>"; };
@@ -399,10 +403,12 @@
 		9031FFD71C68EF7B00BCC456 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				90407A8C1C98F92A00666587 /* Themes */,
 				90407A581C95DD1900666587 /* AlwaysTemplateButton.swift */,
+				906D06111C9F48CA0014EFB5 /* ProgressView.swift */,
+				906D06131C9F49670014EFB5 /* ProgressView.xib */,
 				9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */,
 				9031FFDA1C68EFA200BCC456 /* ReconnectView.xib */,
+				90407A8C1C98F92A00666587 /* Themes */,
 				90C0D3191C8C92F7006BF1EA /* TintedImage.swift */,
 			);
 			path = Views;
@@ -887,6 +893,7 @@
 				90C0F4A11C78CE10007F58BD /* DayTableViewCell.xib in Resources */,
 				90407A741C98ED4800666587 /* UserInfoTableViewCell.xib in Resources */,
 				9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */,
+				906D06141C9F49670014EFB5 /* ProgressView.xib in Resources */,
 				90AFD5C71C608EDC00236D6B /* ChatListViewController.xib in Resources */,
 				90C0F4B11C7A4118007F58BD /* ConversationStartTableViewCell.xib in Resources */,
 				90EBF8C11C474CA700A7AD51 /* ChatViewController.xib in Resources */,
@@ -1040,6 +1047,7 @@
 				90407A551C95D3A000666587 /* ColorTheme.swift in Sources */,
 				90407A591C95DD1900666587 /* AlwaysTemplateButton.swift in Sources */,
 				9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */,
+				906D06121C9F48CA0014EFB5 /* ProgressView.swift in Sources */,
 				9049634A1C7239790078C9DF /* UIImage.swift in Sources */,
 				90407A761C98EE1400666587 /* UserInfoTableViewCell.swift in Sources */,
 				90407A991C98F92A00666587 /* ThemedBarButtonItem.swift in Sources */,
