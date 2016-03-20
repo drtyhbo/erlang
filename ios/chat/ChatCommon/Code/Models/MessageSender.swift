@@ -9,12 +9,17 @@
 import Foundation
 import SwiftyJSON
 
-public class MessageSender {
-    public static let SendingProgressNotification = "MessageSenderSendingProgressNotification"
-    public static let SendingCompleteNotification = "MessageSenderSendingCompleteNotification"
+protocol MessageSenderDelegate: class {
+    func messageSender(messageSender: MessageSender, message: Message, didUpdateProgress progress: Float)
+    func messageSender(messageSender: MessageSender, didFinishSendingMessage message: Message)
+    func messageSenderDidFinishSendingAllMessages(messageSender: MessageSender)
+}
 
+class MessageSender {
+    weak var delegate: MessageSenderDelegate?
+
+    private(set) var isSending = false
     private var messageId = 0
-    private var isSending = false
 
     init() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "messageDidSend:", name: ChatClient.ChatClientMessageDidSend, object: nil)
@@ -36,6 +41,7 @@ public class MessageSender {
 
     private func sendNextPendingMessage() {
         guard let pendingMessage = PendingMessage.nextPendingMessage() else {
+            delegate?.messageSenderDidFinishSendingAllMessages(self)
             isSending = false
             return
         }
@@ -62,7 +68,7 @@ public class MessageSender {
                         bytesSent, totalBytes in
                         dispatch_async(dispatch_get_main_queue()) {
                             let percentComplete = Float(pendingMessage.bytesSent + bytesSent) / Float(pendingMessage.totalBytes)
-                            NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingProgressNotification, object: pendingMessage.message, userInfo: ["percentComplete": percentComplete])
+                            self.delegate?.messageSender(self, message: pendingMessage.message, didUpdateProgress: percentComplete)
                         }
                     }) {
                     success in
@@ -82,7 +88,7 @@ public class MessageSender {
 
     @objc private func messageDidSend(notification: NSNotification) {
         if let messageId = notification.userInfo?["messageId"] as? Int, let pendingMessage = PendingMessage.findWithMessageId(messageId) {
-            NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingCompleteNotification, object: pendingMessage.message, userInfo: nil)
+            delegate?.messageSender(self, didFinishSendingMessage: pendingMessage.message)
 
             pendingMessage.MR_deleteEntity()
             CoreData.save()

@@ -9,8 +9,8 @@
 import ChatCommon
 import Foundation
 
-public class FileHelper {
-    public static func getFileWithId(id: Int, secretKey: NSData?, completion: File?->Void) {
+class FileHelper {
+    static func getFileWithId(id: Int, secretKey: NSData?, completion: File?->Void) {
         if let file = File.findWithId(id) {
             completion(file)
             return
@@ -42,7 +42,7 @@ public class FileHelper {
         }
     }
 
-    public static func saveFileToTemporaryLocation(file: File) -> NSURL {
+    static func saveFileToTemporaryLocation(file: File) -> NSURL {
         if let localPath = file.localPath {
             if NSFileManager.defaultManager().fileExistsAtPath(localPath) {
                 return NSURL(fileURLWithPath: localPath)

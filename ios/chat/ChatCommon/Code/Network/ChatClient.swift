@@ -194,7 +194,6 @@ extension ChatClient: ChatConnectionDelegate {
     }
 
     func chatConnection(chatConnection: ChatConnection, didReceiveJSON json: JSON) {
-        print (json.rawString())
         handleJson(json)
     }
 }

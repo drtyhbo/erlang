@@ -28,10 +28,10 @@ class MediaRowTableViewCell: MessageTableViewCell {
         didSet {
             NSNotificationCenter.defaultCenter().removeObserver(self)
 
-            let isPending = PendingMessage.isMessagePending(message)
+            let isPending = message.isPending
             if isPending {
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didUpdateProgressNotification:", name: MessageSender.SendingProgressNotification, object: nil)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSendingNotification:", name: MessageSender.SendingCompleteNotification, object: nil)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didUpdateProgressNotification:", name: MessageManager.SendingMessageProgressNotification, object: nil)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSendingNotification:", name: MessageManager.FinishedSendingMessageNotification, object: nil)
             }
 
             updateThumbnail()

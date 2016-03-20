@@ -30,8 +30,11 @@ public class MessageManager {
     public static let NewMessagesNotification = "NewMessages"
     public static let NewChatNotification = "NewChat"
     public static let UnreadMessageCountUpdated = "UnreadMessageCountUpdated"
-    static let UnreadMessageCountReset = "UnreadMessageCountReset"
+    public static let UnreadMessageCountReset = "UnreadMessageCountReset"
     public static let TotalUnreadMessageCountUpdated = "TotalUnreadMessageCountUpdated"
+    public static let SendingMessageProgressNotification = "SendingMessageProgress"
+    public static let FinishedSendingMessageNotification = "FinishedSendingMessage"
+    public static let FinishedSendingAllMessagesNotification = "FinishedSendingAllMessages"
 
     var unreadMessageCount: Int {
         var unreadMessageCount = 0
@@ -41,9 +44,17 @@ public class MessageManager {
         return unreadMessageCount
     }
 
+    public var isSending: Bool {
+        return messageSender.isSending
+    }
+
     private var unreadMessageCountForChat: [Chat:Int] = [:]
 
-    private var messageSender = MessageSender()
+    private lazy var messageSender: MessageSender = {
+        let messageSender = MessageSender()
+        messageSender.delegate = self
+        return messageSender
+    }()
 
     private var receivedMessages: [ReceivedMessage] = []
 
@@ -244,5 +255,19 @@ public class MessageManager {
 
         self.receivedMessages += receivedMessages
         processNextReceivedMessage()
+    }
+}
+
+extension MessageManager: MessageSenderDelegate {
+    func messageSender(messageSender: MessageSender, message: Message, didUpdateProgress progress: Float) {
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.SendingMessageProgressNotification, object: message, userInfo: ["percentComplete": progress])
+    }
+
+    func messageSender(messageSender: MessageSender, didFinishSendingMessage message: Message) {
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.FinishedSendingMessageNotification, object: message, userInfo: nil)
+    }
+
+    func messageSenderDidFinishSendingAllMessages(messageSender: MessageSender) {
+        NSNotificationCenter.defaultCenter().postNotificationName(MessageManager.FinishedSendingAllMessagesNotification, object: nil)
     }
 }

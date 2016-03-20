@@ -39,6 +39,10 @@ public class Message: NSManagedObject {
         return objectID.URIRepresentation().lastPathComponent ?? ""
     }
 
+    public var isPending: Bool {
+        return PendingMessage.isMessagePending(self)
+    }
+
     public var type: Type {
         if json["i"].null == nil {
             return .Image

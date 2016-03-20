@@ -10,7 +10,7 @@ import CoreData
 import Foundation
 
 @objc(PendingMessage)
-public class PendingMessage: NSManagedObject {
+class PendingMessage: NSManagedObject {
     @NSManaged private(set) var bytesSent: Int
     @NSManaged private(set) var date: NSDate
     @NSManaged private(set) var messageId: Int
@@ -30,7 +30,7 @@ public class PendingMessage: NSManagedObject {
         pendingMessage.files = NSSet(array: files)
     }
 
-    public static func isMessagePending(message: Message) -> Bool {
+    static func isMessagePending(message: Message) -> Bool {
         return PendingMessage.MR_findFirstByAttribute("message", withValue: message) != nil
     }
 
