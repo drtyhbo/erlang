@@ -46,16 +46,20 @@ public class MessageManager {
     private var messageSender = MessageSender()
 
     private var receivedMessages: [ReceivedMessage] = []
-    private var processingReceivedMessages = false
 
     public func setup() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessages:", name: ChatClient.ChatClientReceivedMessagesNotification, object: nil)
     }
 
+    public func maybeSendMessages() {
+        messageSender.maybeSendNextPendingMessage()
+    }
+
     public func sendMessageWithText(text: String, toChat chat: Chat, callback: Message?->Void) {
         let message = Message.createWithText(text, chat: chat)
-        messageSender.sendMessage(message)
         CoreData.save()
+
+        messageSender.sendMessage(message)
 
         callback(message)
     }
@@ -69,7 +73,7 @@ public class MessageManager {
             }
 
             let imageFile = File.createWithId(fileIds[0], data: UIImageJPEGRepresentation(image, 0.5)!, contentType: "image/jpeg")
-            let thumbnailFile = File.createWithId(fileIds[1], data: UIImageJPEGRepresentation(image.resizeToPercentage(min(1.0, image.size.width / 640)), 0.5)!, contentType: "image/jpeg")
+            let thumbnailFile = File.createWithId(fileIds[1], data: UIImageJPEGRepresentation(image.resizeToPercentage(min(1024, image.size.width) / image.size.width), 0.5)!, contentType: "image/jpeg")
 
             let message = Message.createWithImageFile(imageFile, thumbnailFile: thumbnailFile, chat: chat)
             CoreData.save()
@@ -162,23 +166,14 @@ public class MessageManager {
         }
     }
 
-    private func maybeProcessReceivedMessages() {
-        if processingReceivedMessages {
-            return
-        }
-        processingReceivedMessages = true
-
-        processNextReceivedMessage()
-    }
-
     private func processNextReceivedMessage() {
         if receivedMessages.isEmpty {
-            processingReceivedMessages = false
             return
         }
 
         let nextMessage = receivedMessages.removeAtIndex(0)
         guard let participantIdsJson = nextMessage.messageJson["p"].array else {
+            processNextReceivedMessage()
             return
         }
 
@@ -248,6 +243,6 @@ public class MessageManager {
         }
 
         self.receivedMessages += receivedMessages
-        maybeProcessReceivedMessages()
+        processNextReceivedMessage()
     }
 }

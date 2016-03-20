@@ -59,7 +59,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
     }
 
     private static func paddingForHeaderType(headerType: HeaderType) -> CGFloat {
-        return headerType == .NoPadding ? 0 : 8
+        return headerType == .NoPadding ? 1 : 8
     }
 
     private static func dimensionsForThumbnailWithInfo(thumbnailInfo: Message.ThumbnailInfo) -> (width: CGFloat, height: CGFloat) {

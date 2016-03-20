@@ -64,10 +64,19 @@ public class MessageCrypter {
     // once at a time.
     private func handleEncryption(unencryptedData: NSData, conversation: Conversation, callback: [String:AnyObject]?->Void) {
         var keyPair: KeyPair
+        print ("1")
         if !conversation.isRatcheting {
+            print ("2")
             keyPair = KeyPair.keyPair()!
         } else {
-            keyPair = KeyPair.fromKeychainWithKey(conversation.friend.id)!
+            print ("3")
+            guard let keychainKeyPair = KeyPair.fromKeychainWithKey(conversation.friend.id) else {
+                print ("4")
+                callback(nil)
+                return
+            }
+            print ("5")
+            keyPair = keychainKeyPair
         }
         keyPair.saveToKeychainWithKey(conversation.friend.id)
 

@@ -13,119 +13,81 @@ public class MessageSender {
     public static let SendingProgressNotification = "MessageSenderSendingProgressNotification"
     public static let SendingCompleteNotification = "MessageSenderSendingCompleteNotification"
 
-    private class OutgoingMessage {
-        let message: Message
-        let messageId: Int
-        private(set) var files: [File]
-        private(set) var bytesSent: Int
-        private(set) var totalBytes: Int
-
-        private let secretKey: NSData
-
-        init(message: Message, messageId: Int, files: [File]) {
-            self.message = message
-            self.messageId = messageId
-            self.files = files
-            bytesSent = 0
-            totalBytes = files.reduce(0, combine: {$0 + $1.data.length})
-            secretKey = MessageCrypter.sharedCrypter.sharedSecret()
-        }
-
-        func finishFileAtIndex(fileIndex: Int) {
-            bytesSent += files[fileIndex].data.length
-            files.removeAtIndex(fileIndex)
-        }
-    }
-
     private var messageId = 0
     private var isSending = false
-    private var outgoingMessages: [OutgoingMessage] = []
 
     init() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "messageDidSend:", name: ChatClient.ChatClientMessageDidSend, object: nil)
     }
 
     func sendMessage(message: Message, files: [File] = []) {
-        PendingMessage.createWithMessage(message)
-        outgoingMessages.append(OutgoingMessage(message: message, messageId: messageId++, files: files))
-        maybeSendNextOutgoingMessage()
+        PendingMessage.createWithMessage(message, messageId: messageId++, files: files, secretKey: MessageCrypter.sharedCrypter.sharedSecret())
+        CoreData.save()
+        maybeSendNextPendingMessage()
     }
 
-    private func maybeSendNextOutgoingMessage() {
+    func maybeSendNextPendingMessage() {
         if isSending {
             return
         }
 
-        sendNextOutgoingMessage()
+        sendNextPendingMessage()
     }
 
-    private func sendNextOutgoingMessage() {
-        if outgoingMessages.count == 0 {
+    private func sendNextPendingMessage() {
+        guard let pendingMessage = PendingMessage.nextPendingMessage() else {
             isSending = false
             return
         }
 
         isSending = true
 
-        let outgoingMessage = outgoingMessages.first!
-        if outgoingMessage.files.count > 0 {
-            uploadFile(outgoingMessage.files.first!, withSecretKey: outgoingMessage.secretKey)
+        if let file = pendingMessage.files.anyObject() as? File {
+            uploadFile(file, fromPendingMessage: pendingMessage)
         } else {
-            sendOutgoingMessage(outgoingMessage)
+            sendPendingMessage(pendingMessage)
         }
     }
 
-    private func uploadFile(file: File, withSecretKey secretKey: MessageCrypter.SharedSecret) {
+    private func uploadFile(file: File, fromPendingMessage pendingMessage: PendingMessage) {
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
-            if let uploadUrl = uploadUrl, encryptedFileData = MessageCrypter.sharedCrypter.encryptData(file.data, withSharedSecret: secretKey) {
+            if let uploadUrl = uploadUrl, encryptedFileData = MessageCrypter.sharedCrypter.encryptData(file.data, withSharedSecret: pendingMessage.secretKey) {
                 APIManager.sharedManager.uploadData(
                     encryptedFileData,
                     toS3Url: uploadUrl,
                     contentType: file.contentType,
                     progressCallback: {
                         bytesSent, totalBytes in
-                        guard let outgoingMessage = self.outgoingMessages.first else {
-                            return
-                        }
-
                         dispatch_async(dispatch_get_main_queue()) {
-                            let percentComplete = Float(outgoingMessage.bytesSent + bytesSent) / Float(outgoingMessage.totalBytes)
-                            NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingProgressNotification, object: outgoingMessage.message, userInfo: ["percentComplete": percentComplete])
+                            let percentComplete = Float(pendingMessage.bytesSent + bytesSent) / Float(pendingMessage.totalBytes)
+                            NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingProgressNotification, object: pendingMessage.message, userInfo: ["percentComplete": percentComplete])
                         }
                     }) {
                     success in
                     if success {
-                        if let outgoingMessage = self.outgoingMessages.first {
-                            outgoingMessage.finishFileAtIndex(0)
-                        }
-                        self.sendNextOutgoingMessage()
+                        pendingMessage.finishFile(file)
+                        self.sendNextPendingMessage()
                     }
                 }
             }
         }
     }
 
-    private func sendOutgoingMessage(outgoingMessage: OutgoingMessage) {
-        let message = outgoingMessage.message
-        ChatClient.sharedClient.sendMessageWithData(try! message.json.rawData(), toChat: message.chat, messageId: outgoingMessage.messageId, secretKey: outgoingMessage.secretKey)
+    private func sendPendingMessage(pendingMessage: PendingMessage) {
+        let message = pendingMessage.message
+        ChatClient.sharedClient.sendMessageWithData(message.message.utf8Data, toChat: message.chat, messageId: pendingMessage.messageId, secretKey: pendingMessage.secretKey)
     }
 
     @objc private func messageDidSend(notification: NSNotification) {
-        if let messageId = notification.userInfo?["messageId"] as? Int {
-            for i in 0..<outgoingMessages.count {
-                if outgoingMessages[i].messageId == messageId {
-                    PendingMessage.deletePendingMessage(outgoingMessages[i].message)
-                    CoreData.save()
+        if let messageId = notification.userInfo?["messageId"] as? Int, let pendingMessage = PendingMessage.findWithMessageId(messageId) {
+            NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingCompleteNotification, object: pendingMessage.message, userInfo: nil)
 
-                    NSNotificationCenter.defaultCenter().postNotificationName(MessageSender.SendingCompleteNotification, object: outgoingMessages[i].message, userInfo: nil)
+            pendingMessage.MR_deleteEntity()
+            CoreData.save()
 
-                    outgoingMessages.removeAtIndex(i)
-                    sendNextOutgoingMessage()
-                    break
-                }
-            }
+            sendNextPendingMessage()
         }
     }
 }

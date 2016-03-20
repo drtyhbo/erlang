@@ -11,21 +11,43 @@ import Foundation
 
 @objc(PendingMessage)
 public class PendingMessage: NSManagedObject {
-    @NSManaged var date: NSDate
-    @NSManaged var message: Message
+    @NSManaged private(set) var bytesSent: Int
+    @NSManaged private(set) var date: NSDate
+    @NSManaged private(set) var messageId: Int
+    @NSManaged private(set) var secretKey: NSData
+    @NSManaged private(set) var totalBytes: Int
 
-    static func createWithMessage(message: Message) {
+    @NSManaged private(set) var message: Message
+    @NSManaged private(set) var files: NSSet
+
+    static func createWithMessage(message: Message, messageId: Int, files: [File], secretKey: NSData) {
         let pendingMessage = PendingMessage.MR_createEntity()!
-        pendingMessage.date = NSDate()
+        pendingMessage.date = message.date
         pendingMessage.message = message
+        pendingMessage.messageId = messageId
+        pendingMessage.secretKey = secretKey
+        pendingMessage.totalBytes = files.reduce(0, combine: {$0 + $1.data.length})
+        pendingMessage.files = NSSet(array: files)
     }
 
     public static func isMessagePending(message: Message) -> Bool {
         return PendingMessage.MR_findFirstByAttribute("message", withValue: message) != nil
     }
 
-    static func deletePendingMessage(message: Message) {
-        let predicate = NSPredicate(format: "message == %@", message)
-        PendingMessage.MR_deleteAllMatchingPredicate(predicate)
+    static func findWithMessageId(messageId: Int) -> PendingMessage? {
+        return PendingMessage.MR_findFirstByAttribute("messageId", withValue: messageId)
+    }
+
+    static func nextPendingMessage() -> PendingMessage? {
+        return PendingMessage.MR_findAllSortedBy("date", ascending: true)?.first as? PendingMessage
+    }
+
+    func finishFile(file: File) {
+        bytesSent += file.data.length
+
+        let mutableFiles = mutableSetValueForKey("files")
+        mutableFiles.removeObject(file)
+
+        CoreData.save()
     }
 }

@@ -88,6 +88,7 @@
 		9091F93F1C9D24E800E878C2 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9091F93C1C9D24E800E878C2 /* chat.xcdatamodeld */; };
 		9091F9431C9D262A00E878C2 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9401C9D262A00E878C2 /* chat.xcdatamodeld */; };
 		9091F9451C9D2D2600E878C2 /* NSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */; };
+		9091F9491C9DAFF000E878C2 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9461C9DAFF000E878C2 /* chat.xcdatamodeld */; };
 		90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */; };
 		90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */; };
 		90AFD5B31C5D204100236D6B /* PhoneNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */; };
@@ -268,6 +269,8 @@
 		9091F9411C9D262A00E878C2 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
 		9091F9421C9D262A00E878C2 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
 		9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
+		9091F9471C9DAFF000E878C2 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
+		9091F9481C9DAFF000E878C2 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
 		90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
 		90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhoneNumberViewController.xib; sourceTree = "<group>"; };
@@ -613,6 +616,7 @@
 		90EBF8831C47459000A7AD51 /* chat */ = {
 			isa = PBXGroup;
 			children = (
+				9091F9461C9DAFF000E878C2 /* chat.xcdatamodeld */,
 				9091F9221C9D209300E878C2 /* chat.entitlements */,
 				90EBF88B1C47459000A7AD51 /* Assets.xcassets */,
 				90EBF89C1C47497500A7AD51 /* Code */,
@@ -1024,6 +1028,7 @@
 				90EBF8BE1C474CA700A7AD51 /* ChatRowTableViewCell.swift in Sources */,
 				90407A971C98F92A00666587 /* ThemeCollectionViewCell.swift in Sources */,
 				90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */,
+				9091F9491C9DAFF000E878C2 /* chat.xcdatamodeld in Sources */,
 				90C0D3181C8C8897006BF1EA /* CheckMark.swift in Sources */,
 				90C0F4AD1C7A2AC3007F58BD /* UIColor.swift in Sources */,
 				90AFD5CB1C6090AE00236D6B /* FriendTableViewCell.swift in Sources */,
@@ -1381,6 +1386,7 @@
 				9091F8C91C9CDE5900E878C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9091F9321C9D20D400E878C2 /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
 			isa = XCConfigurationList;
@@ -1389,6 +1395,7 @@
 				9091F9341C9D20D400E878C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		90EBF87C1C47458F00A7AD51 /* Build configuration list for PBXProject "chat" */ = {
 			isa = XCConfigurationList;
@@ -1429,6 +1436,18 @@
 				9091F9421C9D262A00E878C2 /* chat1.xcdatamodel */,
 			);
 			currentVersion = 9091F9421C9D262A00E878C2 /* chat1.xcdatamodel */;
+			name = chat.xcdatamodeld;
+			path = ../ChatCommon/chat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		9091F9461C9DAFF000E878C2 /* chat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9091F9471C9DAFF000E878C2 /* chat.xcdatamodel */,
+				9091F9481C9DAFF000E878C2 /* chat1.xcdatamodel */,
+			);
+			currentVersion = 9091F9481C9DAFF000E878C2 /* chat1.xcdatamodel */;
 			name = chat.xcdatamodeld;
 			path = ../ChatCommon/chat.xcdatamodeld;
 			sourceTree = "<group>";

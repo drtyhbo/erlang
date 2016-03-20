@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CoreData.setup()
 
         MessageManager.sharedManager.setup()
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveNewMessagesNotification:", name: MessageManager.NewMessagesNotification, object: nil)
 
         let rootViewController: UIViewController
@@ -69,6 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        MessageManager.sharedManager.maybeSendMessages()
     }
 
     @objc private func fetchTimerDidFire() {

@@ -26,7 +26,7 @@ class ChatConnection {
     private let host: String
     private let port: UInt16
 
-    private var isConnecting = false
+    private(set) var isConnecting = false
 
     private var s: AsyncSocket!
     private var jsonToSend: [JSON] = []
@@ -56,15 +56,8 @@ class ChatConnection {
     }
 
     func sendJson(json: JSON) {
-        if isConnecting {
-            return
-        }
-
         jsonToSend.append(json)
-
-        if !isConnected {
-            connect()
-        } else {
+        if isConnected {
             sendQueuedJson()
         }
     }

@@ -265,7 +265,8 @@ public class APIManager: NSObject {
     }
 
     private func sendRequestToUrl(url: String, parameters: [String:AnyObject], callback: JSON?->Void) {
-        Alamofire.request(.POST, "https://\(domain)\(webPort)/api/\(url)", parameters: parameters)
+        let webProtocol = Constants.webPort == "80" ? "https" : "http"
+        Alamofire.request(.POST, "\(webProtocol)://\(domain)\(webPort)/api/\(url)", parameters: parameters)
             .responseJSON {
                 response in
                 if let json = response.result.value {

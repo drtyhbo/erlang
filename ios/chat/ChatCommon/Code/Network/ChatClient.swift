@@ -75,7 +75,7 @@ public class ChatClient {
                 "m": encryptedMessage.base64
             ])
 
-            self.connection.sendJson(messageToSendJson)
+            self.sendJson(messageToSendJson)
         }
     }
 
@@ -93,6 +93,10 @@ public class ChatClient {
     }
 
     private func connect() {
+        if connection.isConnecting {
+            return
+        }
+
         NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientConnectingNotification, object: nil)
         if let sessionToken = User.sessionToken {
             let connectJson = JSON([
@@ -100,12 +104,14 @@ public class ChatClient {
                 "u": User.userId,
                 "s": sessionToken,
             ])
+            connection.connect()
+            // Don't use self.sendJson() for this.
             connection.sendJson(connectJson)
         }
     }
 
     private func sendReceivedOfflineMessagesResponse() {
-        connection.sendJson(JSON([
+        sendJson(JSON([
             "t": "a",
             "w": "offline"
         ]))
@@ -157,6 +163,13 @@ public class ChatClient {
         self.receivedMessagesTimer = NSTimer.scheduledTimerWithTimeInterval(0.25, target: self, selector: "sendReceivedMessagesNotification", userInfo: nil, repeats: false)
     }
 
+    private func sendJson(json: JSON) {
+        if !self.connection.isConnected {
+            self.connect()
+        }
+        self.connection.sendJson(json)
+    }
+
     @objc private func sendReceivedMessagesNotification() {
         let receivedMessages = self.receivedMessages
         NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientReceivedMessagesNotification, object: nil, userInfo: ["receivedMessages": receivedMessages])
@@ -181,6 +194,7 @@ extension ChatClient: ChatConnectionDelegate {
     }
 
     func chatConnection(chatConnection: ChatConnection, didReceiveJSON json: JSON) {
+        print (json.rawString())
         handleJson(json)
     }
 }

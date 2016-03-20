@@ -20,6 +20,7 @@ class Conversation: NSManagedObject {
     static func createWithFriend(friend: Friend) -> Conversation {
         let conversation = Conversation.MR_createEntity()!
         conversation.friend = friend
+        conversation.isRatcheting = false
         return conversation
     }
 
