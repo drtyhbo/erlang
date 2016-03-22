@@ -46,6 +46,11 @@
 		9049634A1C7239790078C9DF /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 904963491C7239790078C9DF /* UIImage.swift */; };
 		906D06121C9F48CA0014EFB5 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06111C9F48CA0014EFB5 /* ProgressView.swift */; };
 		906D06141C9F49670014EFB5 /* ProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 906D06131C9F49670014EFB5 /* ProgressView.xib */; };
+		906D061F1CA0D3B20014EFB5 /* ChatMessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D061E1CA0D3B20014EFB5 /* ChatMessageManager.swift */; };
+		906D06211CA0D48C0014EFB5 /* ChatTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06201CA0D48C0014EFB5 /* ChatTableDataSource.swift */; };
+		906D06231CA0D58C0014EFB5 /* Pods_chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906D06221CA0D58C0014EFB5 /* Pods_chat.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		906D06251CA0D7960014EFB5 /* ChatTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06241CA0D7960014EFB5 /* ChatTableView.swift */; };
+		906D06271CA0D8B30014EFB5 /* NormalChatTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06261CA0D8B30014EFB5 /* NormalChatTableDataSource.swift */; };
 		9091F8B81C9CDD5200E878C2 /* PDKeychainBindingsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */; };
 		9091F8C11C9CDE5900E878C2 /* ChatCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 9091F8C01C9CDE5900E878C2 /* ChatCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9091F8DA1C9CDE9500E878C2 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F8CD1C9CDE9500E878C2 /* Chat.swift */; };
@@ -221,6 +226,11 @@
 		904963491C7239790078C9DF /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImage.swift; path = Extensions/UIImage.swift; sourceTree = "<group>"; };
 		906D06111C9F48CA0014EFB5 /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressView.swift; path = chat/Code/Views/ProgressView.swift; sourceTree = SOURCE_ROOT; };
 		906D06131C9F49670014EFB5 /* ProgressView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProgressView.xib; sourceTree = "<group>"; };
+		906D061E1CA0D3B20014EFB5 /* ChatMessageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageManager.swift; sourceTree = "<group>"; };
+		906D06201CA0D48C0014EFB5 /* ChatTableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTableDataSource.swift; sourceTree = "<group>"; };
+		906D06221CA0D58C0014EFB5 /* Pods_chat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_chat.framework; path = "Pods/../build/Debug-iphoneos/Pods_chat.framework"; sourceTree = "<group>"; };
+		906D06241CA0D7960014EFB5 /* ChatTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTableView.swift; sourceTree = "<group>"; };
+		906D06261CA0D8B30014EFB5 /* NormalChatTableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NormalChatTableDataSource.swift; sourceTree = "<group>"; };
 		9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDKeychainBindingsController.framework; path = "Pods/../build/Debug-iphoneos/PDKeychainBindingsController.framework"; sourceTree = "<group>"; };
 		9091F8BE1C9CDE5900E878C2 /* ChatCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9091F8C01C9CDE5900E878C2 /* ChatCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatCommon.h; sourceTree = "<group>"; };
@@ -330,6 +340,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				906D06231CA0D58C0014EFB5 /* Pods_chat.framework in Frameworks */,
 				9091F9171C9CE1CA00E878C2 /* libsodium-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,6 +369,7 @@
 		03C4881D7477C6DD7CC79989 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				906D06221CA0D58C0014EFB5 /* Pods_chat.framework */,
 				9091F93A1C9D227B00E878C2 /* Pods_chat.framework */,
 				9091F9381C9D216800E878C2 /* Pods_chat.framework */,
 				9091F9141C9CE1A600E878C2 /* Sodium.framework */,
@@ -455,6 +467,17 @@
 				904963491C7239790078C9DF /* UIImage.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		906D06191CA0D36A0014EFB5 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				906D061E1CA0D3B20014EFB5 /* ChatMessageManager.swift */,
+				906D06201CA0D48C0014EFB5 /* ChatTableDataSource.swift */,
+				906D06241CA0D7960014EFB5 /* ChatTableView.swift */,
+				906D06261CA0D8B30014EFB5 /* NormalChatTableDataSource.swift */,
+			);
+			path = Layout;
 			sourceTree = "<group>";
 		};
 		9091F8BF1C9CDE5900E878C2 /* ChatCommon */ = {
@@ -667,21 +690,22 @@
 		90EBF8B81C474CA700A7AD51 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				90C0F4A81C7A1F95007F58BD /* NewMessagesTableViewCell.swift */,
-				90C0F4A91C7A1F95007F58BD /* NewMessagesTableViewCell.xib */,
+				900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */,
 				90EBF8B91C474CA700A7AD51 /* ChatRowTableViewCell.swift */,
 				90EBF8BA1C474CA700A7AD51 /* ChatRowTableViewCell.xib */,
 				90EBF8BB1C474CA700A7AD51 /* ChatViewController.swift */,
 				90EBF8BC1C474CA700A7AD51 /* ChatViewController.xib */,
-				90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */,
-				904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */,
-				904963441C722CE30078C9DF /* MediaRowTableViewCell.xib */,
-				900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */,
-				90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */,
-				90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */,
-				90C0F4A21C79621B007F58BD /* MoviePlayer.swift */,
 				90C0F4AE1C7A410C007F58BD /* ConversationStartTableViewCell.swift */,
 				90C0F4B01C7A4118007F58BD /* ConversationStartTableViewCell.xib */,
+				90C0F49E1C78CE05007F58BD /* DayTableViewCell.swift */,
+				90C0F4A01C78CE10007F58BD /* DayTableViewCell.xib */,
+				906D06191CA0D36A0014EFB5 /* Layout */,
+				904963401C722CBA0078C9DF /* MediaRowTableViewCell.swift */,
+				904963441C722CE30078C9DF /* MediaRowTableViewCell.xib */,
+				90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */,
+				90C0F4A21C79621B007F58BD /* MoviePlayer.swift */,
+				90C0F4A81C7A1F95007F58BD /* NewMessagesTableViewCell.swift */,
+				90C0F4A91C7A1F95007F58BD /* NewMessagesTableViewCell.xib */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1032,6 +1056,7 @@
 				90407A871C98F8CA00666587 /* ThemePickerTableViewCell.swift in Sources */,
 				90C0D31A1C8C92F7006BF1EA /* TintedImage.swift in Sources */,
 				9031FFD41C6671B800BCC456 /* Constants.swift in Sources */,
+				906D06211CA0D48C0014EFB5 /* ChatTableDataSource.swift in Sources */,
 				90EBF8BE1C474CA700A7AD51 /* ChatRowTableViewCell.swift in Sources */,
 				90407A971C98F92A00666587 /* ThemeCollectionViewCell.swift in Sources */,
 				90C0F49F1C78CE05007F58BD /* DayTableViewCell.swift in Sources */,
@@ -1056,10 +1081,12 @@
 				90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */,
 				90407AA41C99A64700666587 /* ThemePicker.swift in Sources */,
 				90407A9D1C98F92A00666587 /* ThemedLabel.swift in Sources */,
+				906D06251CA0D7960014EFB5 /* ChatTableView.swift in Sources */,
 				90407A9B1C98F92A00666587 /* ThemedButton.swift in Sources */,
 				900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */,
 				90407A711C98ED3700666587 /* SettingsViewController.swift in Sources */,
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
+				906D06271CA0D8B30014EFB5 /* NormalChatTableDataSource.swift in Sources */,
 				90374E2D1C8496B60008421F /* NSMutableData.swift in Sources */,
 				90374E2F1C8496C40008421F /* String.swift in Sources */,
 				904963411C722CBA0078C9DF /* MediaRowTableViewCell.swift in Sources */,
@@ -1069,6 +1096,7 @@
 				90FC19DA1C7CB8BC004E7EFF /* PhoneNumberFormatter.swift in Sources */,
 				90AFD5B71C5D280900236D6B /* ConfirmCodeViewController.swift in Sources */,
 				90407AA81C99A79800666587 /* ThemeListener.swift in Sources */,
+				906D061F1CA0D3B20014EFB5 /* ChatMessageManager.swift in Sources */,
 				90EBF8C01C474CA700A7AD51 /* ChatViewController.swift in Sources */,
 				90253D711C8B49DA00892DB2 /* TopicTableViewCell.swift in Sources */,
 				90407A9A1C98F92A00666587 /* ThemedBorder.swift in Sources */,

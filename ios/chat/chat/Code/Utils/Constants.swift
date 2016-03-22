@@ -10,13 +10,9 @@ import Foundation
 import UIKit
 
 class Constants {
-    static let host = "chat1.drtyhbo.com"
-    static let webPort = "80"
-/*    static let host = "192.168.1.133"
-    static let webPort = "8080"*/
+    static let fetchLimit = 30
 
     static let profilePicSize = CGSize(width: 144, height: 144)
-    static let profilePicBaseUrl = NSURL(string: "https://s3-us-west-1.amazonaws.com/drtyhbo-chat-users/")!
 
     static let themes: [ColorTheme] = [
         ColorTheme(lightBackgroundColor: UIColor(0xFFF8FB), darkBackgroundColor: UIColor(0x30021C), borderColor: UIColor(0xFCE4EC), buttonColor: UIColor(0xF06292)),
