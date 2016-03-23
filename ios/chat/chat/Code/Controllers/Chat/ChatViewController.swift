@@ -38,7 +38,7 @@ class ChatViewController: UIViewController {
 
                 unreadMessageCount = MessageManager.sharedManager.unreadMessageCountForChat(chat)
 
-                tableView.setupWithChat(chat, style: .Normal)
+                tableView.setupWithChat(chat, style: Constants.chatStyle)
                 MessageManager.sharedManager.markMessagesForChatAsRead(chat)
             }
         }

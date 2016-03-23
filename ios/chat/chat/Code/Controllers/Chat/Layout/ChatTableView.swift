@@ -12,7 +12,7 @@ import UIKit
 
 enum ChatUIStyle {
     case Normal
-    case Bubbles
+    case Bubble
 }
 
 class ChatTableView: UITableView {
@@ -20,7 +20,12 @@ class ChatTableView: UITableView {
     private var uiStyle: ChatUIStyle = .Normal
 
     func setupWithChat(chat: Chat, style: ChatUIStyle) {
-        dataSource = NormalChatTableDataSource(chat: chat, tableView: self)
+        switch style {
+        case .Normal:
+            dataSource = NormalChatTableDataSource(chat: chat, tableView: self)
+        case .Bubble:
+            dataSource = BubbleChatTableDataSource(chat: chat, tableView: self)
+        }
         loadMessages()
     }
 
