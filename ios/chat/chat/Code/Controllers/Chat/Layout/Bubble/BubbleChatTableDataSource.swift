@@ -92,7 +92,7 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
             } else {
                 cell = tableView.dequeueReusableCellWithIdentifier(isFromCurrentUser ?rightMediaRowCellReuseIdentifier : leftMediaRowCellReuseIdentifier, forIndexPath: indexPath) as! BubbleMediaRowTableViewCell
             }
-            cell.headerType = priorMessage?.from == message.from ? .Small : .Large
+            cell.headerType = priorMessage == nil || priorMessage?.from == message.from ? .Small : .Large
             cell.updateWithMessage(message, hasTail: nextMessage == nil || nextMessage?.from != message.from)
 
             return cell

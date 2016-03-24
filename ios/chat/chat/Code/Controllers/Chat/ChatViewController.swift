@@ -239,6 +239,14 @@ extension ChatViewController: UITableViewDelegate {
     }
 }
 
+extension ChatViewController: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 200 {
+            tableView.loadMessages()
+        }
+    }
+}
+
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(textView: UITextView) {
         sizeTextView()

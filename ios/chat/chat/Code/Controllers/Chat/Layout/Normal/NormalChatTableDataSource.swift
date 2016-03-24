@@ -63,10 +63,6 @@ class NormalChatTableDataSource: ChatTableDataSource {
             rows.append(.Message(message, messages[i - 1]))
         }
 
-        if !messageManager.hasMoreMessages {
-            rows.insert(.ConversationStart, atIndex: 0)
-        }
-
 /*        if unreadMessageCount > 0 {
             rows.insert(.NewMessages, atIndex: rows.count - unreadMessageCount)
         }*/
@@ -189,5 +185,8 @@ extension NormalChatTableDataSource: ChatMessageManagerDelegate {
 
     func chatMessageManager(chatMessageManager: ChatMessageManager, didPrependMessages messages: [Message]) {
         rows = calculateRowsFromMessages(messages) + rows
+        if !messageManager.hasMoreMessages {
+            rows.insert(.ConversationStart, atIndex: 0)
+        }
     }
 }

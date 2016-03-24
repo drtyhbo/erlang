@@ -112,7 +112,7 @@
                     <rect key="frame" x="0.0" y="45" width="600" height="503"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
-                        <outlet property="delegate" destination="-1" id="4YF-sd-5f9"/>
+                        <outlet property="delegate" destination="-1" id="hLD-fY-oX5"/>
                     </connections>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oGz-1j-zN4" customClass="ThemedView" customModule="chat" customModuleProvider="target">

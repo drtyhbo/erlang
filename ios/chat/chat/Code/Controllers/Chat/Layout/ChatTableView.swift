@@ -45,32 +45,27 @@ class ChatTableView: UITableView {
             self.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
             // Reload the previous row in case the way it looks depends on the new rows.
             self.reloadRowsAtIndexPaths([NSIndexPath(forRow: previousRowCount - 1, inSection: 0)], withRowAnimation: .None)
+
+            self.layoutIfNeeded()
+
             self.scrollToRowAtIndexPath(NSIndexPath(forRow: newRowCount - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
         }
-
     }
 
-    private func loadMessages() {
+    func loadMessages() {
         let previousRowCount = dataSource!.tableView(self, numberOfRowsInSection: 0)
         (dataSource as? ChatTableDataSource)?.loadMessages()
         let insertedRowCount = dataSource!.tableView(self, numberOfRowsInSection: 0) - previousRowCount
 
         if previousRowCount == 0 || insertedRowCount > 0 {
-            reloadData()
-            layoutIfNeeded()
+            UIView.performWithoutAnimation {
+                self.reloadData()
+                self.layoutIfNeeded()
 
-            if insertedRowCount > 0 {
-                scrollToRowAtIndexPath(NSIndexPath(forRow: insertedRowCount - (previousRowCount == 0 ? 1 : 0), inSection: 0), atScrollPosition: previousRowCount == 0 ? .Bottom : .Top, animated: false)
+                if insertedRowCount > 0 {
+                    self.scrollToRowAtIndexPath(NSIndexPath(forRow: insertedRowCount - (previousRowCount == 0 ? 1 : 0), inSection: 0), atScrollPosition: previousRowCount == 0 ? .Bottom : .Top, animated: false)
+                }
             }
-        }
-
-    }
-}
-
-extension ChatTableView: UIScrollViewDelegate {
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if scrollView.contentOffset.y < 200 {
-            loadMessages()
         }
     }
 }
