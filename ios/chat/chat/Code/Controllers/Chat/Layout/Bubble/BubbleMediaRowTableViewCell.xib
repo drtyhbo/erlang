@@ -15,7 +15,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xs2-cA-zF5">
-                        <rect key="frame" x="10" y="1" width="321" height="129"/>
+                        <rect key="frame" x="70" y="1" width="321" height="129"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UgT-Vc-Ycq" customClass="BubbleImageView" customModule="chat" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="321" height="129"/>
@@ -90,17 +90,17 @@
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="Xs2-cA-zF5" secondAttribute="trailing" constant="70" id="1oY-wy-OYO"/>
+                    <constraint firstAttribute="trailing" secondItem="Xs2-cA-zF5" secondAttribute="trailing" constant="10" id="1oY-wy-OYO"/>
                     <constraint firstAttribute="bottom" secondItem="Xs2-cA-zF5" secondAttribute="bottom" id="6AW-Sw-uXe"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Xs2-cA-zF5" secondAttribute="trailing" constant="70" id="7dq-2L-lcP"/>
                     <constraint firstItem="Xs2-cA-zF5" firstAttribute="leading" secondItem="gi5-jm-Km4" secondAttribute="leading" constant="10" id="cXd-WX-558"/>
                     <constraint firstItem="Xs2-cA-zF5" firstAttribute="top" secondItem="gi5-jm-Km4" secondAttribute="top" constant="1" id="fKd-jd-Z0K"/>
-                    <constraint firstItem="Xs2-cA-zF5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gi5-jm-Km4" secondAttribute="leading" constant="10" id="nEm-C5-tlP"/>
+                    <constraint firstItem="Xs2-cA-zF5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gi5-jm-Km4" secondAttribute="leading" constant="70" id="nEm-C5-tlP"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
                         <exclude reference="7dq-2L-lcP"/>
-                        <exclude reference="nEm-C5-tlP"/>
+                        <exclude reference="cXd-WX-558"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>

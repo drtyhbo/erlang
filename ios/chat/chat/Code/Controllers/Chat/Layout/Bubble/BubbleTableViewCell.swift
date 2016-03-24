@@ -33,8 +33,8 @@ class BubbleTableViewCell: UITableViewCell {
     var message: Message! {
         didSet {
             let fromCurrentUser = message.from == nil
-            alignment = fromCurrentUser ? .Right : .Left
 
+            updateBubbleConstraints()
             bubbleImageBackground.setColor(fromCurrentUser ? ColorTheme.currentTheme.buttonColor : Constants.otherChatBubbleColor, direction: alignment == .Left ? .Left : .Right)
         }
     }
@@ -45,30 +45,19 @@ class BubbleTableViewCell: UITableViewCell {
         }
     }
 
-    private(set) var alignment: Alignment = .Left {
-        didSet {
-            switch alignment {
-            case .Left:
-                bubbleFlexibleLeadingConstraint.active = false
-                bubbleTrailingConstraint.active = false
-
-                bubbleLeadingConstraint.constant = 10
-                bubbleLeadingConstraint.active = true
-                bubbleFlexibleTrailingConstraint.constant = 70
-                bubbleFlexibleTrailingConstraint.active = true
-            case .Right:
-                bubbleLeadingConstraint.active = false
-                bubbleFlexibleTrailingConstraint.active = false
-
-                bubbleFlexibleLeadingConstraint.constant = 70
-                bubbleFlexibleLeadingConstraint.active = true
-                bubbleTrailingConstraint.constant = 10
-                bubbleTrailingConstraint.active = true
-            }
-        }
+    var alignment: Alignment {
+        return message.from == nil ? .Right : .Left
     }
 
     class func estimatedHeightForMessage(message: Message) -> CGFloat {
         return 21
+    }
+
+    private func updateBubbleConstraints() {
+        let leftAligned = alignment == .Left
+        bubbleFlexibleLeadingConstraint.active = !leftAligned
+        bubbleTrailingConstraint.active = !leftAligned
+        bubbleLeadingConstraint.active = leftAligned
+        bubbleFlexibleTrailingConstraint.active = leftAligned
     }
 }
