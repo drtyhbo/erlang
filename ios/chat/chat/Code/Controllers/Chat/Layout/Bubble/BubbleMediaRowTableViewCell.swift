@@ -24,26 +24,6 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
     @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
 
-    override var message: Message! {
-        didSet {
-            NSNotificationCenter.defaultCenter().removeObserver(self)
-
-            let isPending = message.isPending
-            if isPending {
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didUpdateProgressNotification:", name: MessageManager.SendingMessageProgressNotification, object: nil)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSendingNotification:", name: MessageManager.FinishedSendingMessageNotification, object: nil)
-            }
-
-            updateThumbnail()
-
-            mediaContainer.maskView = BubbleImageView(frame: CGRect(x: 0, y: 0, width: widthConstraint.constant, height: heightConstraint.constant), color: UIColor.blackColor(), direction: alignment == .Left ? .Left : .Right)
-            messageImageView.alpha = isPending ? 0.5 : 1
-
-            progressView.hidden = !isPending
-            progressView.progress = 0
-        }
-    }
-
     private static let thumbnailPadding: CGFloat = 80
 
     override class func estimatedHeightForMessage(message: Message) -> CGFloat {
@@ -79,6 +59,26 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
 
         moviePlayer.pause()
         hideMoviePlayer()
+    }
+
+    override func updateWithMessage(message: Message, hasTail: Bool) {
+        super.updateWithMessage(message, hasTail: hasTail)
+
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+
+        let isPending = message.isPending
+        if isPending {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "didUpdateProgressNotification:", name: MessageManager.SendingMessageProgressNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSendingNotification:", name: MessageManager.FinishedSendingMessageNotification, object: nil)
+        }
+
+        updateThumbnail()
+
+        mediaContainer.maskView = BubbleImageView(frame: CGRect(x: 0, y: 0, width: widthConstraint.constant, height: heightConstraint.constant), color: UIColor.blackColor(), direction: alignment == .Left ? .Left : .Right, hasTail: hasTail)
+        messageImageView.alpha = isPending ? 0.5 : 1
+
+        progressView.hidden = !isPending
+        progressView.progress = 0
     }
 
     private func updateThumbnail() {

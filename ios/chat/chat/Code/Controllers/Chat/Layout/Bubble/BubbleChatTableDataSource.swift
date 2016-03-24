@@ -14,8 +14,10 @@ class BubbleChatTableDataSource: ChatTableDataSource {
         case MessageRow(AnyObject)
     }
 
-    private let messageRowCellReuseIdentifier = "BubbleMessageRowTableViewCell"
-    private let mediaRowCellReuseIdentifier = "BubbleMediaRowTableViewCell"
+    private let leftMessageRowCellReuseIdentifier = "LeftBubbleMessageRowTableViewCell"
+    private let rightMessageRowCellReuseIdentifier = "RightBubbleMessageRowTableViewCell"
+    private let leftMediaRowCellReuseIdentifier = "LeftBubbleMediaRowTableViewCell"
+    private let rightMediaRowCellReuseIdentifier = "RightBubbleMediaRowTableViewCell"
 
     private var rows: [RowType] = []
 
@@ -23,8 +25,10 @@ class BubbleChatTableDataSource: ChatTableDataSource {
         super.init(chat: chat, tableView: tableView)
 
         tableView.estimatedRowHeight = 100
-        tableView.registerNib(UINib(nibName: "BubbleMessageRowTableViewCell", bundle: nil), forCellReuseIdentifier: messageRowCellReuseIdentifier)
-        tableView.registerNib(UINib(nibName: "BubbleMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: mediaRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "LeftBubbleMessageRowTableViewCell", bundle: nil), forCellReuseIdentifier: leftMessageRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "RightBubbleMessageRowTableViewCell", bundle: nil), forCellReuseIdentifier: rightMessageRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "LeftBubbleMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: leftMediaRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "RightBubbleMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: rightMediaRowCellReuseIdentifier)
     }
 
     private func calculateRowsFromMessages(messages: [Message]) -> [RowType] {
@@ -40,15 +44,23 @@ class BubbleChatTableDataSource: ChatTableDataSource {
         return rows
     }
 
-    private func priorMessageForRowAtIndex(var rowIndex: Int) -> Message? {
-        rowIndex--
+    private func priorMessageForRowAtIndex(rowIndex: Int) -> Message? {
+        return nextMessageForRowAtIndex(rowIndex, byIncrementing: -1)
+    }
 
-        while rowIndex >= 0 {
+    private func nextMessageForRowAtIndex(rowIndex: Int) -> Message? {
+        return nextMessageForRowAtIndex(rowIndex, byIncrementing: 1)
+    }
+
+    private func nextMessageForRowAtIndex(var rowIndex: Int, byIncrementing increment: Int) -> Message? {
+        rowIndex += increment
+
+        while rowIndex >= 0 && rowIndex < rows.count {
             switch (rows[rowIndex]) {
             case .MessageRow(let messageObject):
                 return messageObject as? Message
             }
-            rowIndex--
+            rowIndex += increment
         }
 
         return nil
@@ -69,16 +81,19 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
 
         switch(row) {
         case .MessageRow(let object):
+            let priorMessage = priorMessageForRowAtIndex(indexPath.row)
+            let nextMessage = nextMessageForRowAtIndex(indexPath.row)
             let message = object as! Message
+            let isFromCurrentUser = message.from == nil
 
             var cell: BubbleTableViewCell
             if message.type == .Text {
-                cell = tableView.dequeueReusableCellWithIdentifier(messageRowCellReuseIdentifier, forIndexPath: indexPath) as! BubbleMessageRowTableViewCell
+                cell = tableView.dequeueReusableCellWithIdentifier(isFromCurrentUser ? rightMessageRowCellReuseIdentifier : leftMessageRowCellReuseIdentifier, forIndexPath: indexPath) as! BubbleMessageRowTableViewCell
             } else {
-                cell = tableView.dequeueReusableCellWithIdentifier(mediaRowCellReuseIdentifier, forIndexPath: indexPath) as! BubbleMediaRowTableViewCell
+                cell = tableView.dequeueReusableCellWithIdentifier(isFromCurrentUser ?rightMediaRowCellReuseIdentifier : leftMediaRowCellReuseIdentifier, forIndexPath: indexPath) as! BubbleMediaRowTableViewCell
             }
-            cell.headerType = priorMessageForRowAtIndex(indexPath.row)?.from == message.from ? .Small : .Large
-            cell.message = message
+            cell.headerType = priorMessage?.from == message.from ? .Small : .Large
+            cell.updateWithMessage(message, hasTail: nextMessage == nil || nextMessage?.from != message.from)
 
             return cell
         }

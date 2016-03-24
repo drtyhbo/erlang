@@ -25,19 +25,6 @@ class BubbleTableViewCell: UITableViewCell {
     @IBOutlet weak var bubbleImageBackground: BubbleImageView!
 
     @IBOutlet weak var bubbleTopConstraint: NSLayoutConstraint!
-    @IBOutlet var bubbleLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet var bubbleTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet var bubbleFlexibleLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet var bubbleFlexibleTrailingConstraint: NSLayoutConstraint!
-
-    var message: Message! {
-        didSet {
-            let fromCurrentUser = message.from == nil
-
-            updateBubbleConstraints()
-            bubbleImageBackground.setColor(fromCurrentUser ? ColorTheme.currentTheme.buttonColor : Constants.otherChatBubbleColor, direction: alignment == .Left ? .Left : .Right)
-        }
-    }
 
     var headerType: HeaderType = .Small {
         didSet {
@@ -49,15 +36,19 @@ class BubbleTableViewCell: UITableViewCell {
         return message.from == nil ? .Right : .Left
     }
 
+    private(set) var message: Message!
+
+    private var hasTail: Bool = true
+
     class func estimatedHeightForMessage(message: Message) -> CGFloat {
         return 21
     }
 
-    private func updateBubbleConstraints() {
-        let leftAligned = alignment == .Left
-        bubbleFlexibleLeadingConstraint.active = !leftAligned
-        bubbleTrailingConstraint.active = !leftAligned
-        bubbleLeadingConstraint.active = leftAligned
-        bubbleFlexibleTrailingConstraint.active = leftAligned
+    func updateWithMessage(message: Message, hasTail: Bool) {
+        self.message = message
+
+        let fromCurrentUser = message.from == nil
+        bubbleImageBackground.hasTail = hasTail
+        bubbleImageBackground.setColor(fromCurrentUser ? ColorTheme.currentTheme.buttonColor : Constants.otherChatBubbleColor, direction: alignment == .Left ? .Left : .Right)
     }
 }

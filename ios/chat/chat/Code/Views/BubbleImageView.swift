@@ -15,10 +15,13 @@ class BubbleImageView: UIImageView {
         case Right
     }
 
+    var hasTail = true
+
     private var direction: Direction!
     private var color: UIColor!
 
-    init(frame: CGRect, color: UIColor, direction: Direction) {
+    init(frame: CGRect, color: UIColor, direction: Direction, hasTail: Bool) {
+        self.hasTail = hasTail
         super.init(frame: frame)
         setColor(color, direction: direction)
     }
@@ -34,7 +37,7 @@ class BubbleImageView: UIImageView {
     }
 
     private func updateBubble() {
-        let bubbleImage = UIImage(named: "Bubble")!
+        let bubbleImage = UIImage(named: hasTail ? "Bubble" : "BubbleNoTail")!
         let flippedBubbleImage = UIImage(CGImage: bubbleImage.CGImage!, scale: bubbleImage.scale, orientation: direction == .Right ? .Up : .UpMirrored).imageMaskedWithColor(color)
         let center = CGPoint(x: bubbleImage.size.width / 2, y: bubbleImage.size.height / 2)
         let capInsets = UIEdgeInsets(top: center.y, left: center.x, bottom: center.y, right: center.x)

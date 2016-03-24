@@ -17,19 +17,19 @@ class BubbleMessageRowTableViewCell: BubbleTableViewCell {
     @IBOutlet weak var messageLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var messageTrailingConstraint: NSLayoutConstraint!
 
-    override var message: Message! {
-        didSet {
-            messageLabel.text = message.text ?? ""
-            messageLabel.textColor = message.from == nil ? UIColor.whiteColor() : UIColor.blackColor()
-
-            messageLeadingConstraint.constant = alignment == .Left ? 15 : 10
-            messageTrailingConstraint.constant = alignment == .Right ? 15 : 5
-        }
-    }
-
     override class func estimatedHeightForMessage(message: Message) -> CGFloat {
         let text = message.text ?? ""
-        let boundingRect = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - 64, height: 9999), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.customFontOfSize(16)], context: nil)
+        let boundingRect = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - 64, height: 9999), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.customFontOfSize(17)], context: nil)
         return super.estimatedHeightForMessage(message) + round(boundingRect.height)
+    }
+
+    override func updateWithMessage(message: Message, hasTail: Bool) {
+        super.updateWithMessage(message, hasTail: hasTail)
+
+        messageLabel.text = message.text ?? ""
+        messageLabel.textColor = message.from == nil ? UIColor.whiteColor() : UIColor.blackColor()
+
+        messageLeadingConstraint.constant = alignment == .Left ? 15 : 10
+        messageTrailingConstraint.constant = alignment == .Right ? 15 : 10
     }
 }

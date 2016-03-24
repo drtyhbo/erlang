@@ -43,6 +43,8 @@ class ChatTableView: UITableView {
             }
 
             self.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+            // Reload the previous row in case the way it looks depends on the new rows.
+            self.reloadRowsAtIndexPaths([NSIndexPath(forRow: previousRowCount - 1, inSection: 0)], withRowAnimation: .None)
             self.scrollToRowAtIndexPath(NSIndexPath(forRow: newRowCount - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
         }
 

@@ -92,27 +92,15 @@
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="Xs2-cA-zF5" secondAttribute="trailing" constant="10" id="1oY-wy-OYO"/>
                     <constraint firstAttribute="bottom" secondItem="Xs2-cA-zF5" secondAttribute="bottom" id="6AW-Sw-uXe"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Xs2-cA-zF5" secondAttribute="trailing" constant="70" id="7dq-2L-lcP"/>
-                    <constraint firstItem="Xs2-cA-zF5" firstAttribute="leading" secondItem="gi5-jm-Km4" secondAttribute="leading" constant="10" id="cXd-WX-558"/>
                     <constraint firstItem="Xs2-cA-zF5" firstAttribute="top" secondItem="gi5-jm-Km4" secondAttribute="top" constant="1" id="fKd-jd-Z0K"/>
                     <constraint firstItem="Xs2-cA-zF5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gi5-jm-Km4" secondAttribute="leading" constant="70" id="nEm-C5-tlP"/>
                 </constraints>
-                <variation key="default">
-                    <mask key="constraints">
-                        <exclude reference="7dq-2L-lcP"/>
-                        <exclude reference="cXd-WX-558"/>
-                    </mask>
-                </variation>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="bubbleBackground" destination="Xs2-cA-zF5" id="eGU-8O-8Y9"/>
-                <outlet property="bubbleFlexibleLeadingConstraint" destination="nEm-C5-tlP" id="lH3-v1-Yld"/>
-                <outlet property="bubbleFlexibleTrailingConstraint" destination="7dq-2L-lcP" id="yGk-bJ-V6c"/>
                 <outlet property="bubbleImageBackground" destination="UgT-Vc-Ycq" id="Zad-OC-hS8"/>
-                <outlet property="bubbleLeadingConstraint" destination="cXd-WX-558" id="f5D-DE-n7z"/>
                 <outlet property="bubbleTopConstraint" destination="fKd-jd-Z0K" id="7pf-36-cow"/>
-                <outlet property="bubbleTrailingConstraint" destination="1oY-wy-OYO" id="jP3-YN-tnO"/>
                 <outlet property="heightConstraint" destination="cOD-bl-RHi" id="v4g-96-Vzz"/>
                 <outlet property="loadingIndicator" destination="Gfm-Qz-Jbr" id="AGi-Vo-jCT"/>
                 <outlet property="mediaContainer" destination="YeY-aE-iCO" id="jPf-5t-Kgh"/>

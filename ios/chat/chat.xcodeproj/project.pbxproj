@@ -61,9 +61,7 @@
 		906D063E1CA0FE8A0014EFB5 /* NewMessagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 906D06341CA0FE8A0014EFB5 /* NewMessagesTableViewCell.xib */; };
 		906D06411CA0FEDA0014EFB5 /* BubbleChatTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06401CA0FEDA0014EFB5 /* BubbleChatTableDataSource.swift */; };
 		906D06441CA100430014EFB5 /* BubbleMessageRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06421CA100430014EFB5 /* BubbleMessageRowTableViewCell.swift */; };
-		906D06451CA100430014EFB5 /* BubbleMessageRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 906D06431CA100430014EFB5 /* BubbleMessageRowTableViewCell.xib */; };
 		906D06481CA103910014EFB5 /* BubbleMediaRowTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D06461CA103910014EFB5 /* BubbleMediaRowTableViewCell.swift */; };
-		906D06491CA103910014EFB5 /* BubbleMediaRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 906D06471CA103910014EFB5 /* BubbleMediaRowTableViewCell.xib */; };
 		906D064B1CA104190014EFB5 /* BubbleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D064A1CA104190014EFB5 /* BubbleTableViewCell.swift */; };
 		906D064D1CA24D3B0014EFB5 /* BubbleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906D064C1CA24D3B0014EFB5 /* BubbleImageView.swift */; };
 		9074A9B81CA2EA5C00C378E6 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9074A9B71CA2EA5C00C378E6 /* UIFont.swift */; };
@@ -77,6 +75,10 @@
 		9074A9C81CA2F36200C378E6 /* CustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9074A9C71CA2F36200C378E6 /* CustomFont.swift */; };
 		9074A9CB1CA2F4E400C378E6 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9074A9C91CA2F4E400C378E6 /* Lato-Regular.ttf */; };
 		9074A9CC1CA2F4E400C378E6 /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9074A9CA1CA2F4E400C378E6 /* Raleway-Regular.ttf */; };
+		9074A9CF1CA43F1200C378E6 /* LeftBubbleMessageRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9074A9CD1CA43F1200C378E6 /* LeftBubbleMessageRowTableViewCell.xib */; };
+		9074A9D01CA43F1200C378E6 /* RightBubbleMessageRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9074A9CE1CA43F1200C378E6 /* RightBubbleMessageRowTableViewCell.xib */; };
+		9074A9D31CA4403D00C378E6 /* LeftBubbleMediaRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9074A9D11CA4403D00C378E6 /* LeftBubbleMediaRowTableViewCell.xib */; };
+		9074A9D41CA4403D00C378E6 /* RightBubbleMediaRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9074A9D21CA4403D00C378E6 /* RightBubbleMediaRowTableViewCell.xib */; };
 		9091F8B81C9CDD5200E878C2 /* PDKeychainBindingsController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */; };
 		9091F8C11C9CDE5900E878C2 /* ChatCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 9091F8C01C9CDE5900E878C2 /* ChatCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9091F8DA1C9CDE9500E878C2 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F8CD1C9CDE9500E878C2 /* Chat.swift */; };
@@ -260,9 +262,7 @@
 		906D06341CA0FE8A0014EFB5 /* NewMessagesTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewMessagesTableViewCell.xib; sourceTree = "<group>"; };
 		906D06401CA0FEDA0014EFB5 /* BubbleChatTableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleChatTableDataSource.swift; sourceTree = "<group>"; };
 		906D06421CA100430014EFB5 /* BubbleMessageRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleMessageRowTableViewCell.swift; sourceTree = "<group>"; };
-		906D06431CA100430014EFB5 /* BubbleMessageRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BubbleMessageRowTableViewCell.xib; sourceTree = "<group>"; };
 		906D06461CA103910014EFB5 /* BubbleMediaRowTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleMediaRowTableViewCell.swift; sourceTree = "<group>"; };
-		906D06471CA103910014EFB5 /* BubbleMediaRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BubbleMediaRowTableViewCell.xib; sourceTree = "<group>"; };
 		906D064A1CA104190014EFB5 /* BubbleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTableViewCell.swift; sourceTree = "<group>"; };
 		906D064C1CA24D3B0014EFB5 /* BubbleImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleImageView.swift; sourceTree = "<group>"; };
 		9074A9B71CA2EA5C00C378E6 /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIFont.swift; path = Extensions/UIFont.swift; sourceTree = "<group>"; };
@@ -276,6 +276,10 @@
 		9074A9C71CA2F36200C378E6 /* CustomFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFont.swift; sourceTree = "<group>"; };
 		9074A9C91CA2F4E400C378E6 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		9074A9CA1CA2F4E400C378E6 /* Raleway-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Regular.ttf"; sourceTree = "<group>"; };
+		9074A9CD1CA43F1200C378E6 /* LeftBubbleMessageRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeftBubbleMessageRowTableViewCell.xib; sourceTree = "<group>"; };
+		9074A9CE1CA43F1200C378E6 /* RightBubbleMessageRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RightBubbleMessageRowTableViewCell.xib; sourceTree = "<group>"; };
+		9074A9D11CA4403D00C378E6 /* LeftBubbleMediaRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeftBubbleMediaRowTableViewCell.xib; sourceTree = "<group>"; };
+		9074A9D21CA4403D00C378E6 /* RightBubbleMediaRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RightBubbleMediaRowTableViewCell.xib; sourceTree = "<group>"; };
 		9091F8B71C9CDD5200E878C2 /* PDKeychainBindingsController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDKeychainBindingsController.framework; path = "Pods/../build/Debug-iphoneos/PDKeychainBindingsController.framework"; sourceTree = "<group>"; };
 		9091F8BE1C9CDE5900E878C2 /* ChatCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9091F8C01C9CDE5900E878C2 /* ChatCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatCommon.h; sourceTree = "<group>"; };
@@ -549,12 +553,14 @@
 		906D063F1CA0FEC70014EFB5 /* Bubble */ = {
 			isa = PBXGroup;
 			children = (
-				906D06461CA103910014EFB5 /* BubbleMediaRowTableViewCell.swift */,
-				906D06471CA103910014EFB5 /* BubbleMediaRowTableViewCell.xib */,
-				906D06421CA100430014EFB5 /* BubbleMessageRowTableViewCell.swift */,
-				906D06431CA100430014EFB5 /* BubbleMessageRowTableViewCell.xib */,
 				906D06401CA0FEDA0014EFB5 /* BubbleChatTableDataSource.swift */,
+				906D06461CA103910014EFB5 /* BubbleMediaRowTableViewCell.swift */,
+				906D06421CA100430014EFB5 /* BubbleMessageRowTableViewCell.swift */,
 				906D064A1CA104190014EFB5 /* BubbleTableViewCell.swift */,
+				9074A9D11CA4403D00C378E6 /* LeftBubbleMediaRowTableViewCell.xib */,
+				9074A9CD1CA43F1200C378E6 /* LeftBubbleMessageRowTableViewCell.xib */,
+				9074A9D21CA4403D00C378E6 /* RightBubbleMediaRowTableViewCell.xib */,
+				9074A9CE1CA43F1200C378E6 /* RightBubbleMessageRowTableViewCell.xib */,
 			);
 			path = Bubble;
 			sourceTree = "<group>";
@@ -991,6 +997,7 @@
 			files = (
 				906D063C1CA0FE8A0014EFB5 /* MediaRowTableViewCell.xib in Resources */,
 				9074A9C61CA2F11800C378E6 /* FontPickerViewController.xib in Resources */,
+				9074A9D31CA4403D00C378E6 /* LeftBubbleMediaRowTableViewCell.xib in Resources */,
 				9074A9BE1CA2ED2100C378E6 /* Lato-Bold.ttf in Resources */,
 				9074A9CC1CA2F4E400C378E6 /* Raleway-Regular.ttf in Resources */,
 				90F1F7921C7F5F2B00A75914 /* us@2x.png in Resources */,
@@ -1000,15 +1007,15 @@
 				9074A9CB1CA2F4E400C378E6 /* Lato-Regular.ttf in Resources */,
 				9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */,
 				906D06361CA0FE8A0014EFB5 /* ChatRowTableViewCell.xib in Resources */,
-				906D06451CA100430014EFB5 /* BubbleMessageRowTableViewCell.xib in Resources */,
 				90407A741C98ED4800666587 /* UserInfoTableViewCell.xib in Resources */,
 				9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */,
 				906D06381CA0FE8A0014EFB5 /* ConversationStartTableViewCell.xib in Resources */,
+				9074A9D41CA4403D00C378E6 /* RightBubbleMediaRowTableViewCell.xib in Resources */,
+				9074A9D01CA43F1200C378E6 /* RightBubbleMessageRowTableViewCell.xib in Resources */,
 				9074A9BC1CA2ECD700C378E6 /* Raleway-Bold.ttf in Resources */,
 				9074A9C21CA2EE6600C378E6 /* FontPickerTableViewCell.xib in Resources */,
 				906D06141C9F49670014EFB5 /* ProgressView.xib in Resources */,
 				90AFD5C71C608EDC00236D6B /* ChatListViewController.xib in Resources */,
-				906D06491CA103910014EFB5 /* BubbleMediaRowTableViewCell.xib in Resources */,
 				90EBF8C11C474CA700A7AD51 /* ChatViewController.xib in Resources */,
 				90407A891C98F8D800666587 /* ThemePickerTableViewCell.xib in Resources */,
 				90AFD5B91C5D281800236D6B /* ConfirmCodeViewController.xib in Resources */,
@@ -1019,6 +1026,7 @@
 				90AFD5CD1C6090B800236D6B /* FriendTableViewCell.xib in Resources */,
 				90407A981C98F92A00666587 /* ThemeCollectionViewCell.xib in Resources */,
 				90C0D3121C8C4B28006BF1EA /* FriendSelectorViewController.xib in Resources */,
+				9074A9CF1CA43F1200C378E6 /* LeftBubbleMessageRowTableViewCell.xib in Resources */,
 				90407A721C98ED3700666587 /* SettingsViewController.xib in Resources */,
 				90AFD5B31C5D204100236D6B /* PhoneNumberViewController.xib in Resources */,
 			);
