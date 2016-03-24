@@ -11,10 +11,10 @@ import UIKit
 
 extension UIFont {
     static func customFontOfSize(size: CGFloat) -> UIFont {
-        return UIFont(name: CustomFont.currentFontName + "-Regular", size: size) ?? UIFont.systemFontOfSize(size)
+        return UIFont(name: CustomFont.currentFont.fontName + "-Regular", size: size) ?? UIFont.systemFontOfSize(size)
     }
 
     static func boldCustomFontOfSize(size: CGFloat) -> UIFont {
-        return UIFont(name: CustomFont.currentFontName + "-Bold", size: size) ?? UIFont.boldSystemFontOfSize(size)
+        return UIFont(name: CustomFont.currentFont.fontName + "-Bold", size: size) ?? UIFont.boldSystemFontOfSize(size)
     }
 }

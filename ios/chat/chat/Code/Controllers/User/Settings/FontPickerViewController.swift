@@ -33,23 +33,27 @@ extension FontPickerViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CustomFont.fontNames.count
+        return CustomFont.fonts.count
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var tableViewCell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier)
+        let font = CustomFont.fonts[indexPath.row]
+
+        var tableViewCell: UITableViewCell! = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier)
         if tableViewCell == nil {
             tableViewCell = UITableViewCell(style: .Default, reuseIdentifier: cellReuseIdentifier)
         }
-        tableViewCell!.textLabel?.font = UIFont(name: CustomFont.fontNames[indexPath.row].fontName + "-Regular", size: 16)
-        tableViewCell!.textLabel?.text = CustomFont.fontNames[indexPath.row].displayName
+        tableViewCell.textLabel?.font = UIFont(name: font.fontName + "-Regular", size: 16)
+        tableViewCell.textLabel?.text = font.displayName
+        tableViewCell.tintColor = ColorTheme.currentTheme.buttonColor
+        tableViewCell.accessoryType = CustomFont.currentFont == font ? .Checkmark : .None
 
-        return tableViewCell!
+        return tableViewCell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        CustomFont.currentFontName = CustomFont.fontNames[indexPath.row].fontName
-        delegate?.fontPickerViewController(self, didSelectCustomFont: CustomFont.fontNames[indexPath.row])
+        CustomFont.currentFont = CustomFont.fonts[indexPath.row]
+        delegate?.fontPickerViewController(self, didSelectCustomFont: CustomFont.fonts[indexPath.row])
         navigationController?.popViewControllerAnimated(true)
     }
 }

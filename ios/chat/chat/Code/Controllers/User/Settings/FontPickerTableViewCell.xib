@@ -61,6 +61,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="RightArrow" width="24" height="24"/>
+        <image name="RightArrow" width="9" height="15"/>
     </resources>
 </document>

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class CustomFont {
-    static let fontNames = [
+    static let fonts = [
         CustomFont(fontName: "AvenirNext", displayName: "Avenir Next"),
         CustomFont(fontName: "AvenirNextCondensed", displayName: "Avenir Next Condensed"),
         CustomFont(fontName: "ChalkboardSE", displayName: "Chalkboard"),
@@ -21,13 +21,19 @@ class CustomFont {
 
     static let FontChangedNotification = "ThemeChanged"
 
-    static var currentFontName: String {
+    static var currentFont: CustomFont {
         get {
-            return NSUserDefaults.sharedUserDefaults().stringForKey(currentFontKey) ?? "Lato"
+            let fontName = NSUserDefaults.sharedUserDefaults().stringForKey(currentFontKey) ?? "Lato"
+            for font in fonts {
+                if font.fontName == fontName {
+                    return font
+                }
+            }
+            return fonts[0]
         }
         set {
             let userDefaults = NSUserDefaults.sharedUserDefaults()
-            userDefaults.setObject(newValue, forKey: currentFontKey)
+            userDefaults.setObject(newValue.fontName, forKey: currentFontKey)
             userDefaults.synchronize()
 
             NSNotificationCenter.defaultCenter().postNotificationName(FontChangedNotification, object: nil, userInfo: nil)
@@ -43,4 +49,8 @@ class CustomFont {
         self.fontName = fontName
         self.displayName = displayName
     }
+}
+
+func ==(lhs: CustomFont, rhs: CustomFont) -> Bool {
+    return lhs.fontName == rhs.fontName
 }

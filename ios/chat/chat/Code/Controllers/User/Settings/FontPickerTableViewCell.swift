@@ -17,6 +17,11 @@ class FontPickerTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .None
-        currentFontLabel.text = CustomFont.currentFontName
+        currentFontLabel.text = CustomFont.currentFont.displayName
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        currentFontLabel.text = CustomFont.currentFont.displayName
     }
 }
