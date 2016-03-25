@@ -10,24 +10,19 @@ import ChatCommon
 import Foundation
 import UIKit
 
-enum ChatUIStyle {
-    case Normal
-    case Bubble
-}
-
 class ChatTableView: UITableView {
     private var chat: Chat!
-    private var uiStyle: ChatUIStyle = .Normal
+    private var layout: ChatLayout = .Bubble
 
-    func setupWithChat(chat: Chat, style: ChatUIStyle) {
-        switch style {
+    func setupWithChat(chat: Chat, layout: ChatLayout) {
+        switch layout {
         case .Normal:
             dataSource = NormalChatTableDataSource(chat: chat, tableView: self)
         case .Bubble:
             dataSource = BubbleChatTableDataSource(chat: chat, tableView: self)
         }
 
-        let verticalInset: CGFloat = style == .Bubble ? 8 : 16
+        let verticalInset: CGFloat = layout == .Bubble ? 8 : 16
         contentInset = UIEdgeInsets(top: verticalInset, left: 0, bottom: verticalInset, right: 0)
 
         loadMessages()

@@ -22,8 +22,6 @@ class Constants {
 
     static let otherChatBubbleColor = UIColor(0xE5E5EA)
 
-    static let chatStyle = ChatUIStyle.Bubble
-
     struct BubbleLayout {
         static let minPadding: CGFloat = 10
         static let maxPadding: CGFloat = 70

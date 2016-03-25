@@ -16,6 +16,7 @@ class SettingsViewController: UIViewController {
     private let userInfoCellReuseIdentifier = "UserInfoTableViewCell"
     private let themePickerCellReuseIdentifier = "ThemePickerTableViewCell"
     private let fontPickerCellReuseIdentifier = "FontPickerTableViewCell"
+    private let layoutPickerCellReuseIdentifier = "LayoutPickerTableViewCell"
 
     private let numberOfSections = 2
 
@@ -25,6 +26,7 @@ class SettingsViewController: UIViewController {
     private let themeSection = 1
     private let themePickerRow = 0
     private let fontPickerRow = 1
+    private let layoutPickerRow = 2
 
     private var imagePickerController: UIImagePickerController?
 
@@ -37,6 +39,7 @@ class SettingsViewController: UIViewController {
         tableView.registerNib(UINib(nibName: "UserInfoTableViewCell", bundle: nil), forCellReuseIdentifier: userInfoCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "ThemePickerTableViewCell", bundle: nil), forCellReuseIdentifier: themePickerCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "FontPickerTableViewCell", bundle: nil), forCellReuseIdentifier: fontPickerCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "LayoutPickerTableViewCell", bundle: nil), forCellReuseIdentifier: layoutPickerCellReuseIdentifier)
     }
 
     @objc private func didTapClose() {
@@ -53,7 +56,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
         if section == userInfoSection {
             return 1
         } else if section == themeSection {
-            return 2
+            return 3
         }
 
         return 0
@@ -71,6 +74,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
                 return tableView.dequeueReusableCellWithIdentifier(themePickerCellReuseIdentifier, forIndexPath: indexPath)
             } else if indexPath.row == fontPickerRow {
                 return tableView.dequeueReusableCellWithIdentifier(fontPickerCellReuseIdentifier, forIndexPath: indexPath)
+            } else if indexPath.row == layoutPickerRow {
+                return tableView.dequeueReusableCellWithIdentifier(layoutPickerCellReuseIdentifier, forIndexPath: indexPath)
             }
         }
 
@@ -85,10 +90,16 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.section == themeSection && indexPath.row == fontPickerRow {
-            let fontPickerViewController = FontPickerViewController()
-            fontPickerViewController.delegate = self
-            navigationController?.pushViewController(fontPickerViewController, animated: true)
+        if indexPath.section == themeSection {
+            if indexPath.row == fontPickerRow {
+                let fontPickerViewController = FontPickerViewController()
+                fontPickerViewController.delegate = self
+                navigationController?.pushViewController(fontPickerViewController, animated: true)
+            } else if indexPath.row == layoutPickerRow {
+                let layoutPickerViewController = LayoutPickerViewController()
+                layoutPickerViewController.delegate = self
+                navigationController?.pushViewController(layoutPickerViewController, animated: true)
+            }
         }
     }
 }
@@ -125,6 +136,12 @@ extension SettingsViewController: UIImagePickerControllerDelegate, UINavigationC
 
 extension SettingsViewController: FontPickerViewControllerDelegate {
     func fontPickerViewController(fontPickerViewController: FontPickerViewController, didSelectCustomFont customFont: CustomFont) {
+        tableView.reloadData()
+    }
+}
+
+extension SettingsViewController: LayoutPickerViewControllerDelegate {
+    func layoutPickerViewController(layoutPickerViewController: LayoutPickerViewController, didSelectLayout layout: ChatLayout) {
         tableView.reloadData()
     }
 }

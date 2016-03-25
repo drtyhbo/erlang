@@ -38,7 +38,7 @@ class ChatViewController: UIViewController {
 
                 unreadMessageCount = MessageManager.sharedManager.unreadMessageCountForChat(chat)
 
-                tableView.setupWithChat(chat, style: Constants.chatStyle)
+                tableView.setupWithChat(chat, layout: ChatLayout.currentLayout())
                 MessageManager.sharedManager.markMessagesForChatAsRead(chat)
             }
         }
@@ -52,6 +52,7 @@ class ChatViewController: UIViewController {
     private var imagePickerController: UIImagePickerController?
 
     deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
         keyboardNotifications.removeNotifications()
     }
 
@@ -91,6 +92,7 @@ class ChatViewController: UIViewController {
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: chat?.participantsArray[0])
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutChangedNotification", name: ChatLayout.LayoutChangedNotification, object: nil)
 
         registerForNotifications()
     }
@@ -206,6 +208,14 @@ class ChatViewController: UIViewController {
             unreadMessagesContainer.hidden = totalUnreadMessageCount == 0
             unreadMessagesCount.text = "\(totalUnreadMessageCount)"
         }
+    }
+
+    @objc private func layoutChangedNotification() {
+        guard let chat = chat else {
+            return
+        }
+
+        tableView.setupWithChat(chat, layout: ChatLayout.currentLayout())
     }
 
     @objc private func didTapOnMessages() {
