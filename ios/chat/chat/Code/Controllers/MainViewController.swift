@@ -53,8 +53,8 @@ class MainViewController: UIViewController {
         addChildViewController(slideViewController)
     }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
 
         if let chatId = NSUserDefaults.standardUserDefaults().URLForKey(currentChatKey), chat = Chat.findWithId(chatId) {
             (slideViewController.contentViewController as! ChatViewController).chat = chat

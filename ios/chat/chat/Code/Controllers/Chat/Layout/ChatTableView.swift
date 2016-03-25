@@ -46,8 +46,6 @@ class ChatTableView: UITableView {
             // Reload the previous row in case the way it looks depends on the new rows.
             self.reloadRowsAtIndexPaths([NSIndexPath(forRow: previousRowCount - 1, inSection: 0)], withRowAnimation: .None)
 
-            self.layoutIfNeeded()
-
             self.scrollToRowAtIndexPath(NSIndexPath(forRow: newRowCount - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
         }
     }
@@ -60,7 +58,6 @@ class ChatTableView: UITableView {
         if previousRowCount == 0 || insertedRowCount > 0 {
             UIView.performWithoutAnimation {
                 self.reloadData()
-                self.layoutIfNeeded()
 
                 if insertedRowCount > 0 {
                     self.scrollToRowAtIndexPath(NSIndexPath(forRow: insertedRowCount - (previousRowCount == 0 ? 1 : 0), inSection: 0), atScrollPosition: previousRowCount == 0 ? .Bottom : .Top, animated: false)

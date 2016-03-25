@@ -81,7 +81,6 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
 
         switch(row) {
         case .MessageRow(let object):
-            let priorMessage = priorMessageForRowAtIndex(indexPath.row)
             let nextMessage = nextMessageForRowAtIndex(indexPath.row)
             let message = object as! Message
             let isFromCurrentUser = message.from == nil
@@ -92,7 +91,7 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
             } else {
                 cell = tableView.dequeueReusableCellWithIdentifier(isFromCurrentUser ?rightMediaRowCellReuseIdentifier : leftMediaRowCellReuseIdentifier, forIndexPath: indexPath) as! BubbleMediaRowTableViewCell
             }
-            cell.headerType = priorMessage == nil || priorMessage?.from == message.from ? .Small : .Large
+            cell.footerType = nextMessage != nil && nextMessage!.from == message.from ? .Small : .Large
             cell.updateWithMessage(message, hasTail: nextMessage == nil || nextMessage?.from != message.from)
 
             return cell

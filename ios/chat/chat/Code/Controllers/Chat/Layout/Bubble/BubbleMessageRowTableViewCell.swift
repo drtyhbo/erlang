@@ -17,9 +17,12 @@ class BubbleMessageRowTableViewCell: BubbleTableViewCell {
     @IBOutlet weak var messageLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var messageTrailingConstraint: NSLayoutConstraint!
 
+    private static let minPadding: CGFloat = 10
+    private static let maxPadding: CGFloat = 15
+
     override class func estimatedHeightForMessage(message: Message) -> CGFloat {
         let text = message.text ?? ""
-        let boundingRect = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - 64, height: 9999), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.customFontOfSize(17)], context: nil)
+        let boundingRect = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - (Constants.BubbleLayout.minPadding + Constants.BubbleLayout.maxPadding) - (minPadding + maxPadding), height: 9999), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.customFontOfSize(17)], context: nil)
         return super.estimatedHeightForMessage(message) + round(boundingRect.height)
     }
 
@@ -29,7 +32,7 @@ class BubbleMessageRowTableViewCell: BubbleTableViewCell {
         messageLabel.text = message.text ?? ""
         messageLabel.textColor = message.from == nil ? UIColor.whiteColor() : UIColor.blackColor()
 
-        messageLeadingConstraint.constant = alignment == .Left ? 15 : 10
-        messageTrailingConstraint.constant = alignment == .Right ? 15 : 10
+        messageLeadingConstraint.constant = alignment == .Left ? BubbleMessageRowTableViewCell.maxPadding : BubbleMessageRowTableViewCell.minPadding
+        messageTrailingConstraint.constant = alignment == .Left ? BubbleMessageRowTableViewCell.minPadding : BubbleMessageRowTableViewCell.maxPadding
     }
 }

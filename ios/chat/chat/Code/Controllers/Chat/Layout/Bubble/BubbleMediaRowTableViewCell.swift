@@ -109,14 +109,18 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
         FileHelper.getFileWithId(thumbnailId, secretKey: message.secretKey) {
             file in
 
-            self.messageImageView.image = nil
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-                if let image = file?.image {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.messageImageView.image = image
-                        self.messageImageView.hidden = false
-                    }
+            dispatch_async(dispatch_get_main_queue()) {
+                self.messageImageView.image = nil
+            }
+
+            if let image = file?.image {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.messageImageView.image = image
+                    self.messageImageView.hidden = false
                 }
+            }
+
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
             }
         }
     }

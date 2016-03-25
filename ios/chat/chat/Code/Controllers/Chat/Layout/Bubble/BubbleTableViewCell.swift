@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 class BubbleTableViewCell: UITableViewCell {
-    enum HeaderType {
+    enum FooterType {
         case Small
         case Large
     }
@@ -24,11 +24,11 @@ class BubbleTableViewCell: UITableViewCell {
     @IBOutlet weak var bubbleBackground: UIView!
     @IBOutlet weak var bubbleImageBackground: BubbleImageView!
 
-    @IBOutlet weak var bubbleTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bubbleBottomConstraint: NSLayoutConstraint!
 
-    var headerType: HeaderType = .Small {
+    var footerType: FooterType = .Small {
         didSet {
-            bubbleTopConstraint.constant = headerType == .Small ? 1 : 16
+            bubbleBottomConstraint.constant = footerType == .Small ? 1 : 16
         }
     }
 
@@ -41,7 +41,7 @@ class BubbleTableViewCell: UITableViewCell {
     private var hasTail: Bool = true
 
     class func estimatedHeightForMessage(message: Message) -> CGFloat {
-        return 21
+        return 16
     }
 
     func updateWithMessage(message: Message, hasTail: Bool) {
