@@ -12,7 +12,7 @@ import UIKit
 class DayTableViewCell: UITableViewCell {
     @IBOutlet weak var dayLabel: UILabel!
 
-    static let estimatedRowHeight: CGFloat = 80
+    static let estimatedRowHeight: CGFloat = 60
 
     var date: NSDate = NSDate() {
         didSet {

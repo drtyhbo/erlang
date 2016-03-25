@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FRIENDS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yg-eE-UCy">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FRIENDS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yg-eE-UCy" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="10" y="9" width="50" height="15"/>
                     <fontDescription key="fontDescription" type="system" weight="ultraLight" pointSize="12"/>
                     <nil key="highlightedColor"/>

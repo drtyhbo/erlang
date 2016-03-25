@@ -37,4 +37,29 @@ extension UIImage {
     func resizeToPercentage(percentage: CGFloat) -> UIImage {
         return resizeToSize(CGSize(width: size.width * percentage, height: size.height * percentage))
     }
+
+    func imageMaskedWithColor(color: UIColor) -> UIImage {
+        let imageRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+
+        UIGraphicsBeginImageContextWithOptions(imageRect.size, false, scale)
+
+        let context = UIGraphicsGetCurrentContext()
+
+        CGContextScaleCTM(context, 1.0, -1.0)
+        CGContextTranslateCTM(context, 0.0, -imageRect.size.height)
+
+        if imageOrientation == .UpMirrored {
+            CGContextScaleCTM(context, -1.0, 1.0)
+            CGContextTranslateCTM(context, -imageRect.size.width, 0.0)
+        }
+
+        CGContextClipToMask(context, imageRect, CGImage)
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextFillRect(context, imageRect)
+
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+    
+        return newImage
+    }
 }

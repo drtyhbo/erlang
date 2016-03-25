@@ -39,6 +39,8 @@ class ThemedNavigationController: UINavigationController {
         navigationBar.barTintColor = UIColor.currentTheme.lightBackgroundColor
         navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
         navigationBar.shadowImage = UIImage.imageWithColor(UIColor.currentTheme.borderColor)
-        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.currentTheme.buttonColor]
+        navigationBar.titleTextAttributes = [
+            NSForegroundColorAttributeName: UIColor.currentTheme.buttonColor,
+            NSFontAttributeName: UIFont.boldCustomFontOfSize(19)]
     }
 }

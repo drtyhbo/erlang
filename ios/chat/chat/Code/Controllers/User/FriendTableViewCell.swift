@@ -43,7 +43,7 @@ class FriendTableViewCell: UITableViewCell {
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         name.textColor = selected ? UIColor.whiteColor() : UIColor.blackColor()
-        name.font = selected ? UIFont.boldSystemFontOfSize(name.font.pointSize) : UIFont.systemFontOfSize(name.font.pointSize)
+        name.font = selected ? UIFont.boldCustomFontOfSize(name.font.pointSize) : UIFont.customFontOfSize(name.font.pointSize)
     }
 
     private func configureCell() {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="GbG-8t-vz7" customClass="LayoutPickerTableViewCell" customModule="chat" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GbG-8t-vz7" id="4ri-gj-0HU">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat Layout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ujp-bw-3fr" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="10" y="11" width="93" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lato" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kBJ-gc-sYO" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="247" y="11" width="34" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aTM-oM-nfm" userLabel="Bottom Border" customClass="ThemedBorder" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="42" width="320" height="1"/>
+                        <color key="backgroundColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="OTl-iA-iej"/>
+                        </constraints>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RightArrow" translatesAutoresizingMaskIntoConstraints="NO" id="TrY-8j-lJL" customClass="TintedImage" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="286" y="10" width="24" height="24"/>
+                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="24" id="w6O-5p-IR6"/>
+                            <constraint firstAttribute="height" constant="24" id="zMH-o9-rQV"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Ujp-bw-3fr" firstAttribute="leading" secondItem="4ri-gj-0HU" secondAttribute="leading" constant="10" id="Le7-yF-sp1"/>
+                    <constraint firstItem="Ujp-bw-3fr" firstAttribute="centerY" secondItem="4ri-gj-0HU" secondAttribute="centerY" id="Nid-JV-4h0"/>
+                    <constraint firstAttribute="trailing" secondItem="aTM-oM-nfm" secondAttribute="trailing" id="OKL-Ew-cnW"/>
+                    <constraint firstItem="TrY-8j-lJL" firstAttribute="leading" secondItem="kBJ-gc-sYO" secondAttribute="trailing" constant="5" id="QyS-DW-8pV"/>
+                    <constraint firstAttribute="trailing" secondItem="TrY-8j-lJL" secondAttribute="trailing" constant="10" id="WlD-fN-GMM"/>
+                    <constraint firstItem="TrY-8j-lJL" firstAttribute="centerY" secondItem="4ri-gj-0HU" secondAttribute="centerY" id="oIb-RW-pOd"/>
+                    <constraint firstItem="kBJ-gc-sYO" firstAttribute="centerY" secondItem="4ri-gj-0HU" secondAttribute="centerY" id="ovw-2X-Rwh"/>
+                    <constraint firstItem="aTM-oM-nfm" firstAttribute="leading" secondItem="4ri-gj-0HU" secondAttribute="leading" id="yGt-wq-Ofg"/>
+                    <constraint firstAttribute="bottom" secondItem="aTM-oM-nfm" secondAttribute="bottom" id="yPZ-Yq-5rW"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="currentLayoutLabel" destination="kBJ-gc-sYO" id="pSK-kN-x9k"/>
+            </connections>
+            <point key="canvasLocation" x="306" y="211"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="RightArrow" width="24" height="24"/>
+    </resources>
+</document>
