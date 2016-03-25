@@ -18,7 +18,7 @@ class MessageTableViewCell: UITableViewCell {
         case NoPadding
     }
 
-    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var userImage: ChatProfilePic!
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
 
@@ -34,11 +34,7 @@ class MessageTableViewCell: UITableViewCell {
             timeFormatter.dateFormat = "H:mm"
             dateLabel.text = timeFormatter.stringFromDate(message.date)
 
-            if let from = message.from {
-                userImage.sd_setImageWithURL(from.profilePicUrl, placeholderImage: UIImage(named: "ProfilePic"))
-            } else {
-                userImage.image = User.profilePic ?? UIImage(named: "ProfilePic")
-            }
+            userImage.friend = message.from
         }
     }
 

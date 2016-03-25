@@ -11,7 +11,7 @@ import Foundation
 
 @objc(Friend)
 public class Friend: NSManagedObject {
-    @NSManaged var id: Int
+    @NSManaged public var id: Int
     @NSManaged public var firstName: String
     @NSManaged var lastName: String?
 
