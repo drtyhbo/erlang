@@ -12,9 +12,22 @@ import Foundation
 class NormalChatTableDataSource: ChatTableDataSource {
     private enum RowType {
         case ConversationStart
-        case Message(AnyObject, AnyObject?)
+        case MessageRow(Message, MessageTableViewCell.HeaderType)
         case Date(NSDate)
         case NewMessages
+
+        func headerTypeForMessage(message: Message) -> MessageTableViewCell.HeaderType {
+            switch(self) {
+                case .MessageRow(let previousMessage, _):
+                    if message.thumbnailInfo != nil && previousMessage.thumbnailInfo != nil {
+                        return .NoPadding
+                    } else {
+                        return (message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from) ? .Full : .PaddingOnly
+                    }
+                default:
+                    return .FullNoPadding
+            }
+        }
     }
 
     private let chatRowCellReuseIdentifier = "ChatRowTableViewCell"
@@ -38,7 +51,7 @@ class NormalChatTableDataSource: ChatTableDataSource {
         tableView.registerNib(UINib(nibName: "ConversationStartTableViewCell", bundle: nil), forCellReuseIdentifier: conversationStartCellReuseIdentifier)
     }
 
-    private func calculateRowsFromMessages(messages: [Message]) -> [RowType] {
+    private func calculateRowsFromMessages(messages: [Message], previousRow: RowType?) -> [RowType] {
         var rows: [RowType] = []
 
         if messages.count == 0 {
@@ -50,17 +63,17 @@ class NormalChatTableDataSource: ChatTableDataSource {
         }
 
         var previousDayOfYear = gregorian.ordinalityOfUnit(.Day, inUnit: .Year, forDate: messages[0].date)
-        rows = [.Message(messages[0], nil)]
+        rows = [.MessageRow(messages[0], previousRow?.headerTypeForMessage(messages[0]) ?? .Full)]
         for i in 1..<messages.count {
             let message = messages[i]
 
             let dayOfYear = gregorian.ordinalityOfUnit(.Day, inUnit: .Year, forDate: message.date)
             if dayOfYear != previousDayOfYear {
                 rows.append(.Date(message.date))
+                previousDayOfYear = dayOfYear
             }
-            previousDayOfYear = dayOfYear
 
-            rows.append(.Message(message, messages[i - 1]))
+            rows.append(.MessageRow(message, rows.last!.headerTypeForMessage(message)))
         }
 
 /*        if unreadMessageCount > 0 {
@@ -68,42 +81,6 @@ class NormalChatTableDataSource: ChatTableDataSource {
         }*/
 
         return rows
-    }
-
-    private func headerTypeForRowAtIndexPath(indexPath: NSIndexPath) -> MessageTableViewCell.HeaderType {
-        if indexPath.row == 0 {
-            return .Full
-        }
-
-        var previousRowIsMedia = false
-
-        switch(rows[indexPath.row - 1]) {
-            case .ConversationStart:
-                return .FullNoPadding
-            case .Date(_):
-                return .FullNoPadding
-            case .NewMessages:
-                return .FullNoPadding
-            case .Message(let object, _):
-                let message = object as! Message
-                previousRowIsMedia = message.thumbnailInfo != nil
-        }
-
-        let row = rows[indexPath.row]
-        switch(row) {
-            case .Message(let messageObject, let previousMessageObject):
-                let message = messageObject as! Message
-                let previousMessage = previousMessageObject as? Message
-                if message.thumbnailInfo != nil && previousRowIsMedia {
-                    return .NoPadding
-                } else if let previousMessage = previousMessage {
-                    return (message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from) ? .Full : .PaddingOnly
-                } else {
-                    return previousMessage == nil && !messageManager.hasMoreMessages ? .Full : .PaddingOnly
-                }
-            default:
-                return .PaddingOnly
-        }
     }
 }
 
@@ -124,8 +101,7 @@ extension NormalChatTableDataSource: UITableViewDataSource {
             let cell = tableView.dequeueReusableCellWithIdentifier(conversationStartCellReuseIdentifier, forIndexPath: indexPath) as! ConversationStartTableViewCell
             cell.friend = chat.participantsArray[0]
             return cell
-        case .Message(let object, _):
-            let message = object as! Message
+        case .MessageRow(let message, let headerType):
 
             var cell: MessageTableViewCell
             if message.type == .Text {
@@ -135,7 +111,7 @@ extension NormalChatTableDataSource: UITableViewDataSource {
             }
 
             cell.message = message
-            cell.headerType = headerTypeForRowAtIndexPath(indexPath)
+            cell.headerType = headerType
 
             return cell
         case .Date(let date):
@@ -151,13 +127,12 @@ extension NormalChatTableDataSource: UITableViewDataSource {
         switch(rows[indexPath.row]) {
         case .ConversationStart:
             return ConversationStartTableViewCell.rowHeight
-        case .Message(let object, _):
-            let message = object as! Message
+        case .MessageRow(let message, let headerType):
             if message.type == .Text {
-                return ChatRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
+                return ChatRowTableViewCell.estimatedHeightForMessage(message, headerType: headerType)
 
             } else {
-                return MediaRowTableViewCell.estimatedHeightForMessage(message, headerType: headerTypeForRowAtIndexPath(indexPath))
+                return MediaRowTableViewCell.estimatedHeightForMessage(message, headerType: headerType)
             }
         case .Date(_):
             return DayTableViewCell.estimatedRowHeight
@@ -180,13 +155,15 @@ extension NormalChatTableDataSource: UITableViewDataSource {
 
 extension NormalChatTableDataSource: ChatMessageManagerDelegate {
     func chatMessageManager(chatMessageManager: ChatMessageManager, didAppendMessages messages: [Message]) {
-        rows += calculateRowsFromMessages(messages)
+        rows += calculateRowsFromMessages(messages, previousRow: rows.last)
     }
 
     func chatMessageManager(chatMessageManager: ChatMessageManager, didPrependMessages messages: [Message]) {
-        rows = calculateRowsFromMessages(messages) + rows
-        if !messageManager.hasMoreMessages {
-            rows.insert(.ConversationStart, atIndex: 0)
+        if messages.count > 0 {
+            rows = calculateRowsFromMessages(messages, previousRow: nil) + rows
+            if !messageManager.hasMoreMessages {
+                rows.insert(.ConversationStart, atIndex: 0)
+            }
         }
     }
 }

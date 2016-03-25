@@ -334,7 +334,7 @@
 		9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
 		9091F9471C9DAFF000E878C2 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
 		9091F9481C9DAFF000E878C2 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
-		90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
+		90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageTableViewCell.swift; path = ../../MessageTableViewCell.swift; sourceTree = "<group>"; };
 		90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
 		90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhoneNumberViewController.xib; sourceTree = "<group>"; };
 		90AFD5B61C5D280900236D6B /* ConfirmCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmCodeViewController.swift; sourceTree = "<group>"; };
@@ -543,6 +543,7 @@
 				906D06301CA0FE8A0014EFB5 /* DayTableViewCell.xib */,
 				906D06311CA0FE8A0014EFB5 /* MediaRowTableViewCell.swift */,
 				906D06321CA0FE8A0014EFB5 /* MediaRowTableViewCell.xib */,
+				90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */,
 				906D06331CA0FE8A0014EFB5 /* NewMessagesTableViewCell.swift */,
 				906D06341CA0FE8A0014EFB5 /* NewMessagesTableViewCell.xib */,
 				906D06291CA0FE4B0014EFB5 /* NormalChatTableDataSource.swift */,
@@ -791,7 +792,6 @@
 				90EBF8BB1C474CA700A7AD51 /* ChatViewController.swift */,
 				90EBF8BC1C474CA700A7AD51 /* ChatViewController.xib */,
 				906D06191CA0D36A0014EFB5 /* Layout */,
-				90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */,
 				90C0F4A21C79621B007F58BD /* MoviePlayer.swift */,
 			);
 			path = Chat;

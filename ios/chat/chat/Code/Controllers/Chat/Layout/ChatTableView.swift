@@ -26,6 +26,10 @@ class ChatTableView: UITableView {
         case .Bubble:
             dataSource = BubbleChatTableDataSource(chat: chat, tableView: self)
         }
+
+        let verticalInset: CGFloat = style == .Bubble ? 8 : 16
+        contentInset = UIEdgeInsets(top: verticalInset, left: 0, bottom: verticalInset, right: 0)
+
         loadMessages()
     }
 
@@ -45,6 +49,8 @@ class ChatTableView: UITableView {
             self.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
             // Reload the previous row in case the way it looks depends on the new rows.
             self.reloadRowsAtIndexPaths([NSIndexPath(forRow: previousRowCount - 1, inSection: 0)], withRowAnimation: .None)
+
+            self.layoutIfNeeded()
 
             self.scrollToRowAtIndexPath(NSIndexPath(forRow: newRowCount - 1, inSection: 0), atScrollPosition: .Bottom, animated: false)
         }

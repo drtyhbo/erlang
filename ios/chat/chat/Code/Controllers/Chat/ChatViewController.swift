@@ -75,7 +75,6 @@ class ChatViewController: UIViewController {
 
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
-        tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
 
         unreadMessagesContainer.layer.cornerRadius = unreadMessagesContainer.bounds.size.height / 2
@@ -116,7 +115,9 @@ class ChatViewController: UIViewController {
     }
 
     private func sizeTextView() {
+        let oldMessageViewHeight = newMessageViewHeightConstraint.constant
         newMessageViewHeightConstraint.constant = newMessageView.contentSize.height
+        tableView.contentOffset.y += newMessageViewHeightConstraint.constant - oldMessageViewHeight
 
         newMessageView.contentOffset.y = 0
         newMessageView.layoutIfNeeded()

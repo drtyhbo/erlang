@@ -15,7 +15,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iob-hP-ReJ">
-                        <rect key="frame" x="133" y="30" width="55" height="19"/>
+                        <rect key="frame" x="133" y="20" width="55" height="39"/>
                         <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -44,8 +44,8 @@
                     <constraint firstItem="Iob-hP-ReJ" firstAttribute="centerX" secondItem="lgS-wv-j0v" secondAttribute="centerX" id="elU-cg-5LI"/>
                     <constraint firstItem="9r1-Zq-28b" firstAttribute="centerY" secondItem="lgS-wv-j0v" secondAttribute="centerY" id="hGw-ah-inh"/>
                     <constraint firstItem="q9p-NU-1tE" firstAttribute="leading" secondItem="Iob-hP-ReJ" secondAttribute="trailing" constant="10" id="la3-Ad-0Ll"/>
-                    <constraint firstItem="Iob-hP-ReJ" firstAttribute="top" secondItem="lgS-wv-j0v" secondAttribute="top" constant="30" id="p7Q-LM-kCy"/>
-                    <constraint firstAttribute="bottom" secondItem="Iob-hP-ReJ" secondAttribute="bottom" constant="30" id="rmr-8j-tAI"/>
+                    <constraint firstItem="Iob-hP-ReJ" firstAttribute="top" secondItem="lgS-wv-j0v" secondAttribute="top" constant="20" id="p7Q-LM-kCy"/>
+                    <constraint firstAttribute="bottom" secondItem="Iob-hP-ReJ" secondAttribute="bottom" constant="20" id="rmr-8j-tAI"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">

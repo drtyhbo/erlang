@@ -27,9 +27,10 @@ class ChatMessageManager {
     }
 
     func loadMessages() {
-        let newMessages = MessageManager.sharedManager.getMessagesForChat(chat, beforeDate: messages.count == 0 ? nil : messages[0].date, fetchLimit: Constants.fetchLimit)
-        hasMoreMessages = newMessages.count == Constants.fetchLimit
-        messages = newMessages + messages
+        let quantityToFetch = Constants.fetchLimit + 1
+        let newMessages = MessageManager.sharedManager.getMessagesForChat(chat, beforeDate: messages.count == 0 ? nil : messages[0].date, fetchLimit: quantityToFetch)
+        hasMoreMessages = newMessages.count == quantityToFetch
+        messages = newMessages[0..<min(newMessages.count, Constants.fetchLimit)] + messages
 
         delegate.chatMessageManager(self, didPrependMessages: newMessages)
     }
