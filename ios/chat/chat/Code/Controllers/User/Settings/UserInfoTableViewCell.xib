@@ -40,7 +40,7 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <imageView contentMode="scaleToFill" image="ProfilePic" translatesAutoresizingMaskIntoConstraints="NO" id="3hA-AF-m3d" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                                    <imageView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3hA-AF-m3d">
                                         <rect key="frame" x="10" y="10" width="64" height="64"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="64" id="H89-aZ-qj1"/>
@@ -204,7 +204,4 @@
             <point key="canvasLocation" x="355" y="283"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="ProfilePic" width="84" height="84"/>
-    </resources>
 </document>

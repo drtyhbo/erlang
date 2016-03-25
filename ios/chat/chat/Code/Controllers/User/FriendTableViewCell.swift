@@ -11,6 +11,7 @@ import Foundation
 import UIKit
 
 class FriendTableViewCell: UITableViewCell {
+    @IBOutlet weak var profilePic: ChatProfilePic!
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var nameLeadingConstraint: NSLayoutConstraint!
 
@@ -55,6 +56,11 @@ class FriendTableViewCell: UITableViewCell {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessagesBadgeUpdated:", name: MessageManager.UnreadMessageCountUpdated, object: chat)
 
         name.text = chat.name
+        if chat.participantsArray.count == 1 {
+            profilePic.friend = chat.participantsArray[0]
+        } else {
+            profilePic.hidden = true
+        }
         updateBadgeWithCount(MessageManager.sharedManager.unreadMessageCountForChat(chat))
     }
 

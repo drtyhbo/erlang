@@ -15,13 +15,20 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="47"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FyP-bi-qNl" customClass="ChatProfilePic" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="5" y="8" width="32" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="32" id="VVh-VS-yAu"/>
+                            <constraint firstAttribute="height" constant="32" id="kfS-AW-1no"/>
+                        </constraints>
+                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ait-L7-hda" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
-                        <rect key="frame" x="40" y="14" width="272" height="20"/>
+                        <rect key="frame" x="42" y="14" width="270" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ndE-0H-PBu">
-                        <rect key="frame" x="10" y="14" width="20" height="20"/>
+                        <rect key="frame" x="11" y="14" width="20" height="20"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p3A-YG-wTz" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="2" width="20" height="17"/>
@@ -42,17 +49,25 @@
                     </view>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="FyP-bi-qNl" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leading" constant="5" id="0Ho-xo-x2e"/>
                     <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leadingMargin" constant="30" id="2Bv-96-4Ns"/>
                     <constraint firstItem="ait-L7-hda" firstAttribute="centerY" secondItem="ZCW-41-x5d" secondAttribute="centerY" id="8Hf-8L-36f"/>
                     <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leading" constant="40" id="A3Y-xf-TVk"/>
+                    <constraint firstItem="FyP-bi-qNl" firstAttribute="centerY" secondItem="ZCW-41-x5d" secondAttribute="centerY" id="AEu-FV-1ul"/>
                     <constraint firstItem="ndE-0H-PBu" firstAttribute="leading" secondItem="ZCW-41-x5d" secondAttribute="leading" constant="10" id="AUJ-qe-8fv"/>
+                    <constraint firstItem="ndE-0H-PBu" firstAttribute="centerY" secondItem="FyP-bi-qNl" secondAttribute="centerY" id="IOU-hC-7jo"/>
                     <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="ndE-0H-PBu" secondAttribute="trailing" constant="10" id="O1C-Vg-U06"/>
+                    <constraint firstItem="ndE-0H-PBu" firstAttribute="centerX" secondItem="FyP-bi-qNl" secondAttribute="centerX" id="cT3-pU-J1l"/>
                     <constraint firstAttribute="trailingMargin" secondItem="ait-L7-hda" secondAttribute="trailing" id="g28-iv-4Q2"/>
+                    <constraint firstItem="ait-L7-hda" firstAttribute="leading" secondItem="FyP-bi-qNl" secondAttribute="trailing" constant="5" id="iCR-x8-2MD"/>
                     <constraint firstItem="ndE-0H-PBu" firstAttribute="centerY" secondItem="ZCW-41-x5d" secondAttribute="centerY" id="qeY-uw-JNG"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
+                        <exclude reference="AUJ-qe-8fv"/>
+                        <exclude reference="qeY-uw-JNG"/>
                         <exclude reference="2Bv-96-4Ns"/>
+                        <exclude reference="A3Y-xf-TVk"/>
                         <exclude reference="O1C-Vg-U06"/>
                     </mask>
                 </variation>
@@ -62,6 +77,7 @@
                 <outlet property="badge" destination="ndE-0H-PBu" id="1v8-ZZ-Icz"/>
                 <outlet property="name" destination="ait-L7-hda" id="vEe-Jn-cMI"/>
                 <outlet property="nameLeadingConstraint" destination="A3Y-xf-TVk" id="W5u-OB-TCg"/>
+                <outlet property="profilePic" destination="FyP-bi-qNl" id="mTn-lj-mND"/>
                 <outlet property="unreadMessageCountLabel" destination="p3A-YG-wTz" id="4JB-A2-xkd"/>
             </connections>
             <point key="canvasLocation" x="258" y="225.5"/>

@@ -15,7 +15,7 @@ protocol UserInfoTableViewCellDelegate: class {
 }
 
 class UserInfoTableViewCell: UITableViewCell {
-    @IBOutlet weak var profilePicImage: ChatProfilePic!
+    @IBOutlet weak var profilePicImage: UIImageView!
 
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var firstNameActivityIndicator: UIActivityIndicatorView!
@@ -29,7 +29,13 @@ class UserInfoTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        profilePicImage.contentMode = .ScaleAspectFit
+        profilePicImage.layer.cornerRadius = 5
+        profilePicImage.clipsToBounds = true
+
         selectionStyle = .None
+
         configureCell()
     }
 
@@ -40,6 +46,7 @@ class UserInfoTableViewCell: UITableViewCell {
 
     private func configureCell() {
         profilePicImage.image = User.profilePic ?? UIImage(named: "ProfilePic")
+        
         profilePicImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapProfilePic"))
 
         firstName.text = User.firstName ?? ""
