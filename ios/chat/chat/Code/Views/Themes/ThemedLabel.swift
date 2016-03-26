@@ -15,9 +15,7 @@ class ThemedLabel: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        updateTheme(ColorTheme.currentTheme)
-
-        themeListener.themeChangeListener = { [weak self] theme in
+        themeListener.listenForThemeChangesWithCallback { [weak self] theme in
             self?.updateTheme(theme)
         }
     }

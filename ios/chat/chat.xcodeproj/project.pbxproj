@@ -14,6 +14,7 @@
 		90253D711C8B49DA00892DB2 /* TopicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D6F1C8B49DA00892DB2 /* TopicTableViewCell.swift */; };
 		90253D721C8B49DA00892DB2 /* TopicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */; };
 		90253D7C1C8BF92400892DB2 /* ChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D7B1C8BF92400892DB2 /* ChatTests.swift */; };
+		902D0F571CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 902D0F561CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -129,6 +130,7 @@
 		9091F9431C9D262A00E878C2 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9401C9D262A00E878C2 /* chat.xcdatamodeld */; };
 		9091F9451C9D2D2600E878C2 /* NSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */; };
 		9091F9491C9DAFF000E878C2 /* chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9091F9461C9DAFF000E878C2 /* chat.xcdatamodeld */; };
+		90A5479D1CA6E1A50042EFEA /* NoHeaderChatRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90A5479C1CA6E1A50042EFEA /* NoHeaderChatRowTableViewCell.xib */; };
 		90AFD5A51C4D9E0100236D6B /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */; };
 		90AFD5B11C5D200900236D6B /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */; };
 		90AFD5B31C5D204100236D6B /* PhoneNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */; };
@@ -219,6 +221,7 @@
 		90253D791C8BF92400892DB2 /* chatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = chatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		90253D7B1C8BF92400892DB2 /* ChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTests.swift; sourceTree = "<group>"; };
 		90253D7D1C8BF92400892DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		902D0F561CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoHeaderMediaRowTableViewCell.xib; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
@@ -344,6 +347,7 @@
 		9091F9441C9D2D2600E878C2 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
 		9091F9471C9DAFF000E878C2 /* chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat.xcdatamodel; sourceTree = "<group>"; };
 		9091F9481C9DAFF000E878C2 /* chat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = chat1.xcdatamodel; sourceTree = "<group>"; };
+		90A5479C1CA6E1A50042EFEA /* NoHeaderChatRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoHeaderChatRowTableViewCell.xib; sourceTree = "<group>"; };
 		90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageTableViewCell.swift; path = ../../MessageTableViewCell.swift; sourceTree = "<group>"; };
 		90AFD5B01C5D200900236D6B /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
 		90AFD5B21C5D204100236D6B /* PhoneNumberViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhoneNumberViewController.xib; sourceTree = "<group>"; };
@@ -561,6 +565,8 @@
 				90AFD5A41C4D9E0100236D6B /* MessageTableViewCell.swift */,
 				906D06331CA0FE8A0014EFB5 /* NewMessagesTableViewCell.swift */,
 				906D06341CA0FE8A0014EFB5 /* NewMessagesTableViewCell.xib */,
+				90A5479C1CA6E1A50042EFEA /* NoHeaderChatRowTableViewCell.xib */,
+				902D0F561CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib */,
 				906D06291CA0FE4B0014EFB5 /* NormalChatTableDataSource.swift */,
 			);
 			path = Normal;
@@ -1022,6 +1028,7 @@
 				9074A9CB1CA2F4E400C378E6 /* Lato-Regular.ttf in Resources */,
 				9031FFDB1C68EFA200BCC456 /* ReconnectView.xib in Resources */,
 				906D06361CA0FE8A0014EFB5 /* ChatRowTableViewCell.xib in Resources */,
+				90A5479D1CA6E1A50042EFEA /* NoHeaderChatRowTableViewCell.xib in Resources */,
 				90407A741C98ED4800666587 /* UserInfoTableViewCell.xib in Resources */,
 				9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */,
 				9074A9DE1CA5B62B00C378E6 /* LayoutPickerViewController.xib in Resources */,
@@ -1038,6 +1045,7 @@
 				90AFD5B91C5D281800236D6B /* ConfirmCodeViewController.xib in Resources */,
 				90C0D3161C8C4D16006BF1EA /* FriendSelectorTableViewCell.xib in Resources */,
 				90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */,
+				902D0F571CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib in Resources */,
 				90FC19DE1C7CC12A004E7EFF /* UserInfoViewController.xib in Resources */,
 				906D063E1CA0FE8A0014EFB5 /* NewMessagesTableViewCell.xib in Resources */,
 				90AFD5CD1C6090B800236D6B /* FriendTableViewCell.xib in Resources */,

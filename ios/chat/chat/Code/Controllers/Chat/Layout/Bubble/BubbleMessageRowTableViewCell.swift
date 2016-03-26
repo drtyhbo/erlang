@@ -22,8 +22,8 @@ class BubbleMessageRowTableViewCell: BubbleTableViewCell {
 
     override class func heightForMessage(message: Message, footerType: FooterType) -> CGFloat {
         let text = message.text ?? ""
-        let boundingRect = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - (Constants.BubbleLayout.minPadding + Constants.BubbleLayout.maxPadding) - (minPadding + maxPadding), height: 9999), options: [NSStringDrawingOptions.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: UIFont.customFontOfSize(17)], context: nil)
-        return super.heightForMessage(message, footerType: footerType) + round(boundingRect.height) + 20
+        let boundingSize = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - (Constants.BubbleLayout.minPadding + Constants.BubbleLayout.maxPadding) - (minPadding + maxPadding), height: 9999), options: [NSStringDrawingOptions.UsesLineFragmentOrigin, NSStringDrawingOptions.UsesFontLeading], attributes: [NSFontAttributeName: UIFont.customFontOfSize(17)], context: nil)
+        return super.heightForMessage(message, footerType: footerType) + ceil(boundingSize.height) + 20
     }
 
     override func updateWithMessage(message: Message, hasTail: Bool) {

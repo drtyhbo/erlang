@@ -19,8 +19,7 @@ class ThemedBarButtonItem: UIBarButtonItem {
         self.target = target
         self.action = action
 
-        updateTheme(ColorTheme.currentTheme)
-        themeListener.themeChangeListener = { [weak self] theme in
+        themeListener.listenForThemeChangesWithCallback { [weak self] theme in
             self?.updateTheme(theme)
         }
     }
@@ -28,8 +27,7 @@ class ThemedBarButtonItem: UIBarButtonItem {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        updateTheme(ColorTheme.currentTheme)
-        themeListener.themeChangeListener = { [weak self] theme in
+        themeListener.listenForThemeChangesWithCallback { [weak self] theme in
             self?.updateTheme(theme)
         }
     }

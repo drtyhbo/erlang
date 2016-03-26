@@ -44,7 +44,9 @@ class MediaRowTableViewCell: MessageTableViewCell {
 
     override var headerType: HeaderType {
         didSet {
-            topConstraint.constant = MediaRowTableViewCell.paddingForHeaderType(headerType)
+            if let topConstraint = topConstraint {
+                topConstraint.constant = MediaRowTableViewCell.paddingForHeaderType(headerType)
+            }
         }
     }
 
@@ -59,7 +61,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
     }
 
     private static func paddingForHeaderType(headerType: HeaderType) -> CGFloat {
-        return headerType == .NoPadding ? 1 : 8
+        return headerType == .PaddingOnly ? 4 : 8
     }
 
     private static func dimensionsForThumbnailWithInfo(thumbnailInfo: Message.ThumbnailInfo) -> (width: CGFloat, height: CGFloat) {

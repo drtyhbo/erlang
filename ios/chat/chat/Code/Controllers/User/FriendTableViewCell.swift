@@ -35,8 +35,7 @@ class FriendTableViewCell: UITableViewCell {
         let selectedView = UIView()
         selectedBackgroundView = selectedView
 
-        updateTheme(ColorTheme.currentTheme)
-        themeListener.themeChangeListener = { [weak self] theme in
+        themeListener.listenForThemeChangesWithCallback { [weak self] theme in
             self?.updateTheme(theme)
         }
     }

@@ -23,15 +23,15 @@
                         </constraints>
                     </imageView>
                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeS-uW-exS">
-                        <rect key="frame" x="64" y="16" width="98" height="17"/>
+                        <rect key="frame" x="64" y="18" width="98" height="17"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Andreas" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-CS-OFM">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Andreas" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CRu-CS-OFM" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="68" height="17"/>
                                 <fontDescription key="fontDescription" type="system" weight="black" pointSize="16"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5:10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kmo-eR-fpe">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5:10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kmo-eR-fpe" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
                                 <rect key="frame" x="73" y="1" width="25" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -49,20 +49,20 @@
                             <constraint firstItem="Kmo-eR-fpe" firstAttribute="leading" secondItem="CRu-CS-OFM" secondAttribute="trailing" constant="5" id="pso-eo-oy2"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GF-UR-H8J">
-                        <rect key="frame" x="64" y="37" width="331" height="82"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GF-UR-H8J" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
+                        <rect key="frame" x="64" y="39" width="331" height="80"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <string key="text">So what are you guys thinking?
 
 Maybe hit the gym at 5pm?</string>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="3GF-UR-H8J" firstAttribute="top" secondItem="SeS-uW-exS" secondAttribute="bottom" constant="4" id="HWG-5h-GPM"/>
                     <constraint firstAttribute="bottom" secondItem="3GF-UR-H8J" secondAttribute="bottom" id="Ixv-DE-pkF"/>
-                    <constraint firstItem="SeS-uW-exS" firstAttribute="top" secondItem="eXu-B3-MYT" secondAttribute="top" id="Pcz-z2-pYi"/>
+                    <constraint firstItem="SeS-uW-exS" firstAttribute="top" secondItem="eXu-B3-MYT" secondAttribute="top" constant="2" id="Pcz-z2-pYi"/>
                     <constraint firstItem="eXu-B3-MYT" firstAttribute="top" secondItem="agl-Zr-hu5" secondAttribute="top" constant="16" id="QLK-Pq-rfS"/>
                     <constraint firstAttribute="trailingMargin" secondItem="3GF-UR-H8J" secondAttribute="trailing" id="Qaq-oQ-eEr"/>
                     <constraint firstAttribute="bottomMargin" secondItem="3GF-UR-H8J" secondAttribute="bottom" id="ZDP-Qs-2qi"/>
@@ -83,10 +83,8 @@ Maybe hit the gym at 5pm?</string>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="dateLabel" destination="Kmo-eR-fpe" id="h5a-Hq-akE"/>
-                <outlet property="headerHeightConstraint" destination="6Vl-VD-XTN" id="bEC-hh-z2R"/>
                 <outlet property="messageLabel" destination="3GF-UR-H8J" id="Zhg-PT-PEp"/>
                 <outlet property="userImage" destination="eXu-B3-MYT" id="EUm-h4-h7M"/>
-                <outlet property="userImageHeightConstraint" destination="oGB-qj-JIg" id="ggI-0N-fsc"/>
                 <outlet property="userImageTopConstraint" destination="QLK-Pq-rfS" id="Jdw-mA-8aa"/>
                 <outlet property="userName" destination="CRu-CS-OFM" id="2xa-H8-Tua"/>
             </connections>

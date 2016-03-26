@@ -15,7 +15,6 @@ class MessageTableViewCell: UITableViewCell {
         case Full
         case FullNoPadding
         case PaddingOnly
-        case NoPadding
     }
 
     @IBOutlet weak var userImage: ChatProfilePic!
@@ -23,50 +22,53 @@ class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
 
     @IBOutlet weak var userImageTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var userImageHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var headerHeightConstraint: NSLayoutConstraint!
 
     var message: Message! {
         didSet {
-            userName.text = message.from?.firstName ?? "Me"
+            if let userName = userName {
+                userName.text = message.from?.firstName ?? "Me"
+            }
 
-            let timeFormatter = NSDateFormatter()
-            timeFormatter.dateFormat = "H:mm"
-            dateLabel.text = timeFormatter.stringFromDate(message.date)
+            if let dateLabel = dateLabel {
+                let timeFormatter = NSDateFormatter()
+                timeFormatter.dateFormat = "H:mm"
+                dateLabel.text = timeFormatter.stringFromDate(message.date)
+            }
 
-            userImage.friend = message.from
+            if let userImage = userImage {
+                userImage.friend = message.from
+            }
         }
     }
 
     var headerType: HeaderType = .Full {
         didSet {
+            guard let userImageTopConstraint = userImageTopConstraint else {
+                return
+            }
+
             switch (headerType) {
                 case .Full:
                     userImageTopConstraint.constant = MessageTableViewCell.paddingTopMax
-                    userImageHeightConstraint.constant = MessageTableViewCell.userImageHeight
-                    headerHeightConstraint.active = false
                 case .FullNoPadding:
                     userImageTopConstraint.constant = 0
-                    userImageHeightConstraint.constant = MessageTableViewCell.userImageHeight
-                    headerHeightConstraint.active = false
                 default:
-                    userImageTopConstraint.constant = headerType == .PaddingOnly ? MessageTableViewCell.paddingTopMin : 0
-                    userImageHeightConstraint.constant = 0
-                    headerHeightConstraint.constant = 0
-                    headerHeightConstraint.active = true
+                    break
             }
         }
     }
 
-    private static let paddingTopMax: CGFloat = 24
+    private static let paddingTopMax: CGFloat = 18
     private static let paddingTopMin: CGFloat = 2
     private static let userImageHeight: CGFloat = 48
+    private static let nameHeight: CGFloat = 17
+    private static let paddingBetweenNameAndContent: CGFloat = 6
 
     class func estimatedHeightForMessage(message: Message, headerType: HeaderType) -> CGFloat {
         if headerType == .Full {
-            return paddingTopMax + 17
+            return paddingTopMax + nameHeight + paddingBetweenNameAndContent
         } else if headerType == .FullNoPadding {
-            return 17
+            return nameHeight + paddingBetweenNameAndContent
         } else {
             return paddingTopMin
         }

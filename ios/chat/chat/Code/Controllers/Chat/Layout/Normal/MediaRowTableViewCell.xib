@@ -123,7 +123,6 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="dateLabel" destination="5nc-KB-uzt" id="2yd-KG-GNq"/>
-                <outlet property="headerHeightConstraint" destination="Z3a-vo-WNj" id="htW-Vu-55w"/>
                 <outlet property="heightConstraint" destination="agU-tW-1th" id="rBx-e4-Uja"/>
                 <outlet property="loadingIndicator" destination="Gfm-Qz-Jbr" id="AGi-Vo-jCT"/>
                 <outlet property="messageImageView" destination="RFL-lt-6l6" id="spY-CZ-Ykg"/>
@@ -132,7 +131,6 @@
                 <outlet property="progressView" destination="FgJ-st-Plg" id="xJv-7D-JXV"/>
                 <outlet property="topConstraint" destination="aU6-gG-R8t" id="d3c-wL-yo4"/>
                 <outlet property="userImage" destination="u9C-sS-3er" id="L7w-cR-5q3"/>
-                <outlet property="userImageHeightConstraint" destination="rgq-D4-Wn1" id="li6-BQ-Bbk"/>
                 <outlet property="userImageTopConstraint" destination="MS8-Xk-kM0" id="WUx-Om-R49"/>
                 <outlet property="userName" destination="eTL-Qo-fsC" id="ZnZ-jv-zWM"/>
                 <outlet property="widthConstraint" destination="3kB-Y6-vWT" id="XLf-EN-zil"/>
