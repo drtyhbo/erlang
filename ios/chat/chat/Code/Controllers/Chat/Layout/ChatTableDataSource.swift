@@ -30,4 +30,8 @@ class ChatTableDataSource: NSObject {
     func loadMessages() {
         messageManager.loadMessages()
     }
+
+    func heightForRowAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
+        return 0
+    }
 }

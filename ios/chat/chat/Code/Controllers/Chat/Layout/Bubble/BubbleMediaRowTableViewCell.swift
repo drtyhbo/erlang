@@ -26,12 +26,12 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
 
     private static let thumbnailPadding: CGFloat = 80
 
-    override class func estimatedHeightForMessage(message: Message) -> CGFloat {
+    override class func heightForMessage(message: Message, footerType: FooterType) -> CGFloat {
         guard let thumbnailInfo = message.thumbnailInfo else {
-            return super.estimatedHeightForMessage(message)
+            return 0
         }
 
-        return super.estimatedHeightForMessage(message) + dimensionsForThumbnailWithInfo(thumbnailInfo).height
+        return super.heightForMessage(message, footerType: footerType) + dimensionsForThumbnailWithInfo(thumbnailInfo).height
     }
 
     private static func dimensionsForThumbnailWithInfo(thumbnailInfo: Message.ThumbnailInfo) -> (width: CGFloat, height: CGFloat) {
@@ -118,9 +118,6 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
                     self.messageImageView.image = image
                     self.messageImageView.hidden = false
                 }
-            }
-
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
             }
         }
     }

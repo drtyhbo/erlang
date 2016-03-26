@@ -111,9 +111,6 @@
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Cpl-E8-vWn" customClass="ChatTableView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="45" width="600" height="503"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="hLD-fY-oX5"/>
-                    </connections>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oGz-1j-zN4" customClass="ThemedView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="548" width="600" height="52"/>

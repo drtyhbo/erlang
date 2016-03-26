@@ -28,7 +28,7 @@ class BubbleTableViewCell: UITableViewCell {
 
     var footerType: FooterType = .Small {
         didSet {
-            bubbleBottomConstraint.constant = footerType == .Small ? 1 : 16
+            bubbleBottomConstraint.constant = BubbleTableViewCell.footerHeightForType(footerType)
         }
     }
 
@@ -40,8 +40,12 @@ class BubbleTableViewCell: UITableViewCell {
 
     private var hasTail: Bool = true
 
-    class func estimatedHeightForMessage(message: Message) -> CGFloat {
-        return 16
+    class func heightForMessage(message: Message, footerType: FooterType) -> CGFloat {
+        return footerHeightForType(footerType)
+    }
+
+    private class func footerHeightForType(footerType: FooterType) -> CGFloat {
+        return footerType == .Small ? 1 : 16
     }
 
     func updateWithMessage(message: Message, hasTail: Bool) {

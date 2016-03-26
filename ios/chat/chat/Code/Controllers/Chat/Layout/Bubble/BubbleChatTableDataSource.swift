@@ -11,7 +11,7 @@ import Foundation
 
 class BubbleChatTableDataSource: ChatTableDataSource {
     private enum RowType {
-        case MessageRow(AnyObject)
+        case MessageRow(Message)
     }
 
     private let leftMessageRowCellReuseIdentifier = "LeftBubbleMessageRowTableViewCell"
@@ -24,11 +24,23 @@ class BubbleChatTableDataSource: ChatTableDataSource {
     override init(chat: Chat, tableView: UITableView) {
         super.init(chat: chat, tableView: tableView)
 
-        tableView.estimatedRowHeight = 100
         tableView.registerNib(UINib(nibName: "LeftBubbleMessageRowTableViewCell", bundle: nil), forCellReuseIdentifier: leftMessageRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "RightBubbleMessageRowTableViewCell", bundle: nil), forCellReuseIdentifier: rightMessageRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "LeftBubbleMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: leftMediaRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "RightBubbleMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: rightMediaRowCellReuseIdentifier)
+    }
+
+    override func heightForRowAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
+        let nextMessage = nextMessageForRowAtIndex(indexPath.row)
+        switch(rows[indexPath.row]) {
+        case .MessageRow(let message):
+            let footerType: BubbleMessageRowTableViewCell.FooterType = nextMessage != nil && nextMessage!.from == message.from ? .Small : .Large
+            if message.type == .Text {
+                return BubbleMessageRowTableViewCell.heightForMessage(message, footerType: footerType)
+            } else {
+                return BubbleMediaRowTableViewCell.heightForMessage(message, footerType: footerType)
+            }
+        }
     }
 
     private func calculateRowsFromMessages(messages: [Message]) -> [RowType] {
@@ -80,9 +92,8 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
         let row = rows[indexPath.row]
 
         switch(row) {
-        case .MessageRow(let object):
+        case .MessageRow(let message):
             let nextMessage = nextMessageForRowAtIndex(indexPath.row)
-            let message = object as! Message
             let isFromCurrentUser = message.from == nil
 
             var cell: BubbleTableViewCell
@@ -95,18 +106,6 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
             cell.updateWithMessage(message, hasTail: nextMessage == nil || nextMessage?.from != message.from)
 
             return cell
-        }
-    }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        switch(rows[indexPath.row]) {
-        case .MessageRow(let object):
-            let message = object as! Message
-            if message.type == .Text {
-                return BubbleMessageRowTableViewCell.estimatedHeightForMessage(message)
-            } else {
-                return BubbleMediaRowTableViewCell.estimatedHeightForMessage(message)
-            }
         }
     }
 }

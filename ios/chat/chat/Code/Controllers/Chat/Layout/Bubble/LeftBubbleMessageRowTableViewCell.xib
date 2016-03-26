@@ -25,7 +25,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eim-XW-MnE" customClass="BubbleImageView" customModule="chat" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="259" height="199"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GF-UR-H8J" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GF-UR-H8J" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
                                 <rect key="frame" x="10" y="10" width="239" height="179"/>
                                 <string key="text">So what are you guys thinking?
 
