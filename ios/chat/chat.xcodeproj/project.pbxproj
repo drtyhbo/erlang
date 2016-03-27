@@ -15,6 +15,8 @@
 		90253D721C8B49DA00892DB2 /* TopicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90253D701C8B49DA00892DB2 /* TopicTableViewCell.xib */; };
 		90253D7C1C8BF92400892DB2 /* ChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90253D7B1C8BF92400892DB2 /* ChatTests.swift */; };
 		902D0F571CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 902D0F561CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib */; };
+		902D0F591CA7317D004BC979 /* BubbleDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D0F581CA7317D004BC979 /* BubbleDateTableViewCell.swift */; };
+		902D0F5B1CA7318C004BC979 /* BubbleDateTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 902D0F5A1CA7318C004BC979 /* BubbleDateTableViewCell.xib */; };
 		9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */; };
 		9031FFD41C6671B800BCC456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD31C6671B800BCC456 /* Constants.swift */; };
 		9031FFD91C68EF8B00BCC456 /* ReconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */; };
@@ -222,6 +224,8 @@
 		90253D7B1C8BF92400892DB2 /* ChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTests.swift; sourceTree = "<group>"; };
 		90253D7D1C8BF92400892DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		902D0F561CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoHeaderMediaRowTableViewCell.xib; sourceTree = "<group>"; };
+		902D0F581CA7317D004BC979 /* BubbleDateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleDateTableViewCell.swift; sourceTree = "<group>"; };
+		902D0F5A1CA7318C004BC979 /* BubbleDateTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BubbleDateTableViewCell.xib; sourceTree = "<group>"; };
 		9031FFD11C6240BF00BCC456 /* ContactsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		9031FFD31C6671B800BCC456 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9031FFD81C68EF8B00BCC456 /* ReconnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReconnectView.swift; sourceTree = "<group>"; };
@@ -576,6 +580,8 @@
 			isa = PBXGroup;
 			children = (
 				906D06401CA0FEDA0014EFB5 /* BubbleChatTableDataSource.swift */,
+				902D0F581CA7317D004BC979 /* BubbleDateTableViewCell.swift */,
+				902D0F5A1CA7318C004BC979 /* BubbleDateTableViewCell.xib */,
 				906D06461CA103910014EFB5 /* BubbleMediaRowTableViewCell.swift */,
 				906D06421CA100430014EFB5 /* BubbleMessageRowTableViewCell.swift */,
 				906D064A1CA104190014EFB5 /* BubbleTableViewCell.swift */,
@@ -1048,6 +1054,7 @@
 				902D0F571CA72C3D004BC979 /* NoHeaderMediaRowTableViewCell.xib in Resources */,
 				90FC19DE1C7CC12A004E7EFF /* UserInfoViewController.xib in Resources */,
 				906D063E1CA0FE8A0014EFB5 /* NewMessagesTableViewCell.xib in Resources */,
+				902D0F5B1CA7318C004BC979 /* BubbleDateTableViewCell.xib in Resources */,
 				90AFD5CD1C6090B800236D6B /* FriendTableViewCell.xib in Resources */,
 				90407A981C98F92A00666587 /* ThemeCollectionViewCell.xib in Resources */,
 				90C0D3121C8C4B28006BF1EA /* FriendSelectorViewController.xib in Resources */,
@@ -1222,6 +1229,7 @@
 				90407A711C98ED3700666587 /* SettingsViewController.swift in Sources */,
 				90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */,
 				90374E2D1C8496B60008421F /* NSMutableData.swift in Sources */,
+				902D0F591CA7317D004BC979 /* BubbleDateTableViewCell.swift in Sources */,
 				906D06441CA100430014EFB5 /* BubbleMessageRowTableViewCell.swift in Sources */,
 				9074A9C11CA2EE6600C378E6 /* FontPickerTableViewCell.swift in Sources */,
 				90DAF2261CA2E75900901DB9 /* LabelWithCustomFont.swift in Sources */,

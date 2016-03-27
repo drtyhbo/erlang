@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="zhD-Uq-fV8" customClass="BubbleDateTableViewCell" customModule="chat" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zhD-Uq-fV8" id="5e3-tg-qP8">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="29"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KVs-9M-s1M">
+                        <rect key="frame" x="96" y="6" width="129" height="17"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yesterday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tnI-xH-pd1">
+                                <rect key="frame" x="0.0" y="0.0" width="70" height="17"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7:02 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EWy-y0-qIv">
+                                <rect key="frame" x="75" y="0.0" width="54" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="EWy-y0-qIv" firstAttribute="leading" secondItem="tnI-xH-pd1" secondAttribute="trailing" constant="5" id="4X1-lt-f30"/>
+                            <constraint firstAttribute="bottom" secondItem="EWy-y0-qIv" secondAttribute="bottom" id="BeL-Kl-uvt"/>
+                            <constraint firstItem="tnI-xH-pd1" firstAttribute="leading" secondItem="KVs-9M-s1M" secondAttribute="leading" id="BlD-Yh-55J"/>
+                            <constraint firstAttribute="trailing" secondItem="EWy-y0-qIv" secondAttribute="trailing" id="GMF-5d-nXz"/>
+                            <constraint firstItem="EWy-y0-qIv" firstAttribute="top" secondItem="KVs-9M-s1M" secondAttribute="top" id="IaG-xZ-J8F"/>
+                            <constraint firstItem="tnI-xH-pd1" firstAttribute="top" secondItem="KVs-9M-s1M" secondAttribute="top" id="lSn-JB-EUr"/>
+                            <constraint firstAttribute="bottom" secondItem="tnI-xH-pd1" secondAttribute="bottom" id="lX5-pf-eBY"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="KVs-9M-s1M" firstAttribute="centerX" secondItem="5e3-tg-qP8" secondAttribute="centerX" id="2aY-0d-1c4"/>
+                    <constraint firstItem="KVs-9M-s1M" firstAttribute="centerY" secondItem="5e3-tg-qP8" secondAttribute="centerY" id="Xvu-dp-8wg"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="dayLabel" destination="tnI-xH-pd1" id="OHa-gf-8wo"/>
+                <outlet property="timeLabel" destination="EWy-y0-qIv" id="mLM-bZ-FEe"/>
+            </connections>
+            <point key="canvasLocation" x="238" y="256"/>
+        </tableViewCell>
+    </objects>
+</document>

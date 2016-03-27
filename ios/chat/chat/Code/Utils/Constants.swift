@@ -25,5 +25,6 @@ class Constants {
     struct BubbleLayout {
         static let minPadding: CGFloat = 10
         static let maxPadding: CGFloat = 70
+        static let timeIntervalBetweenDateRows: NSTimeInterval = 60 * 60
     }
 }
