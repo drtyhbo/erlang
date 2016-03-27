@@ -1,25 +1,26 @@
 var assert = require('assert'),
 	request = require('supertest'),
 	redis = require('../models/redis').redis,
+	Device = require('../models/device').Device,
+	User = require('../models/user').User,
 	Promise = require('bluebird').Promise,
 	helpers = require('./test_helpers');
 
 const Constants = {
 	phoneNumber: '18315550835',
-	phoneNumberKey: 'p:{18315550835}'
+	phoneNumberKey: 'p:{18315550835}',
+	deviceUuid: '729908c5-a457-46af-90a8-8b53a738c218'
 };
 
-function getIdAndCodeForPhoneNumber(phoneNumber) {
-	var sharedId;
-	return redis.getAsync(Constants.phoneNumberKey).then(function(value) {
-		if (value) {
-			sharedId = value
-			return redis.hmgetAsync('u:{' + value + '}', 'code');
-		} else {
-			return Promise.reject()
-		}
-	}).then(function(code) {
-		return Promise.resolve([sharedId, code[0]]);
+function getIdAndCode(phoneNumber, deviceUuid) {
+	var sharedUser;
+	return redis.getAsync(Constants.phoneNumberKey).then(function(userId) {
+		sharedUser = new User(userId);
+		return sharedUser.findDevice(deviceUuid);
+	}).then(function(device) {
+		return device.fetch(Device.fields.code);
+	}).then(function(values) {
+		return Promise.resolve([sharedUser.id, values[0]]);
 	});
 }
 
@@ -36,6 +37,9 @@ describe('logged out', function() {
 	it('/api/register/ - missing phone number', function testSlash(done) {
 		request(server)
 			.post('/api/register/')
+			.send({
+				deviceUuid: Constants.deviceUuid
+			})
 			.expect(200, {
 				status: 'error'
 			}, done);
@@ -45,18 +49,31 @@ describe('logged out', function() {
 		request(server)
 			.post('/api/register/')
 			.send({
-				phone: '12345'
+				phone: '12345',
+				deviceUuid: Constants.deviceUuid
 			})
 			.expect(200, {
 				status: 'error'
 			}, done);
 	});
 
-	it('/api/register/ - phone number', function testSlash(done) {
+	it('/api/register/ - missing device', function testSlash(done) {
 		request(server)
 			.post('/api/register/')
 			.send({
 				phone: Constants.phoneNumber
+			})
+			.expect(200, {
+				status: 'error'
+			}, done);
+	});
+
+	it('/api/register/', function testSlash(done) {
+		request(server)
+			.post('/api/register/')
+			.send({
+				phone: Constants.phoneNumber,
+				deviceUuid: Constants.deviceUuid
 			})
 			.expect(200, {
 				status: 'ok'
@@ -64,7 +81,9 @@ describe('logged out', function() {
 			.end(function(err, res) {
 				redis.getAsync(Constants.phoneNumberKey).then(function(userId) {
 					assert.notEqual(userId, null);
-					return redis.hmgetAsync('u:{' + userId + '}', 'code');
+					return redis.hget('u:{' + userId + '}', 'd:' + Constants.deviceUuid);
+				}).then(function(deviceId) {
+					return redis.hgetAsync('d:{' + deviceId + '}', 'code');
 				}).then(function(code) {
 					assert.notEqual(code, null);
 					done();
@@ -77,7 +96,8 @@ describe('logged out', function() {
 			.post('/api/confirm/')
 			.send({
 				code: '123456',
-				preKeys: [[]]
+				preKeys: [[]],
+				deviceUuid: Constants.deviceUuid
 			})
 			.expect(200, {
 				status: 'error'
@@ -89,7 +109,8 @@ describe('logged out', function() {
 			.post('/api/confirm/')
 			.send({
 				phone: Constants.phoneNumber,
-				preKeys: [[]]
+				preKeys: [[]],
+				deviceUuid: Constants.deviceUuid
 			})
 			.expect(200, {
 				status: 'error'
@@ -101,7 +122,21 @@ describe('logged out', function() {
 			.post('/api/confirm/')
 			.send({
 				phone: Constants.phoneNumber,
-				code: '123456'
+				code: '123456',
+				deviceUuid: Constants.deviceUuid
+			})
+			.expect(200, {
+				status: 'error'
+			}, done);
+	});
+
+	it('/api/confirm/ - no device uuid', function testSlash(done) {
+		request(server)
+			.post('/api/confirm/')
+			.send({
+				phone: Constants.phoneNumber,
+				code: '123456',
+				preKeys: [[]]
 			})
 			.expect(200, {
 				status: 'error'
@@ -109,7 +144,7 @@ describe('logged out', function() {
 	});
 
 	it('/api/confirm/ - success', function testSlash(done) {
-		getIdAndCodeForPhoneNumber(Constants.phoneNumber).then(function(values) {
+		getIdAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
 			var id = values[0];
 			var code = values[1];
 			request(server)
@@ -120,26 +155,32 @@ describe('logged out', function() {
 					preKeys: [{
 						i: [0],
 						pk: ['abcd']
-					}]
+					}],
+					deviceUuid: Constants.deviceUuid
 				})
 				.expect(function(res) {
 					if (!res.body.sessionToken || res.body.sessionToken.length != 64) {
 						return "invalid session token";
 					}
+					if (!res.body.deviceId) {
+						return "invalid device id";
+					}
 					res.body.sessionToken = "abcd";
+					res.body.deviceId = 100;
 				})
 				.expect(200, {
 					status: 'ok',
 					firstName: null,
 					lastName: null,
 					id: id,
-					sessionToken: "abcd"
+					sessionToken: "abcd",
+					deviceId: 100
 				}, done);
 		});
 	});
 
 	it('/api/confirm/ - invalid code', function testSlash(done) {
-		getIdAndCodeForPhoneNumber(Constants.phoneNumber).then(function(values) {
+		getIdAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
 			var id = values[0];
 			var code = values[1];
 			request(server)
@@ -150,7 +191,8 @@ describe('logged out', function() {
 					preKeys: [{
 						i: [0],
 						pk: ['abcd']
-					}]
+					}],
+					deviceUuid: Constants.deviceUuid
 				})
 				.expect(200, {
 					status: 'error'
@@ -158,8 +200,8 @@ describe('logged out', function() {
 		});
 	});
 
-	it('/api/confirm/ - pre keys', function testSlash(done) {
-		getIdAndCodeForPhoneNumber(Constants.phoneNumber).then(function(values) {
+	it('/api/confirm/ - check redis objects', function testSlash(done) {
+		getIdAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
 			var id = values[0];
 			var code = values[1];
 			request(server)
@@ -170,7 +212,8 @@ describe('logged out', function() {
 					preKeys: [{
 						i: [0, 1],
 						pk: ['abcd', 'efgh']
-					}]
+					}],
+					deviceUuid: Constants.deviceUuid
 				})
 				.end(function(err, res) {
 					redis.smembersAsync('pki:{' + id + '}').then(function(values) {
@@ -180,6 +223,12 @@ describe('logged out', function() {
 					}).then(function(values) {
 						assert.equal(values['0'], 'abcd');
 						assert.equal(values['1'], 'efgh');
+						return redis.hget('u:{' + id + '}', 'd:' + Constants.deviceUuid);
+					}).then(function(value) {
+						assert.equal(value, res.body.deviceId);
+						return redis.hget('d:{' + res.body.deviceId + '}', 'session');
+					}).then(function(value) {
+						assert.equal(value, res.body.sessionToken);
 						done();
 					});
 				});

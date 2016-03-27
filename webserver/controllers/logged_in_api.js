@@ -1,4 +1,5 @@
 var express = require('express'),
+	Device = require('../models/device').Device,
 	User = require('../models/user').User,
 	File = require('../models/file').File,
 	s3 = require('../utils/s3');
@@ -6,13 +7,14 @@ var express = require('express'),
 var router = express.Router();
 
 router.use(function(req, res, next) {
-	var id = req.body.id;
+	var deviceId = req.body.deviceId;
 	var sessionToken = req.body.session;
 
-	new User(id).confirmSession(sessionToken).then(function(user) {
+	var device = new Device(deviceId);
+	device.confirmSession(sessionToken).then(function(user) {
 		req.user = user;
-		req.sessionToken = sessionToken;
-		next();		
+		req.device = device;
+		next();
 	}, function(err) {
 		res.send({ 'status': 'session' });
 	});
@@ -81,7 +83,7 @@ router.post('/pns/register/', function(req, res) {
 		return;
 	}
 
-	req.user.update(User.fields.iosPushToken, token).then(function() {
+	req.device.registerPnsToken(token).then(function() {
 		res.send({ 'status': 'ok' })
 	}, function() {
 		sendError(res);

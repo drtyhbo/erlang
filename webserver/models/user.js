@@ -1,5 +1,6 @@
 var redis = require('./redis').redis,
 	utils = require('../utils/utils.js'),
+	Device = require('../models/device.js').Device,
 	Promise = require('bluebird').Promise;
 
 var User = function(id) {
@@ -10,10 +11,8 @@ exports.User = User;
 User.fields = {
 	phone: 'phone',
 	code: 'code',
-	session: 'session',
 	active: 'active',
 	key: 'key',
-	iosPushToken: 'iosToken',
 	firstName: 'firstName',
 	lastName: 'lastName'
 };
@@ -46,13 +45,17 @@ User.checkPhoneNumbers = function(phoneNumbers) {
 	});
 };
 
-// Creates a new user. Returns a promise that resolves to the user.
-User.create = function(phoneNumber) {
+// Resolves to an array with the following members:
+// 0 - The user object.
+// 1 - The device object.
+// 2 - The confirmation code.
+User.create = function(phoneNumber, deviceUuid) {
 	if (!phoneNumber || phoneNumber.length != 11) {
 		return Promise.reject();
 	}
 
-	var sharedId;
+	var sharedUser;
+	var sharedDevice;
 	return this._getUserId(phoneNumber).then(function(id) {
 		if (!id) {
 			return User._create(phoneNumber);
@@ -60,36 +63,39 @@ User.create = function(phoneNumber) {
 			return Promise.resolve(new User(id));
 		}
 	}).then(function(user) {
-		return user._generateCode().thenReturn(user);
-	}).then(function(user) {
-		return Promise.resolve(user);
+		sharedUser = user;
+		return user.findDevice(deviceUuid);
+	}).then(function(device) {
+		sharedDevice = device;
+		return device.generateCode();
+	}).then(function(code) {
+		return Promise.resolve([sharedUser, sharedDevice, code]);
 	});
 };
 
-// Returns a session key for the user (assuming the codes match).
-User.login = function(phoneNumber, code) {
-	var self = this;
-
+// Resolves to an array with the following members:
+// 0 - The user object.
+// 1 - The device object.
+User.verifyNumber = function(phoneNumber, deviceUuid, code) {
 	var sharedUser;
-	return this._getUserId(phoneNumber).then(function(id) {
+	var sharedDevice;
+	return User._getUserId(phoneNumber).then(function(id) {
 		if (!id) {
 			return Promise.reject();
 		}
 
 		sharedUser = new User(id);
-		return sharedUser.fetch(User.fields.code);
+		return sharedUser.findDevice(deviceUuid);
+	}).then(function(device) {
+		sharedDevice = device;
+		return device.fetch(Device.fields.code);
 	}).then(function(values) {
 		if (!code || values[0] != code) {
 			return Promise.reject();
 		}
-		return sharedUser.fetch(User.fields.session);
-	}).then(function(values) {
-		if (!values[0]) {
-			values[0] = utils.generateSessionToken();
-		}
 		return sharedUser
-			._update(User.fields.session, values[0], User.fields.active, true)
-			.thenReturn(sharedUser);
+			._update(User.fields.active, true)
+			.thenReturn([sharedUser, sharedDevice]);
 	});
 };
 
@@ -121,17 +127,6 @@ User._preKeyIndicesKey = function(id) {
 
 User._userKey = function(id) {
 	return 'u:{' + id + '}';
-};
-
-User.prototype.confirmSession = function(sessionToken) {
-	if (!sessionToken) {
-		return Promise.reject();
-	}
-
-	var self = this;
-	return this.fetch(User.fields.session).then(function(values) {
-		return sessionToken == values[0] ? Promise.resolve(self) : Promise.reject();
-	});
 };
 
 User.prototype.exists = function() {
@@ -174,6 +169,18 @@ User.prototype.fetchPreKey = function() {
 		}
 	});
 };
+
+User.prototype.findDevice = function(deviceUuid) {
+	var self = this;
+	return redis.hgetAsync(User._userKey(this.id), 'd:' + deviceUuid).then(function(deviceId) {
+		if (deviceId) {
+			return Promise.resolve(deviceId ? new Device(deviceId) : null);
+		} else {
+			return self._createDevice(deviceUuid);
+		}
+	});
+};
+
 
 User.prototype.update = function() {
 	if (arguments[0] instanceof Array) {
@@ -221,15 +228,10 @@ User.prototype.updatePreKeys = function(preKeys) {
 		});
 };
 
-User.prototype._generateCode = function() {
+User.prototype._createDevice = function(deviceUuid) {
 	var self = this;
-	return redis.hgetAsync(User._userKey(this.id), User.fields.code).then(function(code) {
-		if (!code) {
-			self._code = Math.floor(Math.random() * 900000) + 100000;;
-			return redis.hsetAsync(User._userKey(self.id), User.fields.code, self._code).thenReturn(self._code);
-		} else {
-			return Promise.resolve(code);
-		}
+	return Device.create(this.id).then(function(device) {
+		return redis.hsetAsync(User._userKey(self.id), 'd:' + deviceUuid, device.id).thenReturn(device);
 	});
 };
 

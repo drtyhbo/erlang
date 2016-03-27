@@ -6,10 +6,17 @@ var router = express.Router();
 
 router.post('/register/', function(req, res) {
 	var phoneNumber = req.body.phone;
-	User.create(phoneNumber).then(function(user) {
-		return user.fetch(User.fields.code);
-	}).then(function(values) {
-		twilio.sendSMS(phoneNumber, values[0], function(err, message) {
+	var deviceUuid = req.body.deviceUuid;
+
+	if (!phoneNumber || !deviceUuid) {
+		res.send({ 'status': 'error' });
+		return;
+	}
+
+
+	User.create(phoneNumber, deviceUuid).then(function(values) {
+		var code = values[2];
+		twilio.sendSMS(phoneNumber, code, function(err, message) {
 			res.send({ 'status': 'ok' });
 		});
 	}, function(err) {
@@ -20,26 +27,34 @@ router.post('/register/', function(req, res) {
 router.post('/confirm/', function(req, res) {
 	var phoneNumber = req.body.phone;
 	var code = req.body.code;
+	var deviceUuid = req.body.deviceUuid;
 	var preKeys = req.body.preKeys;
 	
-	if (!phoneNumber || !code || !preKeys || !preKeys[0]) {
+	if (!phoneNumber || !code || !deviceUuid || !preKeys || !preKeys[0]) {
 		res.send({ 'status': 'error' });
 		return;
 	}
 
 	var sharedUser;
-	User.login(phoneNumber, code).then(function(user) {
-		sharedUser = user;
-		return user.updatePreKeys(preKeys[0]);
+	var sharedDevice;
+	var sharedSessionToken;
+	User.verifyNumber(phoneNumber, deviceUuid, code).then(function(values) {
+		sharedUser = values[0];
+		sharedDevice = values[1]
+		return sharedUser.updatePreKeys(preKeys[0]);
 	}).then(function() {
-		return sharedUser.fetch(User.fields.firstName, User.fields.lastName, User.fields.session);
+		return sharedDevice.login();
+	}).then(function(sessionToken) {
+		sharedSessionToken = sessionToken;
+		return sharedUser.fetch(User.fields.firstName, User.fields.lastName);
 	}).then(function(values){
 		res.send({
 			'status': 'ok',
 			'id': sharedUser.id,
+			'deviceId': sharedDevice.id,
 			'firstName': values[0],
 			'lastName': values[1],
-			'sessionToken': values[2]
+			'sessionToken': sharedSessionToken
 		});
 	}, function(err) {
 		res.send({ 'status': 'error' });

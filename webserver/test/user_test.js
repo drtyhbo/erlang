@@ -7,11 +7,14 @@ var assert = require('assert'),
 
 var Constants = {
 	phoneNumber: '18315550835',
+	deviceUuid: '729908c5a45746af90a88b53a738c218',
 	keyOfLastResort: 'abcdefgh'
 };
 
 describe('User', function() {
 	var sharedUser;
+	var sharedDevice;
+	var sharedCode;
 
 	before(function (done) {
 		helpers.deleteUser(Constants.phoneNumber).then(function() {
@@ -34,37 +37,39 @@ describe('User', function() {
 	});
 
 	it('User - create ok', function testSlash(done) {
-		User.create(Constants.phoneNumber).then(function(user) {
-			sharedUser = user;
+		User.create(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
+			sharedUser = values[0];
+			sharedDevice = values[1];
+			sharedCode = values[2];
 
-			assert.notEqual(user, null);
-			return user.fetch(User.fields.code);
-		}).then(function(values) {
-			assert.equal(values[0] >= 100000, true);
-			assert.equal(values[0] <= 999999, true);
+			assert.notEqual(sharedUser, null);
+			assert.notEqual(sharedDevice, null);
+			assert.equal(sharedCode >= 100000, true);
+			assert.equal(sharedCode <= 999999, true);
+			
 			done();
 		});
 	});
 
-	it('User - login no code', function testSlash(done) {
-		User.login(Constants.phoneNumber, '12345').then(function(user) {
+	it('User - verify number no code', function testSlash(done) {
+		User.verifyNumber(Constants.phoneNumber, Constants.deviceUuid).then(function(user) {
 		}, function(err) {
 			done();
 		});
 	});
 
-	it('User - login no phone', function testSlash(done) {
-		User.login('12345', '12345').then(function(user) {
+	it('User - verify number no phone', function testSlash(done) {
+		User.verifyNumber(null, '12345').then(function(user) {
 		}, function(err) {
 			done();
 		});
 	});
 
-	it('User - login ok', function testSlash(done) {
-		sharedUser.fetch(User.fields.code).then(function(values) {
-			return User.login(Constants.phoneNumber, values[0]);
-		}).then(function(user) {
-			assert.notEqual(user, null);
+	it('User - verify number ok', function testSlash(done) {
+		User.verifyNumber(Constants.phoneNumber, Constants.deviceUuid, sharedCode).then(function(values) {
+			assert.equal(values.length, 2);
+			assert.notEqual(values[0], null);
+			assert.notEqual(values[1], null);
 			done();
 		});
 	});
@@ -139,23 +144,6 @@ describe('User', function() {
 			assert.equal(values[1], 'Rob2');
 			assert.equal(values[2], 'Lowe2');
 			assert.equal(values[3], 'jklm2');
-			done();
-		});
-	});
-
-	it('User - confirmSession', function testSlash(done) {
-		sharedUser.fetch(User.fields.session).then(function(values) {
-			return sharedUser.confirmSession(values[0]);
-		}).then(function(user) {
-			assert.notEqual(user, null);
-			done();
-		});
-	});
-
-	it('User - confirmSession null session', function testSlash(done) {
-		sharedUser.confirmSession().then(function() {
-			// Should never get here.
-		}, function(err) {
 			done();
 		});
 	});
