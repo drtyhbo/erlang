@@ -152,6 +152,7 @@
 		90C0D31A1C8C92F7006BF1EA /* TintedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0D3191C8C92F7006BF1EA /* TintedImage.swift */; };
 		90C0F4A31C79621B007F58BD /* MoviePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F4A21C79621B007F58BD /* MoviePlayer.swift */; };
 		90C0F4AD1C7A2AC3007F58BD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C0F4AC1C7A2AC3007F58BD /* UIColor.swift */; };
+		90CC07A51CA76B8E001464F5 /* PendingMessageListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CC07A41CA76B8E001464F5 /* PendingMessageListener.swift */; };
 		90DAF2261CA2E75900901DB9 /* LabelWithCustomFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DAF2251CA2E75900901DB9 /* LabelWithCustomFont.swift */; };
 		90EBF88C1C47459000A7AD51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90EBF88B1C47459000A7AD51 /* Assets.xcassets */; };
 		90EBF8BD1C474CA700A7AD51 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EBF8B61C474CA700A7AD51 /* AppDelegate.swift */; };
@@ -370,6 +371,7 @@
 		90C0D3191C8C92F7006BF1EA /* TintedImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TintedImage.swift; sourceTree = "<group>"; };
 		90C0F4A21C79621B007F58BD /* MoviePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviePlayer.swift; sourceTree = "<group>"; };
 		90C0F4AC1C7A2AC3007F58BD /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIColor.swift; path = Extensions/UIColor.swift; sourceTree = "<group>"; };
+		90CC07A41CA76B8E001464F5 /* PendingMessageListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PendingMessageListener.swift; sourceTree = "<group>"; };
 		90DAF2251CA2E75900901DB9 /* LabelWithCustomFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelWithCustomFont.swift; sourceTree = "<group>"; };
 		90EBF8811C47458F00A7AD51 /* chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90EBF88B1C47459000A7AD51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -468,6 +470,7 @@
 				90F1F78D1C7F52B200A75914 /* KeyboardNotifications.swift */,
 				90FC19D91C7CB8BC004E7EFF /* PhoneNumberFormatter.swift */,
 				9074A9C71CA2F36200C378E6 /* CustomFont.swift */,
+				90CC07A41CA76B8E001464F5 /* PendingMessageListener.swift */,
 			);
 			name = Utils;
 			path = chat/Code/Utils;
@@ -1182,6 +1185,7 @@
 				9031FFD21C6240BF00BCC456 /* ContactsHelper.swift in Sources */,
 				90AFD5C51C608EB200236D6B /* ChatListViewController.swift in Sources */,
 				90407A871C98F8CA00666587 /* ThemePickerTableViewCell.swift in Sources */,
+				90CC07A51CA76B8E001464F5 /* PendingMessageListener.swift in Sources */,
 				90C0D31A1C8C92F7006BF1EA /* TintedImage.swift in Sources */,
 				906D064D1CA24D3B0014EFB5 /* BubbleImageView.swift in Sources */,
 				9031FFD41C6671B800BCC456 /* Constants.swift in Sources */,

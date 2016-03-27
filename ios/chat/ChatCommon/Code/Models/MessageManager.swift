@@ -44,26 +44,22 @@ public class MessageManager {
         return unreadMessageCount
     }
 
+    private let messageSender: MessageSender
+
     public var isSending: Bool {
         return messageSender.isSending
     }
 
     private var unreadMessageCountForChat: [Chat:Int] = [:]
-
-    private lazy var messageSender: MessageSender = {
-        let messageSender = MessageSender()
-        messageSender.delegate = self
-        return messageSender
-    }()
-
     private var receivedMessages: [ReceivedMessage] = []
+
+    init() {
+        messageSender = MessageSender()
+        messageSender.delegate = self
+    }
 
     public func setup() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessages:", name: ChatClient.ChatClientReceivedMessagesNotification, object: nil)
-    }
-
-    public func maybeSendMessages() {
-        messageSender.maybeSendNextPendingMessage()
     }
 
     public func sendMessageWithText(text: String, toChat chat: Chat, callback: Message?->Void) {

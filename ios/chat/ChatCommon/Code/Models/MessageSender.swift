@@ -18,36 +18,36 @@ protocol MessageSenderDelegate: class {
 class MessageSender {
     weak var delegate: MessageSenderDelegate?
 
-    private(set) var isSending = false
+    var isSending: Bool {
+        return currentPendingMessage != nil
+    }
+
+    private var currentPendingMessage: PendingMessage?
     private var messageId = 0
 
     init() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "messageDidSend:", name: ChatClient.ChatClientMessageDidSend, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "clientDidConnect", name: ChatClient.ChatClientDidConnectNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "clientDidDisconnect", name: ChatClient.ChatClientDidDisconnectNotification, object: nil)
     }
 
     func sendMessage(message: Message, files: [File] = []) {
         PendingMessage.createWithMessage(message, messageId: messageId++, files: files, secretKey: MessageCrypter.sharedCrypter.sharedSecret())
         CoreData.save()
-        maybeSendNextPendingMessage()
-    }
-
-    func maybeSendNextPendingMessage() {
-        if isSending {
-            return
-        }
-
         sendNextPendingMessage()
     }
 
     private func sendNextPendingMessage() {
-        guard let pendingMessage = PendingMessage.nextPendingMessage() else {
-            delegate?.messageSenderDidFinishSendingAllMessages(self)
-            isSending = false
+        if currentPendingMessage != nil {
             return
         }
 
-        isSending = true
+        guard let pendingMessage = PendingMessage.nextPendingMessage() else {
+            delegate?.messageSenderDidFinishSendingAllMessages(self)
+            return
+        }
 
+        currentPendingMessage = pendingMessage
         if let file = pendingMessage.files.anyObject() as? File {
             uploadFile(file, fromPendingMessage: pendingMessage)
         } else {
@@ -93,7 +93,18 @@ class MessageSender {
             pendingMessage.MR_deleteEntity()
             CoreData.save()
 
-            sendNextPendingMessage()
+            if let currentPendingMessage = currentPendingMessage where currentPendingMessage == pendingMessage {
+                self.currentPendingMessage = nil
+                sendNextPendingMessage()
+            }
         }
+    }
+
+    @objc private func clientDidConnect() {
+        sendNextPendingMessage()
+    }
+
+    @objc private func clientDidDisconnect() {
+        currentPendingMessage = nil
     }
 }

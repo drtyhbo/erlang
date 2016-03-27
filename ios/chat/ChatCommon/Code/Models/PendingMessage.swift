@@ -51,3 +51,7 @@ class PendingMessage: NSManagedObject {
         CoreData.save()
     }
 }
+
+func ==(lhs: PendingMessage, rhs: PendingMessage) -> Bool {
+    return lhs.messageId == rhs.messageId
+}

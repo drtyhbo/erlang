@@ -22,11 +22,6 @@ class MainViewController: UIViewController {
         slideViewController = APLSlideMenuViewController()
 
         super.init(nibName: nil, bundle: nil)
-
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "chatClientConnecting", name: ChatClient.ChatClientConnectingNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "chatClientDidConnect", name: ChatClient.ChatClientDidConnectNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "chatClientDidDisconnect", name: ChatClient.ChatClientDidDisconnectNotification, object: nil)
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -53,8 +48,8 @@ class MainViewController: UIViewController {
         addChildViewController(slideViewController)
     }
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
 
         if let chatId = NSUserDefaults.standardUserDefaults().URLForKey(currentChatKey), chat = Chat.findWithId(chatId) {
             (slideViewController.contentViewController as! ChatViewController).chat = chat
@@ -66,42 +61,6 @@ class MainViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         slideViewController.view.bounds.size = view.bounds.size
-    }
-
-    private func maybeShowReconnectView() {
-        reconnectViewTimer?.invalidate()
-        reconnectViewTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "showReconnectView", userInfo: nil, repeats: false)
-    }
-
-    @objc private func showReconnectView() {
-        if reconnectView == nil {
-            reconnectView = ReconnectView(frame: CGRect(x: 0, y: 0, width: view.bounds.size.width, height: 50))
-        }
-
-        view.insertSubview(reconnectView, atIndex: 0)
-
-        UIView.animateWithDuration(0.25) {
-            self.slideViewController.view.frame.origin.y = 50
-        }
-    }
-
-    private func hideReconnectView() {
-        reconnectViewTimer?.invalidate()
-        UIView.animateWithDuration(0.25) {
-            self.slideViewController.view.frame.origin.y = 0
-        }
-    }
-
-    @objc private func chatClientConnecting() {
-        maybeShowReconnectView()
-    }
-
-    @objc private func chatClientDidConnect() {
-        hideReconnectView()
-    }
-
-    @objc private func chatClientDidDisconnect() {
-        maybeShowReconnectView()
     }
 }
 

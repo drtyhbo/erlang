@@ -20,6 +20,8 @@ class BubbleMessageRowTableViewCell: BubbleTableViewCell {
     private static let minPadding: CGFloat = 10
     private static let maxPadding: CGFloat = 15
 
+    private var pendingMessageListener: PendingMessageListener?
+
     override class func heightForMessage(message: Message, footerType: FooterType) -> CGFloat {
         let text = message.text ?? ""
         let boundingSize = (text as NSString).boundingRectWithSize(CGSize(width: UIScreen.mainScreen().bounds.size.width - (Constants.BubbleLayout.minPadding + Constants.BubbleLayout.maxPadding) - (minPadding + maxPadding), height: 9999), options: [NSStringDrawingOptions.UsesLineFragmentOrigin, NSStringDrawingOptions.UsesFontLeading], attributes: [NSFontAttributeName: UIFont.customFontOfSize(17)], context: nil)
@@ -29,10 +31,28 @@ class BubbleMessageRowTableViewCell: BubbleTableViewCell {
     override func updateWithMessage(message: Message, hasTail: Bool) {
         super.updateWithMessage(message, hasTail: hasTail)
 
+        let isPending = message.isPending
+        if isPending {
+            pendingMessageListener = PendingMessageListener(message: message, delegate: self)
+        }
+
+        bubbleBackground.alpha = isPending ? 0.5 : 1
         messageLabel.text = message.text ?? ""
         messageLabel.textColor = message.from == nil ? UIColor.whiteColor() : UIColor.blackColor()
 
         messageLeadingConstraint.constant = alignment == .Left ? BubbleMessageRowTableViewCell.maxPadding : BubbleMessageRowTableViewCell.minPadding
         messageTrailingConstraint.constant = alignment == .Left ? BubbleMessageRowTableViewCell.minPadding : BubbleMessageRowTableViewCell.maxPadding
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        pendingMessageListener?.stopListening()
+    }
+}
+
+extension BubbleMessageRowTableViewCell: PendingMessageListenerDelegate {
+    func pendingMessageListenerDidComplete(pendingMessageListener: PendingMessageListener) {
+        bubbleBackground.alpha = 1
     }
 }
