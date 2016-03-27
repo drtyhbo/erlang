@@ -69,13 +69,11 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        updateTheme(ColorTheme.currentTheme)
-        themeListener.themeChangeListener = { [weak self] theme in
+        themeListener.listenForThemeChangesWithCallback { [weak self] theme in
             self?.updateTheme(theme)
         }
 
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 100
+        tableView.chatTableViewDelegate = self
         tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTapOnMessages"))
 
         unreadMessagesContainer.layer.cornerRadius = unreadMessagesContainer.bounds.size.height / 2
@@ -243,21 +241,6 @@ class ChatViewController: UIViewController {
     }
 }
 
-extension ChatViewController: UITableViewDelegate {
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        newMessageView.resignFirstResponder()
-    }
-}
-
-extension ChatViewController: UIScrollViewDelegate {
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if scrollView.contentOffset.y < 200 {
-            tableView.loadMessages()
-        }
-    }
-}
-
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(textView: UITextView) {
         sizeTextView()
@@ -274,5 +257,11 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
 
         dismissViewControllerAnimated(true, completion: nil)
         self.imagePickerController = nil
+    }
+}
+
+extension ChatViewController: ChatTableViewDelegate {
+    func chatTableViewDelegateDidSelectRow(chatTableView: ChatTableView) {
+        newMessageView.resignFirstResponder()
     }
 }

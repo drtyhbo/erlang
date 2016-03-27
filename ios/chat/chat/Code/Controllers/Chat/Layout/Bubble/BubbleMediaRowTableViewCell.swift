@@ -26,12 +26,14 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
 
     private static let thumbnailPadding: CGFloat = 80
 
-    override class func estimatedHeightForMessage(message: Message) -> CGFloat {
+    private var pendingMessageListener: PendingMessageListener?
+
+    override class func heightForMessage(message: Message, footerType: FooterType) -> CGFloat {
         guard let thumbnailInfo = message.thumbnailInfo else {
-            return super.estimatedHeightForMessage(message)
+            return 0
         }
 
-        return super.estimatedHeightForMessage(message) + dimensionsForThumbnailWithInfo(thumbnailInfo).height
+        return super.heightForMessage(message, footerType: footerType) + dimensionsForThumbnailWithInfo(thumbnailInfo).height
     }
 
     private static func dimensionsForThumbnailWithInfo(thumbnailInfo: Message.ThumbnailInfo) -> (width: CGFloat, height: CGFloat) {
@@ -57,6 +59,8 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        pendingMessageListener?.stopListening()
+
         moviePlayer.pause()
         hideMoviePlayer()
     }
@@ -68,8 +72,7 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
 
         let isPending = message.isPending
         if isPending {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "didUpdateProgressNotification:", name: MessageManager.SendingMessageProgressNotification, object: nil)
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSendingNotification:", name: MessageManager.FinishedSendingMessageNotification, object: nil)
+            pendingMessageListener = PendingMessageListener(message: message, delegate: self)
         }
 
         updateThumbnail()
@@ -119,9 +122,6 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
                     self.messageImageView.hidden = false
                 }
             }
-
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-            }
         }
     }
 
@@ -129,24 +129,6 @@ class BubbleMediaRowTableViewCell: BubbleTableViewCell {
         loadingIndicator.hidden = true
         playIcon.hidden = false
         moviePlayer.hidden = true
-    }
-
-    @objc private func didUpdateProgressNotification(notification: NSNotification) {
-        guard let senderMessage = notification.object as? Message, percentComplete = notification.userInfo?["percentComplete"] as? Float where senderMessage.localId == message.localId else {
-            return
-        }
-
-        progressView.progress = percentComplete
-    }
-
-    @objc private func didFinishSendingNotification(notification: NSNotification) {
-        guard let senderMessage = notification.object as? Message where senderMessage.localId == message.localId else {
-            return
-        }
-
-        messageImageView.alpha = 1
-        progressView.hidden = true
-        updateThumbnail()
     }
 
     @objc private func didTapImage() {
@@ -185,5 +167,17 @@ extension BubbleMediaRowTableViewCell: MoviePlayerDelegate {
 
     func moviePlayerDidReachEnd(moviePlayer: MoviePlayer) {
         hideMoviePlayer()
+    }
+}
+
+extension BubbleMediaRowTableViewCell: PendingMessageListenerDelegate {
+    func pendingMessageListener(pendingMessageListener: PendingMessageListener, didUpdateProgress progress: Float) {
+        progressView.progress = progress
+    }
+
+    func pendingMessageListenerDidComplete(pendingMessageListener: PendingMessageListener) {
+        messageImageView.alpha = 1
+        progressView.hidden = true
+        updateThumbnail()
     }
 }

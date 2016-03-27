@@ -29,8 +29,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
 
             let isPending = message.isPending
             if isPending {
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didUpdateProgressNotification:", name: MessageManager.SendingMessageProgressNotification, object: nil)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSendingNotification:", name: MessageManager.FinishedSendingMessageNotification, object: nil)
+                pendingMessageListener = PendingMessageListener(message: message, delegate: self)
             }
 
             updateThumbnail()
@@ -44,11 +43,15 @@ class MediaRowTableViewCell: MessageTableViewCell {
 
     override var headerType: HeaderType {
         didSet {
-            topConstraint.constant = MediaRowTableViewCell.paddingForHeaderType(headerType)
+            if let topConstraint = topConstraint {
+                topConstraint.constant = MediaRowTableViewCell.paddingForHeaderType(headerType)
+            }
         }
     }
 
     private static let thumbnailPadding: CGFloat = 64
+
+    private var pendingMessageListener: PendingMessageListener?
 
     override class func estimatedHeightForMessage(message: Message, headerType: HeaderType) -> CGFloat {
         guard let thumbnailInfo = message.thumbnailInfo else {
@@ -59,7 +62,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
     }
 
     private static func paddingForHeaderType(headerType: HeaderType) -> CGFloat {
-        return headerType == .NoPadding ? 1 : 8
+        return headerType == .PaddingOnly ? 4 : 8
     }
 
     private static func dimensionsForThumbnailWithInfo(thumbnailInfo: Message.ThumbnailInfo) -> (width: CGFloat, height: CGFloat) {
@@ -85,6 +88,8 @@ class MediaRowTableViewCell: MessageTableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        pendingMessageListener?.stopListening()
+        
         moviePlayer.pause()
         hideMoviePlayer()
     }
@@ -135,24 +140,6 @@ class MediaRowTableViewCell: MessageTableViewCell {
         moviePlayer.hidden = true
     }
 
-    @objc private func didUpdateProgressNotification(notification: NSNotification) {
-        guard let senderMessage = notification.object as? Message, percentComplete = notification.userInfo?["percentComplete"] as? Float where senderMessage.localId == message.localId else {
-            return
-        }
-
-        progressView.progress = percentComplete
-    }
-
-    @objc private func didFinishSendingNotification(notification: NSNotification) {
-        guard let senderMessage = notification.object as? Message where senderMessage.localId == message.localId else {
-            return
-        }
-
-        messageImageView.alpha = 1
-        progressView.hidden = true
-        updateThumbnail()
-    }
-
     @objc private func didTapImage() {
         if message.isPending {
             return
@@ -189,5 +176,17 @@ extension MediaRowTableViewCell: MoviePlayerDelegate {
 
     func moviePlayerDidReachEnd(moviePlayer: MoviePlayer) {
         hideMoviePlayer()
+    }
+}
+
+extension MediaRowTableViewCell: PendingMessageListenerDelegate {
+    func pendingMessageListener(pendingMessageListener: PendingMessageListener, didUpdateProgress progress: Float) {
+        progressView.progress = progress
+    }
+
+    func pendingMessageListenerDidComplete(pendingMessageListener: PendingMessageListener) {
+        messageImageView.alpha = 1
+        progressView.hidden = true
+        updateThumbnail()
     }
 }

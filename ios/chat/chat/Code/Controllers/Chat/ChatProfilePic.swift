@@ -21,6 +21,7 @@ class ChatProfilePic: UIImageView {
         ProfilePicMask(name: "heart", imageName: "Heart"),
         ProfilePicMask(name: "star", imageName: "Star"),
         ProfilePicMask(name: "badge", imageName: "Badge")]
+    private let maskLayer = CALayer()
 
     var friend: Friend? {
         didSet {
@@ -63,16 +64,16 @@ class ChatProfilePic: UIImageView {
         clipsToBounds = true
         userInteractionEnabled = true
 
+        layer.masksToBounds = true
+        maskLayer.frame = bounds
+
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: "didTap"))
     }
 
     private func updateMask(mask: ProfilePicMask) {
         if let maskImageName = mask.imageName {
-            let maskLayer = CALayer()
             maskLayer.contents = UIImage(named: maskImageName)!.CGImage
-            maskLayer.frame = bounds
             layer.mask = maskLayer
-            layer.masksToBounds = true
         } else {
             layer.mask = nil
         }

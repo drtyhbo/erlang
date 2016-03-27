@@ -10,7 +10,13 @@ import ChatCommon
 import Foundation
 import UIKit
 
+protocol ChatTableViewDelegate: class {
+    func chatTableViewDelegateDidSelectRow(chatTableView: ChatTableView)
+}
+
 class ChatTableView: UITableView {
+    weak var chatTableViewDelegate: ChatTableViewDelegate?
+
     private var chat: Chat!
     private var layout: ChatLayout = .Bubble
 
@@ -18,8 +24,10 @@ class ChatTableView: UITableView {
         switch layout {
         case .Normal:
             dataSource = NormalChatTableDataSource(chat: chat, tableView: self)
+            delegate = self
         case .Bubble:
             dataSource = BubbleChatTableDataSource(chat: chat, tableView: self)
+            delegate = self
         }
 
         let verticalInset: CGFloat = layout == .Bubble ? 8 : 16
@@ -57,13 +65,34 @@ class ChatTableView: UITableView {
         let insertedRowCount = dataSource!.tableView(self, numberOfRowsInSection: 0) - previousRowCount
 
         if previousRowCount == 0 || insertedRowCount > 0 {
-            UIView.performWithoutAnimation {
-                self.reloadData()
+            reloadData()
 
-                if insertedRowCount > 0 {
+            if insertedRowCount > 0 {
+                if previousRowCount == 0 {
+                    scrollRectToVisible(CGRect(origin: CGPoint(x: 0, y: contentSize.height), size: bounds.size), animated: false)
+                } else {
                     self.scrollToRowAtIndexPath(NSIndexPath(forRow: insertedRowCount - (previousRowCount == 0 ? 1 : 0), inSection: 0), atScrollPosition: previousRowCount == 0 ? .Bottom : .Top, animated: false)
                 }
             }
+        }
+    }
+}
+
+extension ChatTableView: UITableViewDelegate {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        chatTableViewDelegate?.chatTableViewDelegateDidSelectRow(self)
+    }
+
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return (dataSource as! ChatTableDataSource).heightForRowAtIndexPath(indexPath)
+    }
+}
+
+extension ChatTableView: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 200 {
+            loadMessages()
         }
     }
 }

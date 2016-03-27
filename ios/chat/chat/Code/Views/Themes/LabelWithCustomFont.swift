@@ -10,18 +10,17 @@ import Foundation
 import UIKit
 
 class LabelWithCustomFont: UILabel {
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
+    private let themeListener = ThemeListener()
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateFont", name: CustomFont.FontChangedNotification, object: nil)
-        updateFont()
+        themeListener.listenForFontChangesWithCurrentFont(font) { [weak self] font in
+            self?.updateFont(font)
+        }
     }
 
-    @objc private func updateFont() {
-        font = UIFont.customFontOfSize(font?.pointSize ?? 16)
+    @objc private func updateFont(font: UIFont) {
+        self.font = font
     }
 }

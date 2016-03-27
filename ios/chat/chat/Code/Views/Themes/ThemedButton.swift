@@ -17,17 +17,21 @@ class ThemedButton: UIButton {
 
         setImage(imageForState(.Normal)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
 
-        updateTheme(ColorTheme.currentTheme)
-        themeListener.themeChangeListener = { [weak self] theme in
+        themeListener.listenForThemeChangesWithCallback { [weak self] theme in
             self?.updateTheme(theme)
         }
-
-        titleLabel?.font = UIFont.customFontOfSize(titleLabel?.font.pointSize ?? 16)
+        themeListener.listenForFontChangesWithCurrentFont(titleLabel?.font) { [weak self] font in
+            self?.updateFont(font)
+        }
     }
 
     private func updateTheme(theme: ColorTheme) {
         let buttonColor = theme.buttonColor
         tintColor = buttonColor
         setTitleColor(buttonColor, forState: .Normal)
+    }
+
+    private func updateFont(font: UIFont) {
+        titleLabel?.font = font
     }
 }

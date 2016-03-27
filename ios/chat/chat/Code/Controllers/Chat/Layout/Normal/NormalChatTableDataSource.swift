@@ -19,11 +19,7 @@ class NormalChatTableDataSource: ChatTableDataSource {
         func headerTypeForMessage(message: Message) -> MessageTableViewCell.HeaderType {
             switch(self) {
                 case .MessageRow(let previousMessage, _):
-                    if message.thumbnailInfo != nil && previousMessage.thumbnailInfo != nil {
-                        return .NoPadding
-                    } else {
-                        return (message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from) ? .Full : .PaddingOnly
-                    }
+                    return (message.date.timeIntervalSinceDate(previousMessage.date) > 600 || message.from != previousMessage.from) ? .Full : .PaddingOnly
                 default:
                     return .FullNoPadding
             }
@@ -31,7 +27,9 @@ class NormalChatTableDataSource: ChatTableDataSource {
     }
 
     private let chatRowCellReuseIdentifier = "ChatRowTableViewCell"
+    private let noHeaderChatRowCellReuseIdentifier = "NoHeaderChatRowTableViewCell"
     private let mediaRowCellReuseIdentifier = "MediaRowTableViewCell"
+    private let noHeaderMediaRowCellReuseIdentifier = "NoHeaderMediaRowTableViewCell"
     private let dayCellReuseIdentifier = "DayTableViewCell"
     private let newMessagesCellReuseIdentifier = "NewMessagesTableViewCell"
     private let conversationStartCellReuseIdentifier = "ConversationStartTableViewCell"
@@ -44,11 +42,31 @@ class NormalChatTableDataSource: ChatTableDataSource {
 
         tableView.estimatedRowHeight = 100
         tableView.registerNib(UINib(nibName: "ChatRowTableViewCell", bundle: nil), forCellReuseIdentifier: chatRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "NoHeaderChatRowTableViewCell", bundle: nil), forCellReuseIdentifier: noHeaderChatRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "MediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: mediaRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "NoHeaderMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: noHeaderMediaRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "DayTableViewCell", bundle: nil), forCellReuseIdentifier: dayCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "NewMessagesTableViewCell", bundle: nil), forCellReuseIdentifier: newMessagesCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "ConversationStartTableViewCell", bundle: nil), forCellReuseIdentifier: conversationStartCellReuseIdentifier)
+    }
+
+    override func heightForRowAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
+        switch(rows[indexPath.row]) {
+        case .ConversationStart:
+            return ConversationStartTableViewCell.rowHeight
+        case .MessageRow(let message, let headerType):
+            if message.type == .Text {
+                return ChatRowTableViewCell.estimatedHeightForMessage(message, headerType: headerType)
+
+            } else {
+                return MediaRowTableViewCell.estimatedHeightForMessage(message, headerType: headerType)
+            }
+        case .Date(_):
+            return DayTableViewCell.estimatedRowHeight
+        case .NewMessages:
+            return NewMessagesTableViewCell.rowHeight
+        }
     }
 
     private func calculateRowsFromMessages(messages: [Message], previousRow: RowType?) -> [RowType] {
@@ -105,9 +123,11 @@ extension NormalChatTableDataSource: UITableViewDataSource {
 
             var cell: MessageTableViewCell
             if message.type == .Text {
-                cell = tableView.dequeueReusableCellWithIdentifier(chatRowCellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
+                let cellReuseIdentifier = headerType == .PaddingOnly ? noHeaderChatRowCellReuseIdentifier : chatRowCellReuseIdentifier
+                cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! MessageTableViewCell
             } else {
-                cell = tableView.dequeueReusableCellWithIdentifier(mediaRowCellReuseIdentifier, forIndexPath: indexPath) as! MediaRowTableViewCell
+                let cellReuseIdentifier = headerType == .PaddingOnly ? noHeaderMediaRowCellReuseIdentifier : mediaRowCellReuseIdentifier
+                cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! MediaRowTableViewCell
             }
 
             cell.message = message
@@ -120,35 +140,6 @@ extension NormalChatTableDataSource: UITableViewDataSource {
             return cell
         case .NewMessages:
             return tableView.dequeueReusableCellWithIdentifier(newMessagesCellReuseIdentifier, forIndexPath: indexPath)
-        }
-    }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        switch(rows[indexPath.row]) {
-        case .ConversationStart:
-            return ConversationStartTableViewCell.rowHeight
-        case .MessageRow(let message, let headerType):
-            if message.type == .Text {
-                return ChatRowTableViewCell.estimatedHeightForMessage(message, headerType: headerType)
-
-            } else {
-                return MediaRowTableViewCell.estimatedHeightForMessage(message, headerType: headerType)
-            }
-        case .Date(_):
-            return DayTableViewCell.estimatedRowHeight
-        case .NewMessages:
-            return NewMessagesTableViewCell.rowHeight
-        }
-    }
-
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        switch(rows[indexPath.row]) {
-        case .ConversationStart:
-            return ConversationStartTableViewCell.rowHeight
-        case .NewMessages:
-            return NewMessagesTableViewCell.rowHeight
-        default:
-            return UITableViewAutomaticDimension
         }
     }
 }

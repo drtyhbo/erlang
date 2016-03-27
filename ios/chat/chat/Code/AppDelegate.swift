@@ -73,7 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-        MessageManager.sharedManager.maybeSendMessages()
     }
 
     func applicationDidEnterBackground(application: UIApplication) {

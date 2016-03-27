@@ -33,6 +33,9 @@ public class ChatClient {
     private var receivedMessages: [ReceivedMessage] = []
     private var receivedMessagesTimer: NSTimer?
 
+    private var reconnectionTimer: NSTimer?
+    private var reconnectionDelay: NSTimeInterval = Constants.Connection.reconnectionTimeInterval
+
     init() {
         connection = ChatConnection(host: host, port: port)
         connection.delegate = self
@@ -110,6 +113,11 @@ public class ChatClient {
         }
     }
 
+    private func scheduleReconnect() {
+        reconnectionTimer?.invalidate()
+        reconnectionTimer = NSTimer.scheduledTimerWithTimeInterval(reconnectionDelay, target: self, selector: "reconnect", userInfo: nil, repeats: false)
+    }
+
     private func sendReceivedOfflineMessagesResponse() {
         sendJson(JSON([
             "t": "a",
@@ -120,6 +128,7 @@ public class ChatClient {
     private func handleJson(json: JSON) {
         if json["r"] == "connected" {
             state = .Connected
+            reconnectionDelay = Constants.Connection.reconnectionTimeInterval
             NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientDidConnectNotification, object: nil)
         } else if let messages = json["m"].array {
             handleMessagesJson(messages)
@@ -181,6 +190,11 @@ public class ChatClient {
     @objc private func applicationDidBecomeActive() {
         maybeConnect()
     }
+
+    @objc private func reconnect() {
+        reconnectionDelay *= 2
+        maybeConnect()
+    }
 }
 
 extension ChatClient: ChatConnectionDelegate {
@@ -191,6 +205,7 @@ extension ChatClient: ChatConnectionDelegate {
     func chatConnectionOnDisconnect(chatConnection: ChatConnection) {
         state = .Disconnected
         NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientDidDisconnectNotification, object: nil)
+        scheduleReconnect()
     }
 
     func chatConnection(chatConnection: ChatConnection, didReceiveJSON json: JSON) {

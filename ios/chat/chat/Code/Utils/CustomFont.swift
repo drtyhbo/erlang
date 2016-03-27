@@ -12,7 +12,6 @@ import UIKit
 class CustomFont {
     static let fonts = [
         CustomFont(fontName: "AvenirNext", displayName: "Avenir Next"),
-        CustomFont(fontName: "AvenirNextCondensed", displayName: "Avenir Next Condensed"),
         CustomFont(fontName: "ChalkboardSE", displayName: "Chalkboard"),
         CustomFont(fontName: "Lato", displayName: "Lato"),
         CustomFont(fontName: "Menlo", displayName: "Menlo"),

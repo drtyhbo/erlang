@@ -11,37 +11,64 @@ import Foundation
 
 class BubbleChatTableDataSource: ChatTableDataSource {
     private enum RowType {
-        case MessageRow(AnyObject)
+        case DateRow(NSDate)
+        case MessageRow(Message)
     }
 
     private let leftMessageRowCellReuseIdentifier = "LeftBubbleMessageRowTableViewCell"
     private let rightMessageRowCellReuseIdentifier = "RightBubbleMessageRowTableViewCell"
     private let leftMediaRowCellReuseIdentifier = "LeftBubbleMediaRowTableViewCell"
     private let rightMediaRowCellReuseIdentifier = "RightBubbleMediaRowTableViewCell"
+    private let dateCellReuseIdentifier = "DateTableViewCell"
 
     private var rows: [RowType] = []
 
     override init(chat: Chat, tableView: UITableView) {
         super.init(chat: chat, tableView: tableView)
 
-        tableView.estimatedRowHeight = 100
         tableView.registerNib(UINib(nibName: "LeftBubbleMessageRowTableViewCell", bundle: nil), forCellReuseIdentifier: leftMessageRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "RightBubbleMessageRowTableViewCell", bundle: nil), forCellReuseIdentifier: rightMessageRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "LeftBubbleMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: leftMediaRowCellReuseIdentifier)
         tableView.registerNib(UINib(nibName: "RightBubbleMediaRowTableViewCell", bundle: nil), forCellReuseIdentifier: rightMediaRowCellReuseIdentifier)
+        tableView.registerNib(UINib(nibName: "BubbleDateTableViewCell", bundle: nil), forCellReuseIdentifier: dateCellReuseIdentifier)
     }
 
-    private func calculateRowsFromMessages(messages: [Message]) -> [RowType] {
+    override func heightForRowAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
+        let nextMessage = nextMessageForRowAtIndex(indexPath.row)
+        switch(rows[indexPath.row]) {
+        case .DateRow(_):
+            return BubbleDateTableViewCell.rowHeight
+        case .MessageRow(let message):
+            let footerType: BubbleMessageRowTableViewCell.FooterType = nextMessage != nil && nextMessage!.from == message.from ? .Small : .Large
+            if message.type == .Text {
+                return BubbleMessageRowTableViewCell.heightForMessage(message, footerType: footerType)
+            } else {
+                return BubbleMediaRowTableViewCell.heightForMessage(message, footerType: footerType)
+            }
+        }
+    }
+
+    private func calculateRowsFromMessages(messages: [Message], var previousMessage: Message?) -> [RowType] {
         if messages.count == 0 {
             return []
         }
 
         var rows: [RowType] = []
         for i in 0..<messages.count {
+            let message = messages[i]
+            if let previousMessage = previousMessage where message.date.timeIntervalSinceDate(previousMessage.date) >= Constants.BubbleLayout.timeIntervalBetweenDateRows {
+                rows.append(.DateRow(message.date))
+            }
             rows.append(.MessageRow(messages[i]))
+
+            previousMessage = message
         }
 
         return rows
+    }
+
+    private func lastMessage() -> Message? {
+        return nextMessageForRowAtIndex(rows.count, byIncrementing: -1)
     }
 
     private func priorMessageForRowAtIndex(rowIndex: Int) -> Message? {
@@ -57,8 +84,10 @@ class BubbleChatTableDataSource: ChatTableDataSource {
 
         while rowIndex >= 0 && rowIndex < rows.count {
             switch (rows[rowIndex]) {
-            case .MessageRow(let messageObject):
-                return messageObject as? Message
+            case .MessageRow(let message):
+                return message
+            default:
+                break
             }
             rowIndex += increment
         }
@@ -80,9 +109,12 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
         let row = rows[indexPath.row]
 
         switch(row) {
-        case .MessageRow(let object):
+        case .DateRow(let date):
+            let cell = tableView.dequeueReusableCellWithIdentifier(dateCellReuseIdentifier, forIndexPath: indexPath) as! BubbleDateTableViewCell
+            cell.date = date
+            return cell
+        case .MessageRow(let message):
             let nextMessage = nextMessageForRowAtIndex(indexPath.row)
-            let message = object as! Message
             let isFromCurrentUser = message.from == nil
 
             var cell: BubbleTableViewCell
@@ -97,26 +129,14 @@ extension BubbleChatTableDataSource: UITableViewDataSource {
             return cell
         }
     }
-
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        switch(rows[indexPath.row]) {
-        case .MessageRow(let object):
-            let message = object as! Message
-            if message.type == .Text {
-                return BubbleMessageRowTableViewCell.estimatedHeightForMessage(message)
-            } else {
-                return BubbleMediaRowTableViewCell.estimatedHeightForMessage(message)
-            }
-        }
-    }
 }
 
 extension BubbleChatTableDataSource: ChatMessageManagerDelegate {
     func chatMessageManager(chatMessageManager: ChatMessageManager, didAppendMessages messages: [Message]) {
-        rows += calculateRowsFromMessages(messages)
+        rows += calculateRowsFromMessages(messages, previousMessage: lastMessage())
     }
 
     func chatMessageManager(chatMessageManager: ChatMessageManager, didPrependMessages messages: [Message]) {
-        rows = calculateRowsFromMessages(messages) + rows
+        rows = calculateRowsFromMessages(messages, previousMessage: nil) + rows
     }
 }

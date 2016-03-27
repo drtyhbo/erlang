@@ -7,25 +7,45 @@
 //
 
 import Foundation
+import UIKit
 
 class ThemeListener {
-    // Most of the time you'll be
-    var themeChangeListener: (ColorTheme->Void)? {
-        didSet {
-            if !notificationRegistered {
-                notificationRegistered = true
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateTheme", name: ColorTheme.ThemeChangedNotification, object: nil)
-            }
-        }
-    }
+    private var isBold = false
+    private var pointSize: CGFloat = 16
 
-    private var notificationRegistered = false
+    private var themeChangeListener: (ColorTheme->Void)?
+    private var fontChangeListener: (UIFont->Void)?
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
+    func listenForThemeChangesWithCallback(callback: ColorTheme->Void) {
+        if themeChangeListener == nil {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateTheme", name: ColorTheme.ThemeChangedNotification, object: nil)
+        }
+        themeChangeListener = callback
+
+        updateTheme()
+    }
+
+    func listenForFontChangesWithCurrentFont(currentFont: UIFont?, callback: UIFont->Void) {
+        isBold = currentFont?.fontName.rangeOfString("Heavy") != nil
+        pointSize = currentFont?.pointSize ?? 16
+
+        if fontChangeListener == nil {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateFont", name: CustomFont.FontChangedNotification, object: nil)
+        }
+        fontChangeListener = callback
+
+        updateFont()
+    }
+
     @objc private func updateTheme() {
         themeChangeListener?(ColorTheme.currentTheme)
+    }
+
+    @objc private func updateFont() {
+        fontChangeListener?(isBold ? UIFont.boldCustomFontOfSize(pointSize) : UIFont.customFontOfSize(pointSize))
     }
 }
