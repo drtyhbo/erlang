@@ -1,7 +1,6 @@
 var express = require('express'),
 	User = require('../models/user').User,
 	File = require('../models/file').File,
-	Group = require('../models/group').Group,
 	s3 = require('../utils/s3');
 
 var router = express.Router();
@@ -210,55 +209,6 @@ router.post('/info/get/', function(req, res) {
 		sendSuccess(res, {
 			names: names
 		});
-	});
-});
-
-/*
- * Request parameters:
- * name - The name of the group.
- */
-router.post('/group/create/', function(req, res) {
-	var name = req.body.name;
-
-	if (!name) {
-		sendError(res);
-		return;
-	}
-
-	Group.create(name, req.user).then(function(group) {
-		sendSuccess(res, {
-			'groupId': group.id
-		});
-	}, function() {
-		sendError(res);
-	});
-});
-
-/*
- * Request parameters:
- * groupId - The id of the group.
- * friendId - The id of the friend to add.
- */
-router.post('/group/add/', function(req, res) {
-	var groupId = req.body.groupId;
-	var friendId = req.body.friendId;
-
-	if (!groupId || !friendId) {
-		sendError(res);
-		return;
-	}
-
-	var group = new Group(groupId);
-	group.isMember(req.user).then(function(isMember) {
-		if (!isMember) {
-			return Promise.reject();
-		}
-
-		group.addMember(new User(friendId));
-	}).then(function() {
-		sendSuccess(res);
-	}, function() {
-		sendError(res);
 	});
 });
 
