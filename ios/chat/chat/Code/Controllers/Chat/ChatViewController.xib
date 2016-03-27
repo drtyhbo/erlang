@@ -12,6 +12,8 @@
                 <outlet property="newMessageContainerBottomConstraint" destination="a8j-JC-x2F" id="DfV-0C-BEA"/>
                 <outlet property="newMessageView" destination="yps-z8-waJ" id="Kzu-Mb-0pc"/>
                 <outlet property="newMessageViewHeightConstraint" destination="9jE-1e-uwS" id="ha5-QI-5Fj"/>
+                <outlet property="reconnectView" destination="mQH-hs-maU" id="PV0-Hp-wN5"/>
+                <outlet property="reconnectViewTopConstraint" destination="Gug-2P-g16" id="Waj-UB-XCR"/>
                 <outlet property="tableView" destination="Cpl-E8-vWn" id="wnj-Eb-1kW"/>
                 <outlet property="topBar" destination="Dbw-Tz-uqC" id="osq-Uy-kGM"/>
                 <outlet property="unreadMessagesContainer" destination="Z1f-eb-ynr" id="foq-WN-8qN"/>
@@ -24,6 +26,17 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Cpl-E8-vWn" customClass="ChatTableView" customModule="chat" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="45" width="600" height="503"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mQH-hs-maU" customClass="ReconnectView" customModule="chat" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="-5" width="600" height="50"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="XPf-Fi-W3u"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dbw-Tz-uqC" customClass="ThemedView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="45"/>
                     <subviews>
@@ -108,10 +121,6 @@
                         </mask>
                     </variation>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Cpl-E8-vWn" customClass="ChatTableView" customModule="chat" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="45" width="600" height="503"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oGz-1j-zN4" customClass="ThemedView" customModule="chat" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="548" width="600" height="52"/>
                     <subviews>
@@ -218,13 +227,16 @@
                 <constraint firstItem="Cpl-E8-vWn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="9ex-O4-xSb"/>
                 <constraint firstAttribute="trailing" secondItem="Cpl-E8-vWn" secondAttribute="trailing" id="BW0-vj-x87"/>
                 <constraint firstItem="oGz-1j-zN4" firstAttribute="top" secondItem="Cpl-E8-vWn" secondAttribute="bottom" id="GX3-79-cJj"/>
+                <constraint firstItem="mQH-hs-maU" firstAttribute="top" secondItem="Dbw-Tz-uqC" secondAttribute="bottom" constant="-50" id="Gug-2P-g16"/>
                 <constraint firstAttribute="trailing" secondItem="oGz-1j-zN4" secondAttribute="trailing" id="KP6-L7-IkI"/>
                 <constraint firstAttribute="bottom" secondItem="Cpl-E8-vWn" secondAttribute="bottom" constant="40" id="LaK-Up-Fm8"/>
                 <constraint firstItem="oGz-1j-zN4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="PGo-CN-CuT"/>
                 <constraint firstItem="Dbw-Tz-uqC" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="PoQ-AZ-BNO"/>
+                <constraint firstItem="mQH-hs-maU" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="TNB-MQ-buI"/>
                 <constraint firstItem="Dbw-Tz-uqC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="V3C-RL-8kv"/>
                 <constraint firstAttribute="bottom" secondItem="oGz-1j-zN4" secondAttribute="bottom" id="a8j-JC-x2F"/>
                 <constraint firstItem="Cpl-E8-vWn" firstAttribute="top" secondItem="Dbw-Tz-uqC" secondAttribute="bottom" id="ejv-a2-yXf"/>
+                <constraint firstAttribute="trailing" secondItem="mQH-hs-maU" secondAttribute="trailing" id="vqY-MD-Pdp"/>
                 <constraint firstAttribute="trailing" secondItem="Dbw-Tz-uqC" secondAttribute="trailing" id="wnr-0E-jWJ"/>
             </constraints>
             <variation key="default">
