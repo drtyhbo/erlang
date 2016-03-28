@@ -79,14 +79,15 @@ class ConfirmCodeViewController: UIViewController {
         setupActivityIndicator()
         isConfirming = true
 
-        APIManager.sharedManager.confirmPhoneNumber(phoneNumber, withCode: code.text ?? "", preKeys: preKeys) {
-            userIdString, sessionToken, firstName, lastName, error in
+        APIManager.sharedManager.confirmPhoneNumber(phoneNumber, deviceUUID: User.deviceUUID, withCode: code.text ?? "", preKeys: preKeys) {
+            userIdString, deviceIdString, sessionToken, firstName, lastName, error in
 
             self.setupNextButton()
             self.isConfirming = false
 
-            if let userIdString = userIdString, userId = Int(userIdString), sessionToken = sessionToken {
+            if let userIdString = userIdString, userId = Int(userIdString), deviceIdString = deviceIdString, deviceId = Int(deviceIdString), sessionToken = sessionToken {
                 User.userId = userId
+                User.deviceId = deviceId
                 User.sessionToken = sessionToken
                 User.firstName = firstName
                 User.lastName = lastName

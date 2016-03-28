@@ -9,18 +9,20 @@ var assert = require('assert'),
 const Constants = {
 	phoneNumber: '18315550835',
 	phoneNumberKey: 'p:{18315550835}',
-	deviceUuid: '729908c5-a457-46af-90a8-8b53a738c218'
+	deviceUuid: '729908c5a45746af90a88b53a738c218'
 };
 
-function getIdAndCode(phoneNumber, deviceUuid) {
+function getUserDeviceAndCode(phoneNumber, deviceUuid) {
 	var sharedUser;
+	var sharedDevice;
 	return redis.getAsync(Constants.phoneNumberKey).then(function(userId) {
 		sharedUser = new User(userId);
 		return sharedUser.findDevice(deviceUuid);
 	}).then(function(device) {
+		sharedDevice = device;
 		return device.fetch(Device.fields.code);
 	}).then(function(values) {
-		return Promise.resolve([sharedUser.id, values[0]]);
+		return Promise.resolve([sharedUser, sharedDevice, values[0]]);
 	});
 }
 
@@ -144,9 +146,9 @@ describe('logged out', function() {
 	});
 
 	it('/api/confirm/ - success', function testSlash(done) {
-		getIdAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
-			var id = values[0];
-			var code = values[1];
+		getUserDeviceAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
+			var id = values[0].id;
+			var code = values[2];
 			request(server)
 				.post('/api/confirm/')
 				.send({
@@ -180,9 +182,9 @@ describe('logged out', function() {
 	});
 
 	it('/api/confirm/ - invalid code', function testSlash(done) {
-		getIdAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
-			var id = values[0];
-			var code = values[1];
+		getUserDeviceAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
+			var id = values[0].id;
+			var code = values[2];
 			request(server)
 				.post('/api/confirm/')
 				.send({
@@ -201,9 +203,10 @@ describe('logged out', function() {
 	});
 
 	it('/api/confirm/ - check redis objects', function testSlash(done) {
-		getIdAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
-			var id = values[0];
-			var code = values[1];
+		getUserDeviceAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
+			var id = values[0].id;
+			var device = values[1];
+			var code = values[2];
 			request(server)
 				.post('/api/confirm/')
 				.send({
@@ -216,10 +219,10 @@ describe('logged out', function() {
 					deviceUuid: Constants.deviceUuid
 				})
 				.end(function(err, res) {
-					redis.smembersAsync('pki:{' + id + '}').then(function(values) {
+					redis.smembersAsync('pki:{' + device.id + '}').then(function(values) {
 						assert.equal(values[0], '0');
 						assert.equal(values[1], '1');
-						return redis.hgetallAsync('pk:{' + id + '}');
+						return redis.hgetallAsync('pk:{' + device.id + '}');
 					}).then(function(values) {
 						assert.equal(values['0'], 'abcd');
 						assert.equal(values['1'], 'efgh');

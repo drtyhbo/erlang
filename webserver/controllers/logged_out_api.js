@@ -41,7 +41,7 @@ router.post('/confirm/', function(req, res) {
 	User.verifyNumber(phoneNumber, deviceUuid, code).then(function(values) {
 		sharedUser = values[0];
 		sharedDevice = values[1]
-		return sharedUser.updatePreKeys(preKeys[0]);
+		return sharedDevice.updatePreKeys(preKeys[0]);
 	}).then(function() {
 		return sharedDevice.login();
 	}).then(function(sessionToken) {

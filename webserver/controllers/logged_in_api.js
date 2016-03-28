@@ -7,7 +7,7 @@ var express = require('express'),
 var router = express.Router();
 
 router.use(function(req, res, next) {
-	var deviceId = req.body.deviceId;
+	var deviceId = req.body.id;
 	var sessionToken = req.body.session;
 
 	var device = new Device(deviceId);
@@ -54,14 +54,14 @@ router.post('/friend/check/', function(req, res) {
  * Request parameters:
  * userId - Id of the user for whom we need a prekey.
  */
-router.post('/friend/prekey/', function(req, res) {
-	var userId = req.body.userId;
-	if (!userId) {
+router.post('/device/prekey/', function(req, res) {
+	var deviceId = req.body.deviceId;
+	if (!deviceId) {
 		sendError(res);
 		return;
 	}
 
-	new User(userId).fetchPreKey().then(function(key) {
+	new Device(deviceId).fetchPreKey().then(function(key) {
 		res.send({
 			'status': 'ok',
 			'keyIndex': key.index,

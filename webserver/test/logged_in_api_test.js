@@ -46,7 +46,7 @@ describe('logged in', function() {
 
 	function makeRequest(url, params) {
 		params = params || {};
-		params['deviceId'] = sharedDevice.id;
+		params['id'] = sharedDevice.id;
 		params['session'] = sessionToken;
 
 		return request(server)
@@ -86,28 +86,28 @@ describe('logged in', function() {
 		});
 	});
 
-	it('/api/user/friend/prekey/ - no userId', function testSlash(done) {
-		makeRequest('/api/user/friend/prekey/')
+	it('/api/user/device/prekey/ - no userId', function testSlash(done) {
+		makeRequest('/api/user/device/prekey/')
 			.expect(200, {
 				status: 'error',
 			}, done);
 	});
 
-	it('/api/user/friend/prekey/ - no keys', function testSlash(done) {
-		makeRequest('/api/user/friend/prekey/', {
+	it('/api/user/device/prekey/ - no keys', function testSlash(done) {
+		makeRequest('/api/user/device/prekey/', {
 				userId: sharedUser.id})
 			.expect(200, {
 				status: 'error',
 			}, done);
 	});
 
-	it('/api/user/friend/prekey/', function testSlash(done) {
-		return sharedUser.updatePreKeys({
+	it('/api/user/device/prekey/', function testSlash(done) {
+		return sharedDevice.updatePreKeys({
 				i: [0, 0xFFFF],
 				pk: ['abcd', 'ijkl']})
 			.then(function() {
-				makeRequest('/api/user/friend/prekey/', {
-						userId: sharedUser.id})
+				makeRequest('/api/user/device/prekey/', {
+						deviceId: sharedDevice.id})
 					.expect(200, {
 						status: 'ok',
 						keyIndex: 0,

@@ -17,8 +17,6 @@ User.fields = {
 	lastName: 'lastName'
 };
 
-User.keyOfLastResort = 0xFFFF;
-
 // Checks whether the provided numbers correspond to users and returns an array of the
 // phoneNumber/id combinations.
 User.checkPhoneNumbers = function(phoneNumbers) {
@@ -117,14 +115,6 @@ User._phoneKey = function(phoneNumber) {
 	return 'p:{' + phoneNumber + '}';
 };
 
-User._preKeysKey = function(id) {
-	return 'pk:{' + id + '}';
-};
-
-User._preKeyIndicesKey = function(id) {
-	return 'pki:{' + id + '}';
-};
-
 User._userKey = function(id) {
 	return 'u:{' + id + '}';
 };
@@ -137,39 +127,6 @@ User.prototype.fetch = function() {
 	return redis.hmgetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
 };
 
-// Returns the next preKey, or the key of last resort if none are available. Returns a rejection
-// promise if no keys can be found.
-User.prototype.fetchPreKey = function() {
-	var self = this;
-
-	var sharedKeyIndex;
-	return redis.spopAsync(User._preKeyIndicesKey(this.id)).then(function(keyIndex) {
-		if (keyIndex === null) {
-			keyIndex = User.keyOfLastResort;
-		}
-		
-		sharedKeyIndex = keyIndex;
-		var multi = redis
-			.multi()
-			.hget(User._preKeysKey(self.id), keyIndex);		
-
-		if (keyIndex != User.keyOfLastResort) {
-			multi.hdel(User._preKeysKey(self.id), keyIndex)
-		}
-
-		return multi.exec();
-	}).then(function(values) {
-		if (!values[0][1]) {
-			return Promise.reject();
-		} else {
-			return Promise.resolve({
-				index:  parseInt(sharedKeyIndex, 10),
-				key: values[0][1]
-			});
-		}
-	});
-};
-
 User.prototype.findDevice = function(deviceUuid) {
 	var self = this;
 	return redis.hgetAsync(User._userKey(this.id), 'd:' + deviceUuid).then(function(deviceId) {
@@ -180,7 +137,6 @@ User.prototype.findDevice = function(deviceUuid) {
 		}
 	});
 };
-
 
 User.prototype.update = function() {
 	if (arguments[0] instanceof Array) {
@@ -197,35 +153,6 @@ User.prototype.update = function() {
 	}
 	
 	return this._update.apply(this, itemsToUpdate);
-};
-
-// Updates the user's pre-key cache with the provided pre-keys.
-User.prototype.updatePreKeys = function(preKeys) {
-	var indices = preKeys['i'];
-	var publicKeys = preKeys['pk'];
-
-	if (indices.length != publicKeys.length) {
-		return Promise.reject();
-	}
-
-	var keyValues = [];
-	for (var i = 0; i < indices.length; i++) {
-		keyValues.push(indices[i]);
-		keyValues.push(publicKeys[i]);
-	}
-
-	return redis
-		.multi()
-		.hmset(User._preKeysKey(this.id), keyValues)
-		.sadd(User._preKeyIndicesKey(this.id), indices.filter(function(index) { return index != User.keyOfLastResort; }))
-		.exec()
-		.then(function(values) {
-			if (values.length == 2 && values[0][1] == 'OK') {
-				return Promise.resolve(true);
-			} else {
-				return Promise.reject();
-			}
-		});
 };
 
 User.prototype._createDevice = function(deviceUuid) {
