@@ -35,6 +35,7 @@ public class Device: NSManagedObject {
     }
 
     static func activeDeviceForFriend(friend: Friend) -> Device? {
-        return Device.MR_findFirstByAttribute("owner", withValue: friend)
+        let predicate = NSPredicate(format: "owner == %@", friend)
+        return Device.MR_findAllSortedBy("lastActive", ascending: false, withPredicate: predicate)?.first as? Device
     }
 }
