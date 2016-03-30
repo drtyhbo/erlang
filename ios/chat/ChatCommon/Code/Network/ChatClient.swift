@@ -23,6 +23,14 @@ public class ChatClient {
     public static let ChatClientDidConnectNotification = "ChatClientDidConnect"
     public static let ChatClientDidDisconnectNotification = "ChatClientDidDisconnect"
 
+    public var timeToReconnect: NSTimeInterval? {
+        if let reconnectionTimer = reconnectionTimer {
+            let timeRemaining = reconnectionTimer.fireDate.timeIntervalSinceNow
+            return timeRemaining < 0 ? nil : timeRemaining
+        }
+        return nil
+    }
+
     private(set) var state: State = .Disconnected
 
     private let host = Constants.host
@@ -100,6 +108,9 @@ public class ChatClient {
             return
         }
 
+        reconnectionTimer?.invalidate()
+        reconnectionTimer = nil
+
         NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientConnectingNotification, object: nil)
         if let sessionToken = User.sessionToken {
             let connectJson = JSON([
@@ -114,6 +125,10 @@ public class ChatClient {
     }
 
     private func scheduleReconnect() {
+        if let reconnectionTimer = reconnectionTimer where reconnectionTimer.valid {
+            return
+        }
+
         reconnectionTimer?.invalidate()
         reconnectionTimer = NSTimer.scheduledTimerWithTimeInterval(reconnectionDelay, target: self, selector: "reconnect", userInfo: nil, repeats: false)
     }

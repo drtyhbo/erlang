@@ -28,6 +28,9 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var unreadMessagesContainer: UIView!
     @IBOutlet weak var unreadMessagesCount: UILabel!
 
+    @IBOutlet weak var reconnectView: ReconnectView!
+    @IBOutlet weak var reconnectViewTopConstraint: NSLayoutConstraint!
+
     var chat: Chat? {
         didSet {
             if let chat = chat {
@@ -91,6 +94,8 @@ class ChatViewController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "unreadMessageCountUpdated:", name: MessageManager.TotalUnreadMessageCountUpdated, object: chat?.participantsArray[0])
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutChangedNotification", name: ChatLayout.LayoutChangedNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "clientDidConnect", name: ChatClient.ChatClientDidConnectNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "clientDidDisconnect", name: ChatClient.ChatClientDidDisconnectNotification, object: nil)
 
         registerForNotifications()
     }
@@ -218,6 +223,21 @@ class ChatViewController: UIViewController {
 
     @objc private func didTapOnMessages() {
         newMessageView.resignFirstResponder()
+    }
+
+    @objc private func clientDidConnect() {
+        reconnectViewTopConstraint.constant = -reconnectView.bounds.size.height
+        UIView.animateWithDuration(0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    @objc private func clientDidDisconnect() {
+        reconnectView.show()
+        reconnectViewTopConstraint.constant = 0
+        UIView.animateWithDuration(0.25) {
+            self.view.layoutIfNeeded()
+        }
     }
 
     @IBAction func didTapSend() {

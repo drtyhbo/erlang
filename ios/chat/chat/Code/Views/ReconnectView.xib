@@ -7,7 +7,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ReconnectView" customModule="chat" customModuleProvider="target">
             <connections>
+                <outlet property="backgroundView" destination="gpv-IE-hEh" id="9zo-T7-D8h"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="AwJ-Xd-eBK"/>
+                <outlet property="reconnectionLabel" destination="eam-Xs-cw3" id="k0R-6M-amB"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -15,19 +17,53 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reconnecting..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eam-Xs-cw3">
-                    <rect key="frame" x="240" y="14" width="120" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gpv-IE-hEh" customClass="ThemedView" customModule="chat" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FXt-3U-Izb">
+                    <rect key="frame" x="0.0" y="7" width="600" height="36"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Reconnecting..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eam-Xs-cw3" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="114" height="20"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="tap to reconnect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wN6-oW-K9x" customClass="LabelWithCustomFont" customModule="chat" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="20" width="114" height="16"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="wN6-oW-K9x" firstAttribute="top" secondItem="eam-Xs-cw3" secondAttribute="bottom" id="0pC-vO-9Ct"/>
+                        <constraint firstAttribute="trailing" secondItem="wN6-oW-K9x" secondAttribute="trailing" id="1Vf-mx-4Vm"/>
+                        <constraint firstItem="eam-Xs-cw3" firstAttribute="leading" secondItem="FXt-3U-Izb" secondAttribute="leading" id="5do-e7-g3a"/>
+                        <constraint firstAttribute="trailing" secondItem="eam-Xs-cw3" secondAttribute="trailing" id="Lkv-rS-M0h"/>
+                        <constraint firstAttribute="bottom" secondItem="wN6-oW-K9x" secondAttribute="bottom" id="QrR-fM-Ea3"/>
+                        <constraint firstItem="wN6-oW-K9x" firstAttribute="leading" secondItem="FXt-3U-Izb" secondAttribute="leading" id="yUu-Yg-oCD"/>
+                        <constraint firstItem="eam-Xs-cw3" firstAttribute="top" secondItem="FXt-3U-Izb" secondAttribute="top" id="ynS-X4-wIV"/>
+                    </constraints>
+                </view>
             </subviews>
-            <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="eam-Xs-cw3" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Wa1-yI-Rq8"/>
-                <constraint firstItem="eam-Xs-cw3" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="lJP-ZB-bDq"/>
+                <constraint firstAttribute="bottom" secondItem="gpv-IE-hEh" secondAttribute="bottom" id="1WH-A3-Pua"/>
+                <constraint firstItem="gpv-IE-hEh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="3vp-go-Bsy"/>
+                <constraint firstItem="FXt-3U-Izb" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="T3g-se-y64"/>
+                <constraint firstItem="gpv-IE-hEh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Tod-IL-T8j"/>
+                <constraint firstAttribute="trailing" secondItem="FXt-3U-Izb" secondAttribute="trailing" id="UTM-9k-tLP"/>
+                <constraint firstItem="FXt-3U-Izb" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="bPz-V7-3qq"/>
+                <constraint firstItem="FXt-3U-Izb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="oWj-zx-i3d"/>
+                <constraint firstAttribute="trailing" secondItem="gpv-IE-hEh" secondAttribute="trailing" id="tZJ-pe-w5S"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="bPz-V7-3qq"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="390" y="347"/>
         </view>
     </objects>
