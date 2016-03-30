@@ -2,41 +2,51 @@ var assert = require('assert'),
 	request = require('supertest'),
 	redis = require('../models/redis').redis,
 	Promise = require('bluebird').Promise,
+	Device = require('../models/device').Device,
 	User = require('../models/user').User,
 	File = require('../models/file').File,
-	Group = require('../models/group').Group,
 	helpers = require('./test_helpers');
 
 const Constants = {
 	phoneNumber: '18315550835',
-	phoneNumberKey: 'p:{18315550835}'
+	friendNumber: '18315551111',
+	phoneNumberKey: 'p:{18315550835}',
+	deviceUuid: '729908c5a45746af90a88b53a738c218',
+	friendDeviceUuid: '8a93c7eaf63a43c881d059ef5c02797f'
 };
+
+function createFriend() {
+	return User.create(Constants.friendNumber, Constants.friendDeviceUuid).then(function(values) {
+		return Promise.resolve(values[0]);
+	});
+}
 
 describe('logged in', function() {
 	var server;
 	var sharedUser;
+	var sharedDevice;
 	var sessionToken;
 
 	before(function (done) {
 		server = require('../app');
 		helpers.deleteUser(Constants.phoneNumber).then(function() {
-			return User.create(Constants.phoneNumber);
-		}).then(function(user) {
-			sharedUser = user;
-			return user.fetch(User.fields.code);
+			return User.create(Constants.phoneNumber, Constants.deviceUuid);
 		}).then(function(values) {
-			return User.login(Constants.phoneNumber, values[0]);
-		}).then(function(user) {
-			return user.fetch(User.fields.session);
-		}).then(function(values) {
-			sessionToken = values[0]
+			sharedUser = values[0];
+			sharedDevice = values[1];
+			code = values[2];
+			return User.verifyNumber(Constants.phoneNumber, Constants.deviceUuid, code);
+		}).then(function() {
+			return sharedDevice.login();
+		}).then(function(value) {
+			sessionToken = value;
 			done();
 		});
 	});
 
 	function makeRequest(url, params) {
 		params = params || {};
-		params['id'] = sharedUser.id;
+		params['id'] = sharedDevice.id;
 		params['session'] = sessionToken;
 
 		return request(server)
@@ -76,28 +86,28 @@ describe('logged in', function() {
 		});
 	});
 
-	it('/api/user/friend/prekey/ - no userId', function testSlash(done) {
-		makeRequest('/api/user/friend/prekey/')
+	it('/api/user/device/prekey/ - no userId', function testSlash(done) {
+		makeRequest('/api/user/device/prekey/')
 			.expect(200, {
 				status: 'error',
 			}, done);
 	});
 
-	it('/api/user/friend/prekey/ - no keys', function testSlash(done) {
-		makeRequest('/api/user/friend/prekey/', {
+	it('/api/user/device/prekey/ - no keys', function testSlash(done) {
+		makeRequest('/api/user/device/prekey/', {
 				userId: sharedUser.id})
 			.expect(200, {
 				status: 'error',
 			}, done);
 	});
 
-	it('/api/user/friend/prekey/', function testSlash(done) {
-		return sharedUser.updatePreKeys({
+	it('/api/user/device/prekey/', function testSlash(done) {
+		return sharedDevice.updatePreKeys({
 				i: [0, 0xFFFF],
 				pk: ['abcd', 'ijkl']})
 			.then(function() {
-				makeRequest('/api/user/friend/prekey/', {
-						userId: sharedUser.id})
+				makeRequest('/api/user/device/prekey/', {
+						deviceId: sharedDevice.id})
 					.expect(200, {
 						status: 'ok',
 						keyIndex: 0,
@@ -106,24 +116,22 @@ describe('logged in', function() {
 			});
 	});
 
-	it('/api/user/friend/prekey/ - no token', function testSlash(done) {
-		makeRequest('/api/user/pns/register/', {
-				userId: sharedUser.id})
+	it('/api/user/pns/register/ - no token', function testSlash(done) {
+		makeRequest('/api/user/pns/register/')
 			.expect(200, {
 				status: 'error'
 			}, done);
 	});
 
 
-	it('/api/user/friend/prekey/', function testSlash(done) {
+	it('/api/user/pns/register/', function testSlash(done) {
 		makeRequest('/api/user/pns/register/', {
-				userId: sharedUser.id,
 				token: 'pnsToken'})
 			.expect(200, {
 				status: 'error'
 			})
 			.end(function(err, res) {
-				sharedUser.fetch(User.fields.iosPushToken).then(function(values) {
+				sharedDevice.fetch(Device.fields.iosPushToken).then(function(values) {
 					assert.equal(values[0], 'pnsToken');
 					done();
 				});
@@ -148,7 +156,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/create/', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			makeRequest('/api/user/file/create/', {
 					numIds: 1,
 					friendId: friend.id})
@@ -166,7 +174,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/create/ - multiple', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			makeRequest('/api/user/file/create/', {
 					numIds: 2,
 					friendId: friend.id})
@@ -185,7 +193,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/create/ - multiple string', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			makeRequest('/api/user/file/create/', {
 					numIds: '2',
 					friendId: friend.id})
@@ -204,7 +212,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/create/ - gobbly gook', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			makeRequest('/api/user/file/create/', {
 					numIds: 'abcdefg',
 					friendId: friend.id})
@@ -215,7 +223,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/create/ - gobbly gook', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			makeRequest('/api/user/file/create/', {
 					numIds: '-1	',
 					friendId: friend.id})
@@ -226,7 +234,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/get/', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			makeRequest('/api/user/file/get/')
 				.expect(200, {
 					status: 'error'
@@ -235,7 +243,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/get/ - no method, no contentType', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			return File.create(sharedUser, friend, 1);
 		}).then(function(files) {
 			makeRequest('/api/user/file/get/', {
@@ -248,7 +256,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/get/ - no contentType', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			return File.create(sharedUser, friend, 1);
 		}).then(function(files) {
 			makeRequest('/api/user/file/get/', {
@@ -267,7 +275,7 @@ describe('logged in', function() {
 	});
 
 	it('/api/user/file/get/', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			return File.create(sharedUser, friend, 1);
 		}).then(function(files) {
 			makeRequest('/api/user/file/get/', {
@@ -387,68 +395,5 @@ describe('logged in', function() {
 				status: 'ok',
 				uploadUrl: 'https://s3-url'
 			}, done);
-	});
-
-	it('/api/user/group/create/ - no name', function testSlash(done) {
-		makeRequest('/api/user/group/create/')
-			.expect(200, {
-				status: 'error'
-			}, done);
-	});
-
-
-	it('/api/user/group/create/', function testSlash(done) {
-		makeRequest('/api/user/group/create/', {
-				name: 'testGroup'
-			})
-			.expect(function(res) {
-				assert.notEqual(res.body.groupId, null);
-				res.body.groupId = 5
-			})
-			.expect(200, {
-				status: 'ok',
-				groupId: 5
-			}, done);
-	});
-
-	it('/api/user/group/add/ - no access', function testSlash(done) {
-		Group.create('testGroup', sharedUser).then(function(newGroup) {
-			makeRequest('/api/user/group/add/')
-				.expect(200, {
-					status: 'error'
-				}, done);
-		})
-	});
-
-	it('/api/user/group/add/ - no access', function testSlash(done) {
-		var sharedNewUser;
-		User.create('18315551111').then(function(newUser) {
-			sharedNewUser = newUser;
-			return Group.create('testGroup', newUser);
-		}).then(function(newGroup) {
-			makeRequest('/api/user/group/add/', {
-					groupId: newGroup.id,
-					friendId: sharedNewUser.id
-				})
-				.expect(200, {
-					status: 'error'
-				}, done);
-		})
-	});
-
-	it('/api/user/group/add/', function testSlash(done) {
-		var sharedNewUser;
-		User.create('18315551111').then(function(newUser) {
-			sharedNewUser = newUser;
-			return Group.create('testGroup', sharedUser);
-		}).then(function(newGroup) {
-			makeRequest('/api/user/group/add/', {
-					groupId: newGroup.id,
-					friendId: sharedNewUser.id
-				})
-				.expect(200, {
-					status: 'ok'
-				}, done);
-		})
 	});
 });

@@ -57,7 +57,7 @@ class PhoneNumberViewController: UIViewController {
         setupActivityIndicator()
 
         let phoneNumber = PhoneNumber(phoneNumber: currentPhoneNumber)
-        APIManager.sharedManager.registerPhoneNumber(phoneNumber) {
+        APIManager.sharedManager.registerPhoneNumber(phoneNumber, deviceUUID: User.deviceUUID) {
             result in
             if result {
                 User.phoneNumber = phoneNumber.fullNumber

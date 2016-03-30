@@ -24,23 +24,25 @@ public class APIManager: NSObject {
     let domain = Constants.host
     let webPort = Constants.webPort == "80" ? "" : ":\(Constants.webPort)"
 
-    public func registerPhoneNumber(phoneNumber: PhoneNumber, callback: Bool->Void) {
+    public func registerPhoneNumber(phoneNumber: PhoneNumber, deviceUUID: NSUUID, callback: Bool->Void) {
         sendRequestToUrl("register/", parameters: [
-            "phone": phoneNumber.fullNumber
+            "phone": phoneNumber.fullNumber,
+            "deviceUuid": deviceUUID.UUIDString.stringByReplacingOccurrencesOfString("-", withString: "")
         ]) {
             json in
             callback(self.errorFromJson(json) == nil)
         }
     }
 
-    public func confirmPhoneNumber(phoneNumber: PhoneNumber, withCode code: String, preKeys: [PreKey], callback: (String?, String?, String?, String?, Error?)->Void) {
+    public func confirmPhoneNumber(phoneNumber: PhoneNumber, deviceUUID: NSUUID, withCode code: String, preKeys: [PreKey], callback: (String?, String?, String?, String?, String?, Error?)->Void) {
         sendRequestToUrl("confirm/", parameters: [
             "phone": phoneNumber.fullNumber,
+            "deviceUuid": deviceUUID.UUIDString.stringByReplacingOccurrencesOfString("-", withString: ""),
             "code": code,
             "preKeys": preKeys.map({ ["i": $0.index, "pk": $0.keyPair.publicKey.base64 ]})
         ]) {
             json in
-            callback(json?["id"].string, json?["sessionToken"].string, json?["firstName"].string, json?["lastName"].string, self.errorFromJson(json))
+            callback(json?["id"].string, json?["deviceId"].string, json?["sessionToken"].string, json?["firstName"].string, json?["lastName"].string, self.errorFromJson(json))
         }
     }
 
@@ -72,9 +74,9 @@ public class APIManager: NSObject {
         }
     }
 
-    func getPrekeyForFriend(friend: Friend, callback: (Int?, NSData?)->Void) {
-        sendUserRequestToUrl("friend/prekey/", parameters: [
-            "userId": friend.id
+    func getPrekeyForDevice(device: Device, callback: (Int?, NSData?)->Void) {
+        sendUserRequestToUrl("device/prekey/", parameters: [
+            "deviceId": device.id
         ]) {
             json in
 
@@ -84,6 +86,29 @@ public class APIManager: NSObject {
             }
 
             callback(keyIndex, publicKey)
+        }
+    }
+
+    public func activeDevicesForFriends(friends: [Friend], callback: [Int]->Void) {
+        sendUserRequestToUrl("device/active/", parameters: [
+            "userIds": friends.map({ $0.id })
+        ]) {
+            json in
+
+            guard let deviceIdsJson = json?["deviceIds"].array else {
+                callback([])
+                return
+            }
+
+            var deviceIds: [Int] = []
+            for i in 0..<deviceIdsJson.count {
+                guard let deviceId = deviceIdsJson[i].int else {
+                    continue
+                }
+                deviceIds.append(deviceId)
+            }
+
+            callback(deviceIds)
         }
     }
 
@@ -282,7 +307,7 @@ public class APIManager: NSObject {
     }
 
     private func sendUserRequestToUrl(url: String, var parameters: [String:AnyObject], callback: JSON?->Void) {
-        parameters["id"] = User.userId
+        parameters["id"] = User.deviceId
         parameters["session"] = User.sessionToken
 
         sendRequestToUrl("user/\(url)", parameters: parameters, callback: callback)

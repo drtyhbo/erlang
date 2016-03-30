@@ -65,17 +65,20 @@ public class ChatClient {
         let dispatchGroup = dispatch_group_create()
 
         var recipients:[[String:AnyObject]] = []
-        for participant in chat.participantsArray {
-            dispatch_group_enter(dispatchGroup)
-            createRecipientPayloadForFriend(participant, secretKey: secretKey) { payloadJson in
-                guard let payloadJson = payloadJson else {
-                    dispatch_group_leave(dispatchGroup)
-                    return
-                }
 
-                recipients.append(payloadJson)
-                dispatch_group_leave(dispatchGroup)
+        dispatch_group_enter(dispatchGroup)
+        DeviceManager.sharedManager.activeDevicesForFriends(chat.participantsArray) { devices in
+            for device in devices {
+                dispatch_group_enter(dispatchGroup)
+                self.createRecipientPayloadForDevice(device, secretKey: secretKey) { payloadJson in
+                    if let payloadJson = payloadJson {
+                        recipients.append(payloadJson)
+                    }
+                    dispatch_group_leave(dispatchGroup)
+                }
             }
+
+            dispatch_group_leave(dispatchGroup)
         }
 
         dispatch_group_notify(dispatchGroup, dispatch_get_main_queue()) {
@@ -90,15 +93,15 @@ public class ChatClient {
         }
     }
 
-    private func createRecipientPayloadForFriend(friend: Friend, secretKey: NSData, callback: [String:AnyObject]?->Void) {
-        MessageCrypter.sharedCrypter.encryptData(secretKey, forFriend: friend) { secretKeyMessage in
+    private func createRecipientPayloadForDevice(device: Device, secretKey: NSData, callback: [String:AnyObject]?->Void) {
+        MessageCrypter.sharedCrypter.encryptData(secretKey, forDevice: device) { secretKeyMessage in
             guard let secretKeyMessage = secretKeyMessage else {
                 callback(nil)
                 return
             }
 
             callback([
-                "r": friend.id,
+                "r": device.id,
                 "k": secretKeyMessage])
         }
     }
@@ -112,15 +115,8 @@ public class ChatClient {
         reconnectionTimer = nil
 
         NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientConnectingNotification, object: nil)
-        if let sessionToken = User.sessionToken {
-            let connectJson = JSON([
-                "t": "c",
-                "u": User.userId,
-                "s": sessionToken,
-            ])
+        if User.sessionToken != nil {
             connection.connect()
-            // Don't use self.sendJson() for this.
-            connection.sendJson(connectJson)
         }
     }
 
@@ -160,28 +156,30 @@ public class ChatClient {
     // TODO: Clean up this code
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            guard let fromId = messageJson["f"].int else {
+            guard let fromDeviceId = messageJson["f"].int, fromUserId = messageJson["fu"].int else {
                 continue
             }
 
-            var friend: Friend! = Friend.findWithId(fromId)
+            var friend: Friend! = Friend.findWithId(fromUserId)
             if friend == nil {
-                friend = Friend.createWithId(fromId, firstName: "", lastName: "")
-                CoreData.save()
+                friend = Friend.createWithId(fromUserId, firstName: "", lastName: "")
             }
+            let device = Device.createWithId(fromDeviceId, owner: friend)
 
             let messageContainer = messageJson["m"]
             guard let timestamp = messageJson["d"].int,
                 encryptedKeyPayload = messageContainer["k"].object as? [String:AnyObject],
-                decryptedKey = MessageCrypter.sharedCrypter.decryptMessage(encryptedKeyPayload, forFriend: friend),
+                decryptedKey = MessageCrypter.sharedCrypter.decryptMessage(encryptedKeyPayload, forDevice: device),
                 encryptedMessageBase64 = messageContainer["m"].string,
                 encryptedMessageData = NSData.fromBase64(encryptedMessageBase64),
                 decryptedMessage = MessageCrypter.sharedCrypter.decryptData(encryptedMessageData, withSharedSecret: decryptedKey) else {
                 continue
             }
 
-            self.receivedMessages.append(ReceivedMessage(fromId: fromId, timestamp: timestamp, secretKey: decryptedKey, messageJson: JSON(data: decryptedMessage)))
+            self.receivedMessages.append(ReceivedMessage(fromId: fromUserId, timestamp: timestamp, secretKey: decryptedKey, messageJson: JSON(data: decryptedMessage)))
         }
+
+        CoreData.save()
 
         self.receivedMessagesTimer?.invalidate()
         self.receivedMessagesTimer = NSTimer.scheduledTimerWithTimeInterval(0.25, target: self, selector: "sendReceivedMessagesNotification", userInfo: nil, repeats: false)
@@ -214,7 +212,15 @@ public class ChatClient {
 
 extension ChatClient: ChatConnectionDelegate {
     func chatConnectionOnConnect(chatConnection: ChatConnection) {
+        guard let sessionToken = User.sessionToken else {
+            return
+        }
 
+        sendJson(JSON([
+            "t": "c",
+            "d": User.deviceId,
+            "s": sessionToken,
+        ]))
     }
 
     func chatConnectionOnDisconnect(chatConnection: ChatConnection) {

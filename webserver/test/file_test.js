@@ -7,8 +7,17 @@ var assert = require('assert'),
 	helpers = require('./test_helpers');
 
 const Constants = {
+	friendNumber: '18315551111',
 	phoneNumber: '18315550835',
+	friendDeviceUuid: '8a93c7eaf63a43c881d059ef5c02797f'
 };
+
+function createFriend() {
+	return User.create(Constants.friendNumber, Constants.friendDeviceUuid).then(function(values) {
+		return Promise.resolve(values[0]);
+	});
+}
+
 
 describe('file', function() {
 	var sharedUser;
@@ -32,7 +41,7 @@ describe('file', function() {
 	});
 
 	it('create', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			return File.create(sharedUser, friend, 1);
 		}).then(function(files) {
 			assert.equal(files.length, 1);
@@ -44,7 +53,7 @@ describe('file', function() {
 	});
 
 	it('create multiple', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			return File.create(sharedUser, friend, 2);
 		}).then(function(files) {
 			assert.equal(files.length, 2);
@@ -55,7 +64,7 @@ describe('file', function() {
 	it('hasAccess', function testSlash(done) {
 		var sharedFriend;
 		var sharedFile;
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			sharedFriend = friend;
 			return File.create(sharedUser, sharedFriend, 1);
 		}).then(function(files) {
@@ -72,7 +81,7 @@ describe('file', function() {
 	});
 
 	it('hasAccess - no access', function testSlash(done) {
-		User.create('18315551111').then(function(friend) {
+		createFriend().then(function(friend) {
 			sharedFriend = friend;
 			return File.create(sharedUser, sharedFriend, 1);
 		}).then(function(files) {

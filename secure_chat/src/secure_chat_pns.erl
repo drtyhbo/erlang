@@ -17,8 +17,8 @@ start_link() ->
 	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 
-send_notification(UserId, Message) ->
-	gen_server:cast(whereis(?MODULE), {send_notification, UserId, Message}).
+send_notification(DeviceId, Message) ->
+	gen_server:cast(whereis(?MODULE), {send_notification, DeviceId, Message}).
 
 
 init([]) ->
@@ -34,9 +34,10 @@ init([]) ->
 	end.
 
 
-handle_cast({send_notification, UserId, Message}, State) ->
-	case eredis_cluster:q(["HGET", secure_chat_redis:user_id_to_key(UserId), "iosToken"]) of
-	 	{ok, DeviceToken} ->
+handle_cast({send_notification, DeviceId, Message}, State) ->
+	io:format("~p~n", [DeviceId]),
+	case eredis_cluster:q(["HGET", secure_chat_redis:device_id_to_key(DeviceId), "iosToken"]) of
+	 	{ok, DeviceToken} when DeviceToken =/= undefined ->
 	 		apns:send_message(ios_apns, #apns_msg{
 	 			alert = Message,
 	 			content_available = true,

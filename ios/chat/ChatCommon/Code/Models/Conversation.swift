@@ -15,23 +15,23 @@ class Conversation: NSManagedObject {
     @NSManaged var messageNumber: Int
     @NSManaged var preKeyIndex: Int
     @NSManaged var publicKey: NSData?
-    @NSManaged var friend: Friend
+    @NSManaged var device: Device
 
-    static func createWithFriend(friend: Friend) -> Conversation {
+    static func createWithDevice(device: Device) -> Conversation {
         let conversation = Conversation.MR_createEntity()!
-        conversation.friend = friend
+        conversation.device = device
         conversation.isRatcheting = false
         return conversation
     }
 
-    static func getOrCreateWithFriend(friend: Friend) -> Conversation {
-        if let conversation = Conversation.findWithFriend(friend) {
+    static func getOrCreateWithDevice(device: Device) -> Conversation {
+        if let conversation = Conversation.findWithDevice(device) {
             return conversation
         }
-        return createWithFriend(friend)
+        return createWithDevice(device)
     }
 
-    static func findWithFriend(friend: Friend) -> Conversation? {
-        return Conversation.MR_findFirstByAttribute("friend", withValue: friend)
+    static func findWithDevice(device: Device) -> Conversation? {
+        return Conversation.MR_findFirstByAttribute("device", withValue: device)
     }
 }

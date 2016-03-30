@@ -1,5 +1,4 @@
 var redis = require('./redis').redis,
-	user = require('./user').User,
 	Promise = require('bluebird').Promise,
 	s3 = require('../utils/s3'),
 	User = require('./user').User;
@@ -26,9 +25,6 @@ File.create = function(user, friend, numIds) {
 			promises.push(redis.saddAsync(File._fileKey(firstFileId + i), File._userKey(user.id), File._userKey(friend.id)));
 		}
 		
-		console.log(firstFileId);
-		console.log(firstFileId + numIds);
-
 		var files = [];
 		for (var fileId = firstFileId; fileId < firstFileId + numIds; fileId++) {
 			files.push(new File(fileId));

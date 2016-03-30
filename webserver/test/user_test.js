@@ -7,11 +7,14 @@ var assert = require('assert'),
 
 var Constants = {
 	phoneNumber: '18315550835',
+	deviceUuid: '729908c5a45746af90a88b53a738c218',
 	keyOfLastResort: 'abcdefgh'
 };
 
 describe('User', function() {
 	var sharedUser;
+	var sharedDevice;
+	var sharedCode;
 
 	before(function (done) {
 		helpers.deleteUser(Constants.phoneNumber).then(function() {
@@ -34,79 +37,39 @@ describe('User', function() {
 	});
 
 	it('User - create ok', function testSlash(done) {
-		User.create(Constants.phoneNumber).then(function(user) {
-			sharedUser = user;
+		User.create(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
+			sharedUser = values[0];
+			sharedDevice = values[1];
+			sharedCode = values[2];
 
-			assert.notEqual(user, null);
-			return user.fetch(User.fields.code);
-		}).then(function(values) {
-			assert.equal(values[0] >= 100000, true);
-			assert.equal(values[0] <= 999999, true);
+			assert.notEqual(sharedUser, null);
+			assert.notEqual(sharedDevice, null);
+			assert.equal(sharedCode >= 100000, true);
+			assert.equal(sharedCode <= 999999, true);
+
 			done();
 		});
 	});
 
-	it('User - login no code', function testSlash(done) {
-		User.login(Constants.phoneNumber, '12345').then(function(user) {
+	it('User - verify number no code', function testSlash(done) {
+		User.verifyNumber(Constants.phoneNumber, Constants.deviceUuid).then(function(user) {
 		}, function(err) {
 			done();
 		});
 	});
 
-	it('User - login no phone', function testSlash(done) {
-		User.login('12345', '12345').then(function(user) {
+	it('User - verify number no phone', function testSlash(done) {
+		User.verifyNumber(null, '12345').then(function(user) {
 		}, function(err) {
 			done();
 		});
 	});
 
-	it('User - login ok', function testSlash(done) {
-		sharedUser.fetch(User.fields.code).then(function(values) {
-			return User.login(Constants.phoneNumber, values[0]);
-		}).then(function(user) {
-			assert.notEqual(user, null);
-			done();
-		});
-	});
-
-	it('User - checkPreKeys none', function testSlash(done) {
-		sharedUser.fetchPreKey().then(function(key) {
-			// This should not be called.
-		}, function() {
-			done();
-		});
-	});
-
-	it('User - update pre keys', function testSlash(done) {
-		function updatePreKeys(keys) {
-			assert.equal(keys.length, 3);
-			return sharedUser.updatePreKeys({
-				i: [0, 1, 0xFFFF],
-				pk: keys
-			});
-		}
-
-		function validatePreKeys(keys) {
-			assert.equal(keys.length, 2);
-			return redis.smembersAsync('pki:{' + sharedUser.id + '}').then(function(values) {
-				assert.equal(values[0], '0');
-				assert.equal(values[1], '1');
-				return redis.hgetallAsync('pk:{' + sharedUser.id + '}');
-			}).then(function(values) {
-				assert.equal(values['0'], keys[0]);
-				assert.equal(values['1'], keys[1]);
-				return Promise.resolve()
-			});
-		}
-
-		updatePreKeys(['abcd', 'efgh', Constants.keyOfLastResort]).then(function(ok) {
-			assert.equal(ok, true);
-			return validatePreKeys(['abcd', 'efgh']);
-		}).then(function() {
-			return updatePreKeys(['ijkl', 'mnop', Constants.keyOfLastResort]);
-		}).then(function() {
-			return validatePreKeys(['ijkl', 'mnop']);
-		}).then(function() {
+	it('User - verify number ok', function testSlash(done) {
+		User.verifyNumber(Constants.phoneNumber, Constants.deviceUuid, sharedCode).then(function(values) {
+			assert.equal(values.length, 2);
+			assert.notEqual(values[0], null);
+			assert.notEqual(values[1], null);
 			done();
 		});
 	});
@@ -143,23 +106,6 @@ describe('User', function() {
 		});
 	});
 
-	it('User - confirmSession', function testSlash(done) {
-		sharedUser.fetch(User.fields.session).then(function(values) {
-			return sharedUser.confirmSession(values[0]);
-		}).then(function(user) {
-			assert.notEqual(user, null);
-			done();
-		});
-	});
-
-	it('User - confirmSession null session', function testSlash(done) {
-		sharedUser.confirmSession().then(function() {
-			// Should never get here.
-		}, function(err) {
-			done();
-		});
-	});
-
 	it('User - checkPhoneNumbers', function testSlash(done) {
 		var promises = [];
 		promises.push(User.create('18315551111'));
@@ -172,28 +118,6 @@ describe('User', function() {
 			assert.equal(phoneNumbers[1], null);
 			assert.notEqual(phoneNumbers[2].id, null);
 			assert.equal(phoneNumbers[2].phone, '18315552222');
-			done();
-		});
-	});
-
-	it('User - checkPreKeys ok', function testSlash(done) {
-		sharedUser.fetchPreKey().then(function(key) {
-			assert.notEqual(key.index, null);
-			assert.notEqual(key.index, 0xFFFF);
-			assert.notEqual(key.key, null);
-			return sharedUser.fetchPreKey();
-		}).then(function(key) {
-			assert.notEqual(key.index, null);
-			assert.notEqual(key.index, 0xFFFF);
-			assert.notEqual(key.key, null);
-			return sharedUser.fetchPreKey();
-		}).then(function(key) {
-			assert.equal(key.index, 0xFFFF);
-			assert.equal(key.key, Constants.keyOfLastResort);
-			return sharedUser.fetchPreKey();
-		}).then(function(key) {
-			assert.equal(key.index, 0xFFFF);
-			assert.equal(key.key, Constants.keyOfLastResort);
 			done();
 		});
 	});

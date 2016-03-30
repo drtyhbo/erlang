@@ -77,6 +77,30 @@ public class User {
         }
     }
 
+    public static var deviceUUID: NSUUID {
+        get {
+            let keychain = Keychain()
+            if let deviceUUIDString = keychain.stringForKey(deviceUUIDKey), deviceUUID = NSUUID(UUIDString: deviceUUIDString) {
+                return deviceUUID
+            } else {
+                let deviceUUID = NSUUID()
+                keychain.setString(deviceUUID.UUIDString, forKey: deviceUUIDKey)
+                return deviceUUID
+            }
+        }
+    }
+
+    public static var deviceId: Int {
+        get {
+            return NSUserDefaults.sharedUserDefaults().integerForKey(deviceIdKey) ?? -1
+        }
+        set {
+            let userDefaults = NSUserDefaults.sharedUserDefaults()
+            userDefaults.setInteger(newValue, forKey: deviceIdKey)
+            userDefaults.synchronize()
+        }
+    }
+
     static private var profilePicUrl: NSURL {
         let documentsDirectoryUrl = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).last!)
         return documentsDirectoryUrl.URLByAppendingPathComponent("ProfilePic.png")
@@ -87,5 +111,6 @@ public class User {
     private static let sessionTokenKey = "sessionToken"
     private static let firstNameKey = "firstName"
     private static let lastNameKey = "lastName"
-
+    private static let deviceUUIDKey = "deviceUUID"
+    private static let deviceIdKey = "deviceId"
 }
