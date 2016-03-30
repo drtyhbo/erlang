@@ -36,8 +36,8 @@ class ReconnectView: TWTNibBackedView {
     }
 
     @objc private func updateReconnectionLabel() {
-        if let timeToReconnect = ChatClient.sharedClient.timeToReconnect {
-            reconnectionLabel.text = "Reconnecting in \(Int(round(timeToReconnect)))..."
+        if ChatClient.sharedClient.timeToReconnect != nil {
+            reconnectionLabel.text = "Waiting to reconnect..."
         } else {
             reconnectionLabel.text = "Reconnecting..."
         }

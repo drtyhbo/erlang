@@ -115,15 +115,8 @@ public class ChatClient {
         reconnectionTimer = nil
 
         NSNotificationCenter.defaultCenter().postNotificationName(ChatClient.ChatClientConnectingNotification, object: nil)
-        if let sessionToken = User.sessionToken {
-            let connectJson = JSON([
-                "t": "c",
-                "d": User.deviceId,
-                "s": sessionToken,
-            ])
+        if User.sessionToken != nil {
             connection.connect()
-            // Don't use self.sendJson() for this.
-            connection.sendJson(connectJson)
         }
     }
 
@@ -219,7 +212,15 @@ public class ChatClient {
 
 extension ChatClient: ChatConnectionDelegate {
     func chatConnectionOnConnect(chatConnection: ChatConnection) {
+        guard let sessionToken = User.sessionToken else {
+            return
+        }
 
+        sendJson(JSON([
+            "t": "c",
+            "d": User.deviceId,
+            "s": sessionToken,
+        ]))
     }
 
     func chatConnectionOnDisconnect(chatConnection: ChatConnection) {
