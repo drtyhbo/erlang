@@ -38,7 +38,7 @@ class MessageSender {
     }
 
     private func sendNextPendingMessage() {
-        if currentPendingMessage != nil {
+        if let currentPendingMessage = currentPendingMessage where currentPendingMessage.files.count == 0 {
             return
         }
 
@@ -48,14 +48,23 @@ class MessageSender {
         }
 
         currentPendingMessage = pendingMessage
-        if let file = pendingMessage.files.anyObject() as? File {
-            uploadFile(file, fromPendingMessage: pendingMessage)
-        } else {
+        handlePendingMessage(pendingMessage)
+    }
+
+    private func handlePendingMessage(pendingMessage: PendingMessage) {
+        if pendingMessage.files == 0 {
             sendPendingMessage(pendingMessage)
+        } else {
+            uploadNextFileFromPendingMessage(pendingMessage)
         }
     }
 
-    private func uploadFile(file: File, fromPendingMessage pendingMessage: PendingMessage) {
+    private func uploadNextFileFromPendingMessage(pendingMessage: PendingMessage) {
+        guard let file = pendingMessage.files.anyObject() as? File else {
+            sendPendingMessage(pendingMessage)
+            return
+        }
+
         APIManager.sharedManager.getUrlForFileWithId(file.id, method: "PUT", contentType: file.contentType) {
             uploadUrl in
 
@@ -74,7 +83,7 @@ class MessageSender {
                     success in
                     if success {
                         pendingMessage.finishFile(file)
-                        self.sendNextPendingMessage()
+                        self.handlePendingMessage(pendingMessage)
                     }
                 }
             }
