@@ -31,12 +31,11 @@ public class MessageCrypter {
         return Sodium()!.secretBox.open(data, secretKey: sharedSecret)
     }
 
-    func encryptData(unencryptedData: NSData, forFriend friend: Friend, callback: [String:AnyObject]?->Void) {
-        let conversation = Conversation.getOrCreateWithFriend(friend)
-        CoreData.save()
+    func encryptData(unencryptedData: NSData, forDevice device: Device, callback: [String:AnyObject]?->Void) {
+        let conversation = Conversation.getOrCreateWithDevice(device)
 
         if conversation.publicKey == nil {
-            APIManager.sharedManager.getPrekeyForFriend(friend) { keyIndex, publicKey in
+            APIManager.sharedManager.getPrekeyForDevice(device) { keyIndex, publicKey in
                 guard let keyIndex = keyIndex, publicKey = publicKey else {
                     callback(nil)
                     return
@@ -44,7 +43,6 @@ public class MessageCrypter {
 
                 conversation.preKeyIndex = keyIndex
                 conversation.publicKey = publicKey
-                CoreData.save()
 
                 self.handleEncryption(unencryptedData, conversation: conversation, callback: callback)
             }
@@ -53,9 +51,8 @@ public class MessageCrypter {
         }
     }
 
-    func decryptMessage(message: [String:AnyObject], forFriend friend: Friend) -> NSData? {
-        let conversation = Conversation.getOrCreateWithFriend(friend)
-        CoreData.save()
+    func decryptMessage(message: [String:AnyObject], forDevice device: Device) -> NSData? {
+        let conversation = Conversation.getOrCreateWithDevice(device)
 
         return handleDecryption(message, conversation: conversation)
     }
@@ -67,13 +64,13 @@ public class MessageCrypter {
         if !conversation.isRatcheting {
             keyPair = KeyPair.keyPair()!
         } else {
-            guard let keychainKeyPair = KeyPair.fromKeychainWithKey(conversation.friend.id) else {
+            guard let keychainKeyPair = KeyPair.fromKeychainWithKey(conversation.device.id) else {
                 callback(nil)
                 return
             }
             keyPair = keychainKeyPair
         }
-        keyPair.saveToKeychainWithKey(conversation.friend.id)
+        keyPair.saveToKeychainWithKey(conversation.device.id)
 
         guard let sharedSecret = generateSharedSecretForConversation(conversation, withKeyPair: keyPair) else {
             callback(nil)
@@ -102,7 +99,6 @@ public class MessageCrypter {
 
         conversation.isRatcheting = true
         conversation.messageNumber++
-        CoreData.save()
 
         callback(json)
     }
@@ -116,7 +112,6 @@ public class MessageCrypter {
         conversation.publicKey = otherPublicKey
         conversation.preKeyIndex = -1
         conversation.isRatcheting = false
-        CoreData.save()
 
         let keyPair: KeyPair
         if let preKeyIndex = json["pki"] as? Int {
@@ -125,7 +120,7 @@ public class MessageCrypter {
             }
             keyPair = preKey.keyPair
         } else {
-            guard let keychainKeyPair = KeyPair.fromKeychainWithKey(conversation.friend.id) else {
+            guard let keychainKeyPair = KeyPair.fromKeychainWithKey(conversation.device.id) else {
                 return nil
             }
             keyPair = keychainKeyPair
@@ -154,7 +149,7 @@ public class MessageCrypter {
         }
 
         let hash = Hash()
-        if User.userId < conversation.friend.id {
+        if User.deviceId < conversation.device.id {
             hash.update([sharedSecret, keyPair.publicKey, conversation.publicKey!])
         } else {
             hash.update([sharedSecret, conversation.publicKey!, keyPair.publicKey])

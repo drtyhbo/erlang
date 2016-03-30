@@ -119,6 +119,10 @@ User._userKey = function(id) {
 	return 'u:{' + id + '}';
 };
 
+User._devicesKey = function(id) {
+	return 'ud:{' + id + '}';
+};
+
 User.prototype.exists = function() {
 	return redis.existsAsync(User._userKey(this.id));
 };
@@ -129,12 +133,21 @@ User.prototype.fetch = function() {
 
 User.prototype.findDevice = function(deviceUuid) {
 	var self = this;
-	return redis.hgetAsync(User._userKey(this.id), 'd:' + deviceUuid).then(function(deviceId) {
+	return redis.hgetAsync(User._devicesKey(this.id), deviceUuid).then(function(deviceId) {
 		if (deviceId) {
 			return Promise.resolve(deviceId ? new Device(deviceId) : null);
 		} else {
 			return self._createDevice(deviceUuid);
 		}
+	});
+};
+
+User.prototype.getActiveDevice = function() {
+	return redis.hgetallAsync(User._devicesKey(this.id)).then(function(devices) {
+		for (deviceUuid in devices) {
+			return Promise.resolve(devices[deviceUuid]);
+		}
+		return Promise.reject();
 	});
 };
 
@@ -158,7 +171,7 @@ User.prototype.update = function() {
 User.prototype._createDevice = function(deviceUuid) {
 	var self = this;
 	return Device.create(this.id).then(function(device) {
-		return redis.hsetAsync(User._userKey(self.id), 'd:' + deviceUuid, device.id).thenReturn(device);
+		return redis.hsetAsync(User._devicesKey(self.id), deviceUuid, device.id).thenReturn(device);
 	});
 };
 

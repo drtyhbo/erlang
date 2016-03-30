@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4895AA0B7AE4B2174643D2F7 /* Pods_chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F57DF795FECAD58982D83601 /* Pods_chat.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		900C566E1CAA1726009F38FC /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900C566D1CAA1726009F38FC /* Device.swift */; };
+		900C56701CAA3D0F009F38FC /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900C566F1CAA3D0F009F38FC /* DeviceManager.swift */; };
 		900EC9011C72B8F000AE5C73 /* ChatProfilePic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */; };
 		9022FBFE1C8B396E00F88BC7 /* FriendsListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9022FBFD1C8B396E00F88BC7 /* FriendsListHeader.swift */; };
 		9022FC001C8B397B00F88BC7 /* FriendsListHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */; };
@@ -216,6 +218,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		900C566D1CAA1726009F38FC /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		900C566F1CAA3D0F009F38FC /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		900EC9001C72B8F000AE5C73 /* ChatProfilePic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatProfilePic.swift; sourceTree = "<group>"; };
 		9022FBFD1C8B396E00F88BC7 /* FriendsListHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsListHeader.swift; sourceTree = "<group>"; };
 		9022FBFF1C8B397B00F88BC7 /* FriendsListHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsListHeader.xib; sourceTree = "<group>"; };
@@ -627,6 +631,8 @@
 				9091F90F1C9CE0F400E878C2 /* Contact.swift */,
 				9091F8CE1C9CDE9500E878C2 /* Conversation.swift */,
 				9091F8CF1C9CDE9500E878C2 /* CoreData.swift */,
+				900C566D1CAA1726009F38FC /* Device.swift */,
+				900C566F1CAA3D0F009F38FC /* DeviceManager.swift */,
 				9091F8D01C9CDE9500E878C2 /* File.swift */,
 				9091F8D21C9CDE9500E878C2 /* Friend.swift */,
 				9091F8D31C9CDE9500E878C2 /* FriendManager.swift */,
@@ -635,10 +641,10 @@
 				9091F8D61C9CDE9500E878C2 /* MessageSender.swift */,
 				9091F8D71C9CDE9500E878C2 /* PendingMessage.swift */,
 				9091F8D81C9CDE9500E878C2 /* PhoneNumber.swift */,
+				9091F9181C9CE34600E878C2 /* PreKey.swift */,
 				9091F8E91C9CDEFB00E878C2 /* ReceivedJson.swift */,
 				9091F8E71C9CDEEA00E878C2 /* SentMessage.swift */,
 				9091F8D91C9CDE9500E878C2 /* User.swift */,
-				9091F9181C9CE34600E878C2 /* PreKey.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1134,6 +1140,7 @@
 				9091F90C1C9CE0C600E878C2 /* String.swift in Sources */,
 				9091F8F01C9CE02A00E878C2 /* APIManager.swift in Sources */,
 				9091F9031C9CE09200E878C2 /* SecurityHelper.swift in Sources */,
+				900C566E1CAA1726009F38FC /* Device.swift in Sources */,
 				9091F8E61C9CDE9500E878C2 /* User.swift in Sources */,
 				9091F8E21C9CDE9500E878C2 /* MessageManager.swift in Sources */,
 				9091F90A1C9CE0C600E878C2 /* NSData.swift in Sources */,
@@ -1158,6 +1165,7 @@
 				9091F9191C9CE34600E878C2 /* PreKey.swift in Sources */,
 				9091F9001C9CE09200E878C2 /* KeyPair.swift in Sources */,
 				9091F9451C9D2D2600E878C2 /* NSUserDefaults.swift in Sources */,
+				900C56701CAA3D0F009F38FC /* DeviceManager.swift in Sources */,
 				9091F8DF1C9CDE9500E878C2 /* Friend.swift in Sources */,
 				9091F8F61C9CE04F00E878C2 /* Constants.swift in Sources */,
 				9091F90B1C9CE0C600E878C2 /* NSMutableData.swift in Sources */,

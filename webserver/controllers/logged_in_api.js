@@ -52,6 +52,31 @@ router.post('/friend/check/', function(req, res) {
 
 /*
  * Request parameters:
+ * phone - The phone numbers to check.
+ */
+router.post('/device/active/', function(req, res) {
+	var userIds = req.body.userIds;
+	if (!userIds) {
+		sendError(res);
+		return;
+	}
+
+	var promises = [];
+	for (var i = 0, userId; userId = userIds[i]; i++) {
+		promises.push(new User(userId).getActiveDevice());
+	}
+
+	Promise.all(promises).then(function(deviceIds) {
+		sendSuccess(res, {
+			'deviceIds': deviceIds.map(function(id) { if (id) return parseInt(id, 10); })
+		});
+	}, function() {
+		sendError(res);
+	});
+});
+
+/*
+ * Request parameters:
  * userId - Id of the user for whom we need a prekey.
  */
 router.post('/device/prekey/', function(req, res) {

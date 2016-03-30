@@ -19,6 +19,7 @@
 -record(user_state,
 		{socket,
 		user_id,
+		device_id,
 		first_name}).
 
 %% ==== Defines ====
@@ -28,13 +29,13 @@
 -define(SOCK_CLOSED(), {ssl_closed, _Port}).
 
 % Incoming JSON
--define(IN_CONNECT_JSON(UserId, SessionToken), [{<<"s">>, SessionToken}, {<<"c">>, UserId}]).
+-define(IN_CONNECT_JSON(DeviceId, SessionToken), [{<<"s">>, SessionToken}, {<<"c">>, DeviceId}]).
 -define(IN_MSG_JSON(ClientId, To, Msg), [{<<"i">>, ClientId}, {<<"r">>, To}, {<<"m">>, Msg}]).
 
 % Outgoing JSON
 -define(OUT_CONNECTED_JSON(), {struct, [{<<"r">>, <<"connected">>}]}).
 -define(OUT_CONNECTION_FAILED_JSON(), {struct, [{<<"r">>, <<"not_connected">>}]}).
--define(OUT_MSG_JSON(TS, From, Msg), {struct, [{<<"d">>, TS},{<<"f">>, From},{<<"m">>, Msg}]}).
+-define(OUT_MSG_JSON(TS, FromDeviceId, FromUserId, Msg), {struct, [{<<"d">>, TS},{<<"f">>, FromDeviceId},{<<"fu">>, FromUserId},{<<"m">>, Msg}]}).
 -define(OUT_MSGS_JSON(Msgs), {struct, [{<<"m">>, Msgs}]}).
 -define(OUT_OFFLINE_MSGS_JSON(Msgs), {struct, [{<<"o">>, Msgs}]}).
 -define(OUT_ERROR_JSON(Error), {struct, [{<<"e">>, Error}]}).
@@ -73,7 +74,7 @@ handle_info(?RECEIVE_SOCK_MSG(Msg), FSMState, State) ->
 	{next_state, FSMState, NewState};
 handle_info(?SOCK_CLOSED(), _FSMState, State) ->
 	{stop, disconnect, State};
-handle_info(Msg, FSMState, State) ->
+handle_info(_, FSMState, State) ->
 	{next_state, FSMState, State}.
 
 
@@ -98,7 +99,7 @@ terminate(_Reason, _StateName, State) ->
 
 
 logged_out(connect, State) ->
-	add_user(State#user_state.user_id, self()),
+	add_device(State#user_state.device_id, self()),
 	send_json(State#user_state.socket, ?OUT_CONNECTED_JSON()),
 	gen_fsm:send_event(self(), check_offline_msgs),
 	{next_state, logged_in, State};
@@ -108,7 +109,7 @@ logged_out(Event, State) ->
 
 
 logged_in(check_offline_msgs, State) ->
-	case secure_chat_msg_store:get_offline_msgs(State#user_state.user_id) of
+	case secure_chat_msg_store:get_offline_msgs(State#user_state.device_id) of
 		[] ->
 			ok;
 		Msgs ->
@@ -158,18 +159,28 @@ handle_json(FSMState, Json, State) ->
 %% === Message routing ===
 
 
-add_user(UserId, Pid) ->
-	syn:register(UserId, Pid).
+add_device(DeviceId, Pid) ->
+	syn:register(DeviceId, Pid).
 
 
 %% === JSON Parsing ===
 
 
 handle_connect_json(Json, State) ->
-	UserId = proplists:get_value(<<"u">>, Json),
+	DeviceId = proplists:get_value(<<"d">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	case eredis_cluster:q(["HMGET", secure_chat_redis:user_id_to_key(UserId), "session", "firstName"]) of
-	 	{ok, [RedisSessionToken, FirstName]} when RedisSessionToken =:= SessionToken, FirstName =/= undefined ->
+	case eredis_cluster:q(["HMGET", secure_chat_redis:device_id_to_key(DeviceId), "session", "u"]) of
+	 	{ok, [RedisSessionToken, UserId]} when RedisSessionToken =:= SessionToken, UserId =/= undefined ->
+	 		load_user_info(list_to_integer(binary_to_list(UserId)), State#user_state{device_id = DeviceId});
+	 	_ ->
+	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
+	 		State
+	 end.
+
+
+load_user_info(UserId, State) ->
+	case eredis_cluster:q(["HGET", secure_chat_redis:user_id_to_key(UserId), "firstName"]) of
+	 	{ok, FirstName} when FirstName =/= undefined ->
 			connect(),
 			State#user_state{user_id = UserId, first_name = binary_to_list(FirstName)};
 	 	_ ->
@@ -182,15 +193,16 @@ recipients_to_msgs(From, Recipients, Msg) ->
 	recipients_to_msgs(From, Recipients, Msg, []).
 recipients_to_msgs(_, [], _, Acc) ->
 	Acc;
-recipients_to_msgs(From, [H|T], Msg, Acc) ->
+recipients_to_msgs({DeviceId, UserId}, [H|T], Msg, Acc) ->
 	MsgPayload = [{<<"m">>, Msg}|H],
 	NewMsg = #message{
 		to=proplists:get_value(<<"r">>, H),
-		from=From,
+		from_device_id=DeviceId,
+		from_user_id=UserId,
 		from_pid=self(),
 		ts=secure_chat_utils:timestamp(),
 		msg=proplists:delete(<<"r">>, MsgPayload)},
-	recipients_to_msgs(From, T, Msg, [NewMsg|Acc]).
+	recipients_to_msgs({DeviceId, UserId}, T, Msg, [NewMsg|Acc]).
 
 
 dispatch_msgs(_, []) ->
@@ -211,7 +223,7 @@ dispatch_msgs(SenderName, [H|T]) ->
 handle_msg_json(Json, State) ->
 	Recipients = proplists:get_value(<<"r">>, Json),
 	Msg = proplists:get_value(<<"m">>, Json),
-	Msgs = recipients_to_msgs(State#user_state.user_id, Recipients, Msg),
+	Msgs = recipients_to_msgs({State#user_state.device_id, State#user_state.user_id}, Recipients, Msg),
 	dispatch_msgs(State#user_state.first_name, Msgs),
 	msg_is_delivered(proplists:get_value(<<"i">>, Json)),
 	State.
@@ -220,7 +232,7 @@ handle_msg_json(Json, State) ->
 handle_acknowledgement_json(Json, State) ->
 	case proplists:get_value(<<"w">>, Json) of
 		<<"offline">> ->
-			secure_chat_msg_store:delete_offline_msgs(State#user_state.user_id);
+			secure_chat_msg_store:delete_offline_msgs(State#user_state.device_id);
 		DeleteType ->
 			io:format("Unknown delete message type ~p~n", [DeleteType])
 	end,
@@ -270,7 +282,7 @@ lists_to_json(Value) ->
 generate_msgs_json([], JsonList) ->
 	JsonList;
 generate_msgs_json([H|T], JsonList) ->
-	generate_msgs_json(T, [?OUT_MSG_JSON(H#message.ts, H#message.from, H#message.msg)|JsonList]).
+	generate_msgs_json(T, [?OUT_MSG_JSON(H#message.ts, H#message.from_device_id, H#message.from_user_id, H#message.msg)|JsonList]).
 
 
 send_json(Socket, Json) ->

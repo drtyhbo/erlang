@@ -31,7 +31,6 @@ init([Port]) ->
 handle_cast(accept, State) ->
 	case ssl:transport_accept(State#server.listen_socket) of
 		{ok, Socket} ->
-			io:format("connected~n"),
 			{ok, NewPid} = secure_chat_user:start(Socket),
 			ssl:controlling_process(Socket, NewPid),
 			ssl:ssl_accept(Socket),

@@ -74,9 +74,9 @@ public class APIManager: NSObject {
         }
     }
 
-    func getPrekeyForFriend(friend: Friend, callback: (Int?, NSData?)->Void) {
-        sendUserRequestToUrl("friend/prekey/", parameters: [
-            "userId": friend.id
+    func getPrekeyForDevice(device: Device, callback: (Int?, NSData?)->Void) {
+        sendUserRequestToUrl("device/prekey/", parameters: [
+            "deviceId": device.id
         ]) {
             json in
 
@@ -86,6 +86,29 @@ public class APIManager: NSObject {
             }
 
             callback(keyIndex, publicKey)
+        }
+    }
+
+    public func activeDevicesForFriends(friends: [Friend], callback: [Int]->Void) {
+        sendUserRequestToUrl("device/active/", parameters: [
+            "userIds": friends.map({ $0.id })
+        ]) {
+            json in
+
+            guard let deviceIdsJson = json?["deviceIds"].array else {
+                callback([])
+                return
+            }
+
+            var deviceIds: [Int] = []
+            for i in 0..<deviceIdsJson.count {
+                guard let deviceId = deviceIdsJson[i].int else {
+                    continue
+                }
+                deviceIds.append(deviceId)
+            }
+
+            callback(deviceIds)
         }
     }
 
