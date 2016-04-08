@@ -1,31 +1,110 @@
-var redis = require('./redis').redis,
+var mongoose = require('mongoose'),
 	utils = require('../utils/utils.js'),
+	Device = require('../models/device.js').Device,
 	Promise = require('bluebird').Promise;
 
-const deviceIdKey = 'device_id';
+var deviceSchema = mongoose.Schema({
+	deviceUuid: String,
+	code: String,
+	iosPushToken: String,
+	session: String,
+	userId: mongoose.Schema.Types.ObjectId,
+	preKeys: [mongoose.Schema.Types.Mixed]
+});
 
-var Device = function(id) {
-	this.id = id;
-};
-exports.Device = Device;
+deviceSchema.methods.generateCode = function() {
+	if (this.code) {
+		return Promise.resolve(this.code);
+	}
 
-Device.fields = {
-	code: 'code',
-	iosPushToken: 'iosToken',
-	userId: 'u',
-	session: 'session'
-};
-
-Device.keyOfLastResort = 0xFFFF;
-
-Device.create = function(userId) {
-	return redis.incrAsync(deviceIdKey).then(function(id) {
-		var device = new Device(id);
-		return device._update(Device.fields.userId, userId).thenReturn(device);
+	var code = Math.floor(Math.random() * 900000) + 100000;
+	this.code = code;
+	return this.save().then(function(user) {
+		return Promise.resolve(code);
 	});
 };
 
-Device.prototype.confirmSession = function(sessionToken) {
+deviceSchema.methods.login = function() {
+	var sessionToken = utils.generateSessionToken();
+
+	this.session = sessionToken
+	return this.save().then(function() {
+		return Promise.resolve(sessionToken);
+	});
+};
+
+deviceSchema.methods.updatePreKeys = function(preKeys) {
+	var indices = preKeys['i'];
+	var publicKeys = preKeys['pk'];
+	if (indices.length != publicKeys.length) {
+		return Promise.reject();
+	}
+
+	for (var i = 0; i < indices.length; i++) {
+		this._updatePreKey(indices[i], publicKeys[i]);
+	}
+
+	return this.save();
+};
+
+deviceSchema.methods._updatePreKey = function(index, publicKey) {
+	for (var i = 0; i < this.preKeys.length; i++) {
+		if (this.preKeys[i].i == index) {
+			this.preKeys[i].pk = publicKey;
+			return
+		}
+	}
+
+	this.preKeys.push({
+		i: index,
+		pk: publicKey
+	});
+};
+
+var Device = mongoose.model('Device', deviceSchema);
+
+Device.keyOfLastResort = 0xFFFF;
+
+Device.create = function(deviceUuid, userId) {
+	if (!deviceUuid || !userId) {
+		return Promise.reject();
+	}
+
+	return Device.find({
+		deviceUuid: deviceUuid,
+		userId: userId
+	}).then(function(devices) {
+		if (!devices.length) {
+			var device = new Device({
+				deviceUuid: deviceUuid,
+				userId: userId
+			});
+			return device.save();
+		} else {
+			return Promise.resolve(devices[0]);
+		}
+	});
+};
+
+Device.findDevice = function(deviceUuid, userId) {
+	if (!deviceUuid || !userId) {
+		return Promise.reject();
+	}
+
+	return Device.find({
+		deviceUuid: deviceUuid,
+		userId: userId
+	}).then(function(devices) {
+		if (!devices.length) {
+			return Promise.reject();
+		} else {
+			return Promise.resolve(devices[0]);
+		}
+	});
+};
+
+exports.Device = Device;
+/*Device.prototype.confirmSession = function(sessionToken) {
 	var User = require('../models/user').User;
 
 	if (!sessionToken) {
@@ -54,11 +133,11 @@ Device.prototype.fetchPreKey = function() {
 		if (keyIndex === null) {
 			keyIndex = Device.keyOfLastResort;
 		}
-		
+
 		sharedKeyIndex = keyIndex;
 		var multi = redis
 			.multi()
-			.hget(Device._preKeysKey(self.id), keyIndex);		
+			.hget(Device._preKeysKey(self.id), keyIndex);
 
 		if (keyIndex != Device.keyOfLastResort) {
 			multi.hdel(Device._preKeysKey(self.id), keyIndex)
@@ -141,4 +220,4 @@ Device._preKeyIndicesKey = function(id) {
 
 Device.prototype._update = function() {
 	return redis.hmsetAsync(Device._deviceKey(this.id), Array.prototype.slice.call(arguments));
-};
+};*/

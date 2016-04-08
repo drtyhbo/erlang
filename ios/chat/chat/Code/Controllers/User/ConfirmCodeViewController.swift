@@ -80,12 +80,12 @@ class ConfirmCodeViewController: UIViewController {
         isConfirming = true
 
         APIManager.sharedManager.confirmPhoneNumber(phoneNumber, deviceUUID: User.deviceUUID, withCode: code.text ?? "", preKeys: preKeys) {
-            userIdString, deviceIdString, sessionToken, firstName, lastName, error in
+            userId, deviceId, sessionToken, firstName, lastName, error in
 
             self.setupNextButton()
             self.isConfirming = false
 
-            if let userIdString = userIdString, userId = Int(userIdString), deviceIdString = deviceIdString, deviceId = Int(deviceIdString), sessionToken = sessionToken {
+            if let userId = userId, deviceId = deviceId, sessionToken = sessionToken {
                 User.userId = userId
                 User.deviceId = deviceId
                 User.sessionToken = sessionToken

@@ -99,6 +99,7 @@ terminate(_Reason, _StateName, State) ->
 
 
 logged_out(connect, State) ->
+	mc_worker_api:insert(mongo, <<"users">>, [{<<"name">>, <<"binnewies">>}]),
 	add_device(State#user_state.device_id, self()),
 	send_json(State#user_state.socket, ?OUT_CONNECTED_JSON()),
 	gen_fsm:send_event(self(), check_offline_msgs),

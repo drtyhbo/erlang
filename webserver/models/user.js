@@ -1,25 +1,87 @@
-var redis = require('./redis').redis,
+var mongoose = require('mongoose'),
 	utils = require('../utils/utils.js'),
 	Device = require('../models/device.js').Device,
 	Promise = require('bluebird').Promise;
 
-var User = function(id) {
-	this.id = id;
+var userSchema = mongoose.Schema({
+	phone: String,
+	first: String,
+	last: String
+});
+
+var User = mongoose.model('User', userSchema);
+
+User.checkPhoneNumbers = function(phoneNumbers) {
+	return User.find({
+		phone: { $in: phoneNumbers }
+	});
 };
+
+User.create = function(phoneNumber, deviceUuid) {
+	if (!phoneNumber || phoneNumber.length != 11) {
+		return Promise.reject();
+	}
+
+	var sharedUser;
+	var sharedDevice;
+	return this._create(phoneNumber).then(function(user) {
+		sharedUser = user;
+		return Device.create(deviceUuid, user._id);
+	}).then(function(device) {
+		sharedDevice = device;
+		return device.generateCode();
+	}).then(function(code) {
+		return Promise.resolve([sharedUser, sharedDevice, code]);
+	});
+};
+
+User.findUser = function(phoneNumber) {
+	return User.find({ phone: phoneNumber }).then(function(users) {
+		if (!users.length) {
+			return Promise.reject();
+		} else {
+			return Promise.resolve(users[0]);
+		}
+	});
+};
+
+User.verifyNumber = function(phoneNumber, deviceUuid, code) {
+	var sharedUser;
+	var sharedDevice;
+
+	return User.findUser(phoneNumber).then(function(user) {
+		sharedUser = user;
+		return Device.findDevice(deviceUuid, user._id);
+	}).then(function(device) {
+		if (!code || device.code != code) {
+			return Promise.reject();
+		}
+
+		return Promise.resolve([sharedUser, device]);
+	});
+};
+
+User._create = function(phoneNumber) {
+	return User.find({
+		phone: phoneNumber
+	}).then(function(users) {
+		if (!users.length) {
+			var user = new User({
+				phone: phoneNumber
+			});
+			return user.save();
+		} else {
+			return Promise.resolve(users[0]);
+		}
+	});
+};
+
 exports.User = User;
 
-User.fields = {
-	phone: 'phone',
-	code: 'code',
-	active: 'active',
-	key: 'key',
-	firstName: 'firstName',
-	lastName: 'lastName'
-};
 
 // Checks whether the provided numbers correspond to users and returns an array of the
 // phoneNumber/id combinations.
-User.checkPhoneNumbers = function(phoneNumbers) {
+/*User.checkPhoneNumbers = function(phoneNumbers) {
 	var sharedIds;
 
 	var promises = [];
@@ -157,14 +219,14 @@ User.prototype.update = function() {
 	} else {
 		var itemsToUpdate = Array.prototype.slice.call(arguments);
 	}
-	
+
 	for (var i = itemsToUpdate.length - 2; i >= 0; i -= 2) {
 		var fieldName = itemsToUpdate[i];
 		if (fieldName != User.fields.firstName && fieldName != User.fields.lastName && fieldName != User.fields.iosPushToken) {
 			itemsToUpdate.splice(i, 2);
 		}
 	}
-	
+
 	return this._update.apply(this, itemsToUpdate);
 };
 
@@ -178,3 +240,4 @@ User.prototype._createDevice = function(deviceUuid) {
 User.prototype._update = function() {
 	return redis.hmsetAsync(User._userKey(this.id), Array.prototype.slice.call(arguments));
 };
+*/

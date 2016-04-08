@@ -1,9 +1,8 @@
 var assert = require('assert'),
+	mongo = require('../models/mongo'),
 	request = require('supertest'),
-	redis = require('../models/redis').redis,
 	Promise = require('bluebird').Promise,
-	User = require('../models/user').User,
-	helpers = require('./test_helpers');
+	User = require('../models/user').User;
 
 var Constants = {
 	phoneNumber: '18315550835',
@@ -11,13 +10,17 @@ var Constants = {
 	keyOfLastResort: 'abcdefgh'
 };
 
+function deleteUser(phoneNumber) {
+	return User.find({ phone: phoneNumber }).remove();
+}
+
 describe('User', function() {
 	var sharedUser;
 	var sharedDevice;
 	var sharedCode;
 
 	before(function (done) {
-		helpers.deleteUser(Constants.phoneNumber).then(function() {
+		deleteUser(Constants.phoneNumber).then(function() {
 			done();
 		});
 	});
@@ -28,7 +31,7 @@ describe('User', function() {
 			done();
 		});
 	});
-	
+
 	it('User - short phone number', function testSlash(done) {
 		User.create('1234').then(function() {
 		}, function() {
@@ -43,7 +46,11 @@ describe('User', function() {
 			sharedCode = values[2];
 
 			assert.notEqual(sharedUser, null);
+			assert.equal(sharedUser.phone, Constants.phoneNumber);
+
 			assert.notEqual(sharedDevice, null);
+			assert.equal(sharedDevice.deviceUuid, Constants.deviceUuid);
+
 			assert.equal(sharedCode >= 100000, true);
 			assert.equal(sharedCode <= 999999, true);
 
@@ -70,11 +77,12 @@ describe('User', function() {
 			assert.equal(values.length, 2);
 			assert.notEqual(values[0], null);
 			assert.notEqual(values[1], null);
+
 			done();
 		});
 	});
 
-	it('User - fetch/update', function testSlash(done) {
+/*	it('User - fetch/update', function testSlash(done) {
 		sharedUser.update(
 				User.fields.session, 'abcd',
 				User.fields.firstName, 'Rob',
@@ -120,5 +128,5 @@ describe('User', function() {
 			assert.equal(phoneNumbers[2].phone, '18315552222');
 			done();
 		});
-	});
+	});*/
 });

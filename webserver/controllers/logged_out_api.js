@@ -29,7 +29,7 @@ router.post('/confirm/', function(req, res) {
 	var code = req.body.code;
 	var deviceUuid = req.body.deviceUuid;
 	var preKeys = req.body.preKeys;
-	
+
 	if (!phoneNumber || !code || !deviceUuid || !preKeys || !preKeys[0]) {
 		res.send({ 'status': 'error' });
 		return;
@@ -37,7 +37,6 @@ router.post('/confirm/', function(req, res) {
 
 	var sharedUser;
 	var sharedDevice;
-	var sharedSessionToken;
 	User.verifyNumber(phoneNumber, deviceUuid, code).then(function(values) {
 		sharedUser = values[0];
 		sharedDevice = values[1]
@@ -45,16 +44,13 @@ router.post('/confirm/', function(req, res) {
 	}).then(function() {
 		return sharedDevice.login();
 	}).then(function(sessionToken) {
-		sharedSessionToken = sessionToken;
-		return sharedUser.fetch(User.fields.firstName, User.fields.lastName);
-	}).then(function(values){
 		res.send({
 			'status': 'ok',
-			'id': sharedUser.id,
-			'deviceId': sharedDevice.id,
-			'firstName': values[0],
-			'lastName': values[1],
-			'sessionToken': sharedSessionToken
+			'id': sharedUser._id.toString(),
+			'deviceId': sharedDevice._id.toString(),
+			'firstName': sharedUser.first || null,
+			'lastName': sharedUser.last || null,
+			'sessionToken': sessionToken
 		});
 	}, function(err) {
 		res.send({ 'status': 'error' });

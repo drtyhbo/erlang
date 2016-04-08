@@ -11,7 +11,7 @@ import Foundation
 
 @objc(Friend)
 public class Friend: NSManagedObject {
-    @NSManaged public var id: Int
+    @NSManaged public var id: String
     @NSManaged public var firstName: String
     @NSManaged var lastName: String?
 
@@ -24,10 +24,10 @@ public class Friend: NSManagedObject {
     }
 
     public override var hashValue: Int {
-        return id
+        return id.hashValue
     }
 
-    static func createWithId(id: Int, firstName: String, lastName: String?) -> Friend {
+    static func createWithId(id: String, firstName: String, lastName: String?) -> Friend {
         if let friend = findWithId(id) {
             friend.firstName = firstName
             friend.lastName = lastName
@@ -41,7 +41,7 @@ public class Friend: NSManagedObject {
         return friend
     }
 
-    static func findWithId(id: Int) -> Friend? {
+    static func findWithId(id: String) -> Friend? {
         return Friend.MR_findFirstByAttribute("id", withValue: id)
     }
 
