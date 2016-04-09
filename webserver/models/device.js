@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
 	utils = require('../utils/utils.js'),
-	Device = require('../models/device.js').Device,
 	Promise = require('bluebird').Promise;
 
 var deviceSchema = mongoose.Schema({
@@ -11,6 +10,25 @@ var deviceSchema = mongoose.Schema({
 	userId: mongoose.Schema.Types.ObjectId,
 	preKeys: [mongoose.Schema.Types.Mixed]
 });
+
+deviceSchema.methods.confirmSession = function(session) {
+	return session && this.session && session == this.session;
+};
+
+deviceSchema.methods.fetchPreKey = function() {
+	var preKey = {
+		index: this.preKeys[0].i,
+		key: this.preKeys[0].pk
+	};
+
+	if (preKey.index != Device.keyOfLastResort) {
+		return this.update({ $pull: { preKeys: { i: preKey.index }}}).then(function() {
+			return Promise.resolve(preKey);
+		})
+	} else {
+		return Promise.resolve(preKey);
+	}
+};
 
 deviceSchema.methods.generateCode = function() {
 	if (this.code) {
@@ -31,6 +49,11 @@ deviceSchema.methods.login = function() {
 	return this.save().then(function() {
 		return Promise.resolve(sessionToken);
 	});
+};
+
+deviceSchema.methods.registerPnsToken = function(pnsToken) {
+	this.iosPushToken = pnsToken;
+	return this.save();
 };
 
 deviceSchema.methods.updatePreKeys = function(preKeys) {
@@ -66,7 +89,7 @@ var Device = mongoose.model('Device', deviceSchema);
 Device.keyOfLastResort = 0xFFFF;
 
 Device.create = function(deviceUuid, userId) {
-	if (!deviceUuid || !userId) {
+	if (!deviceUuid || !userId || !Device._verifyUuid(deviceUuid)) {
 		return Promise.reject();
 	}
 
@@ -86,21 +109,32 @@ Device.create = function(deviceUuid, userId) {
 	});
 };
 
-Device.findDevice = function(deviceUuid, userId) {
-	if (!deviceUuid || !userId) {
+Device.findDevice = function(deviceUuid) {
+	if (!deviceUuid) {
 		return Promise.reject();
 	}
 
-	return Device.find({
-		deviceUuid: deviceUuid,
-		userId: userId
-	}).then(function(devices) {
-		if (!devices.length) {
-			return Promise.reject();
-		} else {
-			return Promise.resolve(devices[0]);
-		}
-	});
+	return Device.find({ deviceUuid: deviceUuid }).then(Device._findDeviceCallback);
+};
+
+Device.findDeviceById = function(deviceId) {
+	if (!deviceId) {
+		return Promise.reject();
+	}
+
+	return Device.find({ _id: deviceId }).then(Device._findDeviceCallback);
+};
+
+Device._findDeviceCallback = function(devices) {
+	if (!devices.length) {
+		return Promise.reject();
+	} else {
+		return Promise.resolve(devices[0]);
+	}
+}
+
+Device._verifyUuid = function(uuid) {
+	return new RegExp('[a-f0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}', 'i').test(uuid);
 };
 
 exports.Device = Device;

@@ -185,9 +185,9 @@ public class MessageManager {
         }
 
         var participants: [Friend] = []
-        var unknownIds: [Int] = []
+        var unknownIds: [String] = []
         for participantIdJson in participantIdsJson {
-            guard let participantId = participantIdJson.int else {
+            guard let participantId = participantIdJson.string else {
                 continue
             }
 

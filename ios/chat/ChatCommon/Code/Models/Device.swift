@@ -12,11 +12,11 @@ import MagicalRecord
 
 @objc(Device)
 public class Device: NSManagedObject {
-    @NSManaged var id: Int
+    @NSManaged var id: String
     @NSManaged var lastActive: NSDate
     @NSManaged var owner: Friend?
 
-    public static func createWithId(id: Int, owner: Friend? = nil) -> Device {
+    public static func createWithId(id: String, owner: Friend? = nil) -> Device {
         if let device = findWithId(id) {
             device.lastActive = NSDate()
             return device
@@ -30,7 +30,7 @@ public class Device: NSManagedObject {
         return device
     }
 
-    static func findWithId(id: Int) -> Device? {
+    static func findWithId(id: String) -> Device? {
         return Device.MR_findFirstByAttribute("id", withValue: id)
     }
 

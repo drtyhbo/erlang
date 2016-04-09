@@ -10,12 +10,12 @@ import Foundation
 import SwiftyJSON
 
 class ReceivedMessage {
-    let fromId: Int
+    let fromId: String
     let timestamp: Int
     let secretKey: NSData
     let messageJson: JSON
 
-    init(fromId: Int, timestamp: Int, secretKey: NSData, messageJson: JSON) {
+    init(fromId: String, timestamp: Int, secretKey: NSData, messageJson: JSON) {
         self.fromId = fromId
         self.timestamp = timestamp
         self.secretKey = secretKey

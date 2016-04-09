@@ -7,7 +7,7 @@ var assert = require('assert'),
 
 var Constants = {
 	phoneNumber: '18315550835',
-	deviceUuid: '729908c5a45746af90a88b53a738c218',
+	deviceUuid: 'f9c9b5fb-9ffd-4aa0-8760-9d8ad18391dd',
 	keyOfLastResort: 'abcdefgh'
 };
 
@@ -95,27 +95,28 @@ describe('Device', function() {
 		});
 	});
 
-	it('Device - find device for user no user id', function testSlash(done) {
-		Device.findDeviceForUser(Constants.deviceUuid, null).then(function(device) {
+	it('Device - find device no device uuid', function testSlash(done) {
+		Device.findDevice(null).then(function(device) {
 		}, function() {
 			done();
 		});
 	});
 
-	it('Device - find device for user no device uuid', function testSlash(done) {
-		Device.findDeviceForUser(null, sharedUser._id).then(function(device) {
-		}, function() {
-			done();
-		});
-	});
-
-	it('Device - find device for user ok', function testSlash(done) {
-		Device.findDeviceForUser(Constants.deviceUuid, sharedUser._id).then(function(device) {
+	it('Device - find device ok', function testSlash(done) {
+		Device.findDevice(Constants.deviceUuid).then(function(device) {
 			assert.equal(device.deviceUuid, Constants.deviceUuid);
-			assert.equal(device.userId.toString(), sharedUser._id.toString());
-			
+
 			done();
 		});
+	});
+
+	it('Device - verify uuid', function testSlash(done) {
+		assert.equal(Device._verifyUuid(), false);
+		assert.equal(Device._verifyUuid('f9C9b5fB-4aa0-8760-9D8ad18391dd'), false);
+		assert.equal(Device._verifyUuid('f9c9b5fb-9ffd-4aa0-8760-9d8ad18391dd'), true);
+		assert.equal(Device._verifyUuid('f9C9b5fB-9ffD-4aa0-8760-9D8ad18391dd'), true);
+
+		done();
 	});
 
 	/*it('User - verify number no code', function testSlash(done) {

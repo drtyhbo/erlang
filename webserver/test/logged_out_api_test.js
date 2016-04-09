@@ -7,12 +7,15 @@ var assert = require('assert'),
 
 const Constants = {
 	phoneNumber: '18315550835',
-	phoneNumberKey: 'p:{18315550835}',
-	deviceUuid: '729908c5a45746af90a88b53a738c218'
+	deviceUuid: '240b1900-895e-4b5d-907c-af0538464838'
 };
 
 function deleteUser(phoneNumber) {
 	return User.find({ phone: phoneNumber }).remove();
+}
+
+function deleteDevice(deviceUuid) {
+	return Device.find({ deviceUuid: deviceUuid }).remove();
 }
 
 function getUserDeviceAndCode(phoneNumber, deviceUuid) {
@@ -30,7 +33,13 @@ describe('logged out', function() {
 
 	before(function (done) {
 		server = require('../app');
-		deleteUser(Constants.phoneNumber).then(function() {
+
+		var promises = [];
+
+		promises.push(deleteUser(Constants.phoneNumber));
+		promises.push(deleteDevice(Constants.deviceUuid));
+
+		Promise.all(promises).then(function() {
 			done();
 		});
 	});

@@ -1,15 +1,16 @@
 var assert = require('assert'),
+	mongo = require('../models/mongo'),
 	request = require('supertest'),
-	redis = require('../models/redis').redis,
-	Promise = require('bluebird').Promise,
+	Device = require('../models/device').Device,
 	File = require('../models/file').File,
-	User = require('../models/user').User,
-	helpers = require('./test_helpers');
+	Promise = require('bluebird').Promise,
+	User = require('../models/user').User;
 
 const Constants = {
-	friendNumber: '18315551111',
 	phoneNumber: '18315550835',
-	friendDeviceUuid: '8a93c7eaf63a43c881d059ef5c02797f'
+	friendNumber: '18315551111',
+	deviceUuid: '240b1900-895e-4b5d-907c-af0538464838',
+	friendDeviceUuid: '240b1900-895e-4b5d-907c-af0538464839'
 };
 
 function createFriend() {
@@ -18,77 +19,70 @@ function createFriend() {
 	});
 }
 
+function deleteUser(phoneNumber) {
+	return User.find({ phone: phoneNumber }).remove();
+}
+
+function deleteDevice(deviceUuid) {
+	return Device.find({ deviceUuid: deviceUuid }).remove();
+}
 
 describe('file', function() {
 	var sharedUser;
+	var sharedFriend;
 
 	before(function (done) {
-		helpers.deleteUser(Constants.phoneNumber).then(function() {
-			return User.create(Constants.phoneNumber);
+		var promises = [];
+
+		promises.push(deleteUser(Constants.phoneNumber));
+		promises.push(deleteDevice(Constants.deviceUuid));
+		promises.push(deleteUser(Constants.friendNumber));
+		promises.push(deleteDevice(Constants.friendDeviceUuid));
+
+		Promise.all(promises).then(function() {
+			return User.create(Constants.phoneNumber, Constants.deviceUuid);
 		}).then(function(user) {
-			sharedUser = user;
+			sharedUser = user[0];
+			return User.create(Constants.friendNumber, Constants.friendDeviceUuid)
+		}).then(function(friend) {
+			sharedFriend = friend[0];
 			done();
 		});
 	});
 
-	it('create - invalid friend', function testSlash(done) {
-		File.create(sharedUser, new User(-1), 1).then(function() {
-			done();
-			// This should not be called.
-		}, function() {
+	it('create - one user', function testSlash(done) {
+		File.create([sharedUser], 1).then(function(files) {
+			assert.notEqual(files, null);
+			assert.equal(files.length, 1);
+			assert.equal(files[0].userIds.length, 1);
+			assert.equal(files[0].hasAccess(sharedUser), true);
+			assert.equal(files[0].hasAccess(sharedFriend), false);
 			done();
 		});
 	});
 
 	it('create', function testSlash(done) {
-		createFriend().then(function(friend) {
-			return File.create(sharedUser, friend, 1);
-		}).then(function(files) {
+		File.create([sharedUser, sharedFriend], 1).then(function(files) {
+			assert.notEqual(files, null);
 			assert.equal(files.length, 1);
-			done();
-		}, function(err) {
-			console.log(err);
+			assert.equal(files[0].userIds.length, 2);
+			assert.equal(files[0].hasAccess(sharedUser), true);
+			assert.equal(files[0].hasAccess(sharedFriend), true);
 			done();
 		});
 	});
 
-	it('create multiple', function testSlash(done) {
-		createFriend().then(function(friend) {
-			return File.create(sharedUser, friend, 2);
-		}).then(function(files) {
+	it('create - multiple', function testSlash(done) {
+		File.create([sharedUser, sharedFriend], 2).then(function(files) {
+			assert.notEqual(files, null);
+
 			assert.equal(files.length, 2);
-			done();
-		});
-	});
+			for (var i = 0; i < files.count; i++) {
+				assert.equal(files[i].userIds.length, 2);
+				assert.equal(files[i].hasAccess(sharedUser), true);
+				assert.equal(files[i].hasAccess(sharedFriend), true);
+			}
 
-	it('hasAccess', function testSlash(done) {
-		var sharedFriend;
-		var sharedFile;
-		createFriend().then(function(friend) {
-			sharedFriend = friend;
-			return File.create(sharedUser, sharedFriend, 1);
-		}).then(function(files) {
-			assert.equal(files.length, 1);
-			sharedFile = files[0];
-			return sharedFile.hasAccess(sharedUser);
-		}).then(function(hasAccess) {
-			assert.equal(hasAccess, true);
-			return sharedFile.hasAccess(sharedFriend);
-		}).then(function(hasAccess) {
-			assert.equal(hasAccess, true);
-			done();
-		});
-	});
-
-	it('hasAccess - no access', function testSlash(done) {
-		createFriend().then(function(friend) {
-			sharedFriend = friend;
-			return File.create(sharedUser, sharedFriend, 1);
-		}).then(function(files) {
-			assert.equal(files.length, 1);
-			return files[0].hasAccess(new User(0));
-		}).then(function(hasAccess) {
-			assert.equal(hasAccess, false);
 			done();
 		});
 	});

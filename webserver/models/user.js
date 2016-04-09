@@ -14,7 +14,26 @@ var User = mongoose.model('User', userSchema);
 User.checkPhoneNumbers = function(phoneNumbers) {
 	return User.find({
 		phone: { $in: phoneNumbers }
+	}).then(function(users) {
+		// Return the list of users in the order they were provided in phoneNumbers
+		// with missing users replaced with null.
+		var results = [];
+		for (var i = 0; i < phoneNumbers.length; i++) {
+			var user = User._userWithPhoneNumber(phoneNumbers[i], users);
+			results.push(user)
+		}
+
+		return Promise.resolve(results);
 	});
+};
+
+User._userWithPhoneNumber = function(phoneNumber, users) {
+	for (var i = 0; i < users.length; i++) {
+		if (phoneNumber == users[i].phone) {
+			return users[i];
+		}
+	}
+	return null;
 };
 
 User.create = function(phoneNumber, deviceUuid) {
@@ -36,14 +55,20 @@ User.create = function(phoneNumber, deviceUuid) {
 };
 
 User.findUser = function(phoneNumber) {
-	return User.find({ phone: phoneNumber }).then(function(users) {
-		if (!users.length) {
-			return Promise.reject();
-		} else {
-			return Promise.resolve(users[0]);
-		}
-	});
+	return User.find({ phone: phoneNumber }).then(User._findUserCallback);
 };
+
+User.findUserById = function(userId) {
+	return User.find({ _id: userId }).then(User._findUserCallback);
+};
+
+User._findUserCallback = function(users) {
+	if (!users.length) {
+		return Promise.reject();
+	} else {
+		return Promise.resolve(users[0]);
+	}
+}
 
 User.verifyNumber = function(phoneNumber, deviceUuid, code) {
 	var sharedUser;
@@ -51,9 +76,9 @@ User.verifyNumber = function(phoneNumber, deviceUuid, code) {
 
 	return User.findUser(phoneNumber).then(function(user) {
 		sharedUser = user;
-		return Device.findDevice(deviceUuid, user._id);
+		return Device.findDevice(deviceUuid);
 	}).then(function(device) {
-		if (!code || device.code != code) {
+		if (device.userId.toString() != sharedUser._id.toString() || !code || device.code != code) {
 			return Promise.reject();
 		}
 
@@ -81,57 +106,9 @@ exports.User = User;
 
 // Checks whether the provided numbers correspond to users and returns an array of the
 // phoneNumber/id combinations.
-/*User.checkPhoneNumbers = function(phoneNumbers) {
-	var sharedIds;
+/*
 
-	var promises = [];
-	for (var i = 0, phoneNumber; phoneNumber = phoneNumbers[i]; i++) {
-		promises.push(this._getUserId(phoneNumber));
-	}
 
-	return Promise.all(promises).then(function(ids) {
-		var results = [];
-		for (var i = 0; i < ids.length; i++) {
-			if (ids[i]) {
-				results.push({
-					'id': ids[i],
-					'phone': phoneNumbers[i]
-				});
-			} else {
-				results.push(null);
-			}
-		}
-		return Promise.resolve(results);
-	});
-};
-
-// Resolves to an array with the following members:
-// 0 - The user object.
-// 1 - The device object.
-// 2 - The confirmation code.
-User.create = function(phoneNumber, deviceUuid) {
-	if (!phoneNumber || phoneNumber.length != 11) {
-		return Promise.reject();
-	}
-
-	var sharedUser;
-	var sharedDevice;
-	return this._getUserId(phoneNumber).then(function(id) {
-		if (!id) {
-			return User._create(phoneNumber);
-		} else {
-			return Promise.resolve(new User(id));
-		}
-	}).then(function(user) {
-		sharedUser = user;
-		return user.findDevice(deviceUuid);
-	}).then(function(device) {
-		sharedDevice = device;
-		return device.generateCode();
-	}).then(function(code) {
-		return Promise.resolve([sharedUser, sharedDevice, code]);
-	});
-};
 
 // Resolves to an array with the following members:
 // 0 - The user object.

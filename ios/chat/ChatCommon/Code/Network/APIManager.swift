@@ -47,7 +47,7 @@ public class APIManager: NSObject {
     }
 
     struct FriendData {
-        let id: Int
+        let id: String
         let phoneNumber: String
     }
 
@@ -65,7 +65,7 @@ public class APIManager: NSObject {
                     }
 
                     let friendJson = friendsJson[i]
-                    if let stringId = friendJson["id"].string, id = Int(stringId), phoneNumber = friendJson["phone"].string {
+                    if let id = friendJson["id"].string, phoneNumber = friendJson["phone"].string {
                         friendsData.append(FriendData(id: id, phoneNumber: phoneNumber))
                     }
                 }
@@ -89,7 +89,7 @@ public class APIManager: NSObject {
         }
     }
 
-    public func activeDevicesForFriends(friends: [Friend], callback: [Int]->Void) {
+    public func activeDevicesForFriends(friends: [Friend], callback: [String]->Void) {
         sendUserRequestToUrl("device/active/", parameters: [
             "userIds": friends.map({ $0.id })
         ]) {
@@ -100,9 +100,9 @@ public class APIManager: NSObject {
                 return
             }
 
-            var deviceIds: [Int] = []
+            var deviceIds: [String] = []
             for i in 0..<deviceIdsJson.count {
-                guard let deviceId = deviceIdsJson[i].int else {
+                guard let deviceId = deviceIdsJson[i].string else {
                     continue
                 }
                 deviceIds.append(deviceId)
@@ -137,7 +137,7 @@ public class APIManager: NSObject {
         }
     }
 
-    func getInfoForUsersWithIds(userIds: [Int], callback: [(firstName: String, lastName: String)]?->Void) {
+    func getInfoForUsersWithIds(userIds: [String], callback: [(firstName: String, lastName: String)]?->Void) {
         sendUserRequestToUrl("info/get/", parameters: [
             "userIds": userIds
         ]) { json in

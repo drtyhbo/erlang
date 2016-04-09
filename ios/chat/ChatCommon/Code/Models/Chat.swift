@@ -28,9 +28,11 @@ public class Chat: NSManagedObject {
         return participants.allObjects as? [Friend] ?? []
     }
 
-    var participantIds: [Int] {
+    var participantIds: [String] {
         var participantIds = participantsArray.map({ $0.id })
-        participantIds.append(User.userId)
+        if let userId = User.userId {
+            participantIds.append(userId)
+        }
         return participantIds
     }
 
