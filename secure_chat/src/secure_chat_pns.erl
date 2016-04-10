@@ -35,13 +35,17 @@ init([]) ->
 
 
 handle_cast({send_notification, DeviceId, Message}, State) ->
-	io:format("~p~n", [DeviceId]),
-	case eredis_cluster:q(["HGET", secure_chat_redis:device_id_to_key(DeviceId), "iosToken"]) of
-	 	{ok, DeviceToken} when DeviceToken =/= undefined ->
+	DeviceDoc = mc_worker_api:find_one(
+		mongo,
+		<<"devices">>,
+		{<<"_id">>, secure_chat_oid:str_to_oid(DeviceId)},
+		#{projector => {<<"iosPushToken">>, 1}}),
+	case maps:find(<<"iosPushToken">>, DeviceDoc) of
+		{ok, PushToken} when PushToken =/= undefined ->
 	 		apns:send_message(ios_apns, #apns_msg{
 	 			alert = Message,
 	 			content_available = true,
-				device_token = binary_to_list(DeviceToken)});
+    			device_token = binary_to_list(PushToken)});
 	 	_ ->
 	 		ok
 	end,

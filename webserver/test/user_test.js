@@ -111,6 +111,14 @@ describe('User', function() {
 		});
 	});
 
+	it('User - get active device', function testSlash(done) {
+		sharedUser.getActiveDevice().then(function(device) {
+			assert.equal(device.userId, device.userId);
+			assert.equal(device.deviceUuid, '240b1900895e4b5d907caf0538464838');
+			done();
+		});
+	});
+
 /*	it('User - fetch/update', function testSlash(done) {
 		sharedUser.update(
 				User.fields.session, 'abcd',

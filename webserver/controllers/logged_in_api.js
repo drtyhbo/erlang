@@ -77,17 +77,16 @@ router.post('/device/active/', function(req, res) {
 		return;
 	}
 
-	var promises = [];
-	for (var i = 0, userId; userId = userIds[i]; i++) {
-		promises.push(new User(userId).getActiveDevice());
-	}
-
-	Promise.all(promises).then(function(deviceIds) {
+	User.findUsersByIds(userIds).then(function(users) {
+		var promises = [];
+		for (var i = 0, user; user = users[i]; i++) {
+			promises.push(user.getActiveDevice());
+		}
+		return Promise.all(promises);
+	}).then(function(devices) {
 		sendSuccess(res, {
-			'deviceIds': deviceIds.map(function(id) { if (id) return parseInt(id, 10); })
+			'deviceIds': devices.map(function(device) { if (device) return device._id; })
 		});
-	}, function() {
-		sendError(res);
 	});
 });
 

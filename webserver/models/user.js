@@ -9,6 +9,12 @@ var userSchema = mongoose.Schema({
 	last: String
 });
 
+userSchema.methods.getActiveDevice = function() {
+	return Device.findDevicesForUser(this).then(function(devices) {
+		return Promise.resolve(devices[0]);
+	});
+};
+
 var User = mongoose.model('User', userSchema);
 
 User.checkPhoneNumbers = function(phoneNumbers) {
@@ -60,6 +66,10 @@ User.findUser = function(phoneNumber) {
 
 User.findUserById = function(userId) {
 	return User.find({ _id: userId }).then(User._findUserCallback);
+};
+
+User.findUsersByIds = function(userIds) {
+	return User.find({ _id: { $in: userIds }});
 };
 
 User._findUserCallback = function(users) {
