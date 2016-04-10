@@ -47,7 +47,7 @@ public class APIManager: NSObject {
     }
 
     struct FriendData {
-        let id: Int
+        let id: String
         let phoneNumber: String
     }
 
@@ -65,7 +65,7 @@ public class APIManager: NSObject {
                     }
 
                     let friendJson = friendsJson[i]
-                    if let stringId = friendJson["id"].string, id = Int(stringId), phoneNumber = friendJson["phone"].string {
+                    if let id = friendJson["id"].string, phoneNumber = friendJson["phone"].string {
                         friendsData.append(FriendData(id: id, phoneNumber: phoneNumber))
                     }
                 }
@@ -89,7 +89,7 @@ public class APIManager: NSObject {
         }
     }
 
-    public func activeDevicesForFriends(friends: [Friend], callback: [Int]->Void) {
+    public func activeDevicesForFriends(friends: [Friend], callback: [String]->Void) {
         sendUserRequestToUrl("device/active/", parameters: [
             "userIds": friends.map({ $0.id })
         ]) {
@@ -100,9 +100,9 @@ public class APIManager: NSObject {
                 return
             }
 
-            var deviceIds: [Int] = []
+            var deviceIds: [String] = []
             for i in 0..<deviceIdsJson.count {
-                guard let deviceId = deviceIdsJson[i].int else {
+                guard let deviceId = deviceIdsJson[i].string else {
                     continue
                 }
                 deviceIds.append(deviceId)
@@ -137,7 +137,7 @@ public class APIManager: NSObject {
         }
     }
 
-    func getInfoForUsersWithIds(userIds: [Int], callback: [(firstName: String, lastName: String)]?->Void) {
+    func getInfoForUsersWithIds(userIds: [String], callback: [(firstName: String, lastName: String)]?->Void) {
         sendUserRequestToUrl("info/get/", parameters: [
             "userIds": userIds
         ]) { json in
@@ -159,15 +159,15 @@ public class APIManager: NSObject {
         }
     }
 
-    func createFileForFriend(friend: Friend, numFiles: Int, callback: [Int]?->Void) {
+    func createFileForFriends(friends: [Friend], numFiles: Int, callback: [String]?->Void) {
         sendUserRequestToUrl("file/create/", parameters: [
-            "friendId": friend.id,
+            "friendIds": friends.map({ $0.id }),
             "numIds": numFiles]) {
             json in
             if let json = json, fileIdsJson = json["fileIds"].array {
-                var fileIds: [Int] = []
+                var fileIds: [String] = []
                 for fileIdJson in fileIdsJson {
-                    guard let fileId = fileIdJson.int else {
+                    guard let fileId = fileIdJson.string else {
                         callback(nil)
                         return
                     }
@@ -180,11 +180,11 @@ public class APIManager: NSObject {
         }
     }
 
-    public func getUrlForFileWithId(fileId: Int, callback: NSURL?->Void) {
+    public func getUrlForFileWithId(fileId: String, callback: NSURL?->Void) {
         getUrlForFileWithId(fileId, method: "GET", contentType: "", callback: callback)
     }
 
-    func getUrlForFileWithId(fileId: Int, method: String, contentType: String, callback: NSURL?->Void) {
+    func getUrlForFileWithId(fileId: String, method: String, contentType: String, callback: NSURL?->Void) {
         sendUserRequestToUrl("file/get/", parameters: [
             "fileId": fileId,
             "method": method,

@@ -1,15 +1,23 @@
 var assert = require('assert'),
+	mongo = require('../models/mongo'),
 	request = require('supertest'),
-	redis = require('../models/redis').redis,
+	Device = require('../models/device').Device,
 	Promise = require('bluebird').Promise,
-	User = require('../models/user').User,
-	helpers = require('./test_helpers');
+	User = require('../models/user').User;
 
 var Constants = {
 	phoneNumber: '18315550835',
-	deviceUuid: '729908c5a45746af90a88b53a738c218',
+	deviceUuid: '240b1900895e4b5d907caf0538464838',
 	keyOfLastResort: 'abcdefgh'
 };
+
+function deleteUser(phoneNumber) {
+	return User.find({ phone: phoneNumber }).remove();
+}
+
+function deleteDevice(deviceUuid) {
+	return Device.find({ deviceUuid: deviceUuid }).remove();
+}
 
 describe('User', function() {
 	var sharedUser;
@@ -17,7 +25,10 @@ describe('User', function() {
 	var sharedCode;
 
 	before(function (done) {
-		helpers.deleteUser(Constants.phoneNumber).then(function() {
+		var promises = [];
+		promises.push(deleteUser(Constants.phoneNumber));
+		promises.push(deleteDevice(Constants.deviceUuid));
+		Promise.all(promises).then(function() {
 			done();
 		});
 	});
@@ -28,7 +39,7 @@ describe('User', function() {
 			done();
 		});
 	});
-	
+
 	it('User - short phone number', function testSlash(done) {
 		User.create('1234').then(function() {
 		}, function() {
@@ -43,7 +54,11 @@ describe('User', function() {
 			sharedCode = values[2];
 
 			assert.notEqual(sharedUser, null);
+			assert.equal(sharedUser.phone, Constants.phoneNumber);
+
 			assert.notEqual(sharedDevice, null);
+			assert.equal(sharedDevice.deviceUuid, Constants.deviceUuid);
+
 			assert.equal(sharedCode >= 100000, true);
 			assert.equal(sharedCode <= 999999, true);
 
@@ -70,11 +85,41 @@ describe('User', function() {
 			assert.equal(values.length, 2);
 			assert.notEqual(values[0], null);
 			assert.notEqual(values[1], null);
+
 			done();
 		});
 	});
 
-	it('User - fetch/update', function testSlash(done) {
+	it('User - checkPhoneNumbers', function testSlash(done) {
+		var promises = [];
+
+		promises.push(User.create('18315551111', '332af0262d8344d4b0cfda35b7f38d66'));
+		promises.push(User.create('18315552222', 'b4d0f58c3bd644fea15d834fbdf6b3d5'));
+
+		Promise.all(promises).then(function() {
+			return User.checkPhoneNumbers(['18315551111', '18315553333', '18315552222']);
+		}).then(function(phoneNumbers) {
+			assert.notEqual(phoneNumbers[0].id, null);
+			assert.equal(phoneNumbers[0].phone, '18315551111');
+
+			assert.equal(phoneNumbers[1], null);
+
+			assert.notEqual(phoneNumbers[2].id, null);
+			assert.equal(phoneNumbers[2].phone, '18315552222');
+
+			done();
+		});
+	});
+
+	it('User - get active device', function testSlash(done) {
+		sharedUser.getActiveDevice().then(function(device) {
+			assert.equal(device.userId, device.userId);
+			assert.equal(device.deviceUuid, '240b1900895e4b5d907caf0538464838');
+			done();
+		});
+	});
+
+/*	it('User - fetch/update', function testSlash(done) {
 		sharedUser.update(
 				User.fields.session, 'abcd',
 				User.fields.firstName, 'Rob',
@@ -104,21 +149,5 @@ describe('User', function() {
 			assert.equal(values[3], 'jklm2');
 			done();
 		});
-	});
-
-	it('User - checkPhoneNumbers', function testSlash(done) {
-		var promises = [];
-		promises.push(User.create('18315551111'));
-		promises.push(User.create('18315552222'));
-		Promise.all(promises).then(function() {
-			return User.checkPhoneNumbers(['18315551111', '18315553333', '18315552222']);
-		}).then(function(phoneNumbers) {
-			assert.notEqual(phoneNumbers[0].id, null);
-			assert.equal(phoneNumbers[0].phone, '18315551111');
-			assert.equal(phoneNumbers[1], null);
-			assert.notEqual(phoneNumbers[2].id, null);
-			assert.equal(phoneNumbers[2].phone, '18315552222');
-			done();
-		});
-	});
+	});*/
 });

@@ -1,51 +1,42 @@
-var redis = require('./redis').redis,
-	Promise = require('bluebird').Promise,
+var mongoose = require('mongoose'),
 	s3 = require('../utils/s3'),
-	User = require('./user').User;
+	utils = require('../utils/utils.js'),
+	Promise = require('bluebird').Promise;
 
-const fileIdKey = 'file_id';
+var fileSchema = mongoose.Schema({
+	userIds: [mongoose.Schema.Types.ObjectId]
+});
 
-var File = function(id) {
-	this.id = id;
+fileSchema.methods.hasAccess = function(user) {
+	return this.userIds.indexOf(user._id) != -1;
 };
-exports.File = File;
 
-File.create = function(user, friend, numIds) {
-	return friend.exists().then(function(exists) {
-		if (exists) {
-			return redis.incrbyAsync(fileIdKey, numIds);
-		} else {
+fileSchema.methods.generateSignedUrl = function(method, contentType) {
+	return s3.generateSignedUrl(method, 'files/' + this._id, 'drtyhbo-chat', contentType);
+};
+
+var File = mongoose.model('File', fileSchema);
+
+File.create = function(users, numFiles) {
+	var promises = [];
+
+	var userIds = users.map(function(user) { return user._id });
+	for (var i = 0; i < numFiles; i++) {
+		var file = new File({ userIds: userIds });
+		promises.push(file.save());
+	}
+
+	return Promise.all(promises);
+};
+
+File.findById = function(fileId) {
+	return File.find({ _id: fileId }).then(function(files) {
+		if (!files.length) {
 			return Promise.reject();
+		} else {
+			return Promise.resolve(files[0]);
 		}
-	}).then(function(fileId) {
-		var firstFileId = fileId - numIds;
-
-		var promises = [];
-		for (var i = 0; i < numIds; i++) {
-			promises.push(redis.saddAsync(File._fileKey(firstFileId + i), File._userKey(user.id), File._userKey(friend.id)));
-		}
-		
-		var files = [];
-		for (var fileId = firstFileId; fileId < firstFileId + numIds; fileId++) {
-			files.push(new File(fileId));
-		}
-		
-		return Promise.all(promises).thenReturn(files);
 	});
 };
 
-File._fileKey = function(fileId) {
-	return 'f:{' + fileId + '}';
-};
-
-File._userKey = function(userId) {
-	return 'u:' + userId;
-};
-
-File.prototype.hasAccess = function(user) {
-	return redis.sismemberAsync(File._fileKey(this.id), File._userKey(user.id))
-};
-
-File.prototype.generateSignedUrl = function(fileId, method, contentType) {
-	return s3.generateSignedUrl(method, 'files/' + fileId, 'drtyhbo-chat', contentType);
-};
+exports.File = File;

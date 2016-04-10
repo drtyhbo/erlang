@@ -1,28 +1,29 @@
 var assert = require('assert'),
 	request = require('supertest'),
-	redis = require('../models/redis').redis,
 	Device = require('../models/device').Device,
 	User = require('../models/user').User,
-	Promise = require('bluebird').Promise,
-	helpers = require('./test_helpers');
+	Promise = require('bluebird').Promise;
 
 const Constants = {
 	phoneNumber: '18315550835',
-	phoneNumberKey: 'p:{18315550835}',
-	deviceUuid: '729908c5a45746af90a88b53a738c218'
+	deviceUuid: '240b1900895e4b5d907caf0538464838'
 };
+
+function deleteUser(phoneNumber) {
+	return User.find({ phone: phoneNumber }).remove();
+}
+
+function deleteDevice(deviceUuid) {
+	return Device.find({ deviceUuid: deviceUuid }).remove();
+}
 
 function getUserDeviceAndCode(phoneNumber, deviceUuid) {
 	var sharedUser;
-	var sharedDevice;
-	return redis.getAsync(Constants.phoneNumberKey).then(function(userId) {
-		sharedUser = new User(userId);
-		return sharedUser.findDevice(deviceUuid);
+	return User.findUser(phoneNumber).then(function(user) {
+		sharedUser = user;
+		return Device.findDevice(deviceUuid, user._id);
 	}).then(function(device) {
-		sharedDevice = device;
-		return device.fetch(Device.fields.code);
-	}).then(function(values) {
-		return Promise.resolve([sharedUser, sharedDevice, values[0]]);
+		return Promise.resolve([sharedUser, device, device.code]);
 	});
 }
 
@@ -31,11 +32,17 @@ describe('logged out', function() {
 
 	before(function (done) {
 		server = require('../app');
-		helpers.deleteUser(Constants.phoneNumber).then(function() {
+
+		var promises = [];
+
+		promises.push(deleteUser(Constants.phoneNumber));
+		promises.push(deleteDevice(Constants.deviceUuid));
+
+		Promise.all(promises).then(function() {
 			done();
 		});
 	});
-	
+
 	it('/api/register/ - missing phone number', function testSlash(done) {
 		request(server)
 			.post('/api/register/')
@@ -46,7 +53,7 @@ describe('logged out', function() {
 				status: 'error'
 			}, done);
 	});
-	
+
 	it('/api/register/ - short phone number', function testSlash(done) {
 		request(server)
 			.post('/api/register/')
@@ -81,13 +88,11 @@ describe('logged out', function() {
 				status: 'ok'
 			})
 			.end(function(err, res) {
-				redis.getAsync(Constants.phoneNumberKey).then(function(userId) {
-					assert.notEqual(userId, null);
-					return redis.hget('u:{' + userId + '}', 'd:' + Constants.deviceUuid);
-				}).then(function(deviceId) {
-					return redis.hgetAsync('d:{' + deviceId + '}', 'code');
-				}).then(function(code) {
-					assert.notEqual(code, null);
+				getUserDeviceAndCode(Constants.phoneNumber, Constants.deviceUuid).then(function(values) {
+					assert.notEqual(values[0], null);
+					assert.notEqual(values[1], null);
+					assert.notEqual(values[2], null);
+
 					done();
 				});
 			});
@@ -164,7 +169,10 @@ describe('logged out', function() {
 					if (!res.body.sessionToken || res.body.sessionToken.length != 64) {
 						return "invalid session token";
 					}
-					if (!res.body.deviceId) {
+					if (!res.body.id || res.body.id.length != 24) {
+						return "invalid user id";
+					}
+					if (!res.body.deviceId || res.body.deviceId.length != 24) {
 						return "invalid device id";
 					}
 					res.body.sessionToken = "abcd";
@@ -219,21 +227,8 @@ describe('logged out', function() {
 					deviceUuid: Constants.deviceUuid
 				})
 				.end(function(err, res) {
-					redis.smembersAsync('pki:{' + device.id + '}').then(function(values) {
-						assert.equal(values[0], '0');
-						assert.equal(values[1], '1');
-						return redis.hgetallAsync('pk:{' + device.id + '}');
-					}).then(function(values) {
-						assert.equal(values['0'], 'abcd');
-						assert.equal(values['1'], 'efgh');
-						return redis.hget('u:{' + id + '}', 'd:' + Constants.deviceUuid);
-					}).then(function(value) {
-						assert.equal(value, res.body.deviceId);
-						return redis.hget('d:{' + res.body.deviceId + '}', 'session');
-					}).then(function(value) {
-						assert.equal(value, res.body.sessionToken);
-						done();
-					});
+					// Check keys
+					done();
 				});
 		});
 	});

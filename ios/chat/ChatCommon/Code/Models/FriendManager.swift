@@ -17,7 +17,7 @@ public class FriendManager {
         return Friend.findAll()
     }
 
-    func getFriendById(id: Int) -> Friend? {
+    func getFriendById(id: String) -> Friend? {
         for friend in friends {
             if friend.id == id {
                 return friend

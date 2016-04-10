@@ -6,16 +6,17 @@
 
 start(_StartType, _StartArgs) ->
 	connect_nodes(),
+	application:start(bson),
+	application:start(crypto),
 	lager:start(),
 	apns:start(),
-	eredis_cluster:start(),
 	ssl:start(),
 
 	ok = setup_mnesia(),
 
 	syn:start(),
 	syn:init(),
-    
+
     secure_chat_sup:start_link().
 
 stop(_State) ->

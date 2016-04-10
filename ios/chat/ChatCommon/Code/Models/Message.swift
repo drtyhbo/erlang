@@ -20,13 +20,13 @@ public class Message: NSManagedObject {
     }
 
     public struct ThumbnailInfo {
-        public let id: Int
+        public let id: String
         public let width: Int
         public let height: Int
     }
 
     public struct MovieInfo {
-        public let id: Int
+        public let id: String
     }
 
     @NSManaged private(set) var chat: Chat
@@ -64,7 +64,7 @@ public class Message: NSManagedObject {
                 return nil
         }
 
-        guard let thumbnailId = thumbnailJson["ti"].int, thumbnailWidth = thumbnailJson["tw"].int, thumbnailHeight = thumbnailJson["th"].int else {
+        guard let thumbnailId = thumbnailJson["ti"].string, thumbnailWidth = thumbnailJson["tw"].int, thumbnailHeight = thumbnailJson["th"].int else {
             return nil
         }
 
@@ -80,7 +80,7 @@ public class Message: NSManagedObject {
                 return nil
         }
 
-        guard let movieId = movieJson["v"].int else {
+        guard let movieId = movieJson["v"].string else {
             return nil
         }
 

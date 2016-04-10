@@ -156,7 +156,7 @@ public class ChatClient {
     // TODO: Clean up this code
     private func handleMessagesJson(messagesJson: [JSON]) {
         for messageJson in messagesJson {
-            guard let fromDeviceId = messageJson["f"].int, fromUserId = messageJson["fu"].int else {
+            guard let fromDeviceId = messageJson["f"].string, fromUserId = messageJson["fu"].string else {
                 continue
             }
 
@@ -212,13 +212,13 @@ public class ChatClient {
 
 extension ChatClient: ChatConnectionDelegate {
     func chatConnectionOnConnect(chatConnection: ChatConnection) {
-        guard let sessionToken = User.sessionToken else {
+        guard let deviceId = User.deviceId, sessionToken = User.sessionToken else {
             return
         }
 
         sendJson(JSON([
             "t": "c",
-            "d": User.deviceId,
+            "d": deviceId,
             "s": sessionToken,
         ]))
     }

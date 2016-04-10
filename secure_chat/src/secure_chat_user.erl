@@ -165,24 +165,32 @@ add_device(DeviceId, Pid) ->
 
 %% === JSON Parsing ===
 
-
 handle_connect_json(Json, State) ->
 	DeviceId = proplists:get_value(<<"d">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	case eredis_cluster:q(["HMGET", secure_chat_redis:device_id_to_key(DeviceId), "session", "u"]) of
-	 	{ok, [RedisSessionToken, UserId]} when RedisSessionToken =:= SessionToken, UserId =/= undefined ->
-	 		load_user_info(list_to_integer(binary_to_list(UserId)), State#user_state{device_id = DeviceId});
-	 	_ ->
-	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
-	 		State
-	 end.
-
+	DeviceDoc = mc_worker_api:find_one(
+		mongo,
+		<<"devices">>,
+		{<<"_id">>, secure_chat_oid:str_to_oid(DeviceId)},
+		#{projector => {<<"session">>, 1, <<"userId">>, 1}}),
+	case [maps:find(<<"session">>, DeviceDoc), maps:find(<<"userId">>, DeviceDoc)] of
+		[{ok, MongoSessionToken}, {ok, UserId}] when MongoSessionToken =:= SessionToken ->
+	 		load_user_info(UserId, State#user_state{device_id = DeviceId});
+		_ ->
+			send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
+			State
+	end.
 
 load_user_info(UserId, State) ->
-	case eredis_cluster:q(["HGET", secure_chat_redis:user_id_to_key(UserId), "firstName"]) of
+	UserDoc = mc_worker_api:find_one(
+		mongo,
+		<<"users">>,
+		{<<"_id">>, UserId},
+		#{projector => {<<"first">>, 1}}),
+	case maps:find(<<"first">>, UserDoc) of
 	 	{ok, FirstName} when FirstName =/= undefined ->
 			connect(),
-			State#user_state{user_id = UserId, first_name = binary_to_list(FirstName)};
+			State#user_state{user_id = secure_chat_oid:oid_to_str(UserId), first_name = binary_to_list(FirstName)};
 	 	_ ->
 	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
 	 		State
@@ -211,10 +219,10 @@ dispatch_msgs(SenderName, [H|T]) ->
 	To = H#message.to,
 	store_offline_msg(H),
 	case syn:find_by_key(To) of
-	Pid when is_pid(Pid) ->
-		secure_chat_user:receive_msg(Pid, H);
-	_ ->
-		ok
+		Pid when is_pid(Pid) ->
+			secure_chat_user:receive_msg(Pid, H);
+		_ ->
+			ok
 	end,
 	secure_chat_pns:send_notification(To, SenderName ++ " has sent you a message"),
 	dispatch_msgs(SenderName, T).

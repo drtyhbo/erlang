@@ -21,13 +21,13 @@ public class User {
         }
     }
 
-    public static var userId: Int {
+    public static var userId: String? {
         get {
-            return NSUserDefaults.sharedUserDefaults().integerForKey(userIdKey)
+            return NSUserDefaults.sharedUserDefaults().stringForKey(userIdKey)
         }
         set {
             let userDefaults = NSUserDefaults.sharedUserDefaults()
-            userDefaults.setInteger(newValue, forKey: userIdKey)
+            userDefaults.setObject(newValue, forKey: userIdKey)
             userDefaults.synchronize()
         }
     }
@@ -90,13 +90,13 @@ public class User {
         }
     }
 
-    public static var deviceId: Int {
+    public static var deviceId: String? {
         get {
-            return NSUserDefaults.sharedUserDefaults().integerForKey(deviceIdKey) ?? -1
+            return NSUserDefaults.sharedUserDefaults().stringForKey(deviceIdKey)
         }
         set {
             let userDefaults = NSUserDefaults.sharedUserDefaults()
-            userDefaults.setInteger(newValue, forKey: deviceIdKey)
+            userDefaults.setObject(newValue, forKey: deviceIdKey)
             userDefaults.synchronize()
         }
     }

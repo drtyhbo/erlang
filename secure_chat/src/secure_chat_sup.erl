@@ -23,5 +23,9 @@ init([]) ->
 	Children = [
 		?CHILD(secure_chat_serv, [49165]),
 		?CHILD(secure_chat_msg_store, []),
-		?CHILD(secure_chat_pns, [])],
+		?CHILD(secure_chat_pns, []),
+		?CHILD(mc_worker, [[
+			{database, <<"chat">>},
+			{sharded, ["127.0.0.1:27017"]},
+			{register, mongo}]])],
 	{ok, {SupFlags, Children}}.

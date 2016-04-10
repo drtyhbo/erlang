@@ -30,8 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didFinishSending:", name: MessageManager.FinishedSendingAllMessagesNotification, object: nil)
 
         let rootViewController: UIViewController
-        if User.userId == 0 || User.firstName == nil {
-            rootViewController = ThemedNavigationController(rootViewController: User.userId == 0 ? PhoneNumberViewController() : UserInfoViewController())
+        if User.userId == nil || User.firstName == nil {
+            rootViewController = ThemedNavigationController(rootViewController: User.userId == nil ? PhoneNumberViewController() : UserInfoViewController())
         } else {
             rootViewController = MainViewController()
         }

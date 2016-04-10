@@ -10,7 +10,7 @@ import ChatCommon
 import Foundation
 
 class FileHelper {
-    static func getFileWithId(id: Int, secretKey: NSData?, completion: File?->Void) {
+    static func getFileWithId(id: String, secretKey: NSData?, completion: File?->Void) {
         if let file = File.findWithId(id) {
             completion(file)
             return
