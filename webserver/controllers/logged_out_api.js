@@ -13,7 +13,6 @@ router.post('/register/', function(req, res) {
 		return;
 	}
 
-
 	User.create(phoneNumber, deviceUuid).then(function(values) {
 		var code = values[2];
 		twilio.sendSMS(phoneNumber, code, function(err, message) {

@@ -7,7 +7,7 @@ var assert = require('assert'),
 
 var Constants = {
 	phoneNumber: '18315550835',
-	deviceUuid: 'f9c9b5fb-9ffd-4aa0-8760-9d8ad18391dd',
+	deviceUuid: 'f9c9b5fb9ffd4aa087609d8ad18391dd',
 	keyOfLastResort: 'abcdefgh'
 };
 
@@ -112,9 +112,9 @@ describe('Device', function() {
 
 	it('Device - verify uuid', function testSlash(done) {
 		assert.equal(Device._verifyUuid(), false);
-		assert.equal(Device._verifyUuid('f9C9b5fB-4aa0-8760-9D8ad18391dd'), false);
-		assert.equal(Device._verifyUuid('f9c9b5fb-9ffd-4aa0-8760-9d8ad18391dd'), true);
-		assert.equal(Device._verifyUuid('f9C9b5fB-9ffD-4aa0-8760-9D8ad18391dd'), true);
+		assert.equal(Device._verifyUuid('f9C9b5fB4aa087609D8ad18391dd'), false);
+		assert.equal(Device._verifyUuid('f9c9b5fb9ffd4aa087609d8ad18391dd'), true);
+		assert.equal(Device._verifyUuid('f9C9b5fB9ffD4aa087609D8ad18391dd'), true);
 
 		done();
 	});

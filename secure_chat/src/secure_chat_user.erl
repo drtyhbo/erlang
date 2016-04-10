@@ -99,7 +99,6 @@ terminate(_Reason, _StateName, State) ->
 
 
 logged_out(connect, State) ->
-	mc_worker_api:insert(mongo, <<"users">>, [{<<"name">>, <<"binnewies">>}]),
 	add_device(State#user_state.device_id, self()),
 	send_json(State#user_state.socket, ?OUT_CONNECTED_JSON()),
 	gen_fsm:send_event(self(), check_offline_msgs),
@@ -167,20 +166,32 @@ add_device(DeviceId, Pid) ->
 %% === JSON Parsing ===
 
 
+hexstr_to_bin(S) ->
+	hexstr_to_bin(S, []).
+hexstr_to_bin([], Acc) ->
+	list_to_binary(lists:reverse(Acc));
+hexstr_to_bin([X,Y|T], Acc) ->
+	{ok, [V], []} = io_lib:fread("~16u", [X,Y]),
+	hexstr_to_bin(T, [V | Acc]).
+
+str_to_oid(S) ->
+	hexstr_to_bin(binary_to_list(S)).
+
 handle_connect_json(Json, State) ->
 	DeviceId = proplists:get_value(<<"d">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	case eredis_cluster:q(["HMGET", secure_chat_redis:device_id_to_key(DeviceId), "session", "u"]) of
-	 	{ok, [RedisSessionToken, UserId]} when RedisSessionToken =:= SessionToken, UserId =/= undefined ->
-	 		load_user_info(list_to_integer(binary_to_list(UserId)), State#user_state{device_id = DeviceId});
-	 	_ ->
-	 		send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
-	 		State
-	 end.
-
+	DeviceDoc = mc_worker_api:find_one(mongo, <<"devices">>, {<<"_id">>, {str_to_oid(DeviceId)}}),
+	case [maps:find(<<"session">>, DeviceDoc), maps:find(<<"userId">>, DeviceDoc)] of
+		[{ok, MongoSessionToken}, {ok, UserId}] when MongoSessionToken =:= SessionToken ->
+	 		load_user_info(UserId, State#user_state{device_id = DeviceId});
+		_ ->
+			send_json(State#user_state.socket, ?OUT_CONNECTION_FAILED_JSON()),
+			State
+	end.
 
 load_user_info(UserId, State) ->
-	case eredis_cluster:q(["HGET", secure_chat_redis:user_id_to_key(UserId), "firstName"]) of
+	UserDoc = mc_worker_api:find_one(mongo, <<"users">>, {<<"_id">>, UserId}),
+	case maps:find(<<"first">>, UserDoc) of
 	 	{ok, FirstName} when FirstName =/= undefined ->
 			connect(),
 			State#user_state{user_id = UserId, first_name = binary_to_list(FirstName)};

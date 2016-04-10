@@ -134,7 +134,7 @@ Device._findDeviceCallback = function(devices) {
 }
 
 Device._verifyUuid = function(uuid) {
-	return new RegExp('[a-f0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}', 'i').test(uuid);
+	return new RegExp('[a-f0-9]{32}', 'i').test(uuid);
 };
 
 exports.Device = Device;

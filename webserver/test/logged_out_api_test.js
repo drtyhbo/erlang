@@ -1,13 +1,12 @@
 var assert = require('assert'),
 	request = require('supertest'),
-	redis = require('../models/redis').redis,
 	Device = require('../models/device').Device,
 	User = require('../models/user').User,
 	Promise = require('bluebird').Promise;
 
 const Constants = {
 	phoneNumber: '18315550835',
-	deviceUuid: '240b1900-895e-4b5d-907c-af0538464838'
+	deviceUuid: '240b1900895e4b5d907caf0538464838'
 };
 
 function deleteUser(phoneNumber) {

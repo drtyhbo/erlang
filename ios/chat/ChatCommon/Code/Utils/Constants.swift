@@ -12,7 +12,7 @@ import UIKit
 class Constants {
 /*    static let host = "chat1.drtyhbo.com"
     static let webPort = "80"*/
-    static let host = "127.0.0.1"
+    static let host = "192.168.1.135"
     static let webPort = "8080"
 
     static let profilePicSize = CGSize(width: 144, height: 144)

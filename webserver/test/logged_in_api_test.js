@@ -8,8 +8,8 @@ var assert = require('assert'),
 const Constants = {
 	phoneNumber: '18315550835',
 	friendNumber: '18315551111',
-	deviceUuid: '240b1900-895e-4b5d-907c-af0538464838',
-	friendDeviceUuid: '240b1900-895e-4b5d-907c-af0538464839'
+	deviceUuid: '240b1900895e4b5d907caf0538464838',
+	friendDeviceUuid: '240b1900895e4b5d907caf0538464839'
 };
 
 function deleteUser(phoneNumber) {
@@ -67,8 +67,8 @@ describe('logged in', function() {
 
 	it('/api/user/friend/check/', function testSlash(done) {
 		var promises = [];
-		promises.push(User.create('18315551111', '240b1900-895e-4b5d-907c-af0538464837'));
-		promises.push(User.create('18315552222', 'f9c9b5fb-9ffd-4aa0-8760-9d8ad18391dd'));
+		promises.push(User.create('18315551111', '240b1900895e4b5d907caf0538464837'));
+		promises.push(User.create('18315552222', 'f9c9b5fb9ffd4aa087609d8ad18391dd'));
 		Promise.all(promises).then(function() {
 			makeRequest('/api/user/friend/check/', {
 					'phone': [
@@ -360,7 +360,7 @@ describe('logged in', function() {
 			}, done);
 	});
 
-	/*it('/api/user/profilepic/', function testSlash(done) {
+	it('/api/user/profilepic/', function testSlash(done) {
 		makeRequest('/api/user/profilepic/')
 			.expect(function(res) {
 				assert.notEqual(res.body.uploadUrl, null);
@@ -370,5 +370,5 @@ describe('logged in', function() {
 				status: 'ok',
 				uploadUrl: 'https://s3-url'
 			}, done);
-	});*/
+	});
 });

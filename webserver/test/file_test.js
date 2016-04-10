@@ -9,8 +9,8 @@ var assert = require('assert'),
 const Constants = {
 	phoneNumber: '18315550835',
 	friendNumber: '18315551111',
-	deviceUuid: '240b1900-895e-4b5d-907c-af0538464838',
-	friendDeviceUuid: '240b1900-895e-4b5d-907c-af0538464839'
+	deviceUuid: '240b1900895e4b5d907caf0538464838',
+	friendDeviceUuid: '240b1900895e4b5d907caf0538464839'
 };
 
 function createFriend() {

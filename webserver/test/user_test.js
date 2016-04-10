@@ -7,7 +7,7 @@ var assert = require('assert'),
 
 var Constants = {
 	phoneNumber: '18315550835',
-	deviceUuid: '240b1900-895e-4b5d-907c-af0538464838',
+	deviceUuid: '240b1900895e4b5d907caf0538464838',
 	keyOfLastResort: 'abcdefgh'
 };
 
@@ -93,8 +93,8 @@ describe('User', function() {
 	it('User - checkPhoneNumbers', function testSlash(done) {
 		var promises = [];
 
-		promises.push(User.create('18315551111', '332af026-2d83-44d4-b0cf-da35b7f38d66'));
-		promises.push(User.create('18315552222', 'b4d0f58c-3bd6-44fe-a15d-834fbdf6b3d5'));
+		promises.push(User.create('18315551111', '332af0262d8344d4b0cfda35b7f38d66'));
+		promises.push(User.create('18315552222', 'b4d0f58c3bd644fea15d834fbdf6b3d5'));
 
 		Promise.all(promises).then(function() {
 			return User.checkPhoneNumbers(['18315551111', '18315553333', '18315552222']);

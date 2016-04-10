@@ -197,7 +197,7 @@ router.post('/file/get/', function(req, res) {
 router.post('/profilepic/', function(req, res) {
 	res.send({
 		'status': 'ok',
-		'uploadUrl': s3.generateSignedUrl('PUT', req.user.id, 'drtyhbo-chat-users', 'image/jpeg')
+		'uploadUrl': s3.generateSignedUrl('PUT', req.user._id, 'drtyhbo-chat-users', 'image/jpeg')
 	});
 });
 

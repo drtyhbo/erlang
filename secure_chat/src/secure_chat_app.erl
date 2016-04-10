@@ -10,7 +10,6 @@ start(_StartType, _StartArgs) ->
 	application:start(crypto),
 	lager:start(),
 	apns:start(),
-	eredis_cluster:start(),
 	ssl:start(),
 
 	ok = setup_mnesia(),
