@@ -116,7 +116,7 @@ class MediaRowTableViewCell: MessageTableViewCell {
         loadImageWithId(thumbnailInfo.id)
     }
 
-    private func loadImageWithId(thumbnailId: Int) {
+    private func loadImageWithId(thumbnailId: String) {
         messageImageView.image = nil
 
         FileHelper.getFileWithId(thumbnailId, secretKey: message.secretKey) {

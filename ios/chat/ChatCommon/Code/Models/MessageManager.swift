@@ -72,7 +72,7 @@ public class MessageManager {
     }
 
     public func sendMessageWithImage(image: UIImage, toChat chat: Chat, callback: Message?->Void) {
-        APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
+        APIManager.sharedManager.createFileForFriends(chat.participantsArray, numFiles: 2) {
             fileIds in
             guard let fileIds = fileIds where fileIds.count == 2 else {
                 callback(nil)
@@ -93,7 +93,7 @@ public class MessageManager {
     }
 
     public func sendMessageWithMediaUrl(mediaUrl: NSURL, toChat chat: Chat, callback: Message?->Void) {
-        APIManager.sharedManager.createFileForFriend(chat.participantsArray[0], numFiles: 2) {
+        APIManager.sharedManager.createFileForFriends(chat.participantsArray, numFiles: 2) {
             fileIds in
             guard let fileIds = fileIds where fileIds.count == 2 else {
                 callback(nil)

@@ -146,7 +146,7 @@ router.post('/file/create/', function(req, res) {
 	}
 
 	var promises = [];
-	for (var i = 0, friendId; friendId < friendIds.length; i++) {
+	for (var i = 0, friendId; friendId = friendIds[i]; i++) {
 		promises.push(User.findUserById(friendId));
 	}
 

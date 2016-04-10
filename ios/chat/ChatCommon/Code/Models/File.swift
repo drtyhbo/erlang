@@ -12,7 +12,7 @@ import UIKit
 
 @objc(File)
 public class File: NSManagedObject {
-    @NSManaged var id: Int
+    @NSManaged var id: String
     @NSManaged public var contentType: String
     @NSManaged public var data: NSData
     @NSManaged public var localPath: String?
@@ -21,7 +21,7 @@ public class File: NSManagedObject {
         return UIImage(data: data)
     }
 
-    public static func createWithId(id: Int, data: NSData, contentType: String) -> File {
+    public static func createWithId(id: String, data: NSData, contentType: String) -> File {
         let file = File.MR_createEntity()!
         file.id = id
         file.data = data
@@ -29,7 +29,7 @@ public class File: NSManagedObject {
         return file
     }
 
-    public static func findWithId(id: Int) -> File? {
+    public static func findWithId(id: String) -> File? {
         return File.MR_findFirstByAttribute("id", withValue: id)
     }
 }
