@@ -26,6 +26,8 @@ init([]) ->
 		?CHILD(secure_chat_pns, []),
 		?CHILD(mc_worker, [[
 			{database, <<"chat">>},
-			{sharded, ["127.0.0.1:27017"]},
+			{host, "mongo"},
+			{login, <<"chat">>},
+			{password, <<"u*hw{//B87}YGU=">>},
 			{register, mongo}]])],
 	{ok, {SupFlags, Children}}.

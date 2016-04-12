@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/chat', {
+mongoose.connect('mongodb://chat:u*hw{//B87}YGU=@mongo/chat', {
     promiseLibrary: require('bluebird')
 });
 
