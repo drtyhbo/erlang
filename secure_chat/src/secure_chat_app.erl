@@ -8,6 +8,7 @@ start(_StartType, _StartArgs) ->
 	connect_nodes(),
 	application:start(bson),
 	application:start(crypto),
+	application:start(mongodb),
 	lager:start(),
 	apns:start(),
 	ssl:start(),
@@ -28,7 +29,8 @@ connect_nodes() ->
 
 setup_mnesia() ->
 	mnesia:stop(),
-	mnesia:create_schema([node()]),
+	{ok, DiscNodes} = application:get_env(disc_nodes),
+	mnesia:create_schema([Node || Node <- DiscNodes, Node =:= node()]),
 	mnesia:start(),
     mnesia:change_config(extra_db_nodes, [node() | nodes()]),
 	Result = mnesia:create_table(message, [
