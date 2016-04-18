@@ -24,10 +24,13 @@ init([]) ->
 		?CHILD(secure_chat_serv, [49165]),
 		?CHILD(secure_chat_msg_store, []),
 		?CHILD(secure_chat_pns, []),
-		?CHILD(mc_worker, [[
-			{database, <<"chat">>},
-			{host, "mongo"},
-			{login, <<"chat">>},
-			{password, <<"u*hw{//B87}YGU=">>},
-			{register, mongo}]])],
+		?CHILD(secure_chat_mongo, [[
+			{seed, [{rs, <<"rs0">>, ["chat1.drtyhbo.com:27017", "chat2.drtyhbo.com:27017"]}]},
+			{option, []},
+			{woption, [{database, <<"chat">>},
+				{login, <<"chat">>},
+				{password, <<"u*hw{//B87}YGU=">>},
+				{ssl, true}]}
+			]]
+		)],
 	{ok, {SupFlags, Children}}.

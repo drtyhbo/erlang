@@ -35,11 +35,10 @@ init([]) ->
 
 
 handle_cast({send_notification, DeviceId, Message}, State) ->
-	DeviceDoc = mc_worker_api:find_one(
-		mongo,
+	{ok, DeviceDoc} = secure_chat_mongo:find_one(
 		<<"devices">>,
 		{<<"_id">>, secure_chat_oid:str_to_oid(DeviceId)},
-		#{projector => {<<"iosPushToken">>, 1}}),
+		{<<"iosPushToken">>, true}),
 	case maps:find(<<"iosPushToken">>, DeviceDoc) of
 		{ok, PushToken} when PushToken =/= undefined ->
 	 		apns:send_message(ios_apns, #apns_msg{

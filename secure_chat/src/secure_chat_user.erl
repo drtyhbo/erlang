@@ -168,11 +168,10 @@ add_device(DeviceId, Pid) ->
 handle_connect_json(Json, State) ->
 	DeviceId = proplists:get_value(<<"d">>, Json),
 	SessionToken = proplists:get_value(<<"s">>, Json),
-	DeviceDoc = mc_worker_api:find_one(
-		mongo,
+	{ok, DeviceDoc} = secure_chat_mongo:find_one(
 		<<"devices">>,
 		{<<"_id">>, secure_chat_oid:str_to_oid(DeviceId)},
-		#{projector => {<<"session">>, 1, <<"userId">>, 1}}),
+		{<<"session">>, true, <<"userId">>, true}),
 	case [maps:find(<<"session">>, DeviceDoc), maps:find(<<"userId">>, DeviceDoc)] of
 		[{ok, MongoSessionToken}, {ok, UserId}] when MongoSessionToken =:= SessionToken ->
 	 		load_user_info(UserId, State#user_state{device_id = DeviceId});
@@ -182,11 +181,10 @@ handle_connect_json(Json, State) ->
 	end.
 
 load_user_info(UserId, State) ->
-	UserDoc = mc_worker_api:find_one(
-		mongo,
+	{ok, UserDoc} = secure_chat_mongo:find_one(
 		<<"users">>,
 		{<<"_id">>, UserId},
-		#{projector => {<<"first">>, 1}}),
+		{<<"first">>, true}),
 	case maps:find(<<"first">>, UserDoc) of
 	 	{ok, FirstName} when FirstName =/= undefined ->
 			connect(),
